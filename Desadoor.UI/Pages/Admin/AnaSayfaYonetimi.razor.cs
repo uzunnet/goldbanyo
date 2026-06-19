@@ -152,7 +152,7 @@ public partial class AnaSayfaYonetimi
         }
         catch (Exception ex)
         {
-            snackbar.Add($"Veriler yüklenirken hata oluştu: {ex.Message}", Severity.Error);
+            snackbar.Add(dil.T("admin.anaSayfa.yuklemeHata", "Veriler yüklenirken hata oluştu:") + " " + ex.Message, Severity.Error);
         }
         finally
         {
@@ -173,7 +173,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("anasayfa", "HeroBaslik1", _heroBaslik1);
             await DegerKaydet("anasayfa", "HeroBaslik2", _heroBaslik2);
             await DegerKaydet("anasayfa", "HeroAciklama", _heroAciklama);
-            snackbar.Add("Hero bilgileri başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.heroGuncellendi", "Hero bilgileri başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -196,7 +196,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("anasayfa", "VideoHiz", _videoHiz);
             await DegerKaydet("anasayfa", "VideoMute", _videoMute.ToString());
             await DegerKaydet("anasayfa", "PdfKatalogUrl", _pdfKatalogUrl);
-            snackbar.Add("Medya ve Katalog bilgileri başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.medyaGuncellendi", "Medya ve Katalog bilgileri başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -221,7 +221,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("anasayfa", "Ist3Etiket", _ist3Etiket);
             await DegerKaydet("anasayfa", "Ist4Deger", _ist4Deger);
             await DegerKaydet("anasayfa", "Ist4Etiket", _ist4Etiket);
-            snackbar.Add("İstatistikler başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.istatistikGuncellendi", "İstatistikler başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -245,7 +245,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("anasayfa", "Kat1Etiket", _kat1Etiket);
             await DegerKaydet("anasayfa", "Kat1Baslik", _kat1Baslik);
             await DegerKaydet("anasayfa", "Kat1Aciklama", _kat1Aciklama);
-            snackbar.Add("1. Kategori başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.kat1Guncellendi", "1. Kategori başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -269,7 +269,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("anasayfa", "Kat2Etiket", _kat2Etiket);
             await DegerKaydet("anasayfa", "Kat2Baslik", _kat2Baslik);
             await DegerKaydet("anasayfa", "Kat2Aciklama", _kat2Aciklama);
-            snackbar.Add("2. Kategori başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.kat2Guncellendi", "2. Kategori başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -287,7 +287,7 @@ public partial class AnaSayfaYonetimi
         try
         {
             await DegerKaydet("anasayfa", "OneCikanAdet", _oneCikanAdet);
-            snackbar.Add("Mimari Seçimler ürün sayısı güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.mimariGuncellendi", "Mimari Seçimler ürün sayısı güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -314,7 +314,7 @@ public partial class AnaSayfaYonetimi
             await DegerKaydet("ayarlar", "Telefon1", _telefon1);
             await DegerKaydet("ayarlar", "Telefon2", _telefon2);
             await DegerKaydet("ayarlar", "MesaiSaatleri", _mesaiSaatleri);
-            snackbar.Add("Genel ayarlar başarıyla güncellendi.", Severity.Success);
+            snackbar.Add(dil.T("admin.anaSayfa.genelAyarlarGuncellendi", "Genel ayarlar başarıyla güncellendi."), Severity.Success);
         }
         catch (Exception ex)
         {
@@ -360,11 +360,11 @@ public partial class AnaSayfaYonetimi
                 else
                     _kat2Gorsel = gorselUrl;
 
-                snackbar.Add("Görsel başarıyla yüklendi.", Severity.Success);
+                snackbar.Add(dil.T("admin.anaSayfa.gorselYuklendi", "Görsel başarıyla yüklendi."), Severity.Success);
             }
             else
             {
-                snackbar.Add(cevap?.Mesaj ?? "Görsel yüklenemedi.", Severity.Error);
+                snackbar.Add(cevap?.Mesaj ?? dil.T("admin.anaSayfa.gorselYuklenemedi", "Görsel yüklenemedi."), Severity.Error);
             }
         }
         catch (Exception ex)
@@ -429,7 +429,7 @@ public partial class AnaSayfaYonetimi
             _kat2Gorsel = gorselUrl;
 
         _galeriDialog = false;
-        snackbar.Add("Görsel seçildi.", Severity.Success);
+        snackbar.Add(dil.T("admin.anaSayfa.gorselSecildi", "Görsel seçildi."), Severity.Success);
     }
     private string MedyaGorselYolu(GaleriGorseliDto medya)
     {
@@ -448,7 +448,7 @@ public partial class AnaSayfaYonetimi
         var yanit = await api.PutAsync<object>("api/desadoor/sayfa-icerigi", model);
         if (yanit?.BasariliMi != true)
         {
-            throw new Exception(yanit?.Mesaj ?? "Beklenmeyen API hatası");
+            throw new Exception(yanit?.Mesaj ?? dil.T("admin.anaSayfa.apiHata", "Beklenmeyen API hatası"));
         }
     }
 }

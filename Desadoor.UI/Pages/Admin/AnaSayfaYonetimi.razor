@@ -25,18 +25,18 @@ else
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.h5" Class="font-weight-bold primary-text">@dil.T("admin.anaSayfa.karsilama","Karşılama Metinleri")</MudText>
-                                <MudText Typo="Typo.caption">Ana sayfanın en üstünde görünen karşılama alanı ayarları.</MudText>
+                                 <MudText Typo="Typo.caption">@dil.T("admin.anaSayfa.heroCaption", "Ana sayfanın en üstünde görünen karşılama alanı ayarları.")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudForm @ref="_heroForm" IsValidChanged="(v) => _heroGecerliMi = v">
-                                <MudTextField @bind-Value="_heroEtiket" Label="@dil.T("admin.anaSayfa.kucukEtiket","Küçük Etiket")" Placeholder="Örn: DESADOOR VİZYON" Required="true" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Label" />
+                                 <MudTextField @bind-Value="_heroEtiket" Label="@dil.T("admin.anaSayfa.kucukEtiket","Küçük Etiket")" Placeholder="@dil.T("admin.anaSayfa.heroPlaceholder", "Örn: DESADOOR VİZYON")" Required="true" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Label" />
                                 <MudTextField @bind-Value="_heroBaslik1" Label="@dil.T("admin.anaSayfa.anaBaslik1","Ana Başlık Satır 1")" Required="true" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Title" />
                                 <MudTextField @bind-Value="_heroBaslik2" Label="@dil.T("admin.anaSayfa.anaBaslik2","Ana Başlık Satır 2")" Required="true" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Title" />
                                 
-                                <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1 font-weight-bold">Alt Açıklama Metni (Zengin Metin)</MudText>
+                                 <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1 font-weight-bold">@dil.T("admin.anaSayfa.altAciklama", "Alt Açıklama Metni (Zengin Metin)")</MudText>
                                 <div class="editor-container mb-4">
-                                    <MudExRichTextEdit @bind-Value="_heroAciklama" Placeholder="Açıklama giriniz..." />
+                                     <MudExRichTextEdit @bind-Value="_heroAciklama" Placeholder="@dil.T("admin.anaSayfa.aciklamaPlaceholder", "Açıklama giriniz...")" />
                                 </div>
                                 
                                 <MudTextField @bind-Value="_heroGorselUrl" Label="@dil.T("admin.anaSayfa.arkaPlan","Arka Plan Görsel URL")" Variant="Variant.Outlined" Class="mt-3" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Image" />
@@ -50,12 +50,12 @@ else
                     </MudCard>
                 </MudItem>
                 <MudItem xs="12" md="5" Class="anim-scroll-yukari">
-                    <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="mb-4 rounded-lg">Hero bölümü, müşterilerinizin sitenize girdiğinde ilk karşılaştığı alandır. Görsellerin yüksek çözünürlüklü olması önemlidir.</MudAlert>
+                    <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="mb-4 rounded-lg">@dil.T("admin.anaSayfa.heroIpuci", "Hero bölümü, müşterilerinizin sitenize girdiğinde ilk karşılaştığı alandır. Görsellerin yüksek çözünürlüklü olması önemlidir.")</MudAlert>
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudText Typo="Typo.h6" Class="mb-3">@dil.T("admin.anaSayfa.onizleme","Mevcut Görsel Ön İzleme")</MudText>
                         @if (!string.IsNullOrEmpty(_heroGorselUrl))
                         {
-                            <MudImage Src="@_heroGorselUrl" Alt="Hero Preview" Fluid="true" Class="rounded-lg shadow-lg" />
+                            <MudImage Src="@_heroGorselUrl" Alt="@dil.T("admin.anaSayfa.heroPreview", "Hero Önizleme")" Fluid="true" Class="rounded-lg shadow-lg" />
                         }
                         else
                         {
@@ -69,14 +69,14 @@ else
         </MudTabPanel>
 
         @* 2. Sekme: İstatistikler *@
-        <MudTabPanel Text="İstatistikler" Icon="@Icons.Material.Filled.Poll">
+        <MudTabPanel Text="@dil.T("admin.anaSayfa.istatistikler", "İstatistikler")" Icon="@Icons.Material.Filled.Poll">
             <MudGrid>
                 <MudItem xs="12" md="8" Class="anim-scroll-yukari">
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">Şirket Rakamları</MudText>
-                                <MudText Typo="Typo.caption">Hakkımızda bölümünde görünen başarı istatistikleri.</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.sirketRakamlari", "Şirket Rakamları")</MudText>
+                                <MudText Typo="Typo.caption">@dil.T("admin.anaSayfa.istatistikCaption", "Hakkımızda bölümünde görünen başarı istatistikleri.")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
@@ -84,30 +84,30 @@ else
                                 <MudGrid Spacing="4">
                                     <MudItem xs="12" sm="6">
                                         <MudPaper Elevation="0" Class="pa-4 rounded-xl" Style="background: rgba(var(--mud-palette-primary-rgb), 0.05);">
-                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold color-primary">İstatistik 1</MudText>
+                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold color-primary">@dil.T("admin.anaSayfa.istatistik1", "İstatistik 1")</MudText>
                                             <MudTextField @bind-Value="_ist1Deger" Label="@dil.T("admin.anaSayfa.degerOrnek","Değer (Örn: 25+)")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ExposurePlus1" />
-                                            <MudTextField @bind-Value="_ist1Etiket" Label="Etiket (Örn: Yıllık Tecrübe)" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.HistoryEdu" />
+                                            <MudTextField @bind-Value="_ist1Etiket" Label="@dil.T("admin.anaSayfa.etiketOrnek1", "Etiket (Örn: Yıllık Tecrübe)")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.HistoryEdu" />
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
                                         <MudPaper Elevation="0" Class="pa-4 rounded-xl" Style="background: rgba(var(--mud-palette-secondary-rgb), 0.05);">
-                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Secondary">İstatistik 2</MudText>
-                                            <MudTextField @bind-Value="_ist2Deger" Label="Değer (Örn: 10K+)" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CheckCircle" />
-                                            <MudTextField @bind-Value="_ist2Etiket" Label="Etiket (Örn: Başarılı Proje)" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Assignment" />
+                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Secondary">@dil.T("admin.anaSayfa.istatistik2", "İstatistik 2")</MudText>
+                                            <MudTextField @bind-Value="_ist2Deger" Label="@dil.T("admin.anaSayfa.degerOrnek2", "Değer (Örn: 10K+)")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CheckCircle" />
+                                            <MudTextField @bind-Value="_ist2Etiket" Label="@dil.T("admin.anaSayfa.etiketOrnek2", "Etiket (Örn: Başarılı Proje)")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Assignment" />
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
                                         <MudPaper Elevation="0" Class="pa-4 rounded-xl" Style="background: rgba(var(--mud-palette-success-rgb), 0.05);">
-                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Success">İstatistik 3</MudText>
-                                            <MudTextField @bind-Value="_ist3Deger" Label="Değer (Örn: %100)" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.SentimentVerySatisfied" />
-                                            <MudTextField @bind-Value="_ist3Etiket" Label="Etiket (Örn: Müşteri Memn.)" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ThumbUp" />
+                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Success">@dil.T("admin.anaSayfa.istatistik3", "İstatistik 3")</MudText>
+                                            <MudTextField @bind-Value="_ist3Deger" Label="@dil.T("admin.anaSayfa.degerOrnek3", "Değer (Örn: %100)")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.SentimentVerySatisfied" />
+                                            <MudTextField @bind-Value="_ist3Etiket" Label="@dil.T("admin.anaSayfa.etiketOrnek3", "Etiket (Örn: Müşteri Memn.)")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ThumbUp" />
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
                                         <MudPaper Elevation="0" Class="pa-4 rounded-xl" Style="background: rgba(var(--mud-palette-info-rgb), 0.05);">
-                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Info">İstatistik 4</MudText>
-                                            <MudTextField @bind-Value="_ist4Deger" Label="Değer (Örn: 50+)" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Public" />
-                                            <MudTextField @bind-Value="_ist4Etiket" Label="Etiket (Örn: İhracat Ülkesi)" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Language" />
+                                            <MudText Typo="Typo.subtitle1" Class="mb-2 font-weight-bold" Color="Color.Info">@dil.T("admin.anaSayfa.istatistik4", "İstatistik 4")</MudText>
+                                            <MudTextField @bind-Value="_ist4Deger" Label="@dil.T("admin.anaSayfa.degerOrnek4", "Değer (Örn: 50+)")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Public" />
+                                            <MudTextField @bind-Value="_ist4Etiket" Label="@dil.T("admin.anaSayfa.etiketOrnek4", "Etiket (Örn: İhracat Ülkesi)")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Language" />
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>
@@ -121,8 +121,8 @@ else
                     </MudCard>
                 </MudItem>
                 <MudItem xs="12" md="4" Class="anim-scroll-yukari">
-                    <MudText Typo="Typo.h6" Class="mb-4">İpucu</MudText>
-                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Class="mb-4">Rakamların yanına + veya % gibi işaretler ekleyerek daha çarpıcı bir görünüm elde edebilirsiniz.</MudAlert>
+                    <MudText Typo="Typo.h6" Class="mb-4">@dil.T("admin.anaSayfa.ipucu", "İpucu")</MudText>
+                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Class="mb-4">@dil.T("admin.anaSayfa.istatistikIpuci", "Rakamların yanına + veya % gibi işaretler ekleyerek daha çarpıcı bir görünüm elde edebilirsiniz.")</MudAlert>
                 </MudItem>
             </MudGrid>
         </MudTabPanel>
@@ -134,29 +134,29 @@ else
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">Video Ayarları</MudText>
-                                <MudText Typo="Typo.caption">Arka plan ve tanıtım videoları yönetimi.</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.videoAyarlari", "Video Ayarları")</MudText>
+                                <MudText Typo="Typo.caption">@dil.T("admin.anaSayfa.videoCaption", "Arka plan ve tanıtım videoları yönetimi.")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudForm @ref="_medyaForm">
                                 <MudGrid>
                                     <MudItem xs="12">
-                                        <MudTextField @bind-Value="_videoUrl" Label="Arka Plan Video URL (.mp4)" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Videocam" Class="mb-4" />
+                                        <MudTextField @bind-Value="_videoUrl" Label="@dil.T("admin.anaSayfa.videoUrl", "Arka Plan Video URL (.mp4)")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Videocam" Class="mb-4" />
                                     </MudItem>
                                     <MudItem xs="12">
-                                        <MudTextField @bind-Value="_youtubeUrl" Label="YouTube Tanıtım Videosu" Variant="Variant.Outlined" Placeholder="https://www.youtube.com/watch?v=..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Custom.Brands.YouTube" Class="mb-4" />
+                                        <MudTextField @bind-Value="_youtubeUrl" Label="@dil.T("admin.anaSayfa.youtubeUrl", "YouTube Tanıtım Videosu")" Variant="Variant.Outlined" Placeholder="@dil.T("admin.anaSayfa.youtubePlaceholder", "https://www.youtube.com/watch?v=...")" Adornment="Adornment.Start" AdornmentIcon="@Icons.Custom.Brands.YouTube" Class="mb-4" />
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudSelect @bind-Value="_videoHiz" Label="Oynatma Hızı" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                                            <MudSelectItem Value="@("0.5")">0.5x Yavaş</MudSelectItem>
-                                            <MudSelectItem Value="@("1.0")">1.0x Normal</MudSelectItem>
-                                            <MudSelectItem Value="@("1.5")">1.5x Hızlı</MudSelectItem>
-                                            <MudSelectItem Value="@("2.0")">2.0x Çok Hızlı</MudSelectItem>
+                                        <MudSelect @bind-Value="_videoHiz" Label="@dil.T("admin.anaSayfa.videoHiz", "Oynatma Hızı")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                                            <MudSelectItem Value="@("0.5")">@dil.T("admin.anaSayfa.hizYavas", "0.5x Yavaş")</MudSelectItem>
+                                            <MudSelectItem Value="@("1.0")">@dil.T("admin.anaSayfa.hizNormal", "1.0x Normal")</MudSelectItem>
+                                            <MudSelectItem Value="@("1.5")">@dil.T("admin.anaSayfa.hizHizli", "1.5x Hızlı")</MudSelectItem>
+                                            <MudSelectItem Value="@("2.0")">@dil.T("admin.anaSayfa.hizCokHizli", "2.0x Çok Hızlı")</MudSelectItem>
                                         </MudSelect>
                                     </MudItem>
                                     <MudItem xs="12" sm="6" Class="d-flex align-center">
-                                        <MudSwitch @bind-Value="_videoMute" Label="Video Sesi Kapalı" Color="Color.Primary" />
+                                        <MudSwitch @bind-Value="_videoMute" Label="@dil.T("admin.anaSayfa.videoMute", "Video Sesi Kapalı")" Color="Color.Primary" />
                                     </MudItem>
                                 </MudGrid>
                             </MudForm>
@@ -168,11 +168,11 @@ else
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.h5" Class="font-weight-bold">Katalog (PDF)</MudText>
-                                <MudText Typo="Typo.caption">Müşterilerinizin indirebileceği kurumsal dosyalar.</MudText>
+                                <MudText Typo="Typo.caption">@dil.T("admin.anaSayfa.katalogCaption", "Müşterilerinizin indirebileceği kurumsal dosyalar.")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
-                            <MudTextField @bind-Value="_pdfKatalogUrl" Label="Kurumsal Katalog (PDF) URL" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.PictureAsPdf" HelperText="İndirme butonu için geçerli bir PDF linki giriniz." />
+                            <MudTextField @bind-Value="_pdfKatalogUrl" Label="@dil.T("admin.anaSayfa.pdfUrl", "Kurumsal Katalog (PDF) URL")" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.PictureAsPdf" HelperText="@dil.T("admin.anaSayfa.pdfHelper", "İndirme butonu için geçerli bir PDF linki giriniz.")" />
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Disabled="@_kaydediliyor" OnClick="MedyaKaydet" FullWidth="true" StartIcon="@Icons.Material.Filled.CloudUpload">
@@ -185,32 +185,32 @@ else
         </MudTabPanel>
 
         @* 4. Sekme: Kategoriler *@
-        <MudTabPanel Text="Kategoriler" Icon="@Icons.Material.Filled.Category">
+        <MudTabPanel Text="@dil.T("admin.anaSayfa.kategoriler", "Kategoriler")" Icon="@Icons.Material.Filled.Category">
             <MudGrid>
                 @* Kategori 1 *@
                 <MudItem xs="12" md="6" Class="anim-scroll-yukari">
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h6" Class="font-weight-bold">1. Kategori (Örn: Kapaklar)</MudText>
+                                <MudText Typo="Typo.h6" Class="font-weight-bold">@dil.T("admin.anaSayfa.kat1Baslik", "1. Kategori (Örn: Kapaklar)")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudForm @ref="_kat1Form">
-                                <MudTextField @bind-Value="_kat1Etiket" Label="Üst Etiket" Variant="Variant.Outlined" Class="mb-4" />
-                                <MudTextField @bind-Value="_kat1Baslik" Label="Kategori Başlığı" Variant="Variant.Outlined" Class="mb-4" />
+                                <MudTextField @bind-Value="_kat1Etiket" Label="@dil.T("admin.anaSayfa.ustEtiket", "Üst Etiket")" Variant="Variant.Outlined" Class="mb-4" />
+                                <MudTextField @bind-Value="_kat1Baslik" Label="@dil.T("admin.anaSayfa.kategoriBaslik", "Kategori Başlığı")" Variant="Variant.Outlined" Class="mb-4" />
                                 
-                                <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1">Kategori Açıklaması</MudText>
-                                <MudExRichTextEdit @bind-Value="_kat1Aciklama" Placeholder="Açıklama giriniz..." />
+                                <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1">@dil.T("admin.anaSayfa.kategoriAciklama", "Kategori Açıklaması")</MudText>
+                                <MudExRichTextEdit @bind-Value="_kat1Aciklama" Placeholder="@dil.T("admin.anaSayfa.aciklamaPlaceholder2", "Açıklama giriniz...")" />
                                 
-                                <MudTextField @bind-Value="_kat1Gorsel" Label="Kategori Görsel URL" Variant="Variant.Outlined" Class="mt-4"
+                                <MudTextField @bind-Value="_kat1Gorsel" Label="@dil.T("admin.anaSayfa.kategoriGorselUrl", "Kategori Görsel URL")" Variant="Variant.Outlined" Class="mt-4"
                                                Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Image"
                                                OnAdornmentClick="() => GaleriAc(1)" />
                                 <MudStack Row="true" Spacing="2" Class="mt-2">
                                     <MudFileUpload T="IBrowserFile" FilesChanged="@((IBrowserFile dosya) => Kat1GorselYukle(dosya))" Accept=".jpg,.jpeg,.png,.webp">
                                         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.CloudUpload"
                                                    Disabled="@_katGorselYukleniyor" Size="Size.Small">
-                                            @(_katGorselYukleniyor ? "Yükleniyor..." : "Dosyadan Yükle")
+                                            @(_katGorselYukleniyor ? @dil.T("admin.anaSayfa.yukleniyor", "Yükleniyor...") : @dil.T("admin.anaSayfa.dosyadanYukle", "Dosyadan Yükle"))
                                         </MudButton>
                                     </MudFileUpload>
                                     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PhotoLibrary" Size="Size.Small"
@@ -220,7 +220,7 @@ else
                                 </MudStack>
                                 @if (!string.IsNullOrWhiteSpace(_kat1Gorsel))
                                 {
-                                    <MudImage Src="@TamUrl(_kat1Gorsel)" Alt="Kategori 1 Önizleme" Fluid="true" Class="rounded-lg mt-3" Style="max-height:180px; object-fit:cover;" />
+                                    <MudImage Src="@TamUrl(_kat1Gorsel)" Alt="@dil.T("admin.anaSayfa.kat1Preview", "Kategori 1 Önizleme")" Fluid="true" Class="rounded-lg mt-3" Style="max-height:180px; object-fit:cover;" />
                                 }
                             </MudForm>
                         </MudCardContent>
@@ -237,25 +237,25 @@ else
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h6" Class="font-weight-bold">2. Kategori (Örn: Kapılar)</MudText>
+                                <MudText Typo="Typo.h6" Class="font-weight-bold">@dil.T("admin.anaSayfa.kat2Baslik", "2. Kategori (Örn: Kapılar)")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudForm @ref="_kat2Form">
-                                <MudTextField @bind-Value="_kat2Etiket" Label="Üst Etiket" Variant="Variant.Outlined" Class="mb-4" />
-                                <MudTextField @bind-Value="_kat2Baslik" Label="Kategori Başlığı" Variant="Variant.Outlined" Class="mb-4" />
+                                <MudTextField @bind-Value="_kat2Etiket" Label="@dil.T("admin.anaSayfa.ustEtiket", "Üst Etiket")" Variant="Variant.Outlined" Class="mb-4" />
+                                <MudTextField @bind-Value="_kat2Baslik" Label="@dil.T("admin.anaSayfa.kategoriBaslik", "Kategori Başlığı")" Variant="Variant.Outlined" Class="mb-4" />
                                 
-                                <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1">Kategori Açıklaması</MudText>
-                                <MudExRichTextEdit @bind-Value="_kat2Aciklama" Placeholder="Açıklama giriniz..." />
+                                <MudText Typo="Typo.subtitle2" Class="mb-2 ml-1">@dil.T("admin.anaSayfa.kategoriAciklama", "Kategori Açıklaması")</MudText>
+                                <MudExRichTextEdit @bind-Value="_kat2Aciklama" Placeholder="@dil.T("admin.anaSayfa.aciklamaPlaceholder2", "Açıklama giriniz...")" />
                                 
-                                <MudTextField @bind-Value="_kat2Gorsel" Label="Kategori Görsel URL" Variant="Variant.Outlined" Class="mt-4"
+                                <MudTextField @bind-Value="_kat2Gorsel" Label="@dil.T("admin.anaSayfa.kategoriGorselUrl", "Kategori Görsel URL")" Variant="Variant.Outlined" Class="mt-4"
                                                Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Image"
                                                OnAdornmentClick="() => GaleriAc(2)" />
                                 <MudStack Row="true" Spacing="2" Class="mt-2">
                                     <MudFileUpload T="IBrowserFile" FilesChanged="@((IBrowserFile dosya) => Kat2GorselYukle(dosya))" Accept=".jpg,.jpeg,.png,.webp">
                                         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.CloudUpload"
                                                    Disabled="@_katGorselYukleniyor" Size="Size.Small">
-                                            @(_katGorselYukleniyor ? "Yükleniyor..." : "Dosyadan Yükle")
+                                            @(_katGorselYukleniyor ? @dil.T("admin.anaSayfa.yukleniyor", "Yükleniyor...") : @dil.T("admin.anaSayfa.dosyadanYukle", "Dosyadan Yükle"))
                                         </MudButton>
                                     </MudFileUpload>
                                     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PhotoLibrary" Size="Size.Small"
@@ -265,7 +265,7 @@ else
                                 </MudStack>
                                 @if (!string.IsNullOrWhiteSpace(_kat2Gorsel))
                                 {
-                                    <MudImage Src="@TamUrl(_kat2Gorsel)" Alt="Kategori 2 Önizleme" Fluid="true" Class="rounded-lg mt-3" Style="max-height:180px; object-fit:cover;" />
+                                    <MudImage Src="@TamUrl(_kat2Gorsel)" Alt="@dil.T("admin.anaSayfa.kat2Preview", "Kategori 2 Önizleme")" Fluid="true" Class="rounded-lg mt-3" Style="max-height:180px; object-fit:cover;" />
                                 }
                             </MudForm>
                         </MudCardContent>
@@ -279,19 +279,19 @@ else
             </MudGrid>
         </MudTabPanel>
         @* 5. Sekme: Genel Ayarlar *@
-        <MudTabPanel Text="Genel Ayarlar" Icon="@Icons.Material.Filled.Settings">
+        <MudTabPanel Text="@dil.T("admin.anaSayfa.genelAyarlar", "Genel Ayarlar")" Icon="@Icons.Material.Filled.Settings">
             <MudGrid>
                 @* Logo ve Footer *@
                 <MudItem xs="12" md="6" Class="anim-scroll-yukari">
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">Logo ve Footer</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.logoFooter", "Logo ve Footer")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
-                            <MudTextField @bind-Value="_logoUrl" Label="Logo URL" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Link" />
-                            <MudTextField @bind-Value="_footerAciklama" Label="Footer Açıklaması" Variant="Variant.Outlined" Lines="3" Class="mb-4" />
+                            <MudTextField @bind-Value="_logoUrl" Label="@dil.T("admin.anaSayfa.logoUrl", "Logo URL")" Variant="Variant.Outlined" Class="mb-4" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Link" />
+                            <MudTextField @bind-Value="_footerAciklama" Label="@dil.T("admin.anaSayfa.footerAciklama", "Footer Açıklaması")" Variant="Variant.Outlined" Lines="3" Class="mb-4" />
                         </MudCardContent>
                     </MudCard>
                 </MudItem>
@@ -301,7 +301,7 @@ else
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">Sosyal Medya</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.sosyalMedya", "Sosyal Medya")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
@@ -318,22 +318,22 @@ else
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">İletişim Bilgileri</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.iletisimBilgileri", "İletişim Bilgileri")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudGrid>
                                 <MudItem xs="12" md="6">
-                                    <MudTextField @bind-Value="_adres" Label="Adres" Variant="Variant.Outlined" Lines="2" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.LocationOn" />
+                                    <MudTextField @bind-Value="_adres" Label="@dil.T("admin.anaSayfa.adres", "Adres")" Variant="Variant.Outlined" Lines="2" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.LocationOn" />
                                 </MudItem>
                                 <MudItem xs="12" md="6">
-                                    <MudTextField @bind-Value="_mesaiSaatleri" Label="Mesai Saatleri" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AccessTime" />
+                                    <MudTextField @bind-Value="_mesaiSaatleri" Label="@dil.T("admin.anaSayfa.mesaiSaatleri", "Mesai Saatleri")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AccessTime" />
                                 </MudItem>
                                 <MudItem xs="12" md="6">
-                                    <MudTextField @bind-Value="_telefon1" Label="Telefon 1" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Phone" />
+                                    <MudTextField @bind-Value="_telefon1" Label="@dil.T("admin.anaSayfa.telefon1", "Telefon 1")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Phone" />
                                 </MudItem>
                                 <MudItem xs="12" md="6">
-                                    <MudTextField @bind-Value="_telefon2" Label="Telefon 2" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Smartphone" />
+                                    <MudTextField @bind-Value="_telefon2" Label="@dil.T("admin.anaSayfa.telefon2", "Telefon 2")" Variant="Variant.Outlined" Class="mb-2" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Smartphone" />
                                 </MudItem>
                             </MudGrid>
                         </MudCardContent>
@@ -348,22 +348,22 @@ else
         </MudTabPanel>
 
         @* 6. Sekme: Mimari Seçimler Ayarları *@
-        <MudTabPanel Text="Mimari Seçimler" Icon="@Icons.Material.Filled.ViewModule">
+        <MudTabPanel Text="@dil.T("admin.anaSayfa.mimariSecimler", "Mimari Seçimler")" Icon="@Icons.Material.Filled.ViewModule">
             <MudGrid>
                 <MudItem xs="12" md="6" Class="anim-scroll-yukari">
                     <MudCard Elevation="0" Class="glass-card pa-4">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">Mimari Seçimler Ürün Ayarı</MudText>
-                                <MudText Typo="Typo.caption">Ana sayfada "Mimari Seçimler" bölümünde kaç ürün gösterileceğini ayarlayın.</MudText>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">@dil.T("admin.anaSayfa.mimariUrunAyari", "Mimari Seçimler Ürün Ayarı")</MudText>
+                                <MudText Typo="Typo.caption">@dil.T("admin.anaSayfa.mimariCaption", "Ana sayfada Mimari Seçimler bölümünde kaç ürün gösterileceğini ayarlayın.")</MudText>
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
                             <MudTextField @bind-Value="_oneCikanAdet"
-                                          Label="Gösterilecek Ürün Sayısı"
+                                          Label="@dil.T("admin.anaSayfa.gosterilecekUrunSayisi", "Gösterilecek Ürün Sayısı")"
                                           Adornment="Adornment.Start"
                                           AdornmentIcon="@Icons.Material.Filled.Numbers"
-                                          HelperText="Örnek: 4, 5, 6, 8"
+                                          HelperText="@dil.T("admin.anaSayfa.ornekSayi", "Örnek: 4, 5, 6, 8")"
                                           Required="true" />
                         </MudCardContent>
                         <MudCardActions>
@@ -374,8 +374,8 @@ else
                     </MudCard>
                 </MudItem>
                 <MudItem xs="12" md="4" Class="anim-scroll-yukari">
-                    <MudText Typo="Typo.h6" Class="mb-4">İpucu</MudText>
-                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Class="mb-4">Bu değer hem "Mimari Seçimler" bölümünü hem de "Kapak Sistemleri" sayfasını etkiler.</MudAlert>
+                    <MudText Typo="Typo.h6" Class="mb-4">@dil.T("admin.anaSayfa.ipucu", "İpucu")</MudText>
+                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Class="mb-4">@dil.T("admin.anaSayfa.mimariIpuci", "Bu değer hem Mimari Seçimler bölümünü hem de Kapak Sistemleri sayfasını etkiler.")</MudAlert>
                 </MudItem>
             </MudGrid>
         </MudTabPanel>
@@ -393,7 +393,7 @@ else
     </TitleContent>
     <DialogContent>
         <MudTextField @bind-Value="_galeriArama" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
-                      Placeholder="Görsel ara..." Variant="Variant.Outlined" Class="mb-4"
+                      Placeholder="@dil.T("admin.anaSayfa.gorselAra", "Görsel ara...")" Variant="Variant.Outlined" Class="mb-4"
                       TextChanged="GaleriAramaDegisti" Immediate="true" />
         @if (_galeriYukleniyor)
         {
@@ -401,7 +401,7 @@ else
         }
         @if (_galeriMedyaListesi.Count == 0 && !_galeriYukleniyor)
         {
-            <MudText Typo="Typo.body1" Align="Align.Center" Class="pa-8">Görsel bulunamadı.</MudText>
+            <MudText Typo="Typo.body1" Align="Align.Center" Class="pa-8">@dil.T("admin.anaSayfa.gorselBulunamadi", "Görsel bulunamadı.")</MudText>
         }
         else
         {
@@ -411,7 +411,7 @@ else
                     <MudItem xs="6" sm="4" md="3" lg="2">
                         <MudCard Elevation="0" Class="medya-admin-kart" Style="@($"cursor:pointer; {(medya.Id == _galeriSeciliMedyaId ? "border: 2px solid var(--mud-palette-primary);" : "")}")">
                             <button type="button" class="medya-admin-gorsel-btn" @onclick="() => GaleriSec(medya)">
-                                <img src="@MedyaGorselYolu(medya)" alt="@(medya.Baslik ?? "Görsel")" class="medya-admin-gorsel" />
+                                <img src="@MedyaGorselYolu(medya)" alt="@(medya.Baslik ?? dil.T("admin.anaSayfa.gorsel", "Görsel"))" class="medya-admin-gorsel" />
                             </button>
                             <MudCardContent Class="pa-2">
                                 <MudText Typo="Typo.caption" Class="text-truncate font-weight-bold">@(medya.Baslik ?? "Görsel")</MudText>
@@ -423,7 +423,7 @@ else
         }
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="GaleriKapat">İptal</MudButton>
+        <MudButton OnClick="GaleriKapat">@dil.T("ortak.iptal", "İptal")</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_galeriSeciliMedyaId == 0)" OnClick="GaleriOnayla">
             Seç
         </MudButton>
