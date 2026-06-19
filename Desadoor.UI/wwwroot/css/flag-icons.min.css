@@ -1,0 +1,8 @@
+/* flag-icons — inline minimal */
+.fi{display:inline-block;width:1em;line-height:1em;background-size:contain;background-position:50%;background-repeat:no-repeat}
+.fi-tr{background-image:url('../../flags/4x3/tr.svg')}
+.fi-en{background-image:url('../../flags/4x3/gb.svg')}
+.fi-de{background-image:url('../../flags/4x3/de.svg')}
+.fi-fr{background-image:url('../../flags/4x3/fr.svg')}
+.fi-ru{background-image:url('../../flags/4x3/ru.svg')}
+.fi-ar{background-image:url('../../flags/4x3/ar.svg')}
