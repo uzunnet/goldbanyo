@@ -328,7 +328,11 @@ public static class TohumVerisi
             new Slayt { Dil = "tr", SayfaKodu = "projeler", Baslik = "Projelerimiz", AltBaslik = "Başarı Hikayeleri", Aciklama = "Tamamladığımız gurur verici projeler.", ArkaplanResim = "/medya/slaytlar/projeler.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "referanslar", Baslik = "Referanslarımız", AltBaslik = "Bize Güvenenler", Aciklama = "Sektörün önde gelen markalarıyla çalışıyoruz.", ArkaplanResim = "/medya/slaytlar/referanslar.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "haber", Baslik = "Haberler & Duyurular", AltBaslik = "Güncel Gelişmeler", Aciklama = "Desadoor'dan en son haberler.", ArkaplanResim = "/medya/slaytlar/haber.jpg", SiraNo = 1 },
-            new Slayt { Dil = "tr", SayfaKodu = "sss", Baslik = "Sıkça Sorulan Sorular", AltBaslik = "Bilgi Bankası", Aciklama = "Merak ettiğiniz tüm soruların cevapları.", ArkaplanResim = "/medya/slaytlar/sss.jpg", SiraNo = 1 }
+            new Slayt { Dil = "tr", SayfaKodu = "sss", Baslik = "Sıkça Sorulan Sorular", AltBaslik = "Bilgi Bankası", Aciklama = "Merak ettiğiniz tüm soruların cevapları.", ArkaplanResim = "/medya/slaytlar/sss.jpg", SiraNo = 1 },
+
+            new Slayt { Dil = "tr", SayfaKodu = "kapak-sistemleri", Baslik = "Kapak Sistemleri", AltBaslik = "Mutfak ve Banyo Çözümleri", Aciklama = "Membran, lake, laminat ve akrilik kapak modellerimiz.", ArkaplanResim = "/medya/slaytlar/Lake-Kapilar-DSL-113.jpg", SiraNo = 1 },
+            new Slayt { Dil = "tr", SayfaKodu = "sertifikalar", Baslik = "Sertifikalarımız", AltBaslik = "Kalite Belgelerimiz", Aciklama = "Uluslararası standartlarda kalite ve güvence.", ArkaplanResim = "/medya/slaytlar/fabrikadis_ic.jpg", SiraNo = 1 },
+            new Slayt { Dil = "tr", SayfaKodu = "iletisim", Baslik = "İletişim", AltBaslik = "Bize Ulaşın", Aciklama = "Size en yakın DesaDoor temsilcisiyle görüşün.", ArkaplanResim = "/medya/slaytlar/ic_mustafa_barut.jpg", SiraNo = 1 },
         };
 
         foreach (var tohum in tohumlar)
