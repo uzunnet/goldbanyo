@@ -1,0 +1,25 @@
+@using Desadoor.Ortak.Modeller
+@inject Servisler.ApiIstemcisi api
+@inject Servisler.DilServisi dil
+
+@if (_sss.Any())
+{
+    <MudPaper Elevation="0" Square="true" Style="background: var(--desa-bg-base); padding: 96px 0;">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="px-6">
+            <MudStack AlignItems="AlignItems.Center" Class="mb-12 text-center">
+                <MudText Typo="Typo.overline" Class="desa-etiket d-block">@dil.T("sss.etiket", "SIKÇA SORULANLAR")</MudText>
+                <MudText Typo="Typo.h3" Class="desa-bolum-baslik">@dil.T("sss.baslik", "Merak Ettikleriniz")</MudText>
+            </MudStack>
+            <MudExpansionPanels Elevation="0" Class="desa-sss-panel">
+                @foreach (var s in _sss.Take(5))
+                {
+                    <MudExpansionPanel Class="mb-2 gsap-fade-up" Style="border: 1px solid var(--desa-border);">
+                        <TitleContent><MudText Typo="Typo.subtitle1" Style="font-family: var(--desa-font-sans);">@s.Soru</MudText></TitleContent>
+                        <ChildContent><MudText Typo="Typo.body2" Style="color: var(--desa-text-secondary); line-height: 1.8;">@s.Cevap</MudText></ChildContent>
+                    </MudExpansionPanel>
+                }
+            </MudExpansionPanels>
+        </MudContainer>
+    </MudPaper>
+}
+

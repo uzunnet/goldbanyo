@@ -1,0 +1,42 @@
+@using Desadoor.Ortak.Modeller.Urunler
+
+<div class="desa-urun-kart cursor-pointer" @onclick="@Tiklandi">
+    <MudCard Elevation="2">
+        <div class="desa-urun-kart-gorsel-sarici">
+            <img src="@_gorselUrl" alt="@Urun.Ad"
+                 onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+        </div>
+
+
+        <div class="desa-urun-kart-rozetler">
+            @if (Urun.VarsayilanUcBoyutModeliId != null)
+            {
+                <span class="desa-rozet desa-rozet-3d">3D</span>
+            }
+            @if (Urun.YeniMi)
+            {
+                <span class="desa-rozet desa-rozet-yeni">@dil.T("urun.yeni", "Yeni")</span>
+            }
+        </div>
+
+        <MudCardContent>
+            <MudText Typo="Typo.h6" Class="mb-2">
+                @Urun.Ad
+            </MudText>
+            @if (!string.IsNullOrEmpty(Urun.KisaAciklama))
+            {
+                <MudText Typo="Typo.body2" Color="Color.Dark" Class="desa-urun-kart-aciklama">
+                    @Urun.KisaAciklama
+                </MudText>
+            }
+        </MudCardContent>
+
+        <MudCardActions Class="pa-4 pt-0">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                       StartIcon="@Icons.Material.Filled.Visibility"
+                       OnClick="@HakkindaIste" FullWidth="true">
+                @dil.T("urun.incele", "İncele")
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>

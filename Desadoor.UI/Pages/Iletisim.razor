@@ -1,0 +1,206 @@
+@page "/iletisim"
+@layout DesaDoorDuzen
+
+@*
+ * Iletisim — DesaDoor iletişim sayfası.
+ * Sayfa içeriği (adres, telefon vb.) adminden %100 kontrol edilir.
+ * Form gönderimi POST /api/desadoor/iletisim ile API'ye ulaşır.
+ *@
+
+<PageTitle>@_sayfaBasligi</PageTitle>
+
+@* ─── HERO ───────────────────────────────────────────────────────────────── *@
+<Desadoor.UI.Bilesenler.HeroSlider SayfaKodu="iletisim" />
+
+@* ─── İLETİŞİM BİLGİLERİ KARTLARI ───────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Class="desa-bolum-acik">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+        <MudGrid Spacing="4">
+
+            @* Adres *@
+            <MudItem xs="12" sm="6" md="3" Class="desa-anim-fade-up">
+                <div class="desa-iletisim-kart">
+                    <div class="desa-iletisim-ikon">
+                        <MudIcon Icon="@Icons.Material.Outlined.LocationOn" />
+                    </div>
+                    <MudText Typo="Typo.overline" Class="desa-etiket mb-2 d-block">@dil.T("iletisim.adres", "ADRES")</MudText>
+                    <MudText Typo="Typo.body2" Style="font-family:'Manrope',sans-serif; line-height:1.7; color:#333;">
+                        @_adres
+                    </MudText>
+                </div>
+            </MudItem>
+
+            @* Telefon *@
+            <MudItem xs="12" sm="6" md="3" Class="desa-anim-fade-up desa-anim-delay-1">
+                <div class="desa-iletisim-kart">
+                    <div class="desa-iletisim-ikon">
+                        <MudIcon Icon="@Icons.Material.Outlined.Phone" />
+                    </div>
+                    <MudText Typo="Typo.overline" Class="desa-etiket mb-2 d-block">@dil.T("iletisim.telefon", "TELEFON")</MudText>
+                    <MudLink Href="@($"tel:{_telefon1.Replace(" ","")}")" Class="d-block mb-1"
+                             Style="font-family:'Manrope',sans-serif; font-weight:600; color:#000; text-decoration:none;">
+                        @_telefon1
+                    </MudLink>
+                    @if (!string.IsNullOrEmpty(_telefon2))
+                    {
+                        <MudLink Href="@($"tel:{_telefon2.Replace(" ","")}")"
+                                 Style="font-family:'Manrope',sans-serif; font-weight:600; color:#666; text-decoration:none;">
+                            @_telefon2
+                        </MudLink>
+                    }
+                </div>
+            </MudItem>
+
+            @* E-posta *@
+            <MudItem xs="12" sm="6" md="3" Class="desa-anim-fade-up desa-anim-delay-2">
+                <div class="desa-iletisim-kart">
+                    <div class="desa-iletisim-ikon">
+                        <MudIcon Icon="@Icons.Material.Outlined.Email" />
+                    </div>
+                    <MudText Typo="Typo.overline" Class="desa-etiket mb-2 d-block">@dil.T("iletisim.eposta", "E-POSTA")</MudText>
+                    <MudLink Href="@($"mailto:{_email}")"
+                             Style="font-family:'Manrope',sans-serif; font-weight:600; color:#000; text-decoration:none; word-break:break-all;">
+                        @_email
+                    </MudLink>
+                </div>
+            </MudItem>
+
+            @* Çalışma Saatleri *@
+            <MudItem xs="12" sm="6" md="3" Class="desa-anim-fade-up desa-anim-delay-3">
+                <div class="desa-iletisim-kart">
+                    <div class="desa-iletisim-ikon">
+                        <MudIcon Icon="@Icons.Material.Outlined.AccessTime" />
+                    </div>
+                    <MudText Typo="Typo.overline" Class="desa-etiket mb-2 d-block">@dil.T("iletisim.calismaSaatleri", "ÇALIŞMA SAATLERİ")</MudText>
+                    <MudText Typo="Typo.body2" Style="font-family:'Manrope',sans-serif; color:#333; font-weight:600;">
+                        @_calismaGunleri
+                    </MudText>
+                    <MudText Typo="Typo.body2" Style="font-family:'Manrope',sans-serif; color:#666;">
+                        @_calismaSaatleri
+                    </MudText>
+                </div>
+            </MudItem>
+
+        </MudGrid>
+    </MudContainer>
+</MudPaper>
+
+@* ─── FORM + HARİTA ──────────────────────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Class="desa-bolum-beyaz">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+        <MudGrid Spacing="6">
+
+            @* Mesaj Formu *@
+            <MudItem xs="12" md="6" Class="desa-anim-fade-right">
+                <MudText Typo="Typo.overline" Class="desa-etiket mb-3 d-block">@dil.T("iletisim.form.baslik", "MESAJ GÖNDER")</MudText>
+                <MudText Typo="Typo.h4" Class="desa-bolum-baslik mb-8"
+                         Style="font-size:32px !important;">
+                    @dil.T("iletisim.form.yardim", "Size Nasıl Yardımcı Olabiliriz?")
+                </MudText>
+
+                @if (_formBasarili)
+                {
+                    <MudAlert Severity="Severity.Success" Square="true" Class="mb-4">
+                        <MudText Typo="Typo.body1" Style="font-family:'Manrope',sans-serif;">
+                            @dil.T("iletisim.form.basariliMesaj", "Mesajınız başarıyla alındı. En kısa sürede size döneceğiz.")
+                        </MudText>
+                    </MudAlert>
+                    <MudButton Variant="Variant.Outlined" Class="desa-btn-ikincil"
+                               OnClick="@(() => _formBasarili = false)">
+                        @dil.T("iletisim.form.yeniMesaj", "Yeni Mesaj Gönder")
+                    </MudButton>
+                }
+                else
+                {
+                    <MudStack Spacing="4">
+                        @if (!string.IsNullOrEmpty(_formModelKodu))
+                        {
+                            <MudAlert Severity="Severity.Info" Square="true" Dense="true">
+                                <strong>@_formModelKodu</strong> @dil.T("iletisim.form.modelIcinTeklif", "modeli için teklif talebi")
+                            </MudAlert>
+                        }
+
+                        <MudGrid Spacing="3">
+                            <MudItem xs="12" sm="6">
+                                <MudTextField @bind-Value="_formAd"
+                                              Label="@($"{dil.T("iletisim.form.adSoyad", "Ad Soyad")} *")"
+                                              Variant="Variant.Outlined"
+                                              Required="true"
+                                              Style="font-family:'Manrope',sans-serif;" />
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudTextField @bind-Value="_formTelefon"
+                                              Label="@dil.T("iletisim.form.telefon", "Telefon")"
+                                              Variant="Variant.Outlined"
+                                              Style="font-family:'Manrope',sans-serif;" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="_formEmail"
+                                              Label="@($"{dil.T("iletisim.form.eposta", "E-posta Adresi")} *")"
+                                              Variant="Variant.Outlined"
+                                              Required="true"
+                                              InputType="InputType.Email"
+                                              Style="font-family:'Manrope',sans-serif;" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="_formKonu"
+                                              Label="@dil.T("iletisim.form.konu", "Konu")"
+                                              Variant="Variant.Outlined"
+                                              Style="font-family:'Manrope',sans-serif;" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="_formMesaj"
+                                              Label="@($"{dil.T("iletisim.form.mesaj", "Mesajınız")} *")"
+                                              Variant="Variant.Outlined"
+                                              Lines="5"
+                                              Required="true"
+                                              Style="font-family:'Manrope',sans-serif;" />
+                            </MudItem>
+                        </MudGrid>
+
+                        <MudButton Variant="Variant.Filled"
+                                   Class="desa-btn-birincil"
+                                   OnClick="FormuGonder"
+                                   Disabled="@_formGonderiliyor"
+                                   EndIcon="@Icons.Material.Outlined.Send"
+                                   Style="padding:16px 40px; align-self:flex-start;">
+                            @if (_formGonderiliyor)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                                <span>@dil.T("ortak.gonderiliyor", "Gönderiliyor...")</span>
+                            }
+                            else
+                            {
+                                <span>@dil.T("iletisim.form.gonder", "MESAJ GÖNDER")</span>
+                            }
+                        </MudButton>
+                    </MudStack>
+                }
+            </MudItem>
+
+            @* Harita *@
+            <MudItem xs="12" md="6" Class="desa-anim-fade-left desa-anim-delay-2">
+                <MudText Typo="Typo.overline" Class="desa-etiket mb-3 d-block">@dil.T("iletisim.konum", "KONUM")</MudText>
+                <MudText Typo="Typo.h4" Class="desa-bolum-baslik mb-8"
+                         Style="font-size:32px !important;">
+                    @dil.T("iletisim.ziyaret", "Bizi Ziyaret Edin")
+                </MudText>
+                <div style="width:100%; height:400px; border:1px solid #EEEEEE; overflow:hidden;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3044.7!2d28.854!3d40.225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14ca14826e41b4a7%3A0x0!2zDesaDoor!5e0!3m2!1str!2str!4v1"
+                            width="100%" height="100%"
+                            style="border:0; display:block;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="DesaDoor Konum Haritası">
+                    </iframe>
+                </div>
+                <MudText Typo="Typo.body2" Class="mt-3"
+                         Style="font-family:'Manrope',sans-serif; color:#666; font-size:13px;">
+                    @_adres
+                </MudText>
+            </MudItem>
+
+        </MudGrid>
+    </MudContainer>
+</MudPaper>

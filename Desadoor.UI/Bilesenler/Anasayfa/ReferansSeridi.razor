@@ -1,0 +1,51 @@
+@using Desadoor.Ortak.Modeller
+@inject Servisler.ApiIstemcisi api
+@inject Servisler.DilServisi dil
+
+@if (_referanslar.Any())
+{
+    <MudPaper Elevation="0" Square="true" Style="background: var(--desa-bg-base); padding: 96px 0;">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+            <MudStack AlignItems="AlignItems.Center" Class="mb-12 text-center">
+                <MudText Typo="Typo.overline" Class="desa-etiket d-block">@dil.T("referanslar.etiket", "25 YILDIR HİZMETİNİZDEYİZ")</MudText>
+                <MudText Typo="Typo.h3" Class="desa-bolum-baslik">@dil.T("referanslar.baslik", "Referanslarımız")</MudText>
+            </MudStack>
+
+            <MudGrid Spacing="4" Justify="Justify.Center">
+                @foreach (var referans in _referanslar)
+                {
+                    <MudItem xs="6" sm="4" md="3" Class="gsap-fade-up">
+                        <a href="/referanslar" style="text-decoration: none; display: block;">
+                            <div class="d-flex flex-column align-center justify-center hover-lift"
+                                 style="height: 100px; border: 1px solid var(--desa-border); border-radius: 8px; padding: 12px; background: var(--desa-bg-card); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
+                                @if (!string.IsNullOrWhiteSpace(referans.Logo))
+                                {
+                                    <img src="@TamUrl(referans.Logo)" alt="@referans.Ad"
+                                         style="max-height: 50px; max-width: 100%; object-fit: contain; filter: grayscale(30%); opacity: 0.85; transition: filter 0.2s, opacity 0.2s;"
+                                         loading="lazy"
+                                         onmouseover="this.style.filter='grayscale(0%)'; this.style.opacity='1';"
+                                         onmouseout="this.style.filter='grayscale(30%)'; this.style.opacity='0.85';" />
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.body2" Style="font-weight: 600; text-align: center; color: var(--desa-secondary); font-size: 0.8rem;">@referans.Ad</MudText>
+                                }
+                            </div>
+                        </a>
+                    </MudItem>
+                }
+            </MudGrid>
+
+            <div class="text-center mt-10">
+                <MudButton Href="/referanslar"
+                           Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           EndIcon="@Icons.Material.Filled.ArrowForward"
+                           Size="Size.Large"
+                           Class="desa-btn-outlined px-8">
+                    @dil.T("referanslar.tumunu", "TÜM REFERANSLARI GÖR")
+                </MudButton>
+            </div>
+        </MudContainer>
+    </MudPaper>
+}

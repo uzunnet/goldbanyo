@@ -1,0 +1,419 @@
+@page "/urun/{Slug}"
+@layout DesaDoorDuzen
+
+<PageTitle>@(_urun?.Ad ?? dil.T("urun.detay", "Ürün Detayı")) — DesaDoor</PageTitle>
+<HeadContent>
+    <meta name="description" content="@(_urun?.KisaAciklama ?? _urun?.Aciklama ?? "DesaDoor ürün detayı")" />
+</HeadContent>
+
+@if (_yukleniyor)
+{
+    <div class="urun-yuklenme-ekran">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-4" Color="Color.Secondary">@dil.T("urun.yukleniyor", "Ürün yükleniyor...")</MudText>
+    </div>
+}
+else if (_urun == null)
+{
+    <div class="urun-bulunamadi-ekran">
+        <MudIcon Icon="@Icons.Material.Filled.SearchOff" Style="font-size:80px; color:var(--mud-palette-primary);" />
+        <MudText Typo="Typo.h4" Class="mb-2">@dil.T("urun.bulunamadi", "Ürün bulunamadı")</MudText>
+        <MudText Color="Color.Secondary" Class="mb-6">@dil.T("urun.bulunamadi.aciklama", "Bu ürün mevcut değil veya kaldırılmış olabilir.")</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/urunler" StartIcon="@Icons.Material.Filled.ArrowBack">
+            @dil.T("urun.urunlereDon", "Ürünlere Dön")
+        </MudButton>
+    </div>
+}
+else
+{
+    @* ─── BREADCRUMB ─── *@
+    <div class="urun-breadcrumb">
+        <MudBreadcrumbs Items="_breadcrumb" Separator="›" />
+    </div>
+
+    <div class="urun-detay-wrapper">
+
+        @* ─── SOL: GÖRSEL / 3D ─── *@
+        <div class="urun-gorsel-bolum">
+
+            @* Tab Seçici *@
+            <div class="urun-gorsel-tabs">
+                <button class="@(_aktifTab == "gorsel" ? "aktif" : "")" @onclick='() => _aktifTab = "gorsel"'>
+                    <MudIcon Icon="@Icons.Material.Filled.PhotoCamera" Size="Size.Small" />
+                    @dil.T("urun.gorsel", "GÖRSEL")
+                </button>
+                @if (_modelYolu != null)
+                {
+                    <button class="@(_aktifTab == "3d" ? "aktif" : "")" @onclick='() => AktifTabDegistir("3d")'>
+                        <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Size="Size.Small" />
+                        @dil.T("urun.ucBoyutGorunum", "3D Görünüm")
+                    </button>
+                }
+            </div>
+
+            @* Görsel Panel *@
+            <div class="urun-gorsel-panel @(_aktifTab == "gorsel" ? "aktif" : "gizli")">
+                @if (!string.IsNullOrEmpty(_anaGorselUrl))
+                {
+                    <img src="@_anaGorselUrl" alt="@_urun.Ad" class="urun-ana-gorsel" onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                }
+                else
+                {
+                    <div class="urun-gorsel-placeholder">
+                        <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Style="font-size:64px; opacity:0.3;" />
+                        <MudText Typo="Typo.caption" Color="Color.Tertiary">@dil.T("urun.gorselYok", "Görsel eklenmedi")</MudText>
+                    </div>
+                }
+
+                @* Küçük resim galerisi *@
+                @if (_medyalar.Count > 1)
+                {
+                    <div class="urun-kucuk-galeri">
+                        @foreach (var (m, idx) in _medyalar.Select((m, i) => (m, i)))
+                        {
+                            <div class="@("kucuk-gorsel-kart " + (_seciliMedyaIdx == idx ? "aktif" : ""))"
+                                 @onclick="() => MedyaSec(idx)">
+                                <img src="@m.MedyaUrl" alt="@(idx + 1)" onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            @* 3D Panel *@
+            <div class="urun-3d-panel @(_aktifTab == "3d" ? "aktif" : "gizli")">
+                <div class="urun-3d-sahne-etiketi">
+                    <span>@dil.T("urun.canliKonfigurator", "Canlı 3D Konfigüratör")</span>
+                    <small>@dil.T("urun.canliKonfiguratorAciklama", "Renk ve malzeme seçimleri anında uygulanır")</small>
+                </div>
+                <div id="urun-detay-3d" class="urun-3d-kapsayici"></div>
+                <div class="urun-3d-kontroller">
+                    <button class="urun-3d-btn" @onclick="KameraSifirla" title='@dil.T("urun.gorunumuSifirla", "Görünümü sıfırla")' aria-label='@dil.T("urun.gorunumuSifirla", "Görünümü sıfırla")'>
+                        <MudIcon Icon="@Icons.Material.Filled.CenterFocusWeak" Size="Size.Small" />
+                    </button>
+                    <button class="urun-3d-btn @(_otomatikDonuyor ? "aktif" : "")" @onclick="OtomatikDondurToggle" title="@(_otomatikDonuyor ? dil.T("urun.dondurmeyiDurdur", "Döndürmeyi durdur") : dil.T("urun.dondur", "Döndür"))" aria-label="@(_otomatikDonuyor ? dil.T("urun.dondurmeyiDurdur", "Döndürmeyi durdur") : dil.T("urun.dondur", "Döndür"))">
+                        <MudIcon Icon="@Icons.Material.Filled.Cached" Size="Size.Small" />
+                    </button>
+                    <button class="urun-3d-btn" @onclick="TamEkran" title='@dil.T("urun.tamEkran", "Tam ekran")' aria-label='@dil.T("urun.tamEkran", "Tam ekran")'>
+                        <MudIcon Icon="@Icons.Material.Filled.Fullscreen" Size="Size.Small" />
+                    </button>
+                    <span class="urun-3d-ipucu">@dil.T("urun.ucBoyutIpucu", "Sürükle: döndür | Kaydır: yakınlaştır")</span>
+                </div>
+            </div>
+        </div>
+
+        @* ─── SAĞ: KONFİGÜRATÖR PANELİ ─── *@
+        <div class="urun-konfigurator-panel">
+
+            @* Ürün Başlık *@
+            <div class="urun-konfigurator-baslik">
+                <div class="urun-rozetler">
+                    @if (_urun.YeniMi)
+                    {
+                        <span class="urun-rozet rozet-yeni">@dil.T("urun.yeni", "Yeni")</span>
+                    }
+                    @if (_urun.OneCikanMi)
+                    {
+                        <span class="urun-rozet rozet-onecikan">⭐ @dil.T("urun.oneCikan", "Öne Çıkan")</span>
+                    }
+                </div>
+                <h1 class="urun-baslik">@_urun.Ad</h1>
+                @if (!string.IsNullOrEmpty(_urun.Kod))
+                {
+                    <span class="urun-kod">@_urun.Kod</span>
+                }
+                @if (!string.IsNullOrEmpty(_urun.KisaAciklama))
+                {
+                    <p class="urun-kisa-aciklama">@_urun.KisaAciklama</p>
+                }
+            </div>
+
+            @* Admin onaylı parçalar varsa — parça bazlı konfiguratör *@
+            @if (_onayliParcalar.Count > 0)
+            {
+                <div class="konfig-bolum">
+                    <h3 class="konfig-bolum-baslik">@dil.T("urun.parcaSecim", "Parça Seçimi")</h3>
+                    <div class="parca-listesi">
+                        @foreach (var p in _onayliParcalar)
+                        {
+                            <div class="@("parca-kart " + (_secilenParcaId == p.Id ? "secili" : ""))"
+                                 @onclick="() => ParcaKartSec(p)">
+                                <div class="parca-kart-icerik">
+                                    <span class="parca-tipi-ikon">@ParcaTipiIkon(p.ParcaTipi)</span>
+                                    <div>
+                                        <div class="parca-ad">@p.GorunenAd</div>
+                                        @if (!string.IsNullOrEmpty(p.ParcaTipi))
+                                        {
+                                            <div class="parca-tip">@p.ParcaTipi</div>
+                                        }
+                                    </div>
+                                </div>
+                                @if (_secilenParcaId == p.Id)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Primary" Size="Size.Small" />
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @* Seçilen parçanın malzemeleri *@
+                @if (_secilenParcaId != null && _parcaMalzemeleri.Count > 0)
+                {
+                    <div class="konfig-bolum">
+                        <h3 class="konfig-bolum-baslik">@dil.T("urun.malzemeKaplama", "Malzeme / Kaplama")</h3>
+                        <div class="malzeme-listesi">
+                            @foreach (var m in _parcaMalzemeleri)
+                            {
+                                <div class="@("malzeme-kart " + (_aktifMalzeme == m.Ad ? "secili" : ""))"
+                                     @onclick="() => MalzemeDegistir(m.Ad)">
+                                    <div class="malzeme-renk-onizleme" style="background: @MalzemeRenkOnizleme(m.Tip)"></div>
+                                    <div>
+                                        <div class="malzeme-ad">@m.Ad</div>
+                                        <div class="malzeme-tip">@m.Tip</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+
+            @* RAL Renk Seçimi — renklenebilir ürünler için *@
+            @if (_renkler.Count > 0)
+            {
+                <div class="konfig-bolum">
+                    <h3 class="konfig-bolum-baslik">@dil.T("urun.renkSecimi", "Renk Seçimi")</h3>
+                    <div class="secili-renk-gostergesi">
+                        <div class="renk-cember" style="background:@_aktifRenk"></div>
+                        <span>@_aktifRenkAdi</span>
+                    </div>
+                    <input type="text"
+                           class="ral-arama-input"
+                           placeholder="@dil.T("urun.ralArama", "RAL kodu veya renk adı ara... (Örn: 1000)")"
+                           @bind="_ralArama"
+                           @bind:event="oninput" />
+                    <div class="renk-paleti">
+                        @foreach (var grupAdi in _renkGruplari.Keys)
+                        {
+                            var grubunRenkleri = _renkGruplari[grupAdi]
+                                .Where(r => string.IsNullOrEmpty(_ralArama)
+                                    || r.Kod.Contains(_ralArama, StringComparison.OrdinalIgnoreCase)
+                                    || r.Ad.Contains(_ralArama, StringComparison.OrdinalIgnoreCase))
+                                .ToList();
+                            if (grubunRenkleri.Count > 0)
+                            {
+                                <div class="renk-grup">
+                                    <div class="renk-grup-baslik" @onclick="() => GrupToggle(grupAdi)">
+                                        <span>@grupAdi</span>
+                                        <MudIcon Icon="@(_acikGruplar.Contains(grupAdi) ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" Size="Size.Small" />
+                                    </div>
+                                    @if (_acikGruplar.Contains(grupAdi))
+                                    {
+                                        <div class="renk-grup-renkleri">
+                                            @foreach (var r in grubunRenkleri)
+                                            {
+                                                <div class="@("renk-nokta " + RenkYaziSinifi(r.HexKod) + (_aktifRenk == RenkHexCss(r.HexKod) ? " secili" : ""))"
+                                                     style="background:@RenkHexCss(r.HexKod)"
+                                                     title="@r.Kod — @r.Ad"
+                                                     @onclick='() => RenkDegistir(RenkHexCss(r.HexKod), r.Kod + " " + r.Ad)'>
+                                                    <span>@r.Kod</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1">
+                        @_renkler.Count @dil.T("urun.renkSecenegi", "renk seçeneği")
+                    </MudText>
+                </div>
+            }
+
+            @* Teknik Özellikler Özeti *@
+            @if (_teknikOzellikler.Count > 0)
+            {
+                <div class="konfig-bolum">
+                    <h3 class="konfig-bolum-baslik">@dil.T("urun.nitelikler", "Nitelikler")</h3>
+                    <div class="ozellik-listesi">
+                        @foreach (var o in _teknikOzellikler.Take(6))
+                        {
+                            <div class="ozellik-satir">
+                                <span class="ozellik-anahtar">@o.Anahtar</span>
+                                <span class="ozellik-deger">@o.Deger</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Teklif İste Butonu *@
+            <button class="teklif-iste-btn" @onclick="TeklifPanelAc">
+                @dil.T("urun.teklifIste", "TEKLİF İSTE") ↗
+            </button>
+
+            @* Ürün Ailesi Linki *@
+            @if (_urun.UrunAilesi != null)
+            {
+                <div class="urun-aile-link">
+                    <MudChip T="string" Color="Color.Primary" Size="Size.Small" Icon="@Icons.Material.Filled.Category">
+                        @_urun.UrunAilesi.Ad
+                    </MudChip>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ─── TEKNİK ÖZELLİKLER (TAM TABLO) ─── *@
+    @if (_teknikOzellikler.Count > 0)
+    {
+        <div class="urun-teknik-bolum">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <h2 class="bolum-baslik">@dil.T("urun.teknikOzellikler", "Teknik Özellikler")</h2>
+                <MudTable Items="_teknikOzellikler" Hover="true" Striped="true" Dense="true" Elevation="0" Outlined="true" Class="teknik-tablo">
+                    <HeaderContent>
+                        <MudTh>@dil.T("urun.ozellik", "Özellik")</MudTh>
+                        <MudTh>@dil.T("urun.deger", "Değer")</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Özellik">@context.Anahtar</MudTd>
+                        <MudTd DataLabel="Değer">@context.Deger</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudContainer>
+        </div>
+    }
+
+    @* ─── BENZER ÜRÜNLER ─── *@
+    @if (_benzerUrunler.Count > 0)
+    {
+        <div class="urun-benzer-bolum">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <h2 class="bolum-baslik">@dil.T("urun.benzerUrunler", "Benzer Ürünler")</h2>
+                <div class="benzer-urun-grid">
+                    @foreach (var bu in _benzerUrunler)
+                    {
+                        <div class="benzer-urun-kart" @onclick='() => navManager.NavigateTo($"/urun/{bu.Slug}")'>
+                            <div class="benzer-gorsel">
+                                @if (bu.AnaGorselMedyaId is long mid && mid > 0)
+                                {
+                                    <img src="@(Api.ApiBaseUrl + "/api/medya/dosya/" + mid)" alt="@bu.Ad" onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                                }
+                                else
+                                {
+                                    <div class="benzer-placeholder">
+                                        <MudIcon Icon="@Icons.Material.Filled.Image" Style="opacity:0.3;" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="benzer-bilgi">
+                                <div class="benzer-ad">@bu.Ad</div>
+                                @if (!string.IsNullOrEmpty(bu.KisaAciklama))
+                                {
+                                    <div class="benzer-aciklama">@bu.KisaAciklama</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </MudContainer>
+        </div>
+    }
+
+    @* ─── EN ÇOK GEZİLENLER ─── *@
+    @if (_enCokGezilenler.Count > 0)
+    {
+        <div class="urun-benzer-bolum">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <h2 class="bolum-baslik">@dil.T("urun.enCokGezilenler", "En Çok Gezilenler")</h2>
+                <div class="benzer-urun-grid">
+                    @foreach (var bu in _enCokGezilenler)
+                    {
+                        <div class="benzer-urun-kart" @onclick='() => navManager.NavigateTo($"/urun/{bu.Slug}")'>
+                            <div class="benzer-gorsel">
+                                @if (bu.AnaGorselMedyaId is long mid && mid > 0)
+                                {
+                                    <img src="@(Api.ApiBaseUrl + "/api/medya/dosya/" + mid)" alt="@bu.Ad" onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                                }
+                                else
+                                {
+                                    <div class="benzer-placeholder">
+                                        <MudIcon Icon="@Icons.Material.Filled.Image" Style="opacity:0.3;" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="benzer-bilgi">
+                                <div class="benzer-ad">@bu.Ad</div>
+                                @if (!string.IsNullOrEmpty(bu.KisaAciklama))
+                                {
+                                    <div class="benzer-aciklama">@bu.KisaAciklama</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </MudContainer>
+        </div>
+    }
+
+    @* ─── ÖNE ÇIKANLAR (EN ÇOK BEĞENİLENLER YERİNE) ─── *@
+    @if (_oneCikanlar.Count > 0)
+    {
+        <div class="urun-benzer-bolum">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <h2 class="bolum-baslik">@dil.T("urun.oneCikanlar", "Müşterilerin Dikkatini Çekenler")</h2>
+                <div class="benzer-urun-grid">
+                    @foreach (var bu in _oneCikanlar)
+                    {
+                        <div class="benzer-urun-kart" @onclick='() => navManager.NavigateTo($"/urun/{bu.Slug}")'>
+                            <div class="benzer-gorsel">
+                                @if (bu.AnaGorselMedyaId is long mid && mid > 0)
+                                {
+                                    <img src="@(Api.ApiBaseUrl + "/api/medya/dosya/" + mid)" alt="@bu.Ad" onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                                }
+                                else
+                                {
+                                    <div class="benzer-placeholder">
+                                        <MudIcon Icon="@Icons.Material.Filled.Image" Style="opacity:0.3;" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="benzer-bilgi">
+                                <div class="benzer-ad">@bu.Ad</div>
+                                @if (!string.IsNullOrEmpty(bu.KisaAciklama))
+                                {
+                                    <div class="benzer-aciklama">@bu.KisaAciklama</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </MudContainer>
+        </div>
+    }
+
+    @* ─── TEKLİF MODAL ─── *@
+    @if (_teklifPanelAcik)
+    {
+        <div class="teklif-modal-overlay" @onclick="TeklifPanelKapat">
+            <div class="teklif-modal" @onclick:stopPropagation="true">
+                <div class="teklif-modal-baslik">
+                    <span>@dil.T("urun.teklifIste", "TEKLİF İSTE")</span>
+                    <button @onclick="TeklifPanelKapat">✕</button>
+                </div>
+                <div class="teklif-modal-icerik">
+                    <MudTextField @bind-Value="_teklifAdSoyad" Label="@dil.T("teklif.adSoyad", "Ad Soyad")" Variant="Variant.Outlined" Class="mb-3" />
+                    <MudTextField @bind-Value="_teklifTelefon" Label="@dil.T("teklif.telefon", "Telefon")" Variant="Variant.Outlined" Class="mb-3" />
+                    <MudTextField @bind-Value="_teklifEposta" Label="@dil.T("teklif.eposta", "E-posta")" Variant="Variant.Outlined" Class="mb-3" />
+                    <MudTextField @bind-Value="_teklifNot" Label="@dil.T("teklif.not", "Notlarınız")" Lines="3" Variant="Variant.Outlined" Class="mb-4"
+                                  HelperText="@($"{dil.T("teklif.secimler", "Seçimler")}: {_aktifRenkAdi} | {_aktifMalzeme}")" />
+                    <button class="teklif-gonder-btn" @onclick="TeklifGonder">
+                        @dil.T("urun.teklifGonder", "TEKLİF TALEP GÖNDER")
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+}

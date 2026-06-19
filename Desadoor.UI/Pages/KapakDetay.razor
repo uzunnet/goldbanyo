@@ -1,0 +1,305 @@
+@page "/kapak/{ModelId:int}/{ModelKodu?}"
+@page "/kapi/{ModelId:int}/{ModelKodu?}"
+@using Desadoor.UI.Models
+@using Desadoor.UI.Bilesenler
+
+<!--
+    KAPAK/KAPI DETAY SAYFASI
+    Hasesoglu'nun aksine sol panel tamamen dolu — Three.js 3D viewer.
+    Renk seçildiğinde 3D model anında güncellenir (viewer yenilenmez).
+    Layout: Sol %60 (3D) + Sağ %40 (Bilgi + Renk + Ölçü + CTA)
+-->
+
+<PageTitle>@(_model?.ModelAdi ?? "Model") | DesaDoor</PageTitle>
+<HeadContent>
+    <meta name="description" content="@(_model?.OnYazi ?? _model?.Aciklama ?? "DesaDoor kalitesiyle tasarlanmış modern ürünler.")" />
+</HeadContent>
+
+<div class="desa-detay-sarici">
+
+    <!-- BREADCRUMB -->
+    <nav class="desa-breadcrumb" aria-label="Breadcrumb">
+        <NavLink href="" class="desa-breadcrumb-link">@dil.T("menu.anasayfa", "Ana Sayfa")</NavLink>
+        <span class="desa-breadcrumb-ayrac">›</span>
+        <NavLink href="@_listeUrl" class="desa-breadcrumb-link">@_listeBaslik</NavLink>
+        @if (_model != null)
+        {
+            <span class="desa-breadcrumb-ayrac">›</span>
+            <span class="desa-breadcrumb-aktif">@_model.ModelKodu</span>
+        }
+    </nav>
+
+    @if (_yukleniyor)
+    {
+        <!-- Yüklenme İskeleti -->
+        <div class="desa-detay-icerik">
+            <div class="desa-detay-sol">
+                <div class="desa-iskelet desa-viewer-iskelet"></div>
+            </div>
+            <div class="desa-detay-sag">
+                <div class="desa-iskelet" style="height:32px; width:60%; margin-bottom:16px;"></div>
+                <div class="desa-iskelet" style="height:20px; width:40%; margin-bottom:32px;"></div>
+                <div class="desa-iskelet" style="height:120px; margin-bottom:24px;"></div>
+                <div class="desa-iskelet" style="height:80px;"></div>
+            </div>
+        </div>
+    }
+    else if (_model == null)
+    {
+        <div class="desa-hata-kutu">
+            <p>@dil.T("kapi.bulunamadi", "Model bulunamadı.")</p>
+            <NavLink href="kapak-sistemleri" class="desa-btn-birincil">@dil.T("kapi.katalogaDon", "Kataloğa Dön")</NavLink>
+        </div>
+    }
+    else
+    {
+        <div class="desa-detay-icerik">
+
+            <!-- SOL PANEL: GALERİ + 3D -->
+            <div class="desa-detay-sol">
+
+                @if (_goster3D && !string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                {
+                    <!-- 3D Görüntüleyici -->
+                    <UcBoyutGoruntuleyici
+                        ModelYolu="@_model.ModelDosyaYolu"
+                        GorselYolu="@_model.GorselYolu"
+                        BaslangicRenk="@_baslangicRenkHex"
+                        SecilenRenk="@_secilenRenkHex" />
+
+                    @if (_secilenRenk != null)
+                    {
+                        <div class="desa-viewer-renk-bilgi desa-anim-fade-up">
+                            <div class="desa-renk-onizleme-buyuk" style="background-color: @_secilenRenk.HexKod;"></div>
+                            <div>
+                                <div class="desa-renk-adi-buyuk">@_secilenRenk.Ad</div>
+                                @if (!string.IsNullOrEmpty(_secilenRenk.Kod))
+                                {
+                                    <div class="desa-renk-uretici-kodu">@dil.T("kapi.kod", "Kod:") @_secilenRenk.Kod</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else if (_galeriGorseller.Any())
+                {
+                    <!-- Ana Görsel -->
+                    <div class="desa-galeri-ana">
+                        <img src="@_galeriGorseller[_aktifGorselIndex]"
+                             alt="@_model.ModelAdi"
+                             class="desa-galeri-ana-gorsel"
+                             onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                    </div>
+
+                    <!-- Küçük Resimler (Thumbnails) -->
+                    <div class="desa-galeri-thumbnails">
+                        @for (int i = 0; i < _galeriGorseller.Count; i++)
+                        {
+                            var idx = i;
+                            <button class="desa-galeri-thumb @(_aktifGorselIndex == idx && !_goster3D ? "aktif" : "")"
+                                    @onclick="@(() => GorselSec(idx))">
+                                <img src="@_galeriGorseller[idx]"
+                                     alt="Görsel @(idx+1)"
+                                     onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                            </button>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                        {
+                            <button class="desa-galeri-thumb desa-galeri-thumb-3d @(_goster3D ? "aktif" : "")"
+                                    @onclick="UcBoyutGoster">
+                                <span class="desa-3d-ikon">3D</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                {
+                    <!-- Sadece 3D model var -->
+                    <UcBoyutGoruntuleyici
+                        ModelYolu="@_model.ModelDosyaYolu"
+                        GorselYolu="@_model.GorselYolu"
+                        BaslangicRenk="@_baslangicRenkHex"
+                        SecilenRenk="@_secilenRenkHex" />
+                }
+                else
+                {
+                    <!-- Fallback: tek görsel -->
+                    <div class="desa-galeri-ana">
+                        <img src="@(_model.GorselYolu ?? "/medya/desadoor_default.png")"
+                             alt="@_model.ModelAdi"
+                             class="desa-galeri-ana-gorsel"
+                             onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                    </div>
+                }
+            </div>
+
+            <!-- SAĞ PANEL: BİLGİ + RENK + ÖLÇÜ + CTA -->
+            <div class="desa-detay-sag">
+
+                <!-- Model Kodu + Rozet -->
+                <div class="desa-detay-ust">
+                    <div class="desa-detay-kodlar">
+                        <span class="desa-model-rozet">@_model.ModelKodu</span>
+                        @if (_model.YeniMi)
+                        {
+                            <span class="desa-yeni-rozet">@dil.T("kapi.yeni", "YENİ")</span>
+                        }
+                    </div>
+                    <h1 class="desa-detay-baslik">@_model.ModelAdi</h1>
+                    @if (!string.IsNullOrEmpty(_model.OnYazi))
+                    {
+                        <p class="desa-detay-on-yazi">@_model.OnYazi</p>
+                    }
+                </div>
+
+                <div class="desa-detay-ayrac"></div>
+
+                <!-- RENK SEÇİCİ -->
+                <RenkSecici
+                    Renkler="@_model.RenkSecenekleri"
+                    SeciliRenk="@_secilenRenk"
+                    SeciliRenkDegisti="@RenkDegisti" />
+
+                <div class="desa-detay-ayrac"></div>
+
+                <!-- ÖLÇÜ BİLGİSİ -->
+                @if (_model.MinYukseklik > 0 || _model.MinGenislik > 0)
+                {
+                    <div class="desa-olcu-kutu">
+                        <div class="desa-etiket" style="margin-bottom:12px;">@dil.T("kapi.modelOlculeri", "MODEL ÖLÇÜLERİ")</div>
+                        <div class="desa-olcu-grid">
+                            <div class="desa-olcu-kalem">
+                                <div class="desa-olcu-ikon">↕</div>
+                                <div>
+                                    <div class="desa-olcu-baslik">@dil.T("kapi.yukseklikH", "YÜKSEKLİK (H)")</div>
+                                    <div class="desa-olcu-deger">
+                                        @dil.T("kapi.min", "Min:") <strong>@_model.MinYukseklik mm</strong>
+                                    </div>
+                                    @if (_model.MaxYukseklik > 0)
+                                    {
+                                        <div class="desa-olcu-deger">
+                                            @dil.T("kapi.maks", "Maks:") <strong>@_model.MaxYukseklik mm</strong>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="desa-olcu-kalem">
+                                <div class="desa-olcu-ikon">↔</div>
+                                <div>
+                                    <div class="desa-olcu-baslik">@dil.T("kapi.genislikW", "GENİŞLİK (W)")</div>
+                                    <div class="desa-olcu-deger">
+                                        @dil.T("kapi.min", "Min:") <strong>@_model.MinGenislik mm</strong>
+                                    </div>
+                                    @if (_model.MaxGenislik > 0)
+                                    {
+                                        <div class="desa-olcu-deger">
+                                            @dil.T("kapi.maks", "Maks:") <strong>@_model.MaxGenislik mm</strong>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="desa-detay-ayrac"></div>
+                }
+
+                <!-- NİTELİKLER -->
+                @if (_model.Nitelikler.Any())
+                {
+                    <div class="desa-nitelik-kutu">
+                        <div class="desa-etiket" style="margin-bottom:12px;">@dil.T("kapi.nitelikler", "NİTELİKLER")</div>
+                        <div class="desa-nitelik-etiketler">
+                            @foreach (var nitelik in _model.Nitelikler)
+                            {
+                                <span class="desa-kategori-cip">@nitelik</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="desa-detay-ayrac"></div>
+                }
+
+                <!-- AÇIKLAMA -->
+                @if (!string.IsNullOrEmpty(_model.Aciklama))
+                {
+                    <div class="desa-aciklama-kutu">
+                        <p>@_model.Aciklama</p>
+                    </div>
+                    <div class="desa-detay-ayrac"></div>
+                }
+
+                <!-- CTA BUTONLARI -->
+                <div class="desa-cta-grup">
+                    <NavLink href="@($"iletisim?model={_model.ModelKodu}&renk={Uri.EscapeDataString(_secilenRenk?.Ad ?? "")}")"
+                       class="desa-btn-birincil desa-cta-ana">
+                        @dil.T("kapi.teklifIste", "Teklif İste")
+                    </NavLink>
+                    <button class="desa-btn-ikincil desa-cta-ikincil" @onclick="KatalogaDon">
+                        @dil.T("kapi.listeyeDon", "← Listeye Dön")
+                    </button>
+                </div>
+
+                <!-- Renk uyarısı -->
+                <div class="desa-renk-uyari">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span>@dil.T("kapi.renkUyarisi", "Web sayfası renk seçeneklerimizi dijital ortama bağlı olarak farklılık gösterebilir. Gerçek renk kartlamıza başvurmanızı öneririz.")</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BENZER MODELLER -->
+        @if (_benzerModeller.Any())
+        {
+            <div class="desa-benzer-bolum">
+                <div class="desa-etiket desa-benzer-baslik">@dil.T("kapi.benzerModeller", "BENZER MODELLER")</div>
+                <div class="desa-benzer-grid">
+                    @foreach (var benzer in _benzerModeller)
+                    {
+                        <NavLink href="@DetayUrl(benzer)" class="desa-benzer-kart">
+                            <div class="desa-benzer-gorsel-sarici">
+                                <img src="@(benzer.GorselYolu ?? "/medya/desadoor_default.png")"
+                                     alt="@benzer.ModelAdi"
+                                     class="desa-benzer-gorsel"
+                                     loading="lazy" />
+                            </div>
+                            <div class="desa-benzer-bilgi">
+                                <span class="desa-model-rozet">@benzer.ModelKodu</span>
+                                <p class="desa-benzer-ad">@benzer.ModelAdi</p>
+                            </div>
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (_cokIzlenenModeller.Any())
+        {
+            <div class="desa-benzer-bolum">
+                <div class="desa-etiket desa-benzer-baslik">@dil.T("kapi.cokIzlenenler", "ÇOK İZLENENLER")</div>
+                <div class="desa-benzer-grid">
+                    @foreach (var model in _cokIzlenenModeller)
+                    {
+                        <NavLink href="@DetayUrl(model)" class="desa-benzer-kart">
+                            <div class="desa-benzer-gorsel-sarici">
+                                <img src="@(model.GorselYolu ?? "/medya/desadoor_default.png")"
+                                     alt="@model.ModelAdi"
+                                     class="desa-benzer-gorsel"
+                                     loading="lazy" />
+                            </div>
+                            <div class="desa-benzer-bilgi">
+                                <span class="desa-model-rozet">@model.ModelKodu</span>
+                                <p class="desa-benzer-ad">@model.ModelAdi</p>
+                            </div>
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

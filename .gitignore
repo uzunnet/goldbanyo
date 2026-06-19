@@ -1,0 +1,92 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+.vs/
+
+# Blazor WASM
+_framework/
+_framework/*.gz
+_framework/*.br
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Veritabanı
+*.db-shm
+*.db-wal
+*.db-journal
+# desadoor.db — takip ediliyor (seed verisi için)
+Yedekler/db/*.db
+
+# AI API Key (güvenlik)
+*.apikey
+ai.config.json
+
+# Ortam Değişkenleri (Gizli Anahtarlar)
+.env
+.env.*
+appsettings.Production.json
+appsettings.*.local.json
+
+# Loglar
+*.log
+logs/
+*.trace
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Test
+TestResults/
+*.trx
+*.coverage
+
+# Publish çıktısı
+yayin/
+
+# Python scriptleri (yasak)
+*.py
+
+# Geçici Dosyalar
+*.tmp
+*.temp
+~$*
+
+# Yedekler (anayasa yedekleri hariç)
+Yedekler/db/
+!Yedekler/db/.gitkeep
+
+# desadoor.db — takip ediliyor
+
+# Large 3D files - handled by Docker
+Desadoor.Api/wwwroot/medya/3d/NRD 100_*.glb
+Desadoor.Api/wwwroot/medya/3d/NRD 101_*.glb
+
+# Medya dosyalari (Docker ile tasinir)
+wwwroot/medya/
+wwwroot/lib/
+wwwroot/flags/
+
+# Kutuphane dosyalari (NuGet/CDN ile gelir)
+wwwroot/lib/
+wwwroot/js/lib/
+wwwroot/flags/
+wwwroot/img/
+Yedekler/

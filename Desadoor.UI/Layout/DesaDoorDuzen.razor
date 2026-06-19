@@ -1,0 +1,309 @@
+@inherits LayoutComponentBase
+
+@* 
+ * DesaDoorDuzen — desadoor firmasına özel Blazor layout bileşenidir.
+ * Üst nav, alt footer ve sayfa geçiş animasyonlarını içerir.
+ * Vizitlink'in YonetimDuzeni veya KamusalDuzen'inden tamamen bağımsızdır.
+ * Tüm menü öğeleri API'den dinamik olarak çekilir; admin panelden yönetilir.
+ *@
+
+@* Admin panelden seçilen favicon — index.html'deki varsayılanın üzerine yazar *@
+@if (!string.IsNullOrWhiteSpace(_faviconUrl))
+{
+    <HeadContent>
+        <link rel="icon" href="@_faviconUrl" />
+    </HeadContent>
+}
+
+<MudThemeProvider Theme="@_tema" />
+<MudSnackbarProvider />
+<MudDialogProvider />
+<MudPopoverProvider />
+
+@* CSS: tokens.css -> index.html üzerinden tek kaynaktan yükleniyor (anayasa §46.1) *@
+
+@* ─── ÜSTTEN AŞAĞI KAYAN GLASSMORPHISM NAVİGASYON ──────────────────────── *@
+<MudAppBar Elevation="0" Fixed="true" Class="desa-navbar" Dense="false">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex align-center justify-space-between px-6 desa-navbar-icerik">
+        
+        @* Logo *@
+        <MudLink Href="/" Underline="Underline.None" Class="desa-logo">
+            @if (!string.IsNullOrEmpty(_logoUrl))
+            {
+                <img src="@_logoUrl" alt="DesaDoor Logo" class="desa-logo-img" />
+            }
+            else
+            {
+                <MudText Typo="Typo.h5" Class="desa-logo-metin">desadoor</MudText>
+            }
+        </MudLink>
+
+        @* Masaüstü Menü *@
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <div class="desa-navbar-masaustu">
+                <div class="desa-navbar-menu">
+                    @if (_menuYukleniyor)
+                    {
+                        @for (int i = 0; i < 6; i++)
+                        {
+                            <MudSkeleton SkeletonType="SkeletonType.Text" Width="80px" Height="20px" Class="mx-3" />
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var oge in _menuOgeleri)
+                        {
+                            if (oge.AltMenuler != null && oge.AltMenuler.Any())
+                            {
+                                <MudMenu @key="@(oge.Id > 0 ? $"{oge.Id}_{_aktifDil}" : $"{oge.Url}_{oge.Baslik}_{oge.Sira}_{_aktifDil}")" Label="@dil.T($"nav_{oge.Baslik}", oge.Baslik)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" PopoverClass="desa-dropdown-menu" Class="desa-nav-link">
+                                    @foreach (var alt in oge.AltMenuler)
+                                    {
+                                        <MudMenuItem Href="@alt.Url">@dil.T($"nav_{alt.Baslik}", alt.Baslik)</MudMenuItem>
+                                    }
+                                </MudMenu>
+                            }
+                            else
+                            {
+                                var relativeUrl = nav.ToBaseRelativePath(nav.Uri).Split('?')[0].TrimEnd('/');
+                                var targetUrl = (oge.Url ?? "").Split('?')[0].TrimEnd('/');
+                                var isActive = string.IsNullOrEmpty(targetUrl) ? string.IsNullOrEmpty(relativeUrl) : relativeUrl.Equals(targetUrl, StringComparison.OrdinalIgnoreCase) || relativeUrl.StartsWith(targetUrl + "/", StringComparison.OrdinalIgnoreCase);
+
+                                <MudLink @key="@(oge.Id > 0 ? $"{oge.Id}_{_aktifDil}" : $"{oge.Url}_{oge.Baslik}_{oge.Sira}_{_aktifDil}")" Href="@oge.Url" 
+                                         Underline="Underline.None"
+                                         Class="@($"desa-nav-link {(isActive ? "aktif" : "")}")">
+                                    @dil.T($"nav_{oge.Baslik}", oge.Baslik)
+                                </MudLink>
+                            }
+                        }
+                    }
+                </div>
+                <div class="desa-navbar-eylemler">
+                    @* Dil Seçici Dropdown *@
+                    <div class="desa-dil-secici">
+                        <MudButton Variant="Variant.Outlined" 
+                                   Color="Color.Primary" 
+                                   Size="Size.Small" 
+                                   EndIcon="@(_dilMenusuAcik ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown)"
+                                   OnClick="@DilMenusuToggle"
+                                   Class="desa-dil-btn-aktif">
+                            <span class="desa-dil-kisa"><span class="@((dil.DesteklenenDiller.FirstOrDefault(d => d.Kod == _aktifDil)?.Bayrak) ?? "")"></span></span>
+                            <span class="desa-dil-kod">@(_aktifDil.ToUpper())</span>
+                        </MudButton>
+                        @if (_dilMenusuAcik)
+                        {
+                            <div class="desa-dil-panel" role="menu">
+                                @foreach (var dilBilgi in dil.DesteklenenDiller)
+                                {
+                                    <button type="button"
+                                            class="@($"desa-dil-panel-ogesi {(_aktifDil == dilBilgi.Kod ? "aktif" : "")}")"
+                                            @onclick="@(() => DilDegistir(dilBilgi.Kod))">
+                                        <span class="desa-dil-bayrak"><span class="@dilBilgi.Bayrak"></span></span>
+                                        <span class="desa-dil-ad">@dilBilgi.Ad</span>
+                                    </button>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <MudButton Href="iletisim" 
+                               Variant="Variant.Filled" 
+                               Class="desa-teklif-btn"
+                               EndIcon="@Icons.Material.Outlined.ArrowOutward">
+                        @dil.T("teklif_al", "Teklif Al")
+                    </MudButton>
+                </div>
+            </div>
+        </MudHidden>
+
+        @* Mobil Hamburger *@
+        <MudHidden Breakpoint="Breakpoint.MdAndUp">
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu" 
+                           Color="Color.Inherit"
+                           OnClick="@MobilMenuToggle" />
+        </MudHidden>
+    </MudContainer>
+</MudAppBar>
+
+@* ─── MOBİL DRAWER MENÜ ─────────────────────────────────────────────────── *@
+<MudHidden Breakpoint="Breakpoint.MdAndUp">
+    <MudDrawer @bind-Open="_mobilMenuAcik" 
+               Anchor="Anchor.Right" 
+               Elevation="4"
+               Variant="DrawerVariant.Temporary"
+               Class="desa-mobil-drawer">
+        <MudDrawerHeader Class="d-flex justify-space-between align-center px-4">
+            <MudText Typo="Typo.h6" Class="desa-logo-metin">desadoor</MudText>
+            <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@MobilMenuToggle" />
+        </MudDrawerHeader>
+        <MudDivider />
+        <MudNavMenu>
+            @foreach (var oge in _menuOgeleri)
+            {
+                if (oge.AltMenuler != null && oge.AltMenuler.Any())
+                {
+                    <MudNavGroup Title="@dil.T(oge.Baslik, oge.Baslik)" Expanded="false" Class="desa-mobil-nav-group">
+                        @foreach (var alt in oge.AltMenuler)
+                        {
+                            <MudNavLink Href="@alt.Url" Match="NavLinkMatch.Prefix"
+                                        OnClick="@MobilMenuToggle" Class="desa-mobil-nav-link-alt">
+                                @dil.T(alt.Baslik, alt.Baslik)
+                            </MudNavLink>
+                        }
+                    </MudNavGroup>
+                }
+                else
+                {
+                    <MudNavLink Href="@oge.Url" Match="@(string.IsNullOrEmpty(oge.Url) ? NavLinkMatch.All : NavLinkMatch.Prefix)"
+                                OnClick="@MobilMenuToggle" Class="desa-mobil-nav-link">
+                        @dil.T(oge.Baslik, oge.Baslik)
+                    </MudNavLink>
+                }
+            }
+        </MudNavMenu>
+        <MudSpacer />
+        <MudContainer Class="pa-4">
+            @* Mobil Dil Seçici *@
+            <MudText Typo="Typo.overline" Class="mb-2 desa-mobil-dil-baslik">@dil.T("dil_sec", "Dil Seçiniz")</MudText>
+            <MudSelect T="string" Value="@_aktifDil" ValueChanged="@DilDegistir" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-4">
+                @foreach (var dilBilgi in dil.DesteklenenDiller)
+                {
+                    <MudSelectItem Value="@dilBilgi.Kod"><span class="@dilBilgi.Bayrak" style="margin-right: 8px;"></span> @dilBilgi.Ad</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton FullWidth="true" Href="iletisim"
+                       Variant="Variant.Filled" Class="desa-teklif-btn">
+                @dil.T("teklif_al", "Teklif Al")
+            </MudButton>
+        </MudContainer>
+    </MudDrawer>
+</MudHidden>
+
+@* ─── SAYFA İÇERİĞİ — FADE-IN GEÇİŞ ANİMASYONU ─────────────────────────── *@
+<MudMainContent Class="@($"desa-main-icerik {(_sayfaHazir ? "sayfa-gorunur" : "sayfa-gizli")}")">
+    @Body
+</MudMainContent>
+
+@* ─── FOOTER ────────────────────────────────────────────────────────────── *@
+<MudPaper Elevation="0" Class="desa-footer mt-16" Square="true">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-12 px-6">
+        <MudGrid>
+            
+            @* Firma Logosu ve Açıklaması *@
+            <MudItem xs="12" sm="6" md="4">
+                @if (!string.IsNullOrEmpty(_logoUrl))
+                {
+                    <img src="@_logoUrl" alt="DesaDoor Logo" class="desa-logo-img mb-4" />
+                }
+                else
+                {
+                    <MudText Typo="Typo.h5" Class="desa-logo-metin desa-footer-logo mb-4">desadoor</MudText>
+                }
+                <MudText Typo="Typo.body2" Class="desa-footer-aciklama mb-6">
+                    @_footerAciklama
+                </MudText>
+                <MudStack Row="true" Spacing="1">
+                    <MudIconButton Icon="@Icons.Custom.Brands.Facebook" 
+                                   Href="@_facebookUrl" Target="_blank"
+                                   Class="desa-sosyal-btn" />
+                    <MudIconButton Icon="@Icons.Custom.Brands.Instagram" 
+                                   Href="@_instagramUrl" Target="_blank"
+                                   Class="desa-sosyal-btn" />
+                    <MudIconButton Icon="@Icons.Custom.Brands.YouTube" 
+                                   Href="@_youtubeUrl" Target="_blank"
+                                   Class="desa-sosyal-btn" />
+                    <MudIconButton Icon="@Icons.Custom.Brands.Pinterest" 
+                                   Href="@_pinterestUrl" Target="_blank"
+                                   Class="desa-sosyal-btn" />
+                </MudStack>
+            </MudItem>
+
+            @* Hızlı Bağlantılar *@
+            <MudItem xs="12" sm="6" md="2">
+                <MudText Typo="Typo.overline" Class="desa-footer-baslik mb-3">
+                    @dil.T("hizli_baglantilar", "Hızlı Bağlantılar")
+                </MudText>
+                <MudStack Spacing="1">
+                    @if (_footerLinkleri.Count > 0)
+                    {
+                        @foreach (var link in _footerLinkleri)
+                        {
+                            <MudLink Href="@link.Url" Class="desa-footer-link">@dil.T($"footer_{link.Baslik}", link.Baslik)</MudLink>
+                        }
+                    }
+                </MudStack>
+            </MudItem>
+
+            @* Ürün Kategorileri *@
+            <MudItem xs="12" sm="6" md="2">
+                <MudText Typo="Typo.overline" Class="desa-footer-baslik mb-3">
+                    @dil.T("kategoriler", "Kategoriler")
+                </MudText>
+                <MudStack Spacing="1">
+                    @if (_footerKategorileri.Count > 0)
+                    {
+                        @foreach (var kat in _footerKategorileri)
+                        {
+                            <MudLink Href="@kat.Url" Class="desa-footer-link">@dil.T($"footer_{kat.Baslik}", kat.Baslik)</MudLink>
+                        }
+                    }
+                </MudStack>
+            </MudItem>
+
+            @* İletişim Bilgileri *@
+            <MudItem xs="12" sm="6" md="4">
+                <MudText Typo="Typo.overline" Class="desa-footer-baslik mb-3">
+                    @dil.T("iletisim_bilgileri", "İletişim Bilgileri")
+                </MudText>
+                <MudStack Spacing="2">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Start">
+                        <MudIcon Icon="@Icons.Material.Outlined.LocationOn" Size="Size.Small" Class="desa-footer-ikon mt-1" />
+                        <MudText Typo="Typo.body2" Class="desa-footer-link">
+                            @((MarkupString)_adres.Replace("\n", "<br/>"))
+                        </MudText>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Outlined.Phone" Size="Size.Small" Class="desa-footer-ikon" />
+                        <MudLink Href="@($"tel:{_telefon1.Replace(" ", "")}")" Class="desa-footer-link">@_telefon1</MudLink>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Outlined.PhoneAndroid" Size="Size.Small" Class="desa-footer-ikon" />
+                        <MudLink Href="@($"tel:{_telefon2.Replace(" ", "")}")" Class="desa-footer-link">@_telefon2</MudLink>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Outlined.AccessTime" Size="Size.Small" Class="desa-footer-ikon" />
+                        <MudText Typo="Typo.body2" Class="desa-footer-link">@_mesaiSaatleri</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+
+        </MudGrid>
+
+        <MudDivider Class="my-6 desa-footer-ayrac" />
+        
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="flex-wrap">
+            <MudText Typo="Typo.caption" Class="desa-footer-link">
+                © @DateTime.UtcNow.Year desadoor. @dil.T("tum_haklar", "Tüm Hakları Saklıdır.")
+                <br />
+                Desadoor bir Edessa Halı şirket kuruluşudur.
+            </MudText>
+            <MudStack Row="true" Spacing="3">
+                <MudLink Href="gizlilik" Class="desa-footer-link" Typo="Typo.caption">
+                    @dil.T("gizlilik", "Gizlilik Politikası")
+                </MudLink>
+                <MudLink Href="kvkk" Class="desa-footer-link" Typo="Typo.caption">@dil.T("kvkk", "KVKK")</MudLink>
+            </MudStack>
+        </MudStack>
+    </MudContainer>
+</MudPaper>
+
+@* ─── SAYFA ÜSTÜNE GERİ DÖN BUTONU ─────────────────────────────────────── *@
+@if (_usaSayfaGoster)
+{
+    <MudFab StartIcon="@Icons.Material.Outlined.KeyboardArrowUp"
+            Color="Color.Dark"
+            Size="Size.Medium"
+            Class="desa-yukari-btn"
+            OnClick="@SayfaBasinaGit" />
+}
+
+@* ─── CANLI SOHBET WIDGET'I ───────────────────────────────────────────── *@
+<Desadoor.UI.Bilesenler.CanliSohbetArayuzu />

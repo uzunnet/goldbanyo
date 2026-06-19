@@ -1,0 +1,4 @@
+/* Breakpoint — DesaDoor */
+@media (max-width: 480px) { .desa-mobil-gizle { display: none !important; } }
+@media (min-width: 481px) and (max-width: 768px) { .desa-tablet-gizle { display: none !important; } }
+@media (min-width: 769px) { .desa-masaustu-gizle { display: none !important; } }

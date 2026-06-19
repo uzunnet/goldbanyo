@@ -1,0 +1,65 @@
+﻿@page "/admin/eposta-sablonlari"
+@layout Desadoor.UI.Layout.AdminDuzen
+@using Desadoor.Ortak.Modeller
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject Desadoor.UI.Servisler.DilServisi dil
+
+<PageTitle>@($"{dil.T("admin.epostaSablonlari.baslik","E-Posta Şablonları")} | DesaDoor Admin")</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-2">@dil.T("admin.epostaSablonlari.baslik","E-Posta Şablonları")</MudText>
+
+<MudToolBar Class="mb-4">
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="YeniEkle">@dil.T("admin.epostaSablonlari.yeniSablon","Yeni Şablon")</MudButton>
+</MudToolBar>
+
+@if (_yukleniyor) { <MudProgressLinear Indeterminate="true" Class="mb-4" /> }
+
+<MudDataGrid Items="@_sablonlar" Dense="true" Striped="true" Hover="true">
+    <Columns>
+        <PropertyColumn Property="x => x.Ad" Title="@dil.T("ortak.ad","Ad")" />
+        <PropertyColumn Property="x => x.Konu" Title="@dil.T("admin.epostaSablonlari.konu","Konu")" />
+        <TemplateColumn Title="@dil.T("admin.epostaSablonlari.tip","Tip")">
+            <CellTemplate><MudChip T="string" Size="Size.Small">@context.Item.Tip</MudChip></CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="@dil.T("ortak.durum","Durum")">
+            <CellTemplate>
+                <MudChip T="string" Size="Size.Small" Color="@(context.Item.AktifMi ? Color.Success : Color.Default)">@(context.Item.AktifMi ? dil.T("ortak.aktif","Aktif") : dil.T("ortak.pasif","Pasif"))</MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="@dil.T("ortak.islemler","İşlemler")">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => Duzenle(context.Item)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => SilAsync(context.Item)" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent><MudDataGridPager /></PagerContent>
+</MudDataGrid>
+
+@if (_dialogAcik)
+{
+    <MudDialog>
+        <TitleContent><MudText Typo="Typo.h6">@(_duzenlemeModu ? dil.T("admin.epostaSablonlari.duzenle","Şablon Düzenle") : dil.T("admin.epostaSablonlari.yeni","Yeni Şablon"))</MudText></TitleContent>
+        <DialogContent>
+            <div class="d-flex flex-column gap-3 admin-eposta-dialog-form">
+                <MudTextField @bind-Value="_formAd" Label="@dil.T("admin.epostaSablonlari.sablonAdi","Şablon Adı")" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_formKonu" Label="@dil.T("admin.epostaSablonlari.epostaKonusu","E-posta Konusu")" Variant="Variant.Outlined" />
+                <MudSelect @bind-Value="_formTip" Label="@dil.T("admin.epostaSablonlari.tip","Tip")" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("HosGeldin")">@dil.T("admin.epostaSablonlari.tip.hosGeldin","Hoş Geldin")</MudSelectItem>
+                    <MudSelectItem Value="@("Dogrulama")">@dil.T("admin.epostaSablonlari.tip.dogrulama","Doğrulama")</MudSelectItem>
+                    <MudSelectItem Value="@("IletisimCevabi")">@dil.T("admin.epostaSablonlari.tip.iletisimCevabi","İletişim Cevabı")</MudSelectItem>
+                    <MudSelectItem Value="@("Bulten")">@dil.T("admin.epostaSablonlari.tip.bulten","Bülten")</MudSelectItem>
+                    <MudSelectItem Value="@("Genel")">@dil.T("admin.epostaSablonlari.tip.genel","Genel")</MudSelectItem>
+                </MudSelect>
+                <MudTextField @bind-Value="_formIcerik" Label="@dil.T("admin.epostaSablonlari.htmlIcerik","HTML İçerik")" Variant="Variant.Outlined" Lines="6" />
+                <MudSwitch @bind-Value="_formAktif" Label="@dil.T("ortak.aktif","Aktif")" />
+            </div>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="DialogKapat">@dil.T("ortak.iptal","İptal")</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="KaydetAsync">@dil.T("ortak.kaydet","Kaydet")</MudButton>
+        </DialogActions>
+    </MudDialog>
+}

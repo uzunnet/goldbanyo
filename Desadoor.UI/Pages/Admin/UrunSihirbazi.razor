@@ -1,0 +1,439 @@
+@page "/admin/urun-sihirbazi"
+@inject Desadoor.UI.Servisler.DilServisi dil
+@layout Desadoor.UI.Layout.AdminDuzen
+@using Microsoft.AspNetCore.Authorization
+@using Desadoor.Ortak.Modeller.Urunler
+@attribute [Authorize]
+
+<PageTitle>@dil.T("admin.urunSihirbazi.sayfaBasligi", "Ürün Sihirbazı") | DesaDoor Admin</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-2">@dil.T("admin.urunSihirbazi.sayfaBasligi", "Ürün Sihirbazı")</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="12">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="YeniUrunBaslat" Class="mr-2">@dil.T("admin.urun.yeni", "Yeni Ürün")</MudButton>
+    </MudItem>
+</MudGrid>
+
+@if (_kaydedildi)
+{ <MudAlert Severity="Severity.Success" Dense="true" Class="mb-4">@dil.T("admin.urunSihirbazi.kayitli", "Kayıtlı") - ID: @_urunId</MudAlert> }
+else
+{ <MudAlert Severity="Severity.Warning" Dense="true" Class="mb-4">@dil.T("admin.urunSihirbazi.onceTemelBilgi", "Önce temel bilgileri kaydedin")</MudAlert> }
+
+<MudGrid Class="mb-4">
+    <MudItem xs="12">
+        <MudButton Variant="@(_aktifSekme == 1 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" OnClick="Sekme1" Class="mr-1">1. @dil.T("admin.urunSihirbazi.temel", "Temel")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 2 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme2" Class="mr-1">2. @dil.T("admin.urun.gorseller", "Görseller")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 3 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme3" Class="mr-1">3. @dil.T("admin.urun.ucBoyut", "3D Model")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 4 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme4" Class="mr-1">4. @dil.T("admin.urunSihirbazi.renk", "Renk")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 5 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme5" Class="mr-1">5. @dil.T("admin.urunSihirbazi.konfig", "Konfigürasyon")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 6 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme6" Class="mr-1">6. @dil.T("admin.urunSihirbazi.ozet", "Özet")</MudButton>
+        <MudButton Variant="@(_aktifSekme == 7 ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Disabled="@(!_kaydedildi)" OnClick="Sekme7">7. @dil.T("admin.ceviri.cevirilerAi", "Çeviriler (AI)")</MudButton>
+    </MudItem>
+</MudGrid>
+
+@if (_aktifSekme == 1)
+{
+    <MudCard>
+        <MudCardContent>
+            @if (_aktifSekme == 1)
+            {
+                <MudGrid>
+                    <MudItem xs="12" md="6"><MudTextField @bind-Value="_urunForm.Ad" Label='@dil.T("admin.urun.ad", "Ürün adı")' Required="true" Variant="Variant.Outlined" /></MudItem>
+                    <MudItem xs="12" md="3"><MudTextField @bind-Value="_urunForm.Kod" Label='@dil.T("admin.urun.kod", "Ürün kodu")' Required="true" Variant="Variant.Outlined" /></MudItem>
+                    <MudItem xs="12" md="3"><MudTextField @bind-Value="_urunForm.Slug" Label="Slug" Required="true" Variant="Variant.Outlined" /></MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudSelect T="int" @bind-Value="_urunForm.UrunAilesiId" Label='@dil.T("admin.urun.aile", "Ürün ailesi")' Variant="Variant.Outlined" Required="true">
+                            @foreach (var a in _aileler) { <MudSelectItem T="int" Value="a.Id">@a.Ad</MudSelectItem> }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudSelect T="int?" @bind-Value="_urunForm.UrunKategoriId" Label='@dil.T("admin.urun.kategori", "Ürün kategorisi")' Variant="Variant.Outlined" Clearable="true">
+                            @foreach (var k in _kategoriler) { <MudSelectItem T="int?" Value="k.Id">@k.Ad</MudSelectItem> }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="6"><MudTextField @bind-Value="_urunForm.KisaAciklama" Label='@dil.T("admin.urun.kisaAciklama", "Kısa açıklama")' Variant="Variant.Outlined" Lines="2" /></MudItem>
+                    <MudItem xs="12" md="3"><MudTextField @bind-Value="_urunForm.Fiyat" Label='@dil.T("admin.urun.fiyat", "Fiyat")' Variant="Variant.Outlined" /></MudItem>
+                    <MudItem xs="12" md="3"><MudTextField @bind-Value="_urunForm.Birim" Label='@dil.T("admin.urun.birim", "Birim")' Variant="Variant.Outlined" /></MudItem>
+                    <MudItem xs="12"><MudTextField @bind-Value="_urunForm.Aciklama" Label='@dil.T("admin.urun.detayliAciklama", "Detaylı açıklama")' Variant="Variant.Outlined" Lines="3" /></MudItem>
+                    <MudItem xs="4"><MudSwitch @bind-Value="_urunForm.OneCikanMi" Label='@dil.T("admin.urun.oneCikan", "Öne çıkan")' Color="Color.Warning" /></MudItem>
+                    <MudItem xs="4"><MudSwitch @bind-Value="_urunForm.YeniMi" Label='@dil.T("admin.urun.yeniEtiketi", "Yeni ürün")' Color="Color.Info" /></MudItem>
+                    <MudItem xs="4"><MudSwitch @bind-Value="_urunForm.AktifMi" Label='@dil.T("admin.urun.yayinda", "Yayında")' Color="Color.Success" /></MudItem>
+                </MudGrid>
+            }
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Tab1Kaydet" Disabled="_tab1Kaydediliyor">
+                @(_tab1Kaydediliyor ? dil.T("ortak.kaydediliyor", "Kaydediliyor...") : dil.T("ortak.kaydet", "Kaydet"))
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+else if (_aktifSekme == 2)
+{
+    <MudCard>
+        <MudCardContent>
+            @if (_tab2Yukleniyor)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else
+            {
+                <MudGrid>
+                    <MudItem xs="12" md="4">
+                        <MudText Typo="Typo.subtitle1" Class="mb-2">@dil.T("admin.urun.anaGorsel", "Ana görsel")</MudText>
+                        @if (_secilenMedyaId is long medId and > 0)
+                        {
+                            <div style="margin-bottom:12px;">
+                                <img src="/api/medya/dosya/@medId" alt="@_urunForm.Ad"
+                                     style="width:100%;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid var(--mud-palette-divider);background:#fafafa;"
+                                     onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                                <MudText Typo="Typo.caption" Color="Color.Success" Class="mt-1">ID: @medId</MudText>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="margin-bottom:12px;">
+                                <img src="/medya/desadoor_default.png"
+                                     alt="@_urunForm.Ad"
+                                     style="width:100%;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid var(--mud-palette-divider);background:#fafafa;"
+                                     onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                            </div>
+                        }
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MedyaSec" StartIcon="@Icons.Material.Filled.Image">
+                            @dil.T("admin.medya.gorselSec", "Görsel seç")
+                        </MudButton>
+                    </MudItem>
+                    <MudItem xs="12" md="8">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.galeriUrlEkle", "Galeri URL ekle")</MudText>
+                        <MudTextField @bind-Value="_galeriMedyaUrl" Label="URL" Variant="Variant.Outlined" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="GaleriEkle" Class="mt-2">@dil.T("admin.urun.galeriyeEkle", "Galeriye ekle")</MudButton>
+                    </MudItem>
+                </MudGrid>
+            }
+        </MudCardContent>
+    </MudCard>
+}
+else if (_aktifSekme == 3)
+{
+    <MudCard>
+        <MudCardContent>
+            @if (_tab3Yukleniyor)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else
+            {
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.glbDosyaYukle", "GLB dosya yükle")</MudText>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="GlbDosyaSecildi" Accept=".glb,.gltf">
+                            <CustomContent Context="context">
+                                <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="context.OpenFilePickerAsync">@dil.T("admin.urun.glbDosyaSec", "GLB dosya seç")</MudButton>
+                            </CustomContent>
+                        </MudFileUpload>
+                    </MudItem>
+                    <MudItem xs="12" md="6" Class="mt-4">
+                        <MudSelect T="int?" Value="@_seciliModelId" ValueChanged="ModelSecildi" Label='@dil.T("admin.urun.calisilacak3dModel", "Çalışılacak 3D model")' Variant="Variant.Outlined" Clearable="true">
+                            @foreach (var model in _modeller)
+                            {
+                                <MudSelectItem T="int?" Value="@model.Id">
+                                    @model.ModelAdi @(model.VarsayilanMi ? $"({dil.T("ortak.varsayilan", "Varsayılan")})" : "")
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" Class="mt-4">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.parcalar", "Parçalar")</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="YeniParca" Disabled="@(!_seciliModelId.HasValue)" Class="mb-2">@dil.T("admin.urun.yeniParca", "Yeni parça")</MudButton>
+                        @if (_tab3FormAcik)
+                        {
+                            <MudCard Outlined="true" Class="pa-3 mb-3">
+                                <MudGrid>
+                                    <MudItem xs="12" md="6"><MudTextField @bind-Value="_parcaForm.GorunenAd" Label='@dil.T("admin.urun.gorunenAd", "Görünen ad")' Variant="Variant.Outlined" /></MudItem>
+                                    <MudItem xs="12" md="6"><MudTextField @bind-Value="_parcaForm.MeshAdi" Label='@dil.T("admin.urun.meshAdi", "Mesh adı")' Variant="Variant.Outlined" /></MudItem>
+                                    <MudItem xs="12" md="4"><MudTextField @bind-Value="_parcaForm.ParcaTipi" Label='@dil.T("admin.urun.parcaTipi", "Parça tipi")' Variant="Variant.Outlined" /></MudItem>
+                                    <MudItem xs="12" md="4"><MudNumericField @bind-Value="_parcaForm.SiraNo" Label='@dil.T("ortak.siraNo", "Sıra no")' Variant="Variant.Outlined" /></MudItem>
+                                    <MudItem xs="12" md="4"><MudTextField @bind-Value="_parcaForm.MalzemeTipiKisiti" Label='@dil.T("admin.urun.malzemeTipiKisitiJson", "Malzeme tipi kısıtı JSON")' Variant="Variant.Outlined" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.SecilebilirMi" Label='@dil.T("admin.urun.secilebilir", "Seçilebilir")' Color="Color.Primary" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.RenklenebilirMi" Label="Renklenebilir" Color="Color.Warning" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.MalzemeDegisebilirMi" Label='@dil.T("admin.urun.malzemeDegisebilir", "Malzeme değişebilir")' Color="Color.Secondary" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.AdminOnayliMi" Label='@dil.T("admin.urun.adminOnayli", "Admin onaylı")' Color="Color.Success" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.HareketliMi" Label="Hareketli" Color="Color.Info" /></MudItem>
+                                    <MudItem xs="4"><MudSwitch @bind-Value="_parcaForm.GizlenebilirMi" Label="Gizlenebilir" Color="Color.Default" /></MudItem>
+                                    <MudItem xs="12">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ParcaKaydet" Disabled="_tab3Kaydediliyor">@dil.T("ortak.kaydet", "Kaydet")</MudButton>
+                                        <MudButton Variant="Variant.Text" OnClick="() => _tab3FormAcik = false" Class="ml-2">@dil.T("ortak.iptal", "İptal")</MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCard>
+                        }
+                        <MudList T="string">
+                            @foreach (var p in _parcalar)
+                            {
+                                <MudListItem T="string">
+                                    <MudGrid>
+                                        <MudItem xs="12" md="3"><MudText>@p.GorunenAd</MudText></MudItem>
+                                        <MudItem xs="12" md="3"><MudText>@p.MeshAdi</MudText></MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudText>@dil.T("admin.urun.secKisa", "Seç"): @(p.SecilebilirMi ? dil.T("ortak.evetKisa", "E") : dil.T("ortak.hayirKisa", "H")) | @dil.T("admin.urun.renk", "Renk"): @(p.RenklenebilirMi ? dil.T("ortak.evetKisa", "E") : dil.T("ortak.hayirKisa", "H")) | @dil.T("admin.urun.malzemeKisa", "Malz."): @(p.MalzemeDegisebilirMi ? dil.T("ortak.evetKisa", "E") : dil.T("ortak.hayirKisa", "H"))</MudText>
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => ParcaDuzenle(p)" />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => ParcaSil(p)" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </MudItem>
+                </MudGrid>
+            }
+        </MudCardContent>
+    </MudCard>
+}
+else if (_aktifSekme == 4)
+{
+    <MudCard>
+        <MudCardContent>
+            @if (_tab4Yukleniyor)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else
+            {
+                <MudGrid>
+                    <MudItem xs="12" md="4">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.parcaSec", "Parça seç")</MudText>
+                        @foreach (var p in _tab4Parcalar)
+                        {
+                            <MudButton Variant="@(_seciliParcaId == p.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Size="Size.Small" OnClick="() => ParcaSecildi(p.Id)" Class="mr-1 mb-1">@p.GorunenAd</MudButton>
+                        }
+                    </MudItem>
+                    @if (_seciliParcaId.HasValue)
+                    {
+                        <MudItem xs="12" md="4">
+                            <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.renkEkleRal", "Renk ekle (RAL)")</MudText>
+                            @foreach (var r in _ralListesi)
+                            {
+                                <MudButton Variant="@(_seciliRenkId == r.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Warning" Size="Size.Small" OnClick="() => _seciliRenkId = r.Id" Class="mr-1 mb-1">@r.Kod</MudButton>
+                            }
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RenkEkle" Disabled="!_seciliRenkId.HasValue" Class="mt-2">@dil.T("ortak.ekle", "Ekle")</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" md="4">
+                            <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.malzemeEkle", "Malzeme ekle")</MudText>
+                            @foreach (var m in _malzemeListesi)
+                            {
+                                <MudButton Variant="@(_seciliMalzemeId == m.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Info" Size="Size.Small" OnClick="() => MalzemeSecildi(m.Id)" Class="mr-1 mb-1">@m.Ad</MudButton>
+                            }
+                            @if (_seciliMalzemeId.HasValue)
+                            {
+                                <MudText Class="mt-2">@dil.T("admin.urun.kaplama", "Kaplama"):</MudText>
+                                @foreach (var k in _kaplamalar)
+                                {
+                                    <MudButton Variant="@(_seciliKaplamaId == k.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Secondary" Size="Size.Small" OnClick="() => _seciliKaplamaId = k.Id" Class="mr-1 mb-1">@k.Ad</MudButton>
+                                }
+                            }
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="MalzemeEkle" Disabled="!_seciliMalzemeId.HasValue" Class="mt-2">@dil.T("ortak.ekle", "Ekle")</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudText Typo="Typo.subtitle2">@dil.T("admin.urun.renkSecenekleri", "Renk seçenekleri")</MudText>
+                            @foreach (var rc in _parcaRenkleri)
+                            {
+                                var ral = _ralListesi.FirstOrDefault(r => r.Id == rc.RalRengiId);
+                                <MudChip T="string" Color="Color.Warning" OnClose="() => RenkSil(rc.Id)" Class="mr-1 mb-1">@(ral?.Kod ?? "RAL") - @rc.Id</MudChip>
+                            }
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudText Typo="Typo.subtitle2">@dil.T("admin.urun.malzemeSecenekleri", "Malzeme seçenekleri")</MudText>
+                            @foreach (var mc in _parcaMalzemeleri)
+                            {
+                                var malzeme = _malzemeListesi.FirstOrDefault(m => m.Id == mc.MalzemeId);
+                                <MudChip T="string" Color="Color.Info" OnClose="() => MalzemeSil(mc.Id)" Class="mr-1 mb-1">@(malzeme?.Ad ?? "Malzeme") - @mc.Id</MudChip>
+                            }
+                        </MudItem>
+                    }
+                </MudGrid>
+            }
+        </MudCardContent>
+    </MudCard>
+}
+else if (_aktifSekme == 5)
+{
+    <MudCard>
+        <MudCardContent>
+            @if (_tab5Yukleniyor)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else
+            {
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.sablonAyarlari", "Şablon ayarları")</MudText>
+                        <MudSelect T="string" @bind-Value="_sablonForm.DetaySablonu" Label="Şablon" Variant="Variant.Outlined">
+                            <MudSelectItem T="string" Value="@("Standart")">Standart</MudSelectItem>
+                            <MudSelectItem T="string" Value="@("Endustriyel3D")">@dil.T("admin.urun.sablonEndustriyel3d", "Endüstriyel 3D")</MudSelectItem>
+                            <MudSelectItem T="string" Value="@("Premium")">Premium</MudSelectItem>
+                        </MudSelect>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SablonKaydet" Disabled="_tab5SablonKaydediliyor" Class="mt-2">@dil.T("admin.urun.sablonKaydet", "Şablonu kaydet")</MudButton>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.konfigurasyonKurallari", "Konfigürasyon kuralları")</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" OnClick="YeniKural" Class="mb-2">@dil.T("admin.urun.yeniKural", "Yeni kural")</MudButton>
+                        @if (_kuralFormAcik)
+                        {
+                            <MudCard Outlined="true" Class="pa-3 mb-2">
+                                <MudGrid>
+                                    <MudItem xs="12" md="6">
+                                        <MudText Typo="Typo.caption">@dil.T("admin.urun.parca1", "Parça 1"):</MudText>
+                                        @foreach (var p in _parcalar)
+                                        {
+                                            <MudButton Variant="@(_kuralForm.Parca1Id == p.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Primary" Size="Size.Small" OnClick="() => _kuralForm.Parca1Id = p.Id" Class="mr-1 mb-1">@p.GorunenAd</MudButton>
+                                        }
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudText Typo="Typo.caption">@dil.T("admin.urun.parca2", "Parça 2"):</MudText>
+                                        @foreach (var p in _parcalar)
+                                        {
+                                            <MudButton Variant="@(_kuralForm.Parca2Id == p.Id ? Variant.Filled : Variant.Outlined)" Color="Color.Secondary" Size="Size.Small" OnClick="() => _kuralForm.Parca2Id = p.Id" Class="mr-1 mb-1">@p.GorunenAd</MudButton>
+                                        }
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudText Typo="Typo.caption">@dil.T("admin.urun.kuralTipi", "Kural tipi"):</MudText>
+                                        <MudButton Variant="@(_kuralForm.KuralTipi == YasakTip ? Variant.Filled : Variant.Outlined)" Color="Color.Error" Size="Size.Small" OnClick="@(() => KuralTipiSec(YasakTip))" Class="mr-1">@dil.T("admin.urun.kuralYasak", "Yasak")</MudButton>
+                                        <MudButton Variant="@(_kuralForm.KuralTipi == ZorunluTip ? Variant.Filled : Variant.Outlined)" Color="Color.Success" Size="Size.Small" OnClick="@(() => KuralTipiSec(ZorunluTip))" Class="mr-1">@dil.T("admin.urun.kuralZorunlu", "Zorunlu")</MudButton>
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="KuralKaydet" Disabled="_kuralKaydediliyor">@dil.T("ortak.kaydet", "Kaydet")</MudButton>
+                                        <MudButton Variant="Variant.Text" OnClick="() => _kuralFormAcik = false" Class="ml-2">@dil.T("ortak.iptal", "İptal")</MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCard>
+                        }
+                        <MudList T="string">
+                            @foreach (var k in _kurallar)
+                            {
+                                <MudListItem T="string">
+                                    <MudGrid>
+                                        <MudItem xs="12" md="4"><MudText>@dil.T("admin.urun.parca1Kisa", "P1"): @k.Parca1Id | @dil.T("admin.urun.parca2Kisa", "P2"): @k.Parca2Id</MudText></MudItem>
+                                        <MudItem xs="12" md="4"><MudChip T="string" Size="Size.Small" Color="@(k.KuralTipi == "Yasak" ? Color.Error : Color.Success)">@k.KuralTipi</MudChip></MudItem>
+                                        <MudItem xs="12" md="4">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => KuralDuzenle(k)" />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => KuralSil(k)" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </MudItem>
+                </MudGrid>
+            }
+        </MudCardContent>
+    </MudCard>
+}
+else if (_aktifSekme == 6)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText Typo="Typo.h6" Class="mb-3">@dil.T("admin.urun.ozet", "Ürün özeti")</MudText>
+            <MudGrid>
+                <MudItem xs="12" md="4">
+                    <MudCard Outlined="true" Class="pa-3">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.temelBilgiler", "Temel bilgiler")</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.Label" Size="Size.Small" /> @_urunForm.Ad</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.QrCode" Size="Size.Small" /> @_urunForm.Kod</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.AttachMoney" Size="Size.Small" /> @_urunForm.Fiyat.ToString()</MudText>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudCard Outlined="true" Class="pa-3">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.icerikDurumu", "İçerik durumu")</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.ViewInAr" Size="Size.Small" /> @dil.T("admin.urun.ucBoyut", "3D Model"): @_modeller.Count</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.Extension" Size="Size.Small" /> @dil.T("admin.urun.parca", "Parça"): @_parcalar.Count</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.Palette" Size="Size.Small" /> @dil.T("admin.urun.renk", "Renk"): @_parcaRenkleri.Count</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.House" Size="Size.Small" /> @dil.T("admin.urun.malzeme", "Malzeme"): @_parcaMalzemeleri.Count</MudText>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudCard Outlined="true" Class="pa-3">
+                        <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.genelDurum", "Genel durum")</MudText>
+                        <MudText><MudIcon Icon="@(_kaydedildi ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Warning)" Size="Size.Small" /> @(_kaydedildi ? dil.T("admin.urun.kayitTamamlandi", "Kayıt tamamlandı") : dil.T("ortak.bekliyor", "Bekliyor"))</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.Rule" Size="Size.Small" /> @dil.T("admin.urun.kural", "Kural"): @_kurallar.Count</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.Style" Size="Size.Small" /> @dil.T("admin.urun.sablon", "Şablon"): @_sablonForm.DetaySablonu</MudText>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+            <MudGrid Class="mt-4">
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Tamamlandi" Class="mr-2">@dil.T("admin.urun.tamamlandiListeyeDon", "Tamamlandı - listeye dön")</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Sekme1">@dil.T("admin.urun.duzenlemeyeDevamEt", "Düzenlemeye devam et")</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}
+else if (_aktifSekme == 7)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText Typo="Typo.h6" Class="mb-3">@dil.T("admin.ceviri.aiOtomatikBaslik", "Yapay zeka ile otomatik çeviri")</MudText>
+            <MudText Typo="Typo.body2" Class="mb-4">@dil.T("admin.ceviri.aiOtomatikAciklama", "Bu özellik, ürünün ad, kısa açıklama ve açıklama alanlarını seçtiğiniz hedef dile otomatik olarak çevirir ve veritabanındaki çeviriler tablosuna kaydeder.")</MudText>
+            
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudSelect T="string" @bind-Value="_secilenHedefDil" Label='@dil.T("admin.ceviri.hedefDil", "Hedef dil")' Variant="Variant.Outlined">
+                        @foreach (var d in dil.DesteklenenDiller.Where(d => d.Kod != "tr"))
+                        {
+                            <MudSelectItem T="string" Value="@d.Kod"><span class="@d.Bayrak" style="margin-right: 8px;"></span> @d.Ad (@d.Kod.ToUpper())</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="6" Class="d-flex align-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="OtomatikCevirVeKaydet" Disabled="@(_ceviriYapiliyor || string.IsNullOrEmpty(_secilenHedefDil))" StartIcon="@Icons.Material.Filled.Translate">
+                        @(_ceviriYapiliyor ? dil.T("admin.ceviri.cevriliyor", "Çevriliyor...") : dil.T("admin.ceviri.aiIleCevirKaydet", "Yapay zeka ile çevir ve kaydet"))
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+
+            @if (_sonCeviriler.Any())
+            {
+                <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">@dil.T("admin.ceviri.cevrilenMetinler", "Çevrilen metinler")</MudText>
+                @foreach (var c in _sonCeviriler)
+                {
+                    <MudAlert Severity="Severity.Success" Class="mb-2"><b>@c.Key:</b> @c.Value</MudAlert>
+                }
+            }
+        </MudCardContent>
+    </MudCard>
+}
+
+<MudDivider Class="my-4" />
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudText Typo="Typo.h5" Class="mb-2">@dil.T("admin.urun.mevcutUrunler", "Mevcut ürünler")</MudText>
+        @if (_listeYukleniyor) { <MudProgressLinear Indeterminate="true" /> }
+        <MudList T="string">
+            @foreach (var u in _urunListesi)
+            {
+                var uNum = new string((u.Kod ?? "").Where(char.IsDigit).ToArray());
+                var uGorsel = u.AnaGorselMedyaId is long uid and > 0
+                    ? $"/api/medya/dosya/{uid}"
+                    : $"/medya/kapaklar/yatay_{uNum}.png";
+                <MudListItem T="string" OnClick="@(() => Duzenle(u.Id))">
+                    <MudGrid>
+                        <MudItem xs="1">
+                            <img src="@uGorsel" width="36" height="36"
+                                 style="object-fit:cover;border-radius:4px;"
+                                 onerror="this.onerror=null;this.src='/medya/desadoor_default.png';" />
+                        </MudItem>
+                        <MudItem xs="2"><MudChip T="string" Size="Size.Small" Color="@(u.UrunAilesiId == 2 ? Color.Secondary : Color.Primary)">@(u.UrunAilesiId == 2 ? dil.T("admin.urun.aileKapi", "Kapı") : dil.T("admin.urun.aileKapak", "Kapak"))</MudChip></MudItem>
+                        <MudItem xs="3"><MudText>@u.Kod</MudText></MudItem>
+                        <MudItem xs="4"><MudText>@u.Ad</MudText></MudItem>
+                        <MudItem xs="2"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Duzenle(u.Id))" /></MudItem>
+                    </MudGrid>
+                </MudListItem>
+            }
+        </MudList>
+    </MudItem>
+</MudGrid>

@@ -1,0 +1,62 @@
+name: DesaDoor CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # ─── 1. BUILD & TEST ──────────────────────────────────────────────────────────
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Kaynak kodu al
+      uses: actions/checkout@v4
+
+    - name: .NET 10 SDK kur
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Bagimliliklari geri yukle
+      run: dotnet restore Desadoor.slnx
+
+    - name: Derle (Release)
+      run: dotnet build Desadoor.slnx --configuration Release --no-restore
+
+    - name: Testleri calistir
+      run: dotnet test Desadoor.Testler/Desadoor.Testler.csproj --configuration Release --no-build --verbosity normal
+
+  # ─── 2. DEPLOY (sadece main/master push) ─────────────────────────────────────
+  deploy:
+    needs: build-and-test
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH ile sunucuya baglan ve deploy et
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT || '22' }}
+        script: |
+          set -e
+          cd ${{ secrets.DEPLOY_PATH }}
+
+          echo "=== Git guncelleniyor ==="
+          git pull origin main
+
+          echo "=== Docker imajlari yeniden olusturuluyor ==="
+          docker compose build --no-cache
+
+          echo "=== Konteynerler yeniden baslatiliyor ==="
+          docker compose up -d
+
+          echo "=== Eski imajlar temizleniyor ==="
+          docker image prune -f
+
+          echo "=== Deploy tamamlandi ==="
+          docker compose ps

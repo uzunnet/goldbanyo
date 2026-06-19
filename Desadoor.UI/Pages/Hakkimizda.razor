@@ -1,0 +1,143 @@
+@page "/hakkimizda"
+@layout Desadoor.UI.Layout.DesaDoorDuzen
+
+<PageTitle>@_sayfaBasligi</PageTitle>
+
+@if (_yukleniyor)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16 d-flex justify-center align-center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
+}
+else
+{
+    @* ─── HERO BÖLÜMÜ ───────────────────────────────────────────────────────── *@
+    <Desadoor.UI.Bilesenler.HeroSlider SayfaKodu="hakkimizda" />
+
+    @* ─── HİKAYEMİZ VE VİZYON ────────────────────────────────────────────────── *@
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+        <MudGrid Spacing="6" Class="align-center">
+            <MudItem Class="anim-scroll-yukari" xs="12" md="6">
+                <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2">@dil.T("hakkimizda.etiket", "Kurumsal")</MudText>
+                <MudText Typo="Typo.h3" Class="desa-bolum-baslik mb-6">@_hikayeBasligi</MudText>
+                <MudText Typo="Typo.body1" Class="desa-govde-metin mb-6" Style="line-height: 1.8;">
+                    @_hikayeMetni
+                </MudText>
+                
+                <MudStack Spacing="4">
+                    <MudPaper Elevation="0" Class="pa-6 desa-misyon-kutu" Style="background-color: var(--desa-bg-alt); border-left: 4px solid var(--desa-primary);">
+                        <MudText Typo="Typo.h6" Class="mb-2">@dil.T("hakkimizda.misyonBaslik", "Misyonumuz")</MudText>
+                        <MudText Typo="Typo.body2" Style="opacity: 0.8;">@_misyon</MudText>
+                    </MudPaper>
+                    <MudPaper Elevation="0" Class="pa-6 desa-vizyon-kutu" Style="background-color: var(--desa-bg-alt); border-left: 4px solid var(--desa-secondary);">
+                        <MudText Typo="Typo.h6" Class="mb-2">@dil.T("hakkimizda.vizyonBaslik", "Vizyonumuz")</MudText>
+                        <MudText Typo="Typo.body2" Style="opacity: 0.8;">@_vizyon</MudText>
+                    </MudPaper>
+                </MudStack>
+            </MudItem>
+            <MudItem Class="anim-scroll-yukari" xs="12" md="6">
+                @if (!string.IsNullOrEmpty(_youtubeUrl))
+                {
+                    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <iframe src="@_youtubeUrl" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(_videoUrl))
+                {
+                    <video class="w-100" style="border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" controls autoplay loop muted>
+                        <source src="@_videoUrl" type="video/mp4" />
+                        @dil.T("video.unsupported", "Tarayıcınız video etiketini desteklemiyor.")
+                    </video>
+                }
+                else
+                {
+                    <div class="desa-gorsel-kutu" style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <img src="/medya/hakkimizda/fabrika.jpg"  alt="DesaDoor Üretim Tesisi" style="width: 100%; height: auto; display: block;" />
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(_pdfKatalogUrl))
+                {
+                    <MudButton Href="@_pdfKatalogUrl" Target="_blank" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.PictureAsPdf" Class="mt-6" Size="Size.Large" FullWidth="true">
+                        @dil.T("hakkimizda.katalogIndir", "Kurumsal Kataloğu İndir (PDF)")
+                    </MudButton>
+                }
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+
+    @* ─── İSTATİSTİKLER ──────────────────────────────────────────────────────── *@
+    <MudPaper Elevation="0" Class="py-16 mt-8" Style="background-color: var(--desa-primary); color: white;">
+        <MudContainer MaxWidth="MaxWidth.Large">
+            <MudGrid Spacing="4" Justify="Justify.Center">
+                <MudItem xs="6" sm="3" Class="anim-scroll-yukari text-center">
+                    <MudText Typo="Typo.h2" Class="desa-istatistik-sayi mb-2" Style="font-weight: 700; color: var(--desa-primary);">@_yilTecrube</MudText>
+                    <MudText Typo="Typo.body2" Style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8;">@dil.T("hakkimizda.yilTecrubeEtiket", "Yıl Tecrübe")</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="3" Class="anim-scroll-yukari text-center">
+                    <MudText Typo="Typo.h2" Class="desa-istatistik-sayi mb-2" Style="font-weight: 700; color: var(--desa-primary);">@_tamamlananProje</MudText>
+                    <MudText Typo="Typo.body2" Style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8;">@dil.T("hakkimizda.tamamlananProjeEtiket", "Tamamlanan Proje")</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="3" Class="anim-scroll-yukari text-center">
+                    <MudText Typo="Typo.h2" Class="desa-istatistik-sayi mb-2" Style="font-weight: 700; color: var(--desa-primary);">@_bayiSayisi</MudText>
+                    <MudText Typo="Typo.body2" Style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8;">@dil.T("hakkimizda.aktifBayiEtiket", "Aktif Bayi")</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="3" Class="anim-scroll-yukari text-center">
+                    <MudText Typo="Typo.h2" Class="desa-istatistik-sayi mb-2" Style="font-weight: 700; color: var(--desa-primary);">@_personelSayisi</MudText>
+                    <MudText Typo="Typo.body2" Style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8;">@dil.T("hakkimizda.uzmanPersonelEtiket", "Uzman Personel")</MudText>
+                </MudItem>
+            </MudGrid>
+        </MudContainer>
+    </MudPaper>
+
+    @* ─── TARİHÇE (TIMELINE) ─────────────────────────────────────────────────── *@
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+        <MudText Typo="Typo.h3" Class="desa-bolum-baslik text-center mb-12">@dil.T("hakkimizda.kilometreTaslari", "Kilometre Taşlarımız")</MudText>
+        <MudTimeline TimelinePosition="TimelinePosition.Alternate">
+            @foreach (var an in _tarihsel)
+            {
+                <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                    <ItemOpposite>
+                        <MudText Typo="Typo.h5" Color="Color.Primary" Style="font-weight: 700;">@an.Yil</MudText>
+                    </ItemOpposite>
+                    <ItemContent>
+                        <MudPaper Elevation="1" Class="pa-4 desa-timeline-kutu" Style="background-color: var(--desa-bg-alt);">
+                            <MudText Typo="Typo.h6" Class="mb-1">@an.Baslik</MudText>
+                            <MudText Typo="Typo.body2" Style="opacity: 0.8;">@an.Aciklama</MudText>
+                        </MudPaper>
+                    </ItemContent>
+                </MudTimelineItem>
+            }
+        </MudTimeline>
+    </MudContainer>
+
+    @* ─── EKİBİMİZ ──────────────────────────────────────────────────────────── *@
+    @if (_ekipUyeleri.Any())
+    {
+        <MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+            <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2 d-block text-center">
+                @dil.T("hakkimizda.ekibimizEtiket", "EKİBİMİZİ DAHA YAKINDAN TANIYIN")
+            </MudText>
+            <MudText Typo="Typo.h3" Class="desa-bolum-baslik text-center mb-12">
+                @dil.T("hakkimizda.ekibimizBaslik", "Ekibimiz")
+            </MudText>
+            <MudGrid Spacing="6" Justify="Justify.Center">
+                @foreach (var uye in _ekipUyeleri)
+                {
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="text-center anim-scroll-yukari">
+                            <div style="width:240px;height:280px;margin:0 auto 1rem;overflow:hidden;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+                                <img src="@EkipResimUrl(uye.Resim)" alt="@uye.AdSoyad"
+                                     style="width:100%;height:100%;object-fit:cover;"
+                                     onerror="this.src='/medya/desadoor_default.png'" />
+                            </div>
+                            <MudText Typo="Typo.subtitle1" Style="font-weight:600;" Class="mb-1">@uye.AdSoyad</MudText>
+                            <MudText Typo="Typo.body2" Style="color:var(--desa-text-muted);">@uye.Unvan</MudText>
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    }
+}
+

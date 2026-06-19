@@ -1,0 +1,34 @@
+@using Desadoor.Ortak.Modeller
+@inject Servisler.ApiIstemcisi api
+@inject Servisler.DilServisi dil
+
+@if (_yorumlar.Any())
+{
+    <MudPaper Elevation="0" Square="true" Style="background: var(--desa-bg-alt); padding: 96px 0;">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+            <MudStack AlignItems="AlignItems.Center" Class="mb-12 text-center">
+                <MudText Typo="Typo.overline" Class="desa-etiket d-block">@dil.T("musteri_yorumlari.etiket", "MÜŞTERİ YORUMLARI")</MudText>
+                <MudText Typo="Typo.h3" Class="desa-bolum-baslik">@dil.T("musteri_yorumlari.baslik", "Bizi Tercih Edenler")</MudText>
+            </MudStack>
+            <MudGrid Spacing="6">
+                @foreach (var yorum in _yorumlar.Take(4))
+                {
+                    <MudItem xs="12" sm="6" md="3" Class="gsap-fade-up">
+                        <div class="pa-6 hover-lift" style="border: 1px solid var(--desa-border); background: var(--desa-bg-base); min-height: 220px;">
+                            <MudStack Row="true" Class="mb-3">
+                                @for (int s = 0; s < yorum.Puan; s++)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Star" Size="Size.Small" Style="color: var(--desa-gold);" />
+                                }
+                            </MudStack>
+                            <MudText Typo="Typo.body2" Class="mb-4" Style="font-style: italic; color: var(--desa-text-secondary); line-height: 1.7;">"@(yorum.Yorum.Length > 120 ? yorum.Yorum[..120] + "..." : yorum.Yorum)"</MudText>
+                            <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">@yorum.MusteriAdi</MudText>
+                            <MudText Typo="Typo.caption" Style="color: var(--desa-text-muted);">@yorum.MusteriSehir</MudText>
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudPaper>
+}
+

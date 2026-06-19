@@ -1,0 +1,205 @@
+/*
+ * ===========================================================================
+ * BİLEŞENLER — MEDYA HAVUZU (medya.css)
+ * ===========================================================================
+ * MedyaKart, MedyaYukleyici, MedyaYoutubeEkle, MedyaSecici, MedyaDuzenleyici
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA KART
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-kart {
+    cursor: pointer;
+    border: 2px solid var(--desa-border);
+    border-radius: var(--desa-radius-md);
+    overflow: hidden;
+    transition: var(--desa-transition);
+    background: var(--desa-surface);
+}
+
+.medya-kart:hover {
+    border-color: var(--desa-accent);
+    box-shadow: var(--desa-shadow-hover);
+}
+
+.medya-kart-secili {
+    border-color: var(--desa-accent) !important;
+    box-shadow: 0 0 0 1px var(--desa-accent), var(--desa-shadow-md);
+}
+
+.medya-kart-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--desa-bg-alt);
+}
+
+.medya-kart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Video oynat simgesi */
+.medya-kart-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(255, 255, 255, 0.9);
+    transition: background var(--desa-transition-fast);
+}
+
+.medya-kart:hover .medya-kart-play {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* PDF simgesi */
+.medya-kart-pdf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--desa-bg-alt);
+    color: var(--desa-accent);
+}
+
+/* 3D (GLB) simgesi */
+.medya-kart-3d {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--desa-bg-alt);
+    color: var(--desa-accent);
+}
+
+/* Bilgi cubugu */
+.medya-kart-info {
+    padding: var(--desa-space-xs) var(--desa-space-sm);
+    background: var(--desa-surface);
+}
+
+/* Tip rozeti */
+.medya-kart-tip {
+    position: absolute;
+    top: var(--desa-space-xs);
+    right: var(--desa-space-xs);
+    padding: 2px 6px;
+    border-radius: var(--desa-radius-sm);
+    font-size: 10px;
+    font-family: var(--desa-font-sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    color: var(--desa-text-inverse);
+    background: var(--desa-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA YÜKLEYİCİ
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-yukleyici-zone {
+    border: 2px dashed var(--desa-border);
+    border-radius: var(--desa-radius-md);
+    padding: var(--desa-space-xl);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--desa-transition);
+    background: var(--desa-bg-alt);
+}
+
+.medya-yukleyici-zone:hover {
+    border-color: var(--desa-accent);
+    background: var(--desa-bg-section);
+}
+
+.medya-yukleyici-zone.drag-over {
+    border-color: var(--desa-accent);
+    background: var(--desa-bg-section);
+    box-shadow: var(--desa-shadow-lux);
+}
+
+.medya-yukleyici-ilerleme {
+    margin-top: var(--desa-space-md);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA YOUTUBE EKLE
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-youtube-onizleme {
+    margin-top: var(--desa-space-md);
+    border-radius: var(--desa-radius-md);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--desa-bg-alt);
+}
+
+.medya-youtube-onizleme img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA DÜZENLEYİCİ
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-duzenleyici-onizleme {
+    width: 100%;
+    max-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--desa-bg-alt);
+    border-radius: var(--desa-radius-md);
+    overflow: hidden;
+    margin-bottom: var(--desa-space-md);
+}
+
+.medya-duzenleyici-onizleme img {
+    max-width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
+}
+
+.medya-duzenleyici-araclar {
+    display: flex;
+    gap: var(--desa-space-sm);
+    flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA SEÇİCİ
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-secici-grid {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.medya-secici-filtreler {
+    display: flex;
+    gap: var(--desa-space-sm);
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: var(--desa-space-md);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * MEDYA KART ARAC IPUCU (tooltip içeriği)
+ * ═══════════════════════════════════════════════════════════════ */
+.medya-tooltip-icerik {
+    max-width: 260px;
+}
+
+.medya-tooltip-icerik img {
+    width: 100%;
+    border-radius: var(--desa-radius-sm);
+    margin-bottom: var(--desa-space-xs);
+}

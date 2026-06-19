@@ -1,0 +1,334 @@
+@page "/"
+@layout DesaDoorDuzen
+
+@* 
+ * DesaDoorAnaSayfa — desadoor kurumsal sitesinin giriş sayfasıdır.
+ * Endüstriyel Lüks Tema (Stitch AI) ile baştan yazılmıştır.
+ * Noto Serif ve Manrope tipografisi, keskin köşeler, siyah-beyaz asimetrik yerleşim
+ * ve canlı CSS animasyonları kullanılmıştır.
+ *@
+
+<PageTitle>desadoor — @dil.T("ana_sayfa_title", "Bursa Kapı ve Mutfak Mobilyaları Üreticisi")</PageTitle>
+
+@* ─── HERO SLIDER (API'den dinamik) ──────────────────────────────────── *@
+<HeroSlider />
+
+@* ─── ASİMETRİK KATEGORİ GEÇİŞLERİ ────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Class="desa-bolum-bg-alt desa-bolum-py-128">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+        
+        @* Kapak Sistemleri - Görsel Sol, Metin Sağ *@
+        <MudGrid Spacing="6" Class="align-center mb-16">
+            <MudItem xs="12" md="5" Class="anim-scroll-resim">
+                <MudImage Src="@_kat1Gorsel" Alt="@_kat1Baslik"
+                          ObjectFit="ObjectFit.Cover" Class="desa-kategori-gorsel" />
+            </MudItem>
+            <MudItem xs="12" md="7" Class="anim-scroll-sag desa-kategori-padding-sol">
+                <MudText Typo="Typo.overline" Class="desa-etiket mb-4 d-block">@_kat1Etiket</MudText>
+                <MudText Typo="Typo.h2" Class="desa-bolum-baslik mb-6">@_kat1Baslik</MudText>
+                <MudText Typo="Typo.body1" Class="desa-hero-aciklama mb-8">
+                    @((MarkupString)_kat1Aciklama)
+                </MudText>
+                <MudButton Href="kapak-sistemleri" Variant="Variant.Outlined" Class="desa-btn-ikincil" EndIcon="@Icons.Material.Outlined.ArrowForward">
+                    @dil.T("koleksiyonu_goster", "KOLEKSİYONU GÖSTER")
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+
+        @* İç Mekan Kapıları - Metin Sol, Görsel Sağ *@
+        <MudGrid Spacing="6" Class="align-center mt-16">
+            <MudItem xs="12" md="7" Class="anim-scroll-sol desa-kategori-padding-sag">
+                <MudText Typo="Typo.overline" Class="desa-etiket mb-4 d-block">@_kat2Etiket</MudText>
+                <MudText Typo="Typo.h2" Class="desa-bolum-baslik mb-6">@_kat2Baslik</MudText>
+                <MudText Typo="Typo.body1" Class="desa-hero-aciklama mb-8">
+                    @((MarkupString)_kat2Aciklama)
+                </MudText>
+                <MudButton Href="kapi-modelleri" Variant="Variant.Outlined" Class="desa-btn-ikincil" EndIcon="@Icons.Material.Outlined.ArrowForward">
+                    @dil.T("modelleri_goster", "MODELLERİ GÖSTER")
+                </MudButton>
+            </MudItem>
+            <MudItem xs="12" md="5" Class="anim-scroll-yukari">
+                <MudImage Src="@_kat2Gorsel" Alt="@_kat2Baslik"
+                          ObjectFit="ObjectFit.Cover" Class="desa-kategori-gorsel" />
+            </MudItem>
+        </MudGrid>
+
+    </MudContainer>
+</MudPaper>
+
+@* ─── VİDEO TANITIM (Dinamik) ────────────────────────────────────────────── *@
+@if (!string.IsNullOrEmpty(_videoUrl) || !string.IsNullOrEmpty(_youtubeVideoId))
+{
+    <MudPaper Elevation="0" Square="true" Class="desa-video-sarici">
+        @if (!string.IsNullOrEmpty(_youtubeVideoId))
+        {
+            <iframe src="https://www.youtube-nocookie.com/embed/@_youtubeVideoId?autoplay=1&mute=@(_videoMute ? "1" : "0")&loop=1&playlist=@_youtubeVideoId&controls=1&rel=0&modestbranding=1&iv_load_policy=3"
+                    frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
+                    class="desa-video-iframe"></iframe>
+        }
+        else
+        {
+            <video autoplay loop muted="@_videoMute" playsinline class="desa-video-element">
+                <source src="@_videoUrl" type="video/mp4">
+            </video>
+        }
+        <div class="desa-video-overlay gsap-night-bg">
+            <div class="text-center anim-scroll-yukari">
+                <MudIcon Icon="@Icons.Material.Outlined.PlayCircleOutline" Class="desa-video-ikon" />
+                <MudText Typo="Typo.h3" Class="desa-video-baslik">@dil.T("anasayfa.video.baslik", "Üretimdeki Hassasiyetimiz")</MudText>
+            </div>
+        </div>
+    </MudPaper>
+}
+
+@* ─── ÖNE ÇIKAN KAPAK MODELLERİ ────────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Class="desa-bolum-bg-base desa-bolum-py-128">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+        
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.End" Class="mb-16">
+            <MudStack Class="anim-scroll-sol">
+                <MudText Typo="Typo.overline" Class="desa-etiket d-block">@dil.T("one_cikan_koleksiyon", "ÖNE ÇIKAN KOLEKSİYON")</MudText>
+                <MudText Typo="Typo.h3" Class="desa-bolum-baslik">@dil.T("one_cikan_kapaklar", "Mimari Seçimler")</MudText>
+            </MudStack>
+            <MudButton Href="kapak-sistemleri" Variant="Variant.Outlined" Class="desa-btn-ikincil">
+                @dil.T("tumunu_gor", "TÜMÜNÜ GÖR")
+            </MudButton>
+        </MudStack>
+
+        <MudGrid Spacing="6">
+            @if (_kapakYukleniyor)
+            {
+                @for (int i = 0; i < _oneCikanAdet; i++)
+                {
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudCard Elevation="0" Square="true" Class="desa-kapak-iskelet">
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="340px" />
+                            <MudCardContent Class="px-0 pt-4">
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Width="60px" Height="12px" Class="mb-2" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Width="90%" Height="16px" Class="mb-1" />
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            }
+            else
+            {
+                <div class="mud-grid mud-grid-spacing-xs-6 desa-kapak-serit">
+                @foreach (var kapak in _oneCikanKapaklar)
+                {
+                    <MudItem xs="12" sm="6" md="3" @key="kapak.Id" Class="anim-scroll-yukari">
+                        <MudCard Elevation="0" Square="true" Class="desa-kapak-kart" @onclick="@(() => KapakDetayiAc(kapak))">
+                            <MudCardMedia Image="@(string.IsNullOrEmpty(kapak.AnaGorselUrl) ? "/medya/desadoor_default.png" : kapak.AnaGorselUrl)"
+                                          Height="340" Class="desa-kapak-medya" />
+                            <MudCardContent Class="px-0 pt-4 pb-0">
+                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-1">
+                                    <MudText Typo="Typo.subtitle1" Class="desa-kapak-model-adi">@kapak.ModelAdi</MudText>
+                                    <MudText Typo="Typo.caption" Class="desa-kapak-model-kodu">@kapak.ModelKodu</MudText>
+                                </MudStack>
+                                <MudText Typo="Typo.body2" Class="desa-kapak-renk">@kapak.RenkAdi</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+                </div>
+            }
+        </MudGrid>
+
+    </MudContainer>
+</MudPaper>
+
+@* ─── RAKAMLAR / İSTATİSTİKLER ──────────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Class="desa-bolum-bg-secondary desa-bolum-py-128">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+        <MudGrid Justify="Justify.Center" Spacing="6" Class="">
+            @foreach (var istatistik in _istatistikler)
+            {
+                <MudItem xs="6" sm="3" Class="anim-scroll-yukari text-center">
+                    <MudText Typo="Typo.h2" Class="desa-istatistik-sayi mb-2">@istatistik.Deger</MudText>
+                    <MudText Typo="Typo.overline" Class="desa-istatistik-label">@istatistik.Etiket</MudText>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</MudPaper>
+
+@* 4 ADIM SUREC *@
+@if (_adimlar.Any())
+{
+    <MudPaper Elevation="0" Square="true" Class="desa-bolum-bg-alt desa-bolum-py-128">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+            <MudStack AlignItems="AlignItems.Center" Class="mb-16 text-center">
+                <MudText Typo="Typo.overline" Class="desa-etiket d-block">@dil.T("anasayfa.surec.etiket", "desadoor & Norden mobilya")</MudText>
+                <MudText Typo="Typo.h2" Class="desa-bolum-baslik">@dil.T("anasayfa.surec.baslik", "4 Adimda Ozel Proje Calismasi")</MudText>
+                <MudText Typo="Typo.body1" Class="desa-hero-aciklama desa-aciklama-max-width">
+                    @dil.T("anasayfa.surec.aciklama", "Mutlakinizin duzeni bir duzenden digerine degisir. Mutlakin sekli dolaplar, tezgahlar ve aksesuarlar icin alani belirler.")
+                </MudText>
+            </MudStack>
+            <MudGrid Spacing="6" Justify="Justify.Center">
+                @for (int i = 0; i < _adimlar.Count; i++)
+                {
+                    var adim = _adimlar[i];
+                    var numara = (i + 1).ToString("D2");
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="text-center pa-6 anim-scroll-yukari">
+                            <div class="desa-adim-sayi-dairesi">
+                                @numara
+                            </div>
+                            <MudText Typo="Typo.h6" Class="mb-3 desa-adim-baslik">@adim.Baslik</MudText>
+                            <MudText Typo="Typo.body2" Class="desa-adim-aciklama">@adim.Aciklama</MudText>
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudPaper>
+}
+
+@* REFERANS LOGOLARI *@
+@* ─── REFERANS SERIDI ──────────────────────────────────────────────────── *@
+<ReferansSeridi />
+
+@* ─── CTA BANNER *@
+@if (!string.IsNullOrEmpty(_ctaBaslik))
+{
+    <MudPaper Elevation="0" Square="true" Class="desa-bolum-bg-secondary desa-bolum-py-96">
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            <div class="text-center anim-scroll-yukari">
+                <MudText Typo="Typo.h2" Class="desa-cta-baslik">@_ctaBaslik</MudText>
+                <MudText Typo="Typo.body1" Class="desa-cta-altbaslik">@_ctaAltBaslik</MudText>
+                <MudButton Href="@_ctaButonLink" 
+                           Variant="Variant.Filled" 
+                           Class="desa-btn-birincil desa-cta-buton">
+                    @_ctaButonYazi
+                </MudButton>
+            </div>
+        </MudContainer>
+    </MudPaper>
+}
+
+
+@* ─── KATALOG CTA (Dinamik) ──────────────────────────────────────────────── *@
+@if (_anasayfaKataloglar.Any() || !string.IsNullOrEmpty(_pdfKatalogUrl))
+{
+    <MudPaper Elevation="0" Square="true" Class="desa-katalog-bolum">
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            <div class="text-center anim-scroll-yukari">
+                <MudText Typo="Typo.overline" Class="desa-etiket mb-4 d-block">@dil.T("anasayfa.katalog.etiket", "DOKÜMANTASYON")</MudText>
+                <MudText Typo="Typo.h2" Class="desa-bolum-baslik mb-6">@dil.T("anasayfa.katalog.baslik", "2024 Tasarım Kataloğumuz Hazır")</MudText>
+                <MudText Typo="Typo.body1" Class="desa-hero-aciklama mb-10">
+                    @dil.T("anasayfa.katalog.aciklama", "Tüm modellerimizi, teknik detayları ve geniş renk yelpazemizi içeren güncel kataloğumuzu hemen indirin, projelerinize ilham katın.")
+                </MudText>
+                @if (_anasayfaKataloglar.Any())
+                {
+                    <div class="desa-katalog-kartlar">
+                        @foreach (var katalog in _anasayfaKataloglar)
+                        {
+                            <article class="desa-katalog-kart">
+                                <a class="desa-katalog-kart__onizleme" href="@KatalogPdfGostericiUrl(katalog)">
+                                    <img src="@KatalogOnizlemeUrl(katalog)" alt="@katalog.Baslik" loading="lazy" />
+                                    <span>@(katalog.Yil?.ToString() ?? DateTime.UtcNow.Year.ToString())</span>
+                                </a>
+                                <div class="desa-katalog-kart__govde">
+                                    <MudText Typo="Typo.h5" Class="desa-katalog-kart__baslik">@katalog.Baslik</MudText>
+                                    @if (!string.IsNullOrWhiteSpace(katalog.Aciklama))
+                                    {
+                                        <MudText Typo="Typo.body2" Class="desa-katalog-kart__aciklama">@katalog.Aciklama</MudText>
+                                    }
+                                    <div class="desa-katalog-kart__meta">
+                                        @if (katalog.SayfaSayisi.HasValue && katalog.SayfaSayisi.Value > 0)
+                                        {
+                                            <span>
+                                                <MudIcon Icon="@Icons.Material.Outlined.MenuBook" Size="Size.Small" />
+                                                @katalog.SayfaSayisi.Value @dil.T("katalog.sayfaSayisi", "Sayfa")
+                                            </span>
+                                        }
+                                        @if (katalog.DosyaBoyutuMb.HasValue && katalog.DosyaBoyutuMb.Value > 0)
+                                        {
+                                            <span>
+                                                <MudIcon Icon="@Icons.Material.Outlined.Save" Size="Size.Small" />
+                                                @katalog.DosyaBoyutuMb.Value.ToString("N1") MB
+                                            </span>
+                                        }
+                                    </div>
+                                    <div class="desa-katalog-kart__aksiyonlar">
+                                        <MudButton Href="@KatalogPdfGostericiUrl(katalog)"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Material.Filled.RemoveRedEye"
+                                                   Class="desa-katalog-incele">
+                                            @dil.T("katalog.incele", "Incele")
+                                        </MudButton>
+                                        <MudIconButton Href="@KatalogIndirUrl(katalog)"
+                                                       Target="_blank"
+                                                       Icon="@Icons.Material.Filled.Download"
+                                                       Color="Color.Primary"
+                                                       Variant="Variant.Outlined" />
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               Class="desa-btn-birincil desa-katalog-buton"
+                               StartIcon="@Icons.Material.Filled.RemoveRedEye"
+                               Href="@EskiKatalogPdfGostericiUrl()">
+                        @dil.T("katalog.incele", "Incele")
+                    </MudButton>
+                }
+            </div>
+        </MudContainer>
+    </MudPaper>
+}
+
+@* ─── HIZMET SURECI ───────────────────────────────────────────────────── *@
+<HizmetSureciBolumu />
+
+@* ─── MUSTERI YORUMLARI ────────────────────────────────────────────────── *@
+<MusteriYorumlariCarousel />
+
+@* ─── SSS ──────────────────────────────────────────────────────────────── *@
+<SSSBolumu />
+
+@* ─── KAPAK DETAY DIALOG (Lightbox) ─────────────────────────────────────── *@
+@if (_secilenKapak is not null)
+{
+    <MudDialog Visible="true" VisibleChanged="@(EventCallback.Factory.Create<bool>(this, (bool v) => { if (!v) _secilenKapak = null; }))"
+               Options="new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = true }">
+        <TitleContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                <MudText Typo="Typo.h5" Class="desa-dialog-model-adi">@_secilenKapak.ModelAdi</MudText>
+                <MudText Typo="Typo.caption" Class="desa-dialog-model-kodu">@_secilenKapak.ModelKodu</MudText>
+            </MudStack>
+        </TitleContent>
+        <DialogContent>
+            @if (_secilenKapak.UygulamaGorselleri.Count == 0)
+            {
+                <MudAlert Severity="Severity.Info" Square="true" Class="mt-4">
+                    @dil.T("uygulama_gorsel_yok", "Bu model için henüz uygulama görseli yüklenmemiştir.")
+                </MudAlert>
+            }
+            else
+            {
+                <MudCarousel Class="mud-width-full my-4 desa-dialog-carousel" ShowArrows="true" ShowBullets="true"
+                             EnableSwipeGesture="true" AutoCycle="false" TData="string">
+                    @foreach (var gorsel in _secilenKapak.UygulamaGorselleri)
+                    {
+                        <MudCarouselItem>
+                            <MudImage Src="@gorsel" Alt="@_secilenKapak.ModelAdi"
+                                      ObjectFit="ObjectFit.Contain" Class="desa-dialog-gorsel" />
+                        </MudCarouselItem>
+                    }
+                </MudCarousel>
+                @if (!string.IsNullOrEmpty(_secilenKapak.Aciklama))
+                {
+                    <MudText Typo="Typo.body1" Class="desa-dialog-aciklama">@((MarkupString)_secilenKapak.Aciklama)</MudText>
+                }
+            }
+        </DialogContent>
+    </MudDialog>
+}

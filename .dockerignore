@@ -1,0 +1,21 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/AppData
+
+# Medya dosyalari Docker image'e dahil (volume bos ise gorunmez)
+# Desadoor.Api/wwwroot/medya/
+
+# Gecici dosyalar
+**/*.tmp
+**/*.log
+**/publish-test
+**/Guncelle
+
+# IDE dosyalari
+**/*.user
+**/*.suo
+**/.idea

@@ -1,0 +1,63 @@
+@import '_content/AuralizeBlazor/AuralizeBlazor.tf5u2o3oxg.bundle.scp.css';
+@import '_content/LiveChartsCore.SkiaSharpView.Blazor/LiveChartsCore.SkiaSharpView.Blazor.bundle.scp.css';
+@import '_content/Nextended.Blazor/Nextended.Blazor.tkxqvq0zjw.bundle.scp.css';
+
+/* /Bilesenler/CanliSohbetArayuzu.razor.rz.scp.css */
+.desa-chat-widget[b-9lck8ahzj7] {
+    position: fixed;
+    bottom: 24px;
+    right: 24px !important;
+    left: auto !important;
+    z-index: 9999;
+}
+
+[b-9lck8ahzj7] .desa-chat-penceresi {
+    width: 350px;
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.desa-chat-mesajlar[b-9lck8ahzj7] {
+    overflow-y: auto;
+    background-color: var(--mud-palette-background-grey);
+}
+
+.desa-mesaj[b-9lck8ahzj7] {
+    max-width: 80%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    position: relative;
+    clear: both;
+}
+
+.desa-mesaj.sistem[b-9lck8ahzj7] {
+    background-color: var(--mud-palette-surface);
+    float: left;
+    border-bottom-left-radius: 0;
+}
+
+.desa-mesaj.kullanici[b-9lck8ahzj7] {
+    background-color: var(--mud-palette-primary);
+    color: white;
+    float: right;
+    border-bottom-right-radius: 0;
+}
+
+.desa-mesaj-saat[b-9lck8ahzj7] {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-top: 4px;
+    text-align: right;
+}
+
+[b-9lck8ahzj7] .hover-lift {
+    transition: transform 0.2s ease-in-out;
+}
+
+[b-9lck8ahzj7] .hover-lift:hover {
+    transform: translateY(-4px);
+}

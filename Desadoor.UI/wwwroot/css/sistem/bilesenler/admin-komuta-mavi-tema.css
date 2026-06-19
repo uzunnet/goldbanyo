@@ -1,0 +1,109 @@
+/*
+ * DESADOOR - ADMIN KOMUTA MAVI TEMA KATMANI
+ * TemaYonetimi > Komuta Mavi secildiginde documentElement uzerine
+ * data-admin-tema="komuta-mavi" atanir. Bu dosya sadece admin panelde calisir.
+ */
+
+:root[data-admin-tema="komuta-mavi"] {
+    --admin-bg: #050f1d;
+    --admin-surface: #081f37;
+    --admin-surface-hover: #0d2d4f;
+    --admin-surface-raised: #0a2848;
+    --admin-primary: #061222;
+    --admin-primary-light: #0e3156;
+    --admin-secondary: #0a2139;
+    --admin-accent: #2d8cff;
+    --admin-accent-light: #5ac8ff;
+    --admin-text: #e9f3ff;
+    --admin-text-primary: #f7fbff;
+    --admin-text-secondary: #b7d4f7;
+    --admin-text-muted: #8fa8c7;
+    --admin-text-dim: rgba(143,168,199,0.52);
+    --admin-text-disabled: rgba(143,168,199,0.38);
+    --admin-border: rgba(91,165,255,0.22);
+    --admin-border-light: rgba(91,165,255,0.14);
+    --admin-border-focus: rgba(45,140,255,0.42);
+    --admin-divider: rgba(91,165,255,0.18);
+    --admin-shadow: 0 18px 50px rgba(0,0,0,0.32);
+    --admin-shadow-hover: 0 24px 70px rgba(0,0,0,0.42);
+    --admin-shadow-glow: 0 0 32px rgba(45,140,255,0.16);
+    --admin-radius: 8px;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-layout {
+    background:
+        radial-gradient(circle at 70% 8%, rgba(45,140,255,0.16), transparent 30%),
+        linear-gradient(180deg, #061222 0%, #050f1d 100%) !important;
+    color: var(--admin-text);
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-layout .mud-main-content {
+    background: transparent !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-banner,
+:root[data-admin-tema="komuta-mavi"] .admin-drawer,
+:root[data-admin-tema="komuta-mavi"] .admin-drawer-right,
+:root[data-admin-tema="komuta-mavi"] .admin-card,
+:root[data-admin-tema="komuta-mavi"] .admin-form-panel,
+:root[data-admin-tema="komuta-mavi"] .admin-table-wrap,
+:root[data-admin-tema="komuta-mavi"] .mud-card,
+:root[data-admin-tema="komuta-mavi"] .mud-paper {
+    border-color: var(--admin-border) !important;
+    border-radius: var(--admin-radius) !important;
+    background:
+        linear-gradient(180deg, rgba(20,65,108,0.72), rgba(7,28,51,0.90)),
+        var(--admin-surface) !important;
+    color: var(--admin-text) !important;
+    box-shadow: var(--admin-shadow) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-banner {
+    border-bottom: 1px solid var(--admin-border) !important;
+    background: rgba(4,16,31,0.96) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-drawer {
+    background: #04101f !important;
+    border-right: 1px solid var(--admin-border) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-drawer .mud-nav-link,
+:root[data-admin-tema="komuta-mavi"] .admin-drawer .mud-nav-group > .mud-nav-link {
+    color: var(--admin-text-secondary) !important;
+    border-radius: var(--admin-radius) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .admin-drawer .mud-nav-link.active,
+:root[data-admin-tema="komuta-mavi"] .admin-drawer .mud-nav-link:hover {
+    color: #ffffff !important;
+    background: linear-gradient(90deg, rgba(45,140,255,0.36), rgba(45,140,255,0.10)) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] :where(
+    .admin-card-title,
+    .admin-banner-sayfa-baslik,
+    .mud-typography,
+    .mud-table-cell,
+    .mud-input-slot,
+    .mud-input-label,
+    .mud-select,
+    .mud-list-item-text
+) {
+    color: inherit !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] .mud-button-filled-primary,
+:root[data-admin-tema="komuta-mavi"] .admin-btn-primary {
+    color: #ffffff !important;
+    border-radius: var(--admin-radius) !important;
+    background: linear-gradient(135deg, #2d8cff, #1557c8) !important;
+    box-shadow: 0 14px 32px rgba(45,140,255,0.28) !important;
+}
+
+:root[data-admin-tema="komuta-mavi"] body:has(.admin-layout) .mud-popover .mud-paper,
+:root[data-admin-tema="komuta-mavi"] body:has(.admin-layout) .mud-popover .mud-list {
+    color: var(--admin-text) !important;
+    background: #071a2e !important;
+    border: 1px solid var(--admin-border) !important;
+}

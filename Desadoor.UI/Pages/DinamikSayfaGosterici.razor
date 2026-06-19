@@ -1,0 +1,68 @@
+@page "/{Slug}"
+@layout DesaDoorDuzen
+
+<PageTitle>DesaDoor - @(_sayfaBasligi ?? dil.T("ortak.yukleniyor", "Yükleniyor..."))</PageTitle>
+
+@if (!_yukleniyor && !_sayfaBulunamadi)
+{
+    <Desadoor.UI.Bilesenler.HeroSlider SayfaKodu="@Slug" />
+}
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8 mb-16 fade-in">
+    @if (_yukleniyor)
+    {
+        <div class="d-flex justify-center align-center" style="min-height: 400px;">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        </div>
+    }
+    else if (_sayfaBulunamadi)
+    {
+        <div class="d-flex flex-column align-center justify-center pa-12 text-center" style="min-height: 400px;">
+            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Large" Color="Color.Error" Class="mb-4" Style="font-size: 5rem;" />
+            <MudText Typo="Typo.h3" Class="fw-bold mb-2">@dil.T("hata.404.baslik", "404 - Sayfa Bulunamadı")</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-6">@dil.T("hata.404.aciklama", "Aradığınız sayfa yayından kaldırılmış veya hiç var olmamış olabilir.")</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/desadoor" Size="Size.Large">@dil.T("hata.404.anasayfa", "Ana Sayfaya Dön")</MudButton>
+        </div>
+    }
+    else
+    {
+        <MudGrid Spacing="4">
+            <MudItem xs="12">
+                @if (!string.IsNullOrEmpty(_youtubeUrl))
+                {
+                    <div class="video-container mb-6" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                        <iframe src="@_youtubeUrl" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(_videoUrl))
+                {
+                    <video class="w-100 rounded-lg mb-6" style="box-shadow: 0 4px 20px rgba(0,0,0,0.1);" 
+                           controls autoplay loop muted="@_videoMute">
+                        <source src="@_videoUrl" type="video/mp4" />
+                        Tarayıcınız video etiketini desteklemiyor.
+                    </video>
+                    <!-- Oynatma hızı JS interop ile ayarlanabilir, şimdilik native kontroller sunuluyor -->
+                }
+
+                @if (!string.IsNullOrEmpty(_pdfKatalogUrl))
+                {
+                    <MudCard Elevation="2" Class="mb-6">
+                        <MudCardContent>
+                            <MudButton Href="@_pdfKatalogUrl" Target="_blank" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.PictureAsPdf" Class="mb-4" Size="Size.Large" FullWidth="true">
+                                @dil.T("hakkimizda.katalogIndir", "Kurumsal Kataloğu İndir (PDF)")
+                            </MudButton>
+                            
+                            <div style="height: 600px; width: 100%; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
+                                <embed src="@_pdfKatalogUrl" type="application/pdf" width="100%" height="100%" />
+                            </div>
+                        </MudCardContent>
+                    </MudCard>
+                }
+
+                <div class="desa-dynamic-content fade-in-up mt-4">
+                    @((MarkupString)_sayfaIcerigi)
+                </div>
+            </MudItem>
+        </MudGrid>
+    }
+</MudContainer>

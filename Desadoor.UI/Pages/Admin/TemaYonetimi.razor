@@ -1,0 +1,112 @@
+@page "/admin/tema-yonetimi"
+@inject Desadoor.UI.Servisler.DilServisi dil
+@layout Desadoor.UI.Layout.AdminDuzen
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<PageTitle>@dil.T("admin.tema.sayfaBasligi", "Tema Yonetimi") | DesaDoor Admin</PageTitle>
+
+<div class="admin-card mb-6">
+    <div class="admin-card-header">
+        <span class="admin-card-title">@dil.T("admin.tema.sablonlar", "Tema Sablonlari")</span>
+        <span class="admin-nav-count">@_temalar.Count</span>
+    </div>
+    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-4">
+        @dil.T("admin.tema.aciklama", "Tek tikla kurumsal temani sec, tum admin paneli aninda degissin.")
+    </MudText>
+
+    <div class="dl-theme-grid">
+        @foreach (var tema in _temalar)
+        {
+            var aktif = _seciliTema == tema.Ad;
+            <div class="dl-theme-card dl-theme-card-clickable @(aktif ? "dl-theme-card-active" : "")"
+                 @onclick="@(() => TemaSecAsync(tema))">
+                @* Renk önizleme şeridi *@
+                <div class="dl-theme-colors">
+                    <div class="dl-theme-swatch" style="background:@tema.Birincil"></div>
+                    <div class="dl-theme-swatch" style="background:@tema.Vurgu"></div>
+                    <div class="dl-theme-swatch" style="background:@tema.ArkaPlan"></div>
+                    <div class="dl-theme-swatch" style="background:@tema.Yuzey"></div>
+                </div>
+                @* Tema bilgisi *@
+                <div class="dl-theme-info">
+                    <div class="d-flex align-center justify-space-between">
+                        <span class="dl-theme-name">@tema.Baslik</span>
+                        @if (aktif)
+                        {
+                            <span class="dl-theme-badge">@dil.T("ortak.aktif","Aktif")</span>
+                        }
+                    </div>
+                    <span class="dl-theme-desc">@tema.Aciklama</span>
+                </div>
+                @* Mini önizleme *@
+                <div class="dl-theme-preview" style="background:@tema.ArkaPlan;">
+                    <div style="display:flex; gap:4px; margin-bottom:6px;">
+                        <div style="width:70%; height:4px; background:@tema.Vurgu; opacity:.3;"></div>
+                        <div style="width:30%; height:4px; background:@tema.Birincil; opacity:.2;"></div>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <div style="flex:1; height:14px; background:@tema.Yuzey; border:1px solid rgba(255,255,255,.05);"></div>
+                        <div style="width:20px; height:14px; background:@tema.Vurgu; opacity:.6;"></div>
+                    </div>
+                    <div style="display:flex; gap:4px; margin-top:4px;">
+                        <div style="flex:1; height:8px; background:@tema.Yuzey; border:1px solid rgba(255,255,255,.05);"></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@* Canlı Önizleme *@
+<div class="admin-card">
+    <div class="admin-card-header">
+        <span class="admin-card-title">@dil.T("admin.tema.canliOnizleme", "Canlı Önizleme") - @_seciliTemaBaslik</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="background:@_seciliYuzey; border:1px solid var(--admin-border); padding:20px;">
+            <div style="width:60%; height:10px; background:@_seciliVurgu; opacity:.2; margin-bottom:12px;"></div>
+            <div style="width:80%; height:8px; background:@_seciliVurgu; opacity:.4; margin-bottom:8px;"></div>
+            <div style="width:40%; height:8px; background:@_seciliVurgu; opacity:.3; margin-bottom:16px;"></div>
+            <div style="display:flex; gap:8px;">
+                <div style="width:80px; height:28px; background:@_seciliVurgu;"></div>
+                <div style="width:80px; height:28px; background:transparent; border:1px solid rgba(255,255,255,.1);"></div>
+            </div>
+        </div>
+        <div style="background:@_seciliYuzey; border:1px solid var(--admin-border); padding:20px;">
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <div style="width:32px; height:32px; background:@_seciliVurgu; opacity:.2;"></div>
+                <div>
+                    <div style="width:120px; height:6px; background:@_seciliVurgu; opacity:.3; margin-bottom:4px;"></div>
+                    <div style="width:80px; height:5px; background:@_seciliVurgu; opacity:.15;"></div>
+                </div>
+            </div>
+            <div style="height:1px; background:var(--admin-border); margin:12px 0;"></div>
+            <div style="display:flex; gap:4px;">
+                <div style="width:16px; height:4px; background:@_seciliVurgu; opacity:.2;"></div>
+                <div style="width:16px; height:4px; background:@_seciliVurgu; opacity:.2;"></div>
+                <div style="width:16px; height:4px; background:@_seciliVurgu; opacity:.2;"></div>
+            </div>
+        </div>
+    </div>
+
+    @* Alt renk bilgisi *@
+    <div style="display:flex; gap:24px; margin-top:16px; flex-wrap:wrap;">
+        <div class="d-flex align-center gap-2">
+            <div style="width:14px; height:14px; background:@_seciliBirincil;"></div>
+            <MudText Typo="Typo.caption">Birincil: @_seciliBirincil</MudText>
+        </div>
+        <div class="d-flex align-center gap-2">
+            <div style="width:14px; height:14px; background:@_seciliVurgu;"></div>
+            <MudText Typo="Typo.caption">Vurgu: @_seciliVurgu</MudText>
+        </div>
+        <div class="d-flex align-center gap-2">
+            <div style="width:14px; height:14px; background:@_seciliArkaPlan;"></div>
+            <MudText Typo="Typo.caption">Arka Plan: @_seciliArkaPlan</MudText>
+        </div>
+        <div class="d-flex align-center gap-2">
+            <div style="width:14px; height:14px; background:@_seciliYuzey;"></div>
+            <MudText Typo="Typo.caption">Yüzey: @_seciliYuzey</MudText>
+        </div>
+    </div>
+</div>

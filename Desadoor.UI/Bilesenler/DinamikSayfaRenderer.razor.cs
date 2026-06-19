@@ -1,0 +1,38 @@
+using Desadoor.Ortak.Modeller;
+using Desadoor.UI.Servisler;
+using Microsoft.AspNetCore.Components;
+
+namespace Desadoor.UI.Bilesenler;
+
+public partial class DinamikSayfaRenderer : ComponentBase
+{
+    [Inject] private ApiIstemcisi Api { get; set; } = default!;
+
+    [Parameter] public string Slug { get; set; } = "anasayfa";
+    [Parameter] public string Dil { get; set; } = "tr";
+
+    private SayfaGorunumDto? _sayfa;
+    private bool _yukleniyor = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await YukleAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await YukleAsync();
+    }
+
+    private async Task YukleAsync()
+    {
+        _yukleniyor = true;
+        StateHasChanged();
+        try
+        {
+            _sayfa = await Api.GetAsync<SayfaGorunumDto>($"api/desadoor/sayfa-gorunumu/{Slug}?dil={Dil}");
+        }
+        catch { _sayfa = null; }
+        _yukleniyor = false;
+    }
+}

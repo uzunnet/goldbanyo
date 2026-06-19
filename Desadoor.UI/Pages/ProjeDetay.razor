@@ -1,0 +1,96 @@
+@page "/projeler/{Slug}"
+@layout Desadoor.UI.Layout.DesaDoorDuzen
+
+<PageTitle>@_sayfaBasligi</PageTitle>
+
+@if (_yukleniyor)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16 d-flex justify-center align-center desa-yukleniyor-alani">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
+}
+else if (_proje is null)
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16 text-center desa-bos-liste-alani">
+        <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Class="desa-bos-liste-ikon" />
+        <MudText Typo="Typo.h5">@dil.T("projeDetay.bulunamadi", "Proje bulunamadi")</MudText>
+        <MudButton Href="/projeler" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" Class="mt-4">
+            @dil.T("projeDetay.projelereDon", "Projelere don")
+        </MudButton>
+    </MudContainer>
+}
+else
+{
+    <section class="desa-detay-hero">
+        <img src="@ProjeGorseli(_proje)" alt="@_proje.Baslik" class="desa-detay-hero-gorsel" />
+        <div class="desa-detay-hero-katman">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <MudStack Spacing="4" Class="desa-detay-hero-icerik">
+                    <MudButton Href="/projeler" Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" Class="desa-detay-geri-btn">
+                        @dil.T("projeDetay.geri", "Projeler")
+                    </MudButton>
+                    <MudText Typo="Typo.overline" Class="desa-detay-ust-etiket">@dil.T("projeDetay.ustEtiket", "Endustriyel uygulama dosyasi")</MudText>
+                    <MudText Typo="Typo.h2" Class="desa-detay-baslik">@_proje.Baslik</MudText>
+                    @if (!string.IsNullOrWhiteSpace(_proje.KisaAciklama))
+                    {
+                        <MudText Typo="Typo.subtitle1" Class="desa-detay-ozet">@_proje.KisaAciklama</MudText>
+                    }
+                    <div class="desa-detay-metrikler">
+                        <div>
+                            <span>@dil.T("projeDetay.konum", "Konum")</span>
+                            <strong>@DegerYaz(_proje.MusteriSehir)</strong>
+                        </div>
+                        <div>
+                            <span>@dil.T("projeDetay.tarih", "Tarih")</span>
+                            <strong>@ProjeTarihiYaz(_proje)</strong>
+                        </div>
+                        <div>
+                            <span>@dil.T("projeDetay.durum", "Durum")</span>
+                            <strong>@dil.T("projeDetay.tamamlandi", "Tamamlandi")</strong>
+                        </div>
+                    </div>
+                </MudStack>
+            </MudContainer>
+        </div>
+    </section>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-12">
+        <MudGrid Spacing="6">
+            <MudItem xs="12" lg="8">
+                <MudPaper Elevation="0" Class="desa-detay-panel">
+                    <MudText Typo="Typo.overline" Class="desa-detay-panel-etiket">@dil.T("projeDetay.projeNotu", "Proje notu")</MudText>
+                    <MudText Typo="Typo.h4" Class="desa-detay-panel-baslik">@dil.T("projeDetay.uygulamaDetayi", "Uygulama detayi")</MudText>
+                    <MudText Typo="Typo.body1" Class="desa-detay-metin">@AciklamaYaz(_proje)</MudText>
+                </MudPaper>
+
+                <MudGrid Spacing="3" Class="mt-6">
+                    @foreach (var madde in SurecMaddeleri)
+                    {
+                        <MudItem xs="12" md="4">
+                            <MudPaper Elevation="0" Class="desa-surec-kutu">
+                                <MudIcon Icon="@madde.Ikon" />
+                                <MudText Typo="Typo.subtitle2">@madde.Baslik</MudText>
+                                <MudText Typo="Typo.body2">@madde.Aciklama</MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudItem>
+
+            <MudItem xs="12" lg="4">
+                <MudPaper Elevation="0" Class="desa-detay-yan-panel">
+                    <MudText Typo="Typo.h6">@dil.T("projeDetay.enCokIncelenen", "En cok incelenen projeler")</MudText>
+                    <MudStack Spacing="2" Class="mt-4">
+                        @foreach (var proje in _enCokIncelenenler)
+                        {
+                            <MudLink Href="@ProjeDetayBaglantisi(proje)" Underline="Underline.None" Class="desa-yan-liste-ogesi">
+                                <img src="@ProjeGorseli(proje)" alt="@proje.Baslik" />
+                                <span>@proje.Baslik</span>
+                            </MudLink>
+                        }
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+}

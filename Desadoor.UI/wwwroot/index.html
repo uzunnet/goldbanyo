@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bursa Kapı ve Mutfak Mobilyaları Üreticisi — DesaDoor</title>
+    <meta name="description" content="DesaDoor — 1992'den beri Bursa'da kapı, mutfak mobilyaları, duşakabin, vestiyer ve dolap kapak sistemleri üretiyoruz. Hemen teklif alın." />
+    <meta name="keywords" content="kapı,bursa kapı,mutfak dolabı,duşakabin,vestiyer,mobilya kapak,lake kapak,membran kapak,akrilik kapak,desadoor" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://desadoor.com.tr" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bursa Kapı ve Mutfak Mobilyaları Üreticisi — DesaDoor" />
+    <meta property="og:description" content="1992'den beri kalite ve estetik. Kapı, mutfak, banyo, duşakabin ve vestiyer sistemleri." />
+    <meta property="og:url" content="https://desadoor.com.tr" />
+    <meta property="og:site_name" content="DesaDoor" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DesaDoor — Kapı ve Mobilya Kapak Sistemleri" />
+    <meta name="twitter:description" content="1992'den beri Bursa'da üretim. Premium kapı ve mobilya kapak sistemleri." />
+    <base href="/" />
+
+    <!-- Fontlar (MudBlazor için Roboto + Material Symbols) — non-blocking -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" /></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/icon?family=Material+Icons" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></noscript>
+
+    <!-- MudBlazor -->
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet" />
+    <link href="_content/Gotho.BlazorPdf/blazorpdf.min.css" rel="stylesheet" />
+    <link href="_content/Gotho.BlazorPdf.MudBlazor/blazorpdf_mudblazor.min.css" rel="stylesheet" />
+
+    <!-- Flag Icons (local) -->
+    <link rel="stylesheet" href="css/lib/flag-icons.min.css" />
+
+    <!-- Sistem CSS — tek giris (tokens.css tum alt dosyalari @import eder) -->
+    <link href="css/sistem/tokens.css?v=1.0.2" rel="stylesheet" />
+    <link href="css/app.css?v=1.0.2" rel="stylesheet" />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#C5A059" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="desa-ilk-yukleme">
+            <div class="desa-ilk-yukleme-spinner"></div>
+            <p class="desa-ilk-yukleme-metin">DesaDoor yükleniyor…</p>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        Beklenmeyen bir hata oluştu.
+        <a href="" class="reload">Yeniden yükle</a>
+        <a class="dismiss">×</a>
+    </div>
+
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
+    <script type="module" src="_content/Gotho.BlazorPdf/blazorpdf.min.js?v=2"></script>
+    <!-- Three.js Kutuphanesi (r128) -->
+    <script src="js/lib/three/three.min.js" defer></script>
+    <script src="js/lib/three/GLTFLoader.js" defer></script>
+    <script src="js/lib/three/OrbitControls.js" defer></script>
+
+    <!-- GSAP & ScrollTrigger (Atelier Monochrome Animations) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script src="js/aos-init.js"></script>
+    <script src="js/scroll-animasyon.js"></script>
+    <script src="js/pdf-gosterici-dil.js?v=3"></script>
+    <script src="js/uc-boyut-motoru.js?v=4" defer></script>
+    <script src="js/tema.js"></script>
+
+    <!-- Blazor WASM Loader -->
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        async function baslatBlazor() {
+            if ('serviceWorker' in navigator) {
+                var yerelGelisme = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+                if (yerelGelisme) {
+                    try {
+                        var kayitlar = await navigator.serviceWorker.getRegistrations();
+                        await Promise.all(kayitlar.map(function(k) { return k.unregister(); }));
+                        if ('caches' in window) {
+                            var anahtarlar = await caches.keys();
+                            await Promise.all(anahtarlar.map(function(a) { return caches.delete(a); }));
+                        }
+                    } catch (e) { /* yut */ }
+                } else {
+                    try { await navigator.serviceWorker.register('service-worker.js'); } catch (e) { /* yut */ }
+                }
+            }
+            await Blazor.start();
+        }
+        baslatBlazor();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+# Cursor AI Agent Redirect
+# Bu dosya Cursor IDE'yi otomatik olarak AGENTS.md'e yönlendirir.
+
+Herhangi bir kod yazmadan önce proje kökündeki `AGENTS.md` dosyasını ve `AjanKurallari/` klasöründeki ilgili kural dosyasını oku.

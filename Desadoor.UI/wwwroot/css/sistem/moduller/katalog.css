@@ -1,0 +1,138 @@
+.katalog-sayfasi {
+    background: var(--desa-bg-base);
+    color: var(--desa-text);
+}
+
+.katalog-hero {
+    min-height: 42vh;
+    display: flex;
+    align-items: end;
+    padding: calc(var(--bosluk-3xl) * 1.5) var(--bosluk-xl) var(--bosluk-2xl);
+    background: linear-gradient(135deg, var(--desa-bg-dark), var(--desa-bg-alt));
+}
+
+.katalog-hero__icerik {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+}
+
+.katalog-hero__etiket {
+    color: var(--desa-accent);
+    letter-spacing: 0;
+}
+
+.katalog-hero__baslik {
+    color: var(--desa-text-inverse);
+    margin: var(--bosluk-sm) 0;
+}
+
+.katalog-hero__metin {
+    max-width: 720px;
+    color: var(--desa-text-muted);
+}
+
+.katalog-liste-bolumu {
+    width: min(1180px, calc(100% - var(--bosluk-xl) * 2));
+    margin: 0 auto;
+    padding: var(--bosluk-2xl) 0 var(--bosluk-3xl);
+}
+
+.katalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--bosluk-lg);
+}
+
+.katalog-kart {
+    overflow: hidden;
+    border: 1px solid var(--desa-border);
+    border-radius: var(--kose-md);
+    background: var(--desa-surface);
+    box-shadow: var(--golge-sm);
+}
+
+.katalog-kart--iskelet {
+    min-height: 520px;
+}
+
+.katalog-kart__onizleme {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    display: grid;
+    place-items: center;
+    background: var(--desa-bg-section);
+    border-bottom: 1px solid var(--desa-border);
+}
+
+.katalog-kart__onizleme img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: var(--bosluk-md);
+}
+
+.katalog-kart__yil {
+    position: absolute;
+    right: var(--bosluk-sm);
+    bottom: var(--bosluk-sm);
+    padding: var(--bosluk-xs) var(--bosluk-sm);
+    background: var(--desa-bg-dark);
+    color: var(--desa-text-inverse);
+    font-weight: 700;
+}
+
+.katalog-kart__govde {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bosluk-sm);
+    min-height: 230px;
+    padding: var(--bosluk-lg);
+}
+
+.katalog-kart__baslik {
+    color: var(--desa-text);
+}
+
+.katalog-kart__aciklama,
+.katalog-kart__meta {
+    color: var(--desa-text-muted);
+}
+
+.katalog-kart__meta,
+.katalog-kart__meta span,
+.katalog-kart__aksiyonlar {
+    display: flex;
+    align-items: center;
+    gap: var(--bosluk-sm);
+    flex-wrap: wrap;
+}
+
+.katalog-kart__aksiyonlar {
+    margin-top: auto;
+    justify-content: space-between;
+}
+
+.katalog-bos {
+    min-height: 320px;
+    display: grid;
+    place-items: center;
+    gap: var(--bosluk-sm);
+    text-align: center;
+    color: var(--desa-text-muted);
+}
+
+.katalog-bos .mud-icon-root {
+    font-size: 58px;
+    color: var(--desa-primary);
+}
+
+@media (max-width: 640px) {
+    .katalog-hero {
+        min-height: 34vh;
+        padding: var(--bosluk-2xl) var(--bosluk-md);
+    }
+
+    .katalog-liste-bolumu {
+        width: min(100% - var(--bosluk-md) * 2, 1180px);
+    }
+}

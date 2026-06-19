@@ -1,0 +1,107 @@
+@using Desadoor.Ortak.Modeller.Urunler
+@inject Desadoor.UI.Servisler.DilServisi dil
+
+<!--
+    RENK SEÇİCİ BİLEŞENİ
+    RalRengi listesini görsel swatch grid olarak sunar.
+    Renk seçildiğinde üst bileşene SeciliRenkDegisti ile bildirim gönderilir.
+    3D viewer anında güncellenir.
+-->
+
+<div class="desa-renk-secici">
+    <!-- Başlık -->
+    <div class="desa-renk-baslik">
+        <span class="desa-etiket">RENK SEÇİMİ</span>
+        @if (_secilenRenk != null && !CokluSecim)
+        {
+            <div class="desa-renk-secilen-bilgi">
+                <MudPaper Elevation="0" Width="32" Height="32" Class="desa-renk-onizleme" Style="@($"background-color:{_secilenRenk.HexKod}")" />
+                <span class="desa-renk-adi">@_secilenRenk.Ad</span>
+                <span class="desa-renk-hex">@_secilenRenk.HexKod</span>
+            </div>
+        }
+        else if (CokluSecim && SecilenRenkler.Any())
+        {
+            <div class="desa-renk-secilen-bilgi" style="background-color: transparent; border: none; padding: 0;">
+                <span style="font-weight: 600; color: var(--desa-primary); font-size: 0.9rem;">@SecilenRenkler.Count Renk Seçildi</span>
+            </div>
+        }
+    </div>
+
+    <!-- Arama -->
+    <div class="desa-renk-arama-sarici">
+        <input type="text" @bind="_aramaMetni" @bind:event="oninput" placeholder="RAL kodunu veya rengin adını arayın (Örn: 1000)..." class="desa-renk-arama-input" />
+    </div>
+
+    <!-- Renk İçerik Alanı -->
+    <div class="desa-renk-icerik">
+        
+        <!-- Sol Menü (Arama boşken gösterilir) -->
+        @if (string.IsNullOrWhiteSpace(_aramaMetni) && RenkGruplari?.Any() == true)
+        {
+            <div class="desa-renk-grup-menu desa-scroll">
+                @foreach (var grup in RenkGruplari)
+                {
+                    <button @onclick="() => GrupSec(grup)" 
+                            class="@($"desa-renk-grup-btn {(_aktifGrup == grup ? "aktif" : "")}")">
+                        @grup
+                    </button>
+                }
+            </div>
+        }
+
+        <!-- Sağ Grid -->
+        <div class="desa-renk-icerik-sag">
+            
+            @if (CokluSecim && FiltreleRenkler().Any())
+            {
+                <div class="desa-renk-toplu-secim">
+                    <button @onclick="TumKataloguSecVeyaKaldir" class="desa-btn-outline desa-renk-toplu-btn" style="border-color:var(--mud-palette-secondary);color:var(--mud-palette-secondary);">
+                        <MudIcon Icon="@Icons.Material.Filled.CollectionsBookmark" Size="Size.Small" Style="margin-right:4px;font-size:1rem;vertical-align:middle;" />
+                        @(Renkler.All(r => SecilenRenkler.Any(sr => sr.Id == r.Id)) ? "Katalogdaki Tümünü Kaldır" : "Katalogdaki Tümünü Seç")
+                    </button>
+                    <button @onclick="AktifGrubuSecVeyaKaldir" class="desa-btn-outline desa-renk-toplu-btn" style="border-color:var(--desa-primary);color:var(--desa-primary);">
+                        <MudIcon Icon="@Icons.Material.Filled.SelectAll" Size="Size.Small" Style="margin-right:4px;font-size:1rem;vertical-align:middle;" />
+                        @(FiltreleRenkler().All(gr => SecilenRenkler.Any(sr => sr.Id == gr.Id)) ? "Gruptaki Tümünü Kaldır" : "Gruptaki Tümünü Seç")
+                    </button>
+                </div>
+            }
+
+            <div class="desa-renk-grid desa-renk-grid-sarici">
+                @foreach (var renk in FiltreleRenkler())
+                {
+                    <div class="desa-renk-kutu-wrap" @onclick="() => RenkSec(renk)" title="@renk.Ad">
+                        
+                        <MudPaper Elevation="@(RenkSeciliMi(renk) ? 4 : 1)"
+                                  Class="@($"desa-renk-swatch {(RenkSeciliMi(renk) ? "secili" : "")}")"
+                                  Style="@($"background-color:{renk.HexKod};")">
+                            
+                            @if (RenkSeciliMi(renk))
+                            {
+                                <svg class="desa-renk-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            }
+                        </MudPaper>
+                        
+                        <span class="desa-renk-kod">
+                            @(renk.Kod?.StartsWith("RAL") == true ? renk.Kod : $"RAL {renk.Kod}")
+                        </span>
+                    </div>
+                }
+            </div>
+            
+            @if (!FiltreleRenkler().Any())
+            {
+                <div class="desa-renk-bos-sonuc">
+                    @dil.T("renk.sonuc_bulunamadi", "Sonuç bulunamadı.")
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Renk Sayısı Bilgisi -->
+    <div class="desa-renk-adet">
+        <span>@string.Format(dil.T("renk.secenek_sayisi", "{0} renk seçeneği mevcut"), FiltreleRenkler().Count())</span>
+    </div>
+</div>

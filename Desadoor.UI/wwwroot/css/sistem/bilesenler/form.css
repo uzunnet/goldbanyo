@@ -1,0 +1,5 @@
+/* Form — DesaDoor */
+.desa-form-grup{margin-bottom:1.5rem}
+.desa-form-etiket{display:block;margin-bottom:.5rem;font-weight:600;font-size:.9rem;color:var(--desa-primary, #1A1A27)}
+.desa-form-input{width:100%;padding:10px 14px;border:1px solid #ddd;font-size:1rem;transition:border-color .2s}
+.desa-form-input:focus{border-color:var(--desa-accent, #C8952A);outline:none;box-shadow:0 0 0 3px rgba(200,149,42,.1)}

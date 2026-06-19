@@ -1,0 +1,119 @@
+@page "/fabrikamiz"
+@layout Desadoor.UI.Layout.DesaDoorDuzen
+
+<PageTitle>Fabrikamız | DesaDoor</PageTitle>
+
+<Desadoor.UI.Bilesenler.HeroSlider SayfaKodu="fabrikamiz" />
+
+@* ─── TANITIM ─── *@
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+    <MudGrid Spacing="6" Class="align-center">
+        <MudItem xs="12" md="6" Class="anim-scroll-yukari">
+            <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2">ÜRETİM TESİSİ</MudText>
+            <MudText Typo="Typo.h3" Class="desa-bolum-baslik mb-4">Fabrikamız</MudText>
+            <MudText Typo="Typo.body1" Class="desa-govde-metin mb-4" Style="line-height:1.9;">
+                Bursa Nilüfer Çalı Mahallesi'nde konumlanan DesaDoor üretim tesisi, <strong>5.000 m²</strong> kapalı alanda modern CNC teknolojileri ve otomatik pres hatlarıyla günde binlerce mobilya kapağı ve iç kapı üretmektedir.
+            </MudText>
+            <MudText Typo="Typo.body1" Class="desa-govde-metin mb-6" Style="line-height:1.9;">
+                1993'ten bu yana süregelen üretim deneyimimiz, Endüstri 4.0 ekipmanları ve sürdürülebilir üretim anlayışıyla bugün Türkiye'nin en yetkin mobilya kapak fabrikalarından biri hâline gelmiştir.
+            </MudText>
+            <MudGrid Spacing="3">
+                @foreach (var ist in _istatistikler)
+                {
+                    <MudItem xs="6">
+                        <MudPaper Elevation="0" Class="pa-4 text-center" Style="background:var(--desa-bg-alt);border-radius:8px;">
+                            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@ist.Deger</MudText>
+                            <MudText Typo="Typo.caption" Style="opacity:.75;">@ist.Etiket</MudText>
+                        </MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+        <MudItem xs="12" md="6" Class="anim-scroll-yukari">
+            <div style="border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.12);">
+                <img src="@Gorsel("fabrika/fabrikadis.jpg")" alt="DesaDoor Fabrika Dış Görünüm"
+                     style="width:100%;height:420px;object-fit:cover;display:block;" />
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@* ─── FABRİKA İÇİ GALERİ ─── *@
+<div style="background:var(--desa-bg-alt);padding:64px 0;">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2 d-block text-center">ÜRETİM SÜRECİ</MudText>
+        <MudText Typo="Typo.h4" Class="desa-bolum-baslik mb-8 text-center">Üretim Alanlarımız</MudText>
+        <MudGrid Spacing="3">
+            @foreach (var (gorsel, baslik, aciklama) in _uretimAlanlari)
+            {
+                <MudItem xs="12" sm="6" md="3" Class="anim-scroll-yukari">
+                    <MudCard Elevation="2" Style="border-radius:10px;overflow:hidden;height:100%;">
+                        <div style="height:220px;overflow:hidden;">
+                            <img src="@Gorsel(gorsel)" alt="@baslik"
+                                 style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" />
+                        </div>
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6" Class="fw-bold mb-1">@baslik</MudText>
+                            <MudText Typo="Typo.body2" Style="opacity:.75;line-height:1.6;">@aciklama</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</div>
+
+@* ─── TEKNOLOJİLERİMİZ ─── *@
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+    <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2 d-block text-center">ENDÜSTRİ 4.0</MudText>
+    <MudText Typo="Typo.h4" Class="desa-bolum-baslik mb-10 text-center">Teknoloji Altyapımız</MudText>
+    <MudGrid Spacing="4">
+        @foreach (var (ikon, baslik, aciklama) in _teknolojiler)
+        {
+            <MudItem xs="12" sm="6" md="4" Class="anim-scroll-yukari">
+                <MudPaper Elevation="0" Class="pa-6 d-flex flex-column align-center text-center"
+                          Style="border:1px solid var(--mud-palette-divider);border-radius:10px;height:100%;">
+                    <MudIcon Icon="@ikon" Color="Color.Primary" Style="font-size:2.5rem;" Class="mb-3" />
+                    <MudText Typo="Typo.h6" Class="fw-bold mb-2">@baslik</MudText>
+                    <MudText Typo="Typo.body2" Style="opacity:.75;line-height:1.7;">@aciklama</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@* ─── DIŞ GÖRÜNÜM ─── *@
+<div style="position:relative;height:400px;overflow:hidden;">
+    <img src="@Gorsel("fabrika/fabrikadis1.jpg")" alt="DesaDoor Fabrika"
+         style="width:100%;height:100%;object-fit:cover;filter:brightness(.55);" />
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;">
+        <MudText Typo="Typo.h3" Style="color:#fff;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.5);">
+            Kalite, her ürünün içinde başlar
+        </MudText>
+        <MudText Typo="Typo.subtitle1" Style="color:rgba(255,255,255,.85);max-width:600px;margin-top:12px;">
+            Hammadde seçiminden son kontrole kadar her adım titizlikle denetlenmektedir.
+        </MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/iletisim"
+                   Class="mt-6" Size="Size.Large">
+            Fabrikamızı Ziyaret Edin
+        </MudButton>
+    </div>
+</div>
+
+@* ─── ÜRETIM GALERİSİ ─── *@
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16">
+    <MudText Typo="Typo.overline" Color="Color.Primary" Class="desa-vurgu-metin mb-2 d-block text-center">GALERİ</MudText>
+    <MudText Typo="Typo.h4" Class="desa-bolum-baslik mb-8 text-center">Üretim Galerimiz</MudText>
+    <MudGrid Spacing="2">
+        @for (int i = 1; i <= 7; i++)
+        {
+            var idx = i;
+            <MudItem xs="12" sm="6" md="@(idx == 1 || idx == 7 ? 6 : 3)" Class="anim-scroll-yukari">
+                <div style="border-radius:8px;overflow:hidden;height:@(idx == 1 || idx == 7 ? "280px" : "200px");">
+                    <img src="@Gorsel($"fabrika/misyonumuz{idx}.jpg")" alt="Üretim @idx"
+                         style="width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block;" />
+                </div>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>

@@ -1,0 +1,20 @@
+/* Tablolar — DesaDoor */
+.mud-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mud-table th {
+    text-align: left;
+    padding: var(--desa-space-sm) var(--desa-space-md);
+    font-weight: 600;
+    border-bottom: 2px solid var(--desa-border);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mud-table td {
+    padding: var(--desa-space-sm) var(--desa-space-md);
+    border-bottom: 1px solid var(--desa-border-light);
+}

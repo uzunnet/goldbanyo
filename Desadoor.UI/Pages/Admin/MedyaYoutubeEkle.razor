@@ -1,0 +1,50 @@
+﻿@page "/admin/medya-youtube-ekle"
+@inject Desadoor.UI.Servisler.DilServisi dil
+@layout Desadoor.UI.Layout.AdminDuzen
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<PageTitle>@dil.T("admin.medya.youtubeSayfaBasligi", "YouTube Ekle") | DesaDoor Admin</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">@dil.T("medya.youtubeEkle", "YouTube Video Ekle")</MudText>
+
+<MudCard Elevation="2" Class="pa-6 admin-medya-youtube-kart">
+    <MudCardContent>
+        <MudTextField @bind-Value="_url" T="string"
+                      Label="@dil.T("admin.medya.youtubeUrl", "YouTube URL")"
+                      Placeholder="https://www.youtube.com/watch?v=..."
+                      Variant="Variant.Outlined" Class="mb-4" />
+
+        <MudTextField @bind-Value="_baslik" T="string"
+                      Label="@dil.T("kapi.modelAdi", "Başlık (opsiyonel)")"
+                      Variant="Variant.Outlined" Class="mb-4" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="Ekle" Disabled="@_yukleniyor"
+                   StartIcon="@Icons.Material.Filled.VideoLibrary">
+            @dil.T("ortak.ekle", "Ekle")
+        </MudButton>
+
+        @if (_yukleniyor)
+        {
+            <MudProgressLinear Indeterminate="true" Class="mt-3" />
+        }
+
+        @if (!string.IsNullOrEmpty(_sonucMesaj))
+        {
+            <MudAlert Severity="@(_basarili ? Severity.Success : Severity.Error)"
+                     Class="mt-4">@_sonucMesaj</MudAlert>
+        }
+    </MudCardContent>
+</MudCard>
+
+@if (!string.IsNullOrEmpty(_videoId))
+{
+    <MudCard Elevation="2" Class="mt-4 pa-2 admin-medya-youtube-kart">
+        <div class="admin-video-gomulu">
+            <iframe src="https://www.youtube.com/embed/@_videoId"
+                    class="admin-video-iframe"
+                    allowfullscreen></iframe>
+        </div>
+    </MudCard>
+}

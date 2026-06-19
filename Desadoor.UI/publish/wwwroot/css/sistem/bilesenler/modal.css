@@ -1,0 +1,4 @@
+/* Modal/Dialog — DesaDoor */
+.desa-modal-ust{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #eee}
+.desa-modal-icerik{padding:24px}
+.desa-modal-alt{padding:16px 24px;border-top:1px solid #eee;display:flex;justify-content:flex-end;gap:12px}
