@@ -15,18 +15,18 @@ public partial class MalzemeYonetimi : ComponentBase
 
     private readonly List<MalzemeTipiSecenegi> MalzemeTipleri =
     [
-        new("Cam", "Cam"),
-        new("Aluminyum", "Aluminyum"),
-        new("Metal", "Metal"),
-        new("Ayna", "Ayna"),
-        new("Porselen", "Porselen"),
-        new("Ahsap", "Ahsap"),
-        new("MDF", "MDF"),
-        new("Lake", "Lake"),
-        new("Membran", "Membran"),
-        new("Akrilik", "Akrilik"),
-        new("Kompakt", "Kompakt"),
-        new("Diger", "Diger")
+        new("malzeme.tip.cam", "Cam"),
+        new("malzeme.tip.aluminyum", "Alüminyum"),
+        new("malzeme.tip.metal", "Metal"),
+        new("malzeme.tip.ayna", "Ayna"),
+        new("malzeme.tip.porselen", "Porselen"),
+        new("malzeme.tip.ahsap", "Ahşap"),
+        new("malzeme.tip.mdf", "MDF"),
+        new("malzeme.tip.lake", "Lake"),
+        new("malzeme.tip.membran", "Membran"),
+        new("malzeme.tip.akrilik", "Akrilik"),
+        new("malzeme.tip.kompakt", "Kompakt"),
+        new("malzeme.tip.diger", "Diğer")
     ];
 
     private List<Malzeme> _liste = [];
@@ -163,12 +163,14 @@ public partial class MalzemeYonetimi : ComponentBase
     private string TipEtiketi(string? deger)
     {
         if (string.IsNullOrWhiteSpace(deger))
-        {
             return "-";
-        }
 
-        return MalzemeTipleri.FirstOrDefault(x => x.Deger == deger)?.Etiket ?? deger;
+        var secenek = MalzemeTipleri.FirstOrDefault(x => x.Deger == deger);
+        return secenek is not null ? DilServisi.T(secenek.DilAnahtari, secenek.Varsayilan) : deger;
     }
 
-    private sealed record MalzemeTipiSecenegi(string Deger, string Etiket);
+    private sealed record MalzemeTipiSecenegi(string DilAnahtari, string Varsayilan)
+    {
+        public string Deger => Varsayilan;
+    }
 }

@@ -48,16 +48,16 @@ public partial class YorumYonetimi : ComponentBase
         if (cevap?.BasariliMi == true)
             Snackbar.Add(cevap.Mesaj, Severity.Info);
         else
-            Snackbar.Add(cevap?.Mesaj ?? "Yorum onayi guncellenemedi.", Severity.Error);
+            Snackbar.Add(cevap?.Mesaj ?? dil.T("admin.yorum.onayHata", "Yorum onayı güncellenemedi."), Severity.Error);
     }
 
     async Task SilOnay(MusteriYorumu y)
     {
         var onay = await DialogServisi.ShowMessageBoxAsync(
-            "Silme Onayı",
-            $"'{y.MusteriAdi}' yorumu silinecektir. Emin misiniz?",
-            yesText: "Evet, Sil",
-            cancelText: "İptal");
+            dil.T("admin.yorum.silmeOnayi", "Silme Onayı"),
+            dil.T("admin.yorum.silOnayMesaj", "'{0}' yorumu silinecektir. Emin misiniz?").Replace("{0}", y.MusteriAdi),
+            yesText: dil.T("admin.yorum.evetSil", "Evet, Sil"),
+            cancelText: dil.T("ortak.iptal", "İptal"));
         if (onay == true) await Sil(y);
     }
 
@@ -71,7 +71,7 @@ public partial class YorumYonetimi : ComponentBase
         }
         else
         {
-            Snackbar.Add(cevap?.Mesaj ?? "Yorum silinemedi.", Severity.Error);
+            Snackbar.Add(cevap?.Mesaj ?? dil.T("admin.yorum.silmeHata", "Yorum silinemedi."), Severity.Error);
         }
     }
 }

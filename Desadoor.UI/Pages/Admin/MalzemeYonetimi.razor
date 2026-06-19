@@ -47,7 +47,7 @@
                     <MudSelect T="string" @bind-Value="_form.Tip" Label='@dil.T("admin.malzeme.tip", "Tip")' Required="true" Class="mb-3">
                         @foreach (var tip in MalzemeTipleri)
                         {
-                            <MudSelectItem Value="@tip.Deger">@tip.Etiket</MudSelectItem>
+                            <MudSelectItem Value="@tip.Deger">@DilServisi.T(tip.DilAnahtari, tip.Varsayilan)</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>

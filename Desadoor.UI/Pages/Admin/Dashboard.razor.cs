@@ -96,8 +96,8 @@ public partial class Dashboard : ComponentBase, IAsyncDisposable
         }
         catch { }
 
-        if (!_etkinlikler.Any(e => e.Eylem == "Dashboard yüklendi"))
-            _etkinlikler.Add(new EtkinlikOgesi { Eylem = "Dashboard yüklendi", Kullanici = "Sistem", Tarih = DateTime.UtcNow, Tip = "bilgi" });
+        if (!_etkinlikler.Any(e => e.Eylem == dil.T("admin.dashboard.yuklendi", "Dashboard yüklendi")))
+            _etkinlikler.Add(new EtkinlikOgesi { Eylem = dil.T("admin.dashboard.yuklendi", "Dashboard yüklendi"), Kullanici = dil.T("admin.dashboard.sistem", "Sistem"), Tarih = DateTime.UtcNow, Tip = dil.T("admin.dashboard.bilgi", "bilgi") });
 
         _yukleniyor = false;
         await InvokeAsync(StateHasChanged);
@@ -233,9 +233,7 @@ public partial class Dashboard : ComponentBase, IAsyncDisposable
         public DateTime Tarih { get; set; }
         public string Tip { get; set; } = "bilgi";
         public bool YeniMi { get; set; }
-        public string ZamanMetni => (DateTime.UtcNow - Tarih).TotalMinutes < 1 ? "Az önce" :
-            (DateTime.UtcNow - Tarih).TotalHours < 1 ? $"{(int)(DateTime.UtcNow - Tarih).TotalMinutes} dk önce" :
-            $"{(int)(DateTime.UtcNow - Tarih).TotalHours} saat önce";
+        // Zaman metni razor'da hesaplanir (dil.T() gerektirir)
     }
 
     public class DashboardKomutaMerkezi
