@@ -331,6 +331,7 @@ public static class TohumVerisi
             new Slayt { Dil = "tr", SayfaKodu = "sss", Baslik = "Sıkça Sorulan Sorular", AltBaslik = "Bilgi Bankası", Aciklama = "Merak ettiğiniz tüm soruların cevapları.", ArkaplanResim = "/medya/slaytlar/sss.jpg", SiraNo = 1 },
 
             new Slayt { Dil = "tr", SayfaKodu = "kapak-sistemleri", Baslik = "Kapak Sistemleri", AltBaslik = "Mutfak ve Banyo Çözümleri", Aciklama = "Membran, lake, laminat ve akrilik kapak modellerimiz.", ArkaplanResim = "/medya/slaytlar/Lake-Kapilar-DSL-113.jpg", SiraNo = 1 },
+            new Slayt { Dil = "tr", SayfaKodu = "bayiler", Baslik = "Bayilerimiz", AltBaslik = "Yetkili Satış Noktaları", Aciklama = "Türkiye genelinde DesaDoor yetkili satış noktaları.", ArkaplanResim = "/medya/slaytlar/ic_toplanti.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "sertifikalar", Baslik = "Sertifikalarımız", AltBaslik = "Kalite Belgelerimiz", Aciklama = "Uluslararası standartlarda kalite ve güvence.", ArkaplanResim = "/medya/slaytlar/fabrikadis_ic.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "iletisim", Baslik = "İletişim", AltBaslik = "Bize Ulaşın", Aciklama = "Size en yakın DesaDoor temsilcisiyle görüşün.", ArkaplanResim = "/medya/slaytlar/ic_mustafa_barut.jpg", SiraNo = 1 },
         };
@@ -1375,10 +1376,11 @@ public static class TohumVerisi
                 new() { Baslik = "Sertifikalarimiz", Url = "sertifikalar", Sira = 4, Konum = "PublicHeader" }
             }},
             new MenuOgesi { Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicHeader" },
-            new MenuOgesi { Baslik = "Referanslar", Url = "referanslar", Sira = 5, Konum = "PublicHeader" },
-            new MenuOgesi { Baslik = "Haber", Url = "haber", Sira = 6, Konum = "PublicHeader" },
-            new MenuOgesi { Baslik = "SSS", Url = "sss", Sira = 7, Konum = "PublicHeader" },
-            new MenuOgesi { Baslik = "İletişim", Url = "iletisim", Sira = 8, Konum = "PublicHeader" }
+            new MenuOgesi { Baslik = "Bayiler", Url = "bayiler", Sira = 5, Konum = "PublicHeader" },
+            new MenuOgesi { Baslik = "Referanslar", Url = "referanslar", Sira = 6, Konum = "PublicHeader" },
+            new MenuOgesi { Baslik = "Haber", Url = "haber", Sira = 7, Konum = "PublicHeader" },
+            new MenuOgesi { Baslik = "SSS", Url = "sss", Sira = 8, Konum = "PublicHeader" },
+            new MenuOgesi { Baslik = "İletişim", Url = "iletisim", Sira = 9, Konum = "PublicHeader" }
         );
 
         // === PUBLIC MOBIL ===
