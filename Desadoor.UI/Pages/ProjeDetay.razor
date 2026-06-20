@@ -60,7 +60,7 @@ else
                 <MudPaper Elevation="0" Class="desa-detay-panel">
                     <MudText Typo="Typo.overline" Class="desa-detay-panel-etiket">@dil.T("projeDetay.projeNotu", "Proje notu")</MudText>
                     <MudText Typo="Typo.h4" Class="desa-detay-panel-baslik">@dil.T("projeDetay.uygulamaDetayi", "Uygulama detayi")</MudText>
-                    <MudText Typo="Typo.body1" Class="desa-detay-metin">@AciklamaYaz(_proje)</MudText>
+                    <MudText Typo="Typo.body1" Class="desa-detay-metin">@((MarkupString)AciklamaYaz(_proje))</MudText>
                 </MudPaper>
 
                 <MudGrid Spacing="3" Class="mt-6">
