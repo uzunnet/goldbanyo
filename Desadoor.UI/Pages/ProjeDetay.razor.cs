@@ -54,9 +54,21 @@ public partial class ProjeDetay : ComponentBase
         => proje.ProjeTarihi?.ToString("dd MMM yyyy") ?? dil.T("ortak.belirtilmedi", "Belirtilmedi");
 
     private string AciklamaYaz(Proje proje)
-        => !string.IsNullOrWhiteSpace(proje.Aciklama)
+    {
+        var metin = !string.IsNullOrWhiteSpace(proje.Aciklama)
             ? proje.Aciklama
             : proje.KisaAciklama ?? dil.T("projeDetay.aciklamaYok", "Bu proje icin detay aciklamasi hazirlaniyor.");
+        
+        return HtmlDuzyazi(metin);
+    }
+
+    private static string HtmlDuzyazi(string? html)
+    {
+        if (string.IsNullOrWhiteSpace(html)) return "";
+        var t = System.Text.RegularExpressions.Regex.Replace(html, "<[^>]+>", "");
+        t = t.Replace("&nbsp;", " ").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">");
+        return t.Trim();
+    }
 
     private sealed record SurecMaddesi(string Baslik, string Aciklama, string Ikon);
 }
