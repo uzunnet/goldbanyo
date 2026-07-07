@@ -7,7 +7,7 @@
 **/AppData
 
 # Medya dosyalari Docker image'e dahil (volume bos ise gorunmez)
-# Desadoor.Api/wwwroot/medya/
+# VizitLink3D.Api/wwwroot/medya/
 
 # Gecici dosyalar
 **/*.tmp

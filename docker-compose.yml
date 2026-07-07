@@ -1,30 +1,30 @@
 services:
-  desadoor-api:
+  vizitlink3d-api:
     build:
       context: .
-      dockerfile: Desadoor.Api/Dockerfile
-    container_name: desadoor-api
+      dockerfile: VizitLink3D.Api/Dockerfile
+    container_name: vizitlink3d-api
     ports:
-      - "5015:8080"
+      - "5115:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
-      - DESADOOR_JWT_KEY=${DESADOOR_JWT_KEY:-DesadoorGizliAnahtar2024!Guvenliyir#XYZ987}
-      - VeriTabani__Yol=/app/Veri/desadoor_v2.db
+      - VIZITLINK3D_JWT_KEY=${VIZITLINK3D_JWT_KEY:-VizitLink3DGizliAnahtar2024!Guvenliyir#XYZ987}
+      - VeriTabani__Yol=/app/Veri/vizitlink3d_v2.db
     volumes:
-      - desadoor_data_v2:/app/Veri
+      - vizitlink3d_data_v2:/app/Veri
     restart: unless-stopped
 
-  desadoor-ui:
+  vizitlink3d-ui:
     build:
       context: .
-      dockerfile: Desadoor.UI/Dockerfile
-    container_name: desadoor-ui
+      dockerfile: VizitLink3D.UI/Dockerfile
+    container_name: vizitlink3d-ui
     ports:
-      - "5013:80"
+      - "5113:80"
     depends_on:
-      - desadoor-api
+      - vizitlink3d-api
     restart: unless-stopped
 
 volumes:
-  desadoor_data_v2:
+  vizitlink3d_data_v2:
