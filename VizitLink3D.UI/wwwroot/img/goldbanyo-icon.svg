@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="goldbanyoIconTitle">
+  <title id="goldbanyoIconTitle">Gold Banyo</title>
+  <rect x="2" y="2" width="32" height="32" rx="10" fill="#C7A24A"/>
+  <path d="M12 10H23.5C26.538 10 29 12.462 29 15.5C29 18.538 26.538 21 23.5 21H18V27H12V10ZM18 15.5V16H22.5C23.328 16 24 15.328 24 14.5C24 13.672 23.328 13 22.5 13H18V15.5Z" fill="#13202B"/>
+</svg>

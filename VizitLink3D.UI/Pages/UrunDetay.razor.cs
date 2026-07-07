@@ -1,0 +1,211 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using VizitLink3D.Ortak.Modeller.Renkler;
+using VizitLink3D.Ortak.Modeller.Urunler;
+using VizitLink3D.UI.Models;
+using VizitLink3D.UI.Servisler;
+
+namespace VizitLink3D.UI.Pages;
+
+public partial class UrunDetay : ComponentBase, IDisposable
+{
+    [Parameter] public string Slug { get; set; } = string.Empty;
+
+    [Inject] private ApiIstemcisi Api { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        dil.DilDegisti += DilDegistiginde;
+    }
+
+    private void DilDegistiginde() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        dil.DilDegisti -= DilDegistiginde;
+    }
+
+    private Urun? _urun;
+    private List<Urun> BenzerUrunler { get; set; } = [];
+    private List<string> GaleriGorselleri { get; set; } = [];
+    private List<UrunUcBoyutModeli> Modeller { get; set; } = [];
+    private List<RalRengi> Renkler { get; set; } = [];
+    private List<UrunMedya> Medyalar { get; set; } = [];
+    private string KoleksiyonAdi { get; set; } = string.Empty;
+    private string KoleksiyonAciklama { get; set; } = string.Empty;
+    private string KategoriAdi { get; set; } = string.Empty;
+    private string HeroGorselUrl { get; set; } = "/medya/vizitlink3d_default.png";
+    private string? HataMesaji { get; set; }
+    private bool _yukleniyor = true;
+    private GoldBanyoKatalogUrunu? _katalogVerisi;
+
+    private List<string> KatalogOzellikleri => _katalogVerisi?.Ozellikler.ToList() ?? [];
+    private List<GoldBanyoKatalogOlcusu> KatalogOlculer => _katalogVerisi?.Olculer.ToList() ?? [];
+
+    private List<(string Ad, string Hex)> RenkSwatchListesi =>
+        _katalogVerisi is not null && _katalogVerisi.Renkler.Length > 0
+            ? _katalogVerisi.Renkler.Select(r => (Ad: r, Hex: GoldBanyoKatalogRenkPaleti.HexBul(r))).ToList()
+            : Renkler.Select(r => (Ad: r.Ad, Hex: r.HexKod ?? "#B0A99A")).ToList();
+
+    private static readonly Dictionary<string, string> OzellikIkonEslesmesi = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Soft Kapak"] = MudBlazor.Icons.Material.Outlined.DoorSliding,
+        ["MDF Ahşap"] = MudBlazor.Icons.Material.Outlined.Forest,
+        ["Dokunmatik Ledli Ayna"] = MudBlazor.Icons.Material.Outlined.TouchApp,
+        ["Kolay Montaj"] = MudBlazor.Icons.Material.Outlined.Build,
+        ["Kolay Temizlenir"] = MudBlazor.Icons.Material.Outlined.CleaningServices,
+        ["Stone Lavabo"] = MudBlazor.Icons.Material.Outlined.Palette,
+        ["Cam Lavabo"] = MudBlazor.Icons.Material.Outlined.Palette,
+    };
+
+    private static string OzellikIkonuBul(string ozellik) =>
+        OzellikIkonEslesmesi.TryGetValue(ozellik, out var ikon) ? ikon : MudBlazor.Icons.Material.Outlined.CheckCircleOutline;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _yukleniyor = true;
+            HataMesaji = null;
+            _urun = null;
+            _katalogVerisi = null;
+            BenzerUrunler = [];
+            GaleriGorselleri = [];
+            Modeller = [];
+            Renkler = [];
+            Medyalar = [];
+            KoleksiyonAdi = string.Empty;
+            KoleksiyonAciklama = string.Empty;
+            KategoriAdi = string.Empty;
+            HeroGorselUrl = "/medya/vizitlink3d_default.png";
+
+            if (string.IsNullOrWhiteSpace(Slug))
+                return;
+
+            var urun = await Api.GetAsync<Urun>($"api/urunler/slug/{Uri.EscapeDataString(Slug)}?dil=tr");
+            if (urun is null)
+                return;
+
+            _urun = urun;
+            _katalogVerisi = UrunGorunumYardimcisi.KatalogVerisiBul(urun);
+
+            var aileler = (await Api.GetAsync<List<UrunAilesi>>("api/urun-ailesi") ?? [])
+                .Where(x => x.AktifMi && !x.SilindiMi)
+                .ToDictionary(x => x.Id);
+            var kategoriler = (await Api.GetAsync<List<UrunKategori>>("api/urun-kategorileri") ?? [])
+                .Where(x => x.AktifMi && !x.SilindiMi)
+                .ToDictionary(x => x.Id);
+
+            Modeller = (await Api.GetAsync<List<UrunUcBoyutModeli>>($"api/urunler/{urun.Id}/uc-boyut-modelleri") ?? [])
+                .Where(x => x.AktifMi && !x.SilindiMi)
+                .ToList();
+            Renkler = (await Api.GetAsync<List<RalRengi>>($"api/urunler/{urun.Id}/renkler") ?? [])
+                .Where(x => x.AktifMi)
+                .ToList();
+            Medyalar = (await Api.GetAsync<List<UrunMedya>>($"api/urunler/{urun.Id}/medyalar") ?? [])
+                .OrderBy(x => x.SiraNo)
+                .ToList();
+            BenzerUrunler = (await Api.GetAsync<List<Urun>>($"api/urunler/{urun.Id}/benzer?adet=6&dil=tr") ?? [])
+                .Where(x => x.AktifMi && !x.SilindiMi && x.Id != urun.Id)
+                .Take(3)
+                .ToList();
+
+            KoleksiyonAdi = UrunGorunumYardimcisi.KoleksiyonAdiBul(urun, aileler);
+            KategoriAdi = UrunGorunumYardimcisi.KategoriAdiBul(urun, kategoriler);
+            KoleksiyonAciklama = aileler.TryGetValue(urun.UrunAilesiId, out var aile) && !string.IsNullOrWhiteSpace(aile.Aciklama)
+                ? aile.Aciklama!
+                : kategoriler.TryGetValue(urun.UrunKategoriId ?? -1, out var kategori) && !string.IsNullOrWhiteSpace(kategori.Aciklama)
+                    ? kategori.Aciklama!
+                    : UrunGorunumYardimcisi.OzetMetniBul(urun);
+
+            HeroGorselUrl = UrunGorunumYardimcisi.AnaGorselUrl(urun, Api.ApiBaseUrl);
+
+            if (_katalogVerisi is not null)
+            {
+                // Katalog ürünlerinin görselleri UI'nin kendi statik wwwroot'unda duruyor,
+                // API üzerinden değil — bu yüzden doğrudan (API taban URL'siz) kullanılır.
+                GaleriGorselleri = new List<string>
+                {
+                    _katalogVerisi.HeroGorselUrl,
+                    _katalogVerisi.KatalogGorselUrl,
+                    _katalogVerisi.TeknikGorselUrl
+                }.Distinct().ToList();
+            }
+            else
+            {
+                GaleriGorselleri = Medyalar
+                    .Where(x => x.MedyaTuru.Equals("Gorsel", StringComparison.OrdinalIgnoreCase)
+                        || x.MedyaTuru.Equals("Resim", StringComparison.OrdinalIgnoreCase)
+                        || x.AnaGosterim)
+                    .Select(x => x.MedyaUrl)
+                    .Distinct()
+                    .ToList();
+            }
+
+            if (GaleriGorselleri.Count == 0)
+                GaleriGorselleri = [HeroGorselUrl];
+        }
+        catch (Exception ex)
+        {
+            HataMesaji = ex.Message;
+            Console.Error.WriteLine($"[UrunDetay] {ex}");
+        }
+        finally
+        {
+            _yukleniyor = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Icerik API'den async geldigi icin ilk render'da .gb-reveal elemanlari
+        // henuz DOM'da olmuyor — bu yuzden her render'da (sadece firstRender'da degil)
+        // yeni eklenen (henuz .gorunur olmayan) elemanlari gozlemciye kaydediyoruz.
+        try
+        {
+            await JS.InvokeVoidAsync("eval", @"
+                (function () {
+                    if (!window.__gbRevealObserver) {
+                        window.__gbRevealObserver = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    entry.target.classList.add('gorunur');
+                                    window.__gbRevealObserver.unobserve(entry.target);
+                                }
+                            });
+                        }, { threshold: 0.1 });
+                    }
+                    document.querySelectorAll('.gb-reveal:not(.gorunur)').forEach(el => window.__gbRevealObserver.observe(el));
+                })();
+            ");
+        }
+        catch { }
+    }
+
+    private string AnaOzeti =>
+        _urun is null
+            ? string.Empty
+            : UrunGorunumYardimcisi.OzetMetniBul(_urun);
+
+    private string ModelOzetMetni =>
+        Modeller.Count > 0
+            ? $"{Modeller.Count} 3D model"
+            : "3D model bilgisi yok";
+
+    private string RenkOzetMetni =>
+        Renkler.Count > 0
+            ? $"{Renkler.Count} renk seçeneği"
+            : "Renk bilgisi yok";
+
+    private string MedyaOzetMetni =>
+        Medyalar.Count > 0
+            ? $"{Medyalar.Count} medya"
+            : "Medya bilgisi yok";
+
+    private string FiyatMetni =>
+        _urun?.Fiyat.HasValue == true ? $"{_urun.Fiyat.Value:N0} TL" : "Fiyat bilgisi yok";
+
+    private string ModelBasligi(UrunUcBoyutModeli model) =>
+        string.IsNullOrWhiteSpace(model.ModelAdi) ? "Model" : model.ModelAdi;
+}

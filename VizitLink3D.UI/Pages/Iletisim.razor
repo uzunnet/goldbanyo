@@ -1,0 +1,27 @@
+@page "/iletisim"
+@layout VizitLink3DDuzen
+
+<PageTitle>Iletisim</PageTitle>
+
+<section class="gb-page">
+    <div class="gb-card-grid">
+        <div class="gb-card">
+            <MudText Typo="Typo.h5">@DilServisi.T("iletisim.telefon", "Telefon")</MudText>
+            @if (_telefonlar != null)
+            {
+                @foreach (var tel in _telefonlar)
+                {
+                    <p>@tel</p>
+                }
+            }
+        </div>
+        <div class="gb-card">
+            <MudText Typo="Typo.h5">@DilServisi.T("iletisim.adres", "Adres")</MudText>
+            <p>@_adres</p>
+        </div>
+        <div class="gb-card">
+            <MudText Typo="Typo.h5">@DilServisi.T("iletisim.eposta", "E-Posta")</MudText>
+            <p>@_email</p>
+        </div>
+    </div>
+</section>

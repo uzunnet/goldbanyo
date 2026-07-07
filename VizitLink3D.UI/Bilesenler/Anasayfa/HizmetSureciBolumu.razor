@@ -1,0 +1,22 @@
+@* HizmetSureciBolumu — Aurelian Onyx 4 adım *@
+
+<section class="surec-bolum">
+    <div class="section-container">
+        <div class="section-baslik-kutu anim-reveal-up">
+            <span class="section-etiket">@dil.T("anasayfa.surec.etiket", "Butik Proje Süreci")</span>
+            <h2 class="section-baslik">@dil.T("anasayfa.surec.baslik", "Hayalden Gerçeğe")</h2>
+            <p class="section-aciklama">@dil.T("anasayfa.surec.aciklama", "Her projede izlediğimiz 4 aşamalı butik yaklaşım.")</p>
+        </div>
+
+        <div class="surec-grid">
+            @foreach (var adim in _adimlar)
+            {
+                <div class="surec-adim anim-reveal-up">
+                    <div class="surec-adim__numarali-daire">@adim.AdimNo</div>
+                    <h3 class="surec-adim__baslik">@adim.Baslik</h3>
+                    <p class="surec-adim__aciklama">@adim.Aciklama</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

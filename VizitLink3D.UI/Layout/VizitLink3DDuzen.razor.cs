@@ -1,439 +1,274 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using MudBlazor;
 using VizitLink3D.Ortak.Modeller;
-using VizitLink3D.UI.Models;
+using VizitLink3D.UI.Servisler;
 
 namespace VizitLink3D.UI.Layout;
 
-/// <summary>
-/// VizitLink3D kurumsal web sitesinin ana layout mantık dosyasıdır.
-/// Navbar, footer, mobil menü, dil değiştirici ve sayfa geçiş animasyonlarını yönetir.
-/// Menü öğeleri API'den dinamik olarak çekilir — admin panelden eklenip çıkarılabilir.
-/// Servisler .razor dosyasındaki @inject direktiflerinden alınır (Blazor standardı).
-/// </summary>
-public partial class VizitLink3DDuzen : IAsyncDisposable
+public partial class VizitLink3DDuzen : IDisposable
 {
-    // Global _Imports.razor'daki @inject ile enjekte edilen servisler burada
-    // tekrar tanımlanmaz. Blazor'da partial class için _Imports.razor üzerinden
-    // gelen inject'ler otomatik olarak kod dosyasına aktarılır.
+    [Inject] private ApiIstemcisi Api { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+    [Inject] private FirmaBilgisiServisi FirmaBilgisi { get; set; } = default!;
+    [Inject] private DilServisi DilServisi { get; set; } = default!;
+    [Inject] private NavigationManager Navigasyon { get; set; } = default!;
 
-    // ─── DURUM ALANLARI ───────────────────────────────────────────────────
-
-    /// <summary>Koyu tema durumu</summary>
-    private bool _isDarkMode = false;
-
-    /// <summary>Mobil hamburger menünün açık/kapalı durumunu tutar.</summary>
-    private bool _mobilMenuAcik = false;
-
-    /// <summary>Masaustu dil panelinin acik/kapali durumunu tutar.</summary>
-    private bool _dilMenusuAcik = false;
-
-    /// <summary>Sayfa yükleme animasyonunun tamamlanıp tamamlanmadığını belirtir.</summary>
-    private bool _sayfaHazir = false;
-
-    /// <summary>Sayfa üstüne git butonunun görünürlüğünü kontrol eder.</summary>
-    private bool _usaSayfaGoster = false;
-
-    /// <summary>Menü yükleniyor mu? True iken skeleton gösterilir.</summary>
-    private bool _menuYukleniyor = true;
-
-    /// <summary>
-    /// Aktif kullanıcı dili. "tr" veya "en" olabilir.
-    /// localStorage'dan başlatılır, değiştirildiğinde kaydedilir.
-    /// </summary>
+    private string _aktifTema = "gold";
+    private string _aktifTemaModu = "koyu";
+    private string _varsayilanDil = "tr";
     private string _aktifDil = "tr";
+    private string _firmaAdi = "Gold Banyo";
+    private string _firmaSlug = "goldbanyo";
+    private string? _logoUrl;
+    private List<DilServisi.DilBilgisi> _diller = [];
+    private bool _ilkRenderTamamlandi;
 
-    /// <summary>
-    /// Firmanın logosunun URL'si. Boş ise metin tabanlı logo gösterilir.
-    /// </summary>
-    private string _logoUrl = "/img/goldbanyo-logo.svg";
+    private List<MenuBaglantisi> _menu = [];
+    private bool KoyuTemaMi => _aktifTemaModu != "acik";
 
-    /// <summary>
-    /// Tarayıcı sekmesi ikonu (favicon). Admin panelden değiştirilebilir;
-    /// boş ise index.html'deki varsayılan ikon kullanılır.
-    /// </summary>
-    private string _faviconUrl = "";
-    private string LogoTamYolu => MarkaVarligiNormalizeEt(_logoUrl, "/img/goldbanyo-logo.svg");
-    private string FaviconTamYolu => MarkaVarligiNormalizeEt(_faviconUrl, "/favicon.png");
-
-    private string _footerAciklama = "Türkiye'nin lider banyo mobilyası üreticisi. 35+ ülkede hizmet veren, 600+ satış noktasına sahip kurumsal marka.";
-    private string _facebookUrl = "https://facebook.com/gold.banyo";
-    private string _instagramUrl = "https://www.instagram.com/gold.banyom/";
-    private string _youtubeUrl = "";
-    private string _pinterestUrl = "";
-    private string _adres = "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / Ankara";
-    private string _telefon1 = "+90 312 847 55 22";
-    private string _telefon2 = "";
-    private string _mesaiSaatleri = "Pzt-Cmt 09:00 - 18:00";
-
-    /// <summary>
-    /// Dinamik menü öğeleri. Admin panelden yapılandırılabilir.
-    /// Her öğe bir başlık ve bir URL içerir.
-    /// </summary>
-    private List<MenuOgesi> _menuOgeleri = new();
-
-    /// <summary>Footer hızlı bağlantıları (API'den dinamik)</summary>
-    private List<MenuOgesi> _footerLinkleri = new();
-
-    /// <summary>Footer kategori bağlantıları (API'den dinamik)</summary>
-    private List<MenuOgesi> _footerKategorileri = new();
-
-    private sealed class FirmaTemaDto
+    private readonly MudTheme _tema = new()
     {
-        public string? SiteTema { get; set; }
-    }
-
-    // ─── MUDBLAZOR TEMA TANIMLARI ─────────────────────────────────────────
-
-    /// <summary>
-    /// Atelier Monochrome temasını MudBlazor ThemeProvider için tanımlar.
-    /// Siyah/beyaz/gri tonları, Noto Serif başlıklar, Manrope gövde metni.
-    /// </summary>
-    private MudTheme _tema = new()
-    {
-        PaletteLight = new PaletteLight
+        PaletteDark = new PaletteDark
         {
-            Primary = "#000000",
-            PrimaryContrastText = "#FFFFFF",
-            Secondary = "#1A1C1C",
-            Background = "#F9F9F9",
-            Surface = "#FFFFFF",
-            AppbarBackground = "rgba(255,255,255,0.90)",
-            AppbarText = "#1A1C1C",
-            DrawerBackground = "#FFFFFF",
-            DrawerText = "#1A1C1C",
-            TextPrimary = "#1A1C1C",
-            TextSecondary = "#4C4546",
-            Divider = "#EEEEEE",
-            ActionDefault = "#1A1C1C",
-        },
-        Typography = new Typography
-        {
-            Default = new DefaultTypography
-            {
-                FontFamily = new[] { "Manrope", "Inter", "sans-serif" }
-            },
-            H1 = new H1Typography
-            {
-                FontFamily = new[] { "Noto Serif", "Georgia", "serif" },
-                FontSize = "4rem",
-                FontWeight = "400",
-                LetterSpacing = "-0.02em"
-            },
-            H2 = new H2Typography
-            {
-                FontFamily = new[] { "Noto Serif", "Georgia", "serif" },
-                FontSize = "2.5rem",
-                FontWeight = "400"
-            },
-            H3 = new H3Typography
-            {
-                FontFamily = new[] { "Noto Serif", "Georgia", "serif" },
-                FontSize = "2rem",
-                FontWeight = "400"
-            },
-            H5 = new H5Typography
-            {
-                FontFamily = new[] { "Noto Serif", "Georgia", "serif" },
-                FontSize = "1.5rem",
-                FontWeight = "400"
-            }
-        },
-        LayoutProperties = new LayoutProperties
-        {
-            DefaultBorderRadius = "0px",   // Sıfır köşe — Atelier Monochrome kuralı
-            AppbarHeight = "72px"
+            Primary = "#d4af37",
+            Secondary = "#c4c7c7",
+            Background = "#121414",
+            Surface = "#1e2020",
+            TextPrimary = "#e2e2e2",
+            TextSecondary = "#c4c7c7",
+            TextDisabled = "#8e9192",
+            AppbarBackground = "#121414",
+            DrawerBackground = "#1e2020",
+            DrawerText = "#e2e2e2",
+            Success = "#4a7c59",
+            Warning = "#c9a449",
+            Error = "#ffb4ab",
+            Info = "#4a6c8c"
         }
     };
 
-    // ─── YAŞAM DÖNGÜSÜ ────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Her render sonrası çalışır. İlk render'da data-tema-id attribute'ünü set eder.
-    /// </summary>
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await js.InvokeVoidAsync("eval",
-                "document.documentElement.setAttribute('data-tema-id','gold');" +
-                "document.documentElement.setAttribute('data-site-tema','gold');" +
-                "document.documentElement.setAttribute('data-tema-mod','koyu');" +
-                "if (window.vizitlink3dTema && window.vizitlink3dTema.siteUygula) { window.vizitlink3dTema.siteUygula('gold'); }");
-        }
-        await base.OnAfterRenderAsync(firstRender);
-    }
-
-    /// <summary>
-    /// Bileşen başladığında çalışır. Dil tercihini localStorage'dan okur,
-    /// menü öğelerini API'den çeker, sayfa geçiş animasyonunu tetikler.
-    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        _sayfaHazir = false;
+        // Ayarlar/firma/menu birbirine bagimli degil - paralel cekilir,
+        // boylece ilk render'a kadar gecen sure (ve "Gold Banyo" varsayilaninin
+        // gorunme suresi) art arda 3 istek yerine tek round-trip'e iner.
+        var ayarlarTask = AyarlariYukleAsync();
+        var firmaTask = FirmaBilgisi.GetFirmaAsync();
+        var menuTask = MenuleriYukleAsync();
+        await Task.WhenAll(ayarlarTask, firmaTask, menuTask);
 
-        try
+        // DilServisi, ayarlardan gelen _varsayilanDil'e ihtiyac duydugu icin
+        // paralel grubun tamamlanmasini bekler.
+        await DilServisi.BaslatAsync(_varsayilanDil);
+        DilServisi.DilDegisti += DilDegisti;
+        _aktifDil = DilServisi.AktifDil;
+        _diller = DilServisi.DesteklenenDiller.ToList();
+
+        var firma = firmaTask.Result;
+        if (firma == null)
         {
-            var kayitliDil = await js.InvokeAsync<string>("localStorage.getItem", "vizitlink3dil");
-            if (!string.IsNullOrEmpty(kayitliDil))
-                _aktifDil = kayitliDil;
-
-            var firmaTema = await api.GetAsync<FirmaTemaDto>("api/firma-tema");
-            var uygulanacakTema = firmaTema?.SiteTema;
-
-            if (string.IsNullOrWhiteSpace(uygulanacakTema))
-            {
-                uygulanacakTema = await js.InvokeAsync<string>("localStorage.getItem", "vizitlink3d_site_tema");
-            }
-
-            if (!string.IsNullOrWhiteSpace(uygulanacakTema))
-            {
-                await js.InvokeVoidAsync("vizitlink3dTema.siteUygula", uygulanacakTema);
-            }
+            return;
         }
-        catch { }
 
-        await dil.BaslatAsync();
+        if (!string.IsNullOrWhiteSpace(firma.Ad))
+        {
+            _firmaAdi = firma.Ad;
+        }
 
-        // Dil degisince layout + tum sayfa govdesi yeniden render edilsin
-        // (sayfa yenilemeden TR/EN gecisi icin zorunlu).
-        dil.DilDegisti += DilDegistiginde;
+        if (!string.IsNullOrWhiteSpace(firma.Slug))
+        {
+            _firmaSlug = firma.Slug;
+        }
 
-        await Task.WhenAll(
-            MenuOgeleriniYukle(),
-            FooterMenuleriniYukle(),
-            AyarlariYukle()
-        );
+        if (!string.IsNullOrWhiteSpace(firma.SiteTema))
+        {
+            _aktifTema = firma.SiteTema;
+        }
 
-        // AI destekli otomatik ceviri mekanizmasini tetikle (eksik anahtarlar icin)
-        _ = dil.EksikCevirileriAIileTamamlaAsync();
-
-        // Sayfa hazırlandı — fade-in animasyonunu başlat
-        await Task.Delay(50); // DOM'un ilk render'ını bekle
-        _sayfaHazir = true;
-
-        // Scroll dinleyicisini kur (yukarı git butonu için)
-        nav.LocationChanged += KonumDegistinde;
-        _ = ZiyaretKaydetAsync(nav.Uri);
+        if (!string.IsNullOrWhiteSpace(firma.Logo))
+        {
+            _logoUrl = UrlNormalizeEt(firma.Logo);
+        }
     }
 
-    private async Task AyarlariYukle()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        try
+        if (!firstRender) return;
+
+        await JS.InvokeVoidAsync("localStorage.setItem", "aktif_firma", _firmaSlug);
+        await JS.InvokeVoidAsync("localStorage.setItem", "vizitlink3d_site_tema", _aktifTema);
+        var kayitliDil = await JS.InvokeAsync<string?>("localStorage.getItem", "vizitlink3dil");
+        if (string.IsNullOrWhiteSpace(kayitliDil) && !string.Equals(_varsayilanDil, _aktifDil, StringComparison.OrdinalIgnoreCase))
         {
-            var sozluk = await api.GetAsync<Dictionary<string, string>>($"api/sayfa-icerigi/ayarlar?dil={dil.AktifDil}");
-            if (sozluk != null)
-            {
-                if (sozluk.TryGetValue("LogoUrl", out var logo) && !string.IsNullOrEmpty(logo))
-                {
-                    _logoUrl = MarkaVarligiNormalizeEt(logo, "/img/goldbanyo-logo.svg");
-                }
-                if (sozluk.TryGetValue("FaviconUrl", out var favicon) && !string.IsNullOrEmpty(favicon))
-                {
-                    _faviconUrl = MarkaVarligiNormalizeEt(favicon, "/favicon.png");
-                }
-                if (sozluk.TryGetValue("FooterAciklama", out var fa)) _footerAciklama = fa;
-                if (sozluk.TryGetValue("FacebookUrl", out var fb)) _facebookUrl = fb;
-                if (sozluk.TryGetValue("InstagramUrl", out var ins)) _instagramUrl = ins;
-                if (sozluk.TryGetValue("YoutubeUrl", out var yt)) _youtubeUrl = yt;
-                if (sozluk.TryGetValue("PinterestUrl", out var pin)) _pinterestUrl = pin;
-                if (sozluk.TryGetValue("Adres", out var adr)) _adres = adr;
-                if (sozluk.TryGetValue("Telefon1", out var t1)) _telefon1 = t1;
-                if (sozluk.TryGetValue("Telefon2", out var t2)) _telefon2 = t2;
-                if (sozluk.TryGetValue("MesaiSaatleri", out var ms)) _mesaiSaatleri = ms;
-            }
+            await DilServisi.DilDegistirAsync(_varsayilanDil);
+            _aktifDil = DilServisi.AktifDil;
         }
-        catch { /* ayarlar yüklenemezse varsayılan değerler kullanılır */ }
-    }
 
-    /// <summary>
-    /// Sayfa URL'i değiştiğinde çalışır. Mobil menüyü kapatır ve
-    /// yeni sayfanın animasyonla açılmasını sağlar.
-    /// </summary>
-    private async void KonumDegistinde(object? sender, LocationChangedEventArgs e)
-    {
-        _mobilMenuAcik = false;
-        _dilMenusuAcik = false;
-        _sayfaHazir = false;
-        StateHasChanged();
+        var kayitliTemaModu = await JS.InvokeAsync<string?>("localStorage.getItem", "temaMod");
+        if (string.IsNullOrWhiteSpace(kayitliTemaModu))
+        {
+            await JS.InvokeVoidAsync("vizitlink3dTema.modUygula", _aktifTemaModu);
+        }
+        else
+        {
+            _aktifTemaModu = kayitliTemaModu;
+            await JS.InvokeVoidAsync("vizitlink3dTema.modUygula", kayitliTemaModu);
+        }
 
-        await Task.Delay(150);
-        _sayfaHazir = true;
-        await ZiyaretKaydetAsync(e.Location);
+        await JS.InvokeVoidAsync("vizitlink3dTema.siteUygula", _aktifTema);
+        await JS.InvokeVoidAsync("vizitlink3dDil.htmlDiliniAyarla", _aktifDil);
+        _ilkRenderTamamlandi = true;
         StateHasChanged();
     }
 
-    private async Task ZiyaretKaydetAsync(string adres)
+    private sealed record MenuBaglantisi(string Baslik, string Url, List<MenuBaglantisi> AltMenuler);
+
+    private string MenuBasligi(MenuBaglantisi oge) => oge.Baslik switch
     {
-        var yol = nav.ToBaseRelativePath(adres);
-        if (string.IsNullOrWhiteSpace(yol))
-            yol = "/";
-        else if (!yol.StartsWith('/'))
-            yol = "/" + yol;
-
-        await api.PostAsync<object>("api/dashboard/ziyaret-kaydet", new ZiyaretKaydetDto(yol, null));
-    }
-
-    private static string MarkaVarligiNormalizeEt(string? deger, string varsayilanDeger)
-    {
-        if (string.IsNullOrWhiteSpace(deger))
-        {
-            return varsayilanDeger;
-        }
-
-        var normalizeDeger = deger.Contains("vizitlink3d", StringComparison.OrdinalIgnoreCase)
-            ? varsayilanDeger
-            : deger;
-
-        if (normalizeDeger.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
-            || normalizeDeger.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            || normalizeDeger.StartsWith("/", StringComparison.Ordinal))
-        {
-            return normalizeDeger;
-        }
-
-        return "/" + normalizeDeger.TrimStart('~').TrimStart('/');
-    }
-
-    private record ZiyaretKaydetDto(string Sayfa, string? Referer);
-
-    // ─── MENÜ YÜKLEMESİ ──────────────────────────────────────────────────
-
-    /// <summary>
-    /// Admin panelden yapılandırılan dinamik menü öğelerini API'den çeker.
-    /// API yanıt vermezse varsayılan statik menü kullanılır — sistemin kilitlenmemesi için.
-    /// </summary>
-    private async Task MenuOgeleriniYukle()
-    {
-        _menuYukleniyor = true;
-        try
-        {
-            // api.GetAsync<T> doğrudan T? döndürür (Cevap<T> değil)
-            var liste = await api.GetAsync<List<MenuOgesi>>("api/menu/ana");
-            if (liste?.Count > 0)
-            {
-                // URL'leri temizle (başındaki / işaretini kaldır)
-                foreach (var menu in liste)
-                {
-                    if (menu.Url != null && menu.Url.StartsWith("/"))
-                    {
-                        menu.Url = menu.Url.TrimStart('/');
-                    }
-
-                    if (menu.AltMenuler != null)
-                    {
-                        foreach (var alt in menu.AltMenuler)
-                        {
-                            if (alt.Url != null && alt.Url.StartsWith("/"))
-                            {
-                                alt.Url = alt.Url.TrimStart('/');
-                            }
-                        }
-                    }
-                }
-                _menuOgeleri = liste;
-            }
-            else
-                _menuOgeleri = VarsayilanMenuOlustur();
-        }
-        catch
-        {
-            // API erişilemez — statik fallback menü
-            _menuOgeleri = VarsayilanMenuOlustur();
-        }
-        finally
-        {
-            _menuYukleniyor = false;
-        }
-    }
-
-    private async Task FooterMenuleriniYukle()
-    {
-        try
-        {
-            var hizli = await api.GetAsync<List<MenuOgesi>>("api/menu/footer");
-            if (hizli?.Count > 0) _footerLinkleri = hizli;
-
-            var kategoriler = await api.GetAsync<List<MenuOgesi>>("api/menu/footer-kategori");
-            if (kategoriler?.Count > 0) _footerKategorileri = kategoriler;
-        }
-        catch { /* API erisilemezse footer bos kalir */ }
-    }
-
-    /// <summary>
-    /// API erişilemez veya boş döndüğünde kullanılan yedek statik menü öğeleri.
-    /// Bu liste VizitLink3D mevcut site yapısını yansıtır.
-    /// </summary>
-    private List<MenuOgesi> VarsayilanMenuOlustur() => new()
-    {
-        new MenuOgesi { Baslik = dil.T("ana_sayfa", "Ana Sayfa"),         Url = "" },
-        new MenuOgesi { Baslik = dil.T("kurumsal", "Kurumsal"),           Url = "kurumsal", AltMenuler = new() {
-            new MenuOgesi { Baslik = dil.T("hakkimizda", "Hakkımızda"), Url = "hakkimizda" },
-            new MenuOgesi { Baslik = dil.T("vizyon_misyon", "Vizyon & Misyon"), Url = "vizyon-misyon" },
-            new MenuOgesi { Baslik = dil.T("kalite_politikasi", "Kalite Politikası"), Url = "kalite-politikasi" }
-        } },
-        new MenuOgesi { Baslik = dil.T("projeler", "Projelerimiz"),       Url = "projeler" },
-        new MenuOgesi { Baslik = dil.T("iletisim", "İletişim"),           Url = "iletisim" },
+        "Ana Sayfa" => DilServisi.T("menu.anasayfa", oge.Baslik),
+        "Ürünler" => DilServisi.T("menu.urunler", oge.Baslik),
+        "Gold Exclusive" => DilServisi.T("menu.goldExclusive", oge.Baslik),
+        "Gold Premium" => DilServisi.T("menu.goldPremium", oge.Baslik),
+        "Gold Trend" => DilServisi.T("menu.goldTrend", oge.Baslik),
+        "Gold Standart" => DilServisi.T("menu.goldStandart", oge.Baslik),
+        "Tüm Ürünler" => DilServisi.T("menu.tumUrunler", oge.Baslik),
+        "Katalog" => DilServisi.T("menu.katalog", oge.Baslik),
+        "Projeler" => DilServisi.T("menu.projeler", oge.Baslik),
+        "Kurumsal" => DilServisi.T("menu.kurumsal", oge.Baslik),
+        "Hakkımızda" => DilServisi.T("menu.hakkimizda", oge.Baslik),
+        "Vizyon & Misyon" => DilServisi.T("menu.vizyonMisyon", oge.Baslik),
+        "Ekibimiz" => DilServisi.T("menu.ekibimiz", oge.Baslik),
+        "Sertifikalarımız" => DilServisi.T("menu.sertifikalarimiz", oge.Baslik),
+        "Bayiler" => DilServisi.T("menu.bayiler", oge.Baslik),
+        "Fabrikamız" => DilServisi.T("menu.fabrikamiz", oge.Baslik),
+        "Referanslar" => DilServisi.T("menu.referanslar", oge.Baslik),
+        "Haber" => DilServisi.T("menu.haber", oge.Baslik),
+        "SSS" => DilServisi.T("menu.sss", oge.Baslik),
+        "İletişim" => DilServisi.T("menu.iletisim", oge.Baslik),
+        _ => oge.Baslik
     };
 
-    // ─── EYLEMLER ────────────────────────────────────────────────────────
-
-    private void TemaDegistir()
+    private async Task AyarlariYukleAsync()
     {
-        _isDarkMode = !_isDarkMode;
+        var ayarlar = await Api.GetAsync<Dictionary<string, string>>("api/sayfa-icerigi/ayarlar?dil=tr");
+        if (ayarlar == null)
+        {
+            return;
+        }
+
+        if (ayarlar.TryGetValue("VarsayilanDil", out var varsayilanDil) && !string.IsNullOrWhiteSpace(varsayilanDil))
+        {
+            _varsayilanDil = varsayilanDil.ToLowerInvariant();
+        }
+
+        if (ayarlar.TryGetValue("TemaModu", out var temaModu) && !string.IsNullOrWhiteSpace(temaModu))
+        {
+            _aktifTemaModu = temaModu.ToLowerInvariant() == "acik" ? "acik" : "koyu";
+        }
     }
 
-    /// <summary>Mobil hamburger menüsünü açar veya kapatır.</summary>
-    private void MobilMenuToggle() => _mobilMenuAcik = !_mobilMenuAcik;
-
-    /// <summary>Masaustu dil listesini acar veya kapatir.</summary>
-    private void DilMenusuToggle() => _dilMenusuAcik = !_dilMenusuAcik;
-
-    /// <summary>
-    /// Kullanıcının dil tercihini değiştirir. Seçim localStorage'a kaydedilir
-    /// ve DilServisi aracılığıyla tüm bileşenlere yansıtılır.
-    /// </summary>
-    private async Task DilDegistir(string yeniDil)
+    private async Task MenuleriYukleAsync()
     {
-        _aktifDil = yeniDil;
-        _dilMenusuAcik = false;
-        await js.InvokeVoidAsync("localStorage.setItem", "vizitlink3dil", yeniDil);
-        await dil.DilDegistirAsync(yeniDil);
+        var menuler = await Api.GetAsync<List<MenuOgesi>>("api/menu/ana");
+        if (menuler == null || menuler.Count == 0)
+        {
+            _menu =
+            [
+                new("Ana Sayfa", "/", []),
+                new("Hakkımızda", "/hakkimizda", []),
+                new("Banyo Dolapları", "/banyo-dolaplari", []),
+                new("Katalog", "/katalog", []),
+                new("İletişim", "/iletisim", [])
+            ];
+            return;
+        }
+
+        _menu = menuler
+            .OrderBy(m => m.Sira)
+            .Select(MenuyeDonustur)
+            .ToList();
     }
 
-    /// <summary>
-    /// DilServisi.DilDegisti olayina baglanir. Layout ve altindaki @Body
-    /// sayfa govdesini yeniden render ederek ceviri metinlerini gunceller.
-    /// </summary>
-    private async void DilDegistiginde()
+    private static MenuBaglantisi MenuyeDonustur(MenuOgesi oge)
     {
-        _aktifDil = dil.AktifDil;
-        await Task.WhenAll(
-            MenuOgeleriniYukle(),
-            FooterMenuleriniYukle(),
-            AyarlariYukle()
-        );
-        _ = dil.EksikCevirileriAIileTamamlaAsync();
-        await InvokeAsync(StateHasChanged);
+        var altMenuler = oge.AltMenuler?
+            .Where(a => a.AktifMi && !a.SilindiMi)
+            .OrderBy(a => a.Sira)
+            .Select(MenuyeDonustur)
+            .ToList() ?? [];
+
+        return new MenuBaglantisi(
+            oge.Baslik,
+            UrlNormalizeEt(oge.Url),
+            altMenuler);
     }
 
-    /// <summary>Tarayıcı sayfasını en üste kaydırır. Yukarı git butonu için kullanılır.</summary>
-    private async Task SayfaBasinaGit()
+    private static string UrlNormalizeEt(string? url)
     {
-        await js.InvokeVoidAsync("window.scrollTo", 0, 0);
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return "/";
+        }
+
+        if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            || url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase)
+            || url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        if (url.Equals("/img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
+            || url.Equals("img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        {
+            return "/img/goldbanyo-logo.png";
+        }
+
+        return url.StartsWith('/') ? url : "/" + url.TrimStart('/');
     }
 
-    /// <summary>
-    /// Bileşen kaldırıldığında LocationChanged olay dinleyicisini temizler.
-    /// Bellek sızıntısını önlemek için zorunludur.
-    /// </summary>
-    public ValueTask DisposeAsync()
+    private async Task DilSecildi(ChangeEventArgs args)
     {
-        nav.LocationChanged -= KonumDegistinde;
-        dil.DilDegisti -= DilDegistiginde;
-        return ValueTask.CompletedTask;
+        var yeniDil = args.Value?.ToString()?.Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(yeniDil) || yeniDil == _aktifDil)
+        {
+            return;
+        }
+
+        await DilServisi.DilDegistirAsync(yeniDil);
+        _aktifDil = DilServisi.AktifDil;
+        await JS.InvokeVoidAsync("vizitlink3dDil.htmlDiliniAyarla", _aktifDil);
+
+        if (_ilkRenderTamamlandi)
+        {
+            Navigasyon.NavigateTo(Navigasyon.Uri, true);
+        }
+    }
+
+    private async Task TemaModuDegistir(string mod)
+    {
+        if (string.IsNullOrWhiteSpace(mod) || mod == _aktifTemaModu)
+        {
+            return;
+        }
+
+        _aktifTemaModu = mod;
+        await JS.InvokeVoidAsync("vizitlink3dTema.modUygula", mod);
+        StateHasChanged();
+    }
+
+    private string TemaModuClass(string mod) => _aktifTemaModu == mod ? "gb-mod-btn aktif" : "gb-mod-btn";
+
+    private void DilDegisti()
+    {
+        _aktifDil = DilServisi.AktifDil;
+        _diller = DilServisi.DesteklenenDiller.ToList();
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        DilServisi.DilDegisti -= DilDegisti;
     }
 }
-

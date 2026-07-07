@@ -1,0 +1,180 @@
+@page "/yonetim/firmalar"
+@using VizitLink3D.Ortak.Modeller
+@inject ApiIstemcisi api
+@inject MudBlazor.ISnackbar Snackbar
+
+<PageTitle>Firma Yönetim - VizitLink3D</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-8">
+    <MudText Typo="Typo.h4" Class="mb-6">Firma Yönetimi</MudText>
+
+    @if (_firmalar == null)
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+    else if (_firmalar.Count == 0)
+    {
+        <MudAlert Severity="Severity.Warning">Firma kaydı bulunamadı.</MudAlert>
+    }
+    else
+    {
+        <MudTable Items="@_firmalar" Hover="true" Striped="true" Dense="false">
+            <HeaderContent>
+                <MudTh>Firma Adı</MudTh>
+                <MudTh>Logo</MudTh>
+                <MudTh>Site Tema</MudTh>
+                <MudTh>Admin Tema</MudTh>
+                <MudTh>Eylemler</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Firma Adı">
+                    <MudText>@context.Ad</MudText>
+                    <MudText Typo="Typo.caption">@context.Unvan</MudText>
+                </MudTd>
+                <MudTd DataLabel="Logo">
+                    @if (!string.IsNullOrEmpty(context.Logo))
+                    {
+                        <img src="@context.Logo" style="max-height: 40px; max-width: 100px;" alt="@context.Ad" />
+                    }
+                    else
+                    {
+                        <MudText>-</MudText>
+                    }
+                </MudTd>
+                <MudTd DataLabel="Site Tema">
+                    <MudText>@context.SiteTema</MudText>
+                </MudTd>
+                <MudTd DataLabel="Admin Tema">
+                    <MudText>@context.AdminTema</MudText>
+                </MudTd>
+                <MudTd DataLabel="Eylemler">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                               OnClick="@(async () => await DuzenleAcAsync(context))">
+                        Düzenle
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@* Düzenleme Dialog *@
+<MudDialog @bind-IsVisible="@_duzenleDialoguAcik">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Firma Düzenle: @_seciliFirma?.Ad</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_seciliFirma != null)
+        {
+            <MudStack Spacing="4">
+                <MudTextField @bind-Value="_seciliFirma.Ad" Label="Firma Adı" />
+                <MudTextField @bind-Value="_seciliFirma.Unvan" Label="Firma Ünvanı" />
+
+                <MudTextField @bind-Value="_seciliFirma.Logo" Label="Logo URL" HelperText="Logo resminin tam URL'si" />
+                @if (!string.IsNullOrEmpty(_seciliFirma.Logo))
+                {
+                    <img src="@_seciliFirma.Logo" style="max-height: 80px; max-width: 200px;" alt="Logo Önizlemesi" />
+                }
+
+                <MudSelect @bind-Value="_seciliFirma.SiteTema" Label="Site Teması" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("gold")">Gold</MudSelectItem>
+                    <MudSelectItem Value="@("stitch")">Stitch</MudSelectItem>
+                    <MudSelectItem Value="@("default")">Default</MudSelectItem>
+                </MudSelect>
+
+                <MudSelect @bind-Value="_seciliFirma.AdminTema" Label="Admin Teması" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("endustri-karanlik")">Endüstri Karanlık</MudSelectItem>
+                    <MudSelectItem Value="@("endustri-acik")">Endüstri Açık</MudSelectItem>
+                    <MudSelectItem Value="@("default")">Default</MudSelectItem>
+                </MudSelect>
+
+                <MudDivider />
+
+                <MudText Typo="Typo.subtitle2">Tasarım Renkleri (Hex Kod)</MudText>
+                <MudTextField @bind-Value="_seciliFirma.TasarimRengi1" Label="Renk 1" Placeholder="#FFD700" />
+                <MudTextField @bind-Value="_seciliFirma.TasarimRengi2" Label="Renk 2" Placeholder="#FFA500" />
+                <MudTextField @bind-Value="_seciliFirma.TasarimRengi3" Label="Renk 3" Placeholder="#FF8C00" />
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@DuzenleKapat">İptal</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@KaydetAsync">Kaydet</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private List<Firma>? _firmalar;
+    private Firma? _seciliFirma;
+    private bool _duzenleDialoguAcik = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FirmalariYukleAsync();
+    }
+
+    private async Task FirmalariYukleAsync()
+    {
+        try
+        {
+            _firmalar = await api.GetAsync<List<Firma>>("api/firma");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Firmalar yüklenemedi: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task DuzenleAcAsync(Firma firma)
+    {
+        _seciliFirma = new Firma
+        {
+            Id = firma.Id,
+            Ad = firma.Ad,
+            Unvan = firma.Unvan,
+            Logo = firma.Logo,
+            SiteTema = firma.SiteTema,
+            AdminTema = firma.AdminTema,
+            TasarimRengi1 = firma.TasarimRengi1,
+            TasarimRengi2 = firma.TasarimRengi2,
+            TasarimRengi3 = firma.TasarimRengi3
+        };
+        _duzenleDialoguAcik = true;
+        await Task.CompletedTask;
+    }
+
+    private void DuzenleKapat()
+    {
+        _duzenleDialoguAcik = false;
+        _seciliFirma = null;
+    }
+
+    private async Task KaydetAsync()
+    {
+        if (_seciliFirma == null) return;
+
+        try
+        {
+            var dto = new
+            {
+                _seciliFirma.Ad,
+                _seciliFirma.Unvan,
+                _seciliFirma.Logo,
+                _seciliFirma.SiteTema,
+                _seciliFirma.AdminTema,
+                _seciliFirma.TasarimRengi1,
+                _seciliFirma.TasarimRengi2,
+                _seciliFirma.TasarimRengi3
+            };
+
+            await api.PutAsync<Firma>($"api/firma/{_seciliFirma.Id}", dto);
+            Snackbar.Add($"{_seciliFirma.Ad} başarıyla güncellendi.", Severity.Success);
+            DuzenleKapat();
+            await FirmalariYukleAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Kayıt başarısız: {ex.Message}", Severity.Error);
+        }
+    }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="220" height="48" viewBox="0 0 220 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="goldbanyoLogoTitle">
+  <title id="goldbanyoLogoTitle">Gold Banyo</title>
+  <rect x="2" y="4" width="40" height="40" rx="12" fill="#C7A24A"/>
+  <path d="M15 15H29C32.866 15 36 18.134 36 22C36 25.866 32.866 29 29 29H23V35H15V15ZM23 22V23H28.5C29.328 23 30 22.328 30 21.5C30 20.672 29.328 20 28.5 20H23V22Z" fill="#13202B"/>
+  <text x="54" y="21" fill="#13202B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="0.08em">GOLD</text>
+  <text x="54" y="38" fill="#5E6670" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0.18em">BANYO</text>
+</svg>

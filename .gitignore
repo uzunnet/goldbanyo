@@ -24,7 +24,11 @@ _framework/*.br
 *.db-shm
 *.db-wal
 *.db-journal
-# desadoor.db — takip ediliyor (seed verisi için)
+*.db.bak
+# vizitlink3d.db artik imaja gomulmuyor — uygulama ilk acilista migration+seed
+# ile kendi olusturuyor (bkz. Program.cs, entrypoint.sh). Repo'da tutulmaz
+# (1GB+'a ulasabiliyor, GitHub'in tek dosya limitini asiyor).
+VizitLink3D.Api/vizitlink3d.db
 Yedekler/db/*.db
 
 # AI API Key (güvenlik)
@@ -36,6 +40,7 @@ ai.config.json
 .env.*
 appsettings.Production.json
 appsettings.*.local.json
+.codex/config.toml
 
 # Loglar
 *.log
@@ -73,8 +78,6 @@ yayin/
 Yedekler/db/
 !Yedekler/db/.gitkeep
 
-# desadoor.db — takip ediliyor
-
 # Large 3D files - handled by Docker
 Desadoor.Api/wwwroot/medya/3d/NRD 100_*.glb
 Desadoor.Api/wwwroot/medya/3d/NRD 101_*.glb
@@ -89,4 +92,6 @@ wwwroot/lib/
 wwwroot/js/lib/
 wwwroot/flags/
 wwwroot/img/
+# Publish artiklari (build artifact, kaynakta durmasin)
+ui-publish/
 Yedekler/

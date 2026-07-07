@@ -11,7 +11,6 @@ ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 COPY --from=build /app/publish .
 RUN mkdir -p /app/Veri
-COPY --from=build /app/VizitLink3D.Api/vizitlink3d.db /app/vizitlink3d.db
 RUN cp -r /app/wwwroot/medya /app/medya-init 2>/dev/null || true
 COPY VizitLink3D.Api/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>VizitLink 3D - Admin Girişi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #666; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .error { color: #d32f2f; margin-top: 10px; text-align: center; }
+        .success { color: #388e3c; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 VizitLink 3D</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" id="username" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Şifre</label>
+                <input type="password" id="password" required autocomplete="off">
+            </div>
+            <button type="submit">Giriş Yap</button>
+            <div id="error" class="error"></div>
+            <div id="success" class="success"></div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errDiv = document.getElementById('error');
+            const sucDiv = document.getElementById('success');
+            errDiv.textContent = '';
+            sucDiv.textContent = '';
+            
+            try {
+                const response = await fetch('http://localhost:5115/api/kimlik/giris', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ kullaniciAdi: user, sifre: pass })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.veri) {
+                    sucDiv.textContent = '✅ GİRİŞ BAŞARILI! Token alındı.';
+                    sucDiv.style.color = '#388e3c';
+                } else {
+                    errDiv.textContent = data.mesaj || 'Giriş başarısız';
+                }
+            } catch (err) {
+                errDiv.textContent = 'Hata: ' + err.message;
+            }
+        });
+    </script>
+</body>
+</html>

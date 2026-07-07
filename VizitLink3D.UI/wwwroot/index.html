@@ -4,21 +4,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Gold Banyo - Banyo Mobilyalari ve Koleksiyonlari</title>
-    <meta name="description" content="Gold Banyo; premium, trend ve exclusive koleksiyonlariyla Bursa merkezli banyo mobilyasi, banyo dolabi ve proje cozumleri sunar." />
-    <meta name="keywords" content="gold banyo,banyo mobilyasi,banyo dolabi,bursa banyo mobilyasi,banyo koleksiyonu,premium banyo,trend banyo" />
+    <title>Firma Vitrini</title>
+    <meta name="description" content="Firma vitrini, koleksiyonlar ve proje çözümleri." />
+    <meta name="keywords" content="firma, koleksiyon, ürün, vitrin" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.goldbanyom.com.tr/" />
     <meta property="og:locale" content="tr_TR" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Gold Banyo - Banyo Mobilyalari ve Koleksiyonlari" />
-    <meta property="og:description" content="Gold Banyo; premium, trend ve exclusive serileriyle banyolara tasarim, konfor ve uzun omurlu kalite getirir." />
+    <meta property="og:title" content="Firma Vitrini" />
+    <meta property="og:description" content="Firma vitrini, koleksiyonlar ve proje çözümleri." />
     <meta property="og:url" content="https://www.goldbanyom.com.tr/" />
-    <meta property="og:site_name" content="Gold Banyo" />
+    <meta property="og:site_name" content="Firma Vitrini" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gold Banyo - Banyo Mobilyalari" />
-    <meta name="twitter:description" content="Gold Banyo koleksiyonlari ile banyo projelerinize premium tasarim ve dayanikli malzeme kalitesi katin." />
+    <meta name="twitter:title" content="Firma Vitrini" />
+    <meta name="twitter:description" content="Firma vitrini, koleksiyonlar ve proje çözümleri." />
     <base href="/" />
+    <script>
+        if (window.location.hostname === '127.0.0.1') {
+            window.location.replace(window.location.href.replace('127.0.0.1', 'localhost'));
+        }
+    </script>
 
     <!-- Fontlar (MudBlazor için Roboto + Material Symbols) — non-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,8 +35,6 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/icon?family=Material+Icons" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></noscript>
 
-    <base href="/" />
-
     <!-- MudBlazor -->
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet" />
@@ -42,8 +45,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/css/flag-icons.min.css" />
 
     <!-- Sistem CSS — tek giris (tokens.css tum alt dosyalari @import eder) -->
-    <link href="css/sistem/tokens.css?v=1.0.4" rel="stylesheet" />
-    <link href="css/app.css?v=1.0.4" rel="stylesheet" />
+    <link href="css/sistem/tokens.css?v=1.0.6" rel="stylesheet" />
+    <link href="css/app.css?v=1.0.6" rel="stylesheet" />
+    <link href="css/sistem/bilesenler/wasm-fallback.css?v=1.0.6" rel="stylesheet" />
+    <link href="css/temalar/_sistem/ortak-bilesenler.css?v=1.0.6" rel="stylesheet" />
+    <link href="css/temalar/_sistem/animasyon-ortak.css?v=1.0.6" rel="stylesheet" />
+    <link href="css/temalar/_sistem/efektler-ortak.css?v=1.0.6" rel="stylesheet" />
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
@@ -55,7 +62,7 @@
     <div id="app">
         <div class="gb-ilk-yukleme">
             <div class="gb-ilk-yukleme-spinner"></div>
-            <p class="gb-ilk-yukleme-metin">Gold Banyo yükleniyor…</p>
+            <p class="gb-ilk-yukleme-metin">Site yükleniyor…</p>
         </div>
     </div>
 
@@ -77,12 +84,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    <script src="js/tema.js"></script>
     <script>
-        // Gold tema'yı load et
+        window.vizitlink3dApiBaseUrl = (function () {
+            var host = window.location.hostname || "";
+            if (host === "localhost" || host === "127.0.0.1") {
+                return "http://localhost:5115";
+            }
+
+            return window.location.origin;
+        })();
+    </script>
+    <script src="js/tema.js?v=5"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if (window.vizitlink3dTema && window.vizitlink3dTema.siteUygula) {
-                window.vizitlink3dTema.siteUygula('gold');
+            if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
+                window.vizitlink3dTema.siteBaslat('gold');
             }
         });
     </script>
@@ -91,26 +107,44 @@
     <script src="js/aos-init.js"></script>
     <script src="js/pdf-gosterici-dil.js?v=3"></script>
     <script src="js/uc-boyut-motoru.js?v=4" defer></script>
-    <script src="js/tema.js"></script>
-
-    <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="js/wasm-uyumluluk-fallback.js?v=2"></script>
     <script>
-        // PWA kapali (00_PROJE_BILGISI.md: PWA_Offline: false) - Service Worker kayit edilmez.
-        // Eski (eski deploy'lardan kalan) SW'leri temizle.
-        if ('serviceWorker' in navigator) {
+        if (window.vizitlink3dWasmFallbackYukle) {
+            window.vizitlink3dWasmFallbackYukle();
+        }
+    </script>
+    <!-- Blazor WASM Loader -->
+    <script src="_framework/blazor.webassembly.js?v=20260704-3113-loaderfix-1" autostart="false"></script>
+    <script>
+        window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
+            && typeof window.WebAssembly !== 'undefined'
+            && typeof window.fetch !== 'undefined';
+
+        async function eskiYuklemeleriTemizle() {
+            // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
+            // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                navigator.serviceWorker.getRegistrations().then(function(liste) {
-                    liste.forEach(function(k) { k.unregister(); });
-                });
-                if ('caches' in window) {
-                    caches.keys().then(function(anahtarlar) {
-                        anahtarlar.forEach(function(a) { caches.delete(a); });
-                    });
+                if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                    const kayitlar = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(kayitlar.map(function(kayit) { return kayit.unregister(); }));
+                }
+                if (typeof caches !== 'undefined' && 'keys' in caches) {
+                    const anahtarlar = await caches.keys();
+                    await Promise.all(anahtarlar.map(function(anahtar) { return caches.delete(anahtar); }));
                 }
             } catch (e) { /* yut */ }
         }
+
         async function baslatBlazor() {
+            if (!window.vizitlink3dWasmDestekleniyor) {
+                return;
+            }
+            // Not: cache-busting icin manuel '?v=' sorgu dizesi eklemeyin.
+            // Blazor her framework dosyasini icerik hash'i ile fingerprint'ler
+            // (orn. VizitLink3D.UI.1flnmdrlzj.wasm) - bu zaten otomatik cache-busting saglar.
+            // Manuel query-string eklemek, ana assembly icin preload/fetch URL uyusmazligina
+            // ve 404/net::ERR_ABORTED hatasina yol acmisti.
+            await eskiYuklemeleriTemizle();
             await Blazor.start();
         }
         baslatBlazor();

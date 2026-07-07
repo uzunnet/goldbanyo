@@ -1,0 +1,51 @@
+/*
+ * GOLD — animasyonlar.css
+ * Altın dramatik motion preset'leri.
+ */
+
+/* ─── ANİMASYON TANIMLARI (top-level, CSS standardı) ─── */
+
+@keyframes gold-marka-akis {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+@keyframes gold-glow-dans {
+        0%, 100% { box-shadow: 0 0 20px color-mix(in srgb, var(--tema-vurgu) 30%, transparent); }
+        50%      { box-shadow: 0 0 40px color-mix(in srgb, var(--tema-vurgu) 60%, transparent), 0 0 60px color-mix(in srgb, var(--tema-vurgu) 30%, transparent); }
+}
+
+@keyframes gold-shimmer {
+    0%   { opacity: 0.8; transform: translateX(-100%) skewX(-15deg); }
+    50%  { opacity: 0.3; }
+    100% { opacity: 0.8; transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes gold-yazi-parilti {
+        0%, 100% { text-shadow: 0 0 20px color-mix(in srgb, var(--tema-vurgu) 30%, transparent); }
+        50%      { text-shadow: 0 0 40px color-mix(in srgb, var(--tema-vurgu) 60%, transparent), 0 0 60px color-mix(in srgb, var(--tema-vurgu) 30%, transparent); }
+}
+
+@keyframes gold-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+@keyframes gold-goruntu-belir {
+    from { opacity: 0; transform: translateY(50px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+:root[data-tema-id="gold"] {
+
+    /* Uygulama sınıfları */
+    .anim-altin-akis { animation: gold-marka-akis 4s ease infinite; }
+    .anim-altin-glow { animation: gold-glow-dans 2.6s ease-in-out infinite; }
+    .anim-altin-shimmer { animation: gold-shimmer 0.8s ease-in-out forwards; }
+    .anim-altin-yazi { animation: gold-yazi-parilti 3s ease-in-out infinite; }
+    .anim-float { animation: gold-float 4s ease-in-out infinite; }
+    .anim-goruntu-belir {
+        animation: gold-goruntu-belir var(--tema-gecis-yavas) var(--tema-bezier) forwards;
+    }
+    .anim-glow-dans { animation: gold-glow-dans 2.6s ease-in-out infinite; }
+}
