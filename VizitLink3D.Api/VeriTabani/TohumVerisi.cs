@@ -80,7 +80,7 @@ public static class TohumVerisi
         });
         await Bolum(vt, "Ayarlar", async () => { if (!vt.SayfaIcerikleri.Any(s => s.Bolum == "ayarlar")) await TohumlaAyarlariAsync(vt); });
         await Bolum(vt, "Firma", async () => { if (!vt.Firmalar.Any()) await TohumlaFirmaAsync(vt); });
-        await Bolum(vt, "Lisans", async () => { if (!vt.Lisanslar.Any()) await TohumlaLisansAsync(vt); });
+        await Bolum(vt, "Lisans", async () => await TohumlaLisansAsync(vt));
         await Bolum(vt, "ProjeKategorileri", async () => { if (!vt.ProjeKategorileri.Any()) await TohumlaProjeKategorileriAsync(vt); });
         await Bolum(vt, "Referanslar", async () => { await TohumlaReferanslariAsync(vt); });
         await Bolum(vt, "ReferansLoglariGuncelle", async () => { await ReferansLogoGuncelleAsync(vt); });
@@ -1139,13 +1139,31 @@ public static class TohumVerisi
             return;
         }
 
+        const string birincilDomain = "goldbanyo.uzunreklam.com";
+        const string yedekDomain = "www.goldbanyo.uzunreklam.com";
+
+        var mevcutLisans = await vt.Lisanslar.FirstOrDefaultAsync(l => l.FirmaId == firma.Id);
+        if (mevcutLisans is not null)
+        {
+            // Domain yanlis girilmisse (ornegin daha once "uzunnetreklam" gibi) duzelt.
+            // Suresi/tipi/durumu sonradan admin panelden degistirilmis olabilecegi
+            // icin onlara dokunulmaz, sadece domain alanlari senkronlanir.
+            if (mevcutLisans.BirincilDomain != birincilDomain || mevcutLisans.YedekDomain != yedekDomain)
+            {
+                mevcutLisans.BirincilDomain = birincilDomain;
+                mevcutLisans.YedekDomain = yedekDomain;
+                await vt.SaveChangesAsync();
+            }
+            return;
+        }
+
         var baslangic = DateTime.UtcNow.Date;
 
         vt.Lisanslar.Add(new Lisans
         {
             FirmaId = firma.Id,
-            BirincilDomain = "www.goldbanyo.uzunnetreklam.com",
-            YedekDomain = "goldbanyo.uzunnetreklam.com",
+            BirincilDomain = birincilDomain,
+            YedekDomain = yedekDomain,
             BaslangicTarihi = baslangic,
             BitisTarihi = baslangic.AddYears(1),
             LisansTipi = LisansServisi.Yillik,
