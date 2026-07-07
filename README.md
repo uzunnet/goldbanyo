@@ -1,4 +1,4 @@
-# DesaDoor — Premium Kapı ve Mobilya Kapak Sistemleri
+# Gold Banyo — Banyo Dolabı Kurumsal Web Platformu
 
 **.NET 10 + Blazor WASM + MudBlazor + SQLite** kurumsal web platformu.
 
@@ -6,13 +6,13 @@
 
 ```bash
 # Derle
-dotnet build Desadoor.slnx
+dotnet build
 
-# API çalıştır (port 5015)
-cd Desadoor.Api && dotnet run
+# API çalıştır (port 5115)
+cd VizitLink3D.Api && dotnet run
 
-# UI çalıştır (port 5013)
-cd Desadoor.UI && dotnet run
+# UI çalıştır (port 5113)
+cd VizitLink3D.UI && dotnet run
 
 # Veya tek komutla
 .\BASLA.bat
@@ -21,60 +21,40 @@ cd Desadoor.UI && dotnet run
 ## Test
 
 ```bash
-# Tüm testleri çalıştır (170+ test)
-dotnet test Desadoor.Testler/Desadoor.Testler.csproj
-
-# Belirli test dosyası
-dotnet test Desadoor.Testler/Desadoor.Testler.csproj --filter "FullyQualifiedName~ApiTemelTestler"
+# Tüm testleri çalıştır
+dotnet test VizitLink3D.Testler/VizitLink3D.Testler.csproj
 ```
 
 ## Migration
 
 ```bash
 # Yeni migration oluştur
-dotnet ef migrations add MigrationAdi --project Desadoor.Api/Desadoor.Api.csproj
+dotnet ef migrations add MigrationAdi --project VizitLink3D.Api/VizitLink3D.Api.csproj
 
 # Veritabanını güncelle
-dotnet ef database update --project Desadoor.Api/Desadoor.Api.csproj
+dotnet ef database update --project VizitLink3D.Api/VizitLink3D.Api.csproj
 ```
 
 ## Proje Yapısı
 
 | Klasör | Açıklama |
 |--------|----------|
-| `Desadoor.Api/` | ASP.NET Core Web API (port 5015) |
-| `Desadoor.UI/` | Blazor WebAssembly (port 5013) |
-| `Desadoor.Ortak/` | Paylaşılan modeller |
-| `Desadoor.Testler/` | xUnit test projesi (180 test) |
-
-## Paketler
-
-| Paket | % |
-|-------|---|
-| Veritabanı Şeması | 100% ✅ |
-| Backend Modüler Yapı | 92% |
-| Frontend Sayfalar | 95% |
-| Admin Paneli | 92% |
-| 3D Görsel Sistem | 90% |
-| Çoklu Dil & İçerik | 100% ✅ |
-| Test, Güvenlik & Deploy | 82% |
-| Medya Havuzu | 75% |
-| AI Asistan Altyapı | 85% |
+| `VizitLink3D.Api/` | ASP.NET Core Web API (port 5115) |
+| `VizitLink3D.UI/` | Blazor WebAssembly (port 5113) |
+| `VizitLink3D.Ortak/` | Paylaşılan modeller |
+| `VizitLink3D.Testler/` | xUnit test projesi |
 
 ## Teknoloji
 
 - .NET 10
 - Blazor WebAssembly
-- MudBlazor 9.4
+- MudBlazor
 - Entity Framework Core (SQLite)
 - Three.js (3D ürün görüntüleyici)
 - SignalR (canlı sohbet + bildirim + AI streaming)
 - FluentValidation
 - Serilog
-- QuestPDF
-- SixLabors.ImageSharp
 
-## Anayasa
+## Kurallar
 
-Tüm geliştirme kuralları için: [KURALLAR.md](KURALLAR.md)
-Detaylı yol haritası: [DESEPLAN.md](DESEPLAN.md)
+Tüm geliştirme kuralları için: [AGENTS.md](AGENTS.md) ve [AjanKurallari/](AjanKurallari/)
