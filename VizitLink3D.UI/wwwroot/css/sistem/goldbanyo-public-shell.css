@@ -1743,7 +1743,7 @@ button.gb-chip {
 
 .gb-detail-baslik-v2 {
   font-family: "Playfair Display", var(--tema-font-baslik, serif);
-  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+  font-size: clamp(1.44rem, 2.64vw, 2.16rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: var(--tema-metin, #e2e2e2);
