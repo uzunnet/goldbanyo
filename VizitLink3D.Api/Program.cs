@@ -138,6 +138,14 @@ using (var kapsam = uygulama.Services.CreateScope())
 {
     var vt = kapsam.ServiceProvider.GetRequiredService<VizitLink3DDbContext>();
     var webEnv = kapsam.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
+    // SQLite performans ayarlari: WAL modu okuma/yazmayi birbirini kilitlemeden
+    // calistirir (coklu istek altinda hizli kalir), busy_timeout kilit
+    // catismalarinda "database is locked" hatasi yerine kisa sure bekler.
+    vt.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
+    vt.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;");
+    vt.Database.ExecuteSqlRaw("PRAGMA busy_timeout=5000;");
+
     var migrationAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "1", StringComparison.OrdinalIgnoreCase)
         || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "true", StringComparison.OrdinalIgnoreCase);
 
