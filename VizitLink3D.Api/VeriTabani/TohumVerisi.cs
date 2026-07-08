@@ -2957,8 +2957,6 @@ public static class TohumVerisi
                     Ana: false,
                     Sira: index + 4)));
 
-            UrunMedya? heroMedya = null;
-
             foreach (var medya in medyaKuyrugu)
             {
                 var mevcutMedya = await vt.UrunMedyalari
@@ -2966,7 +2964,7 @@ public static class TohumVerisi
 
                 if (mevcutMedya == null)
                 {
-                    mevcutMedya = new UrunMedya
+                    vt.UrunMedyalari.Add(new UrunMedya
                     {
                         UrunId = urun.Id,
                         MedyaUrl = medya.Url,
@@ -2974,8 +2972,7 @@ public static class TohumVerisi
                         Aciklama = $"{katalogUrunu.Ad} katalog görseli",
                         SiraNo = medya.Sira,
                         AnaGosterim = medya.Ana
-                    };
-                    vt.UrunMedyalari.Add(mevcutMedya);
+                    });
                 }
                 else
                 {
@@ -2983,18 +2980,11 @@ public static class TohumVerisi
                     mevcutMedya.AnaGosterim = medya.Ana;
                     mevcutMedya.Aciklama = $"{katalogUrunu.Ad} katalog görseli";
                 }
-
-                if (medya.Ana)
-                    heroMedya = mevcutMedya;
             }
 
+            // AnaGorselMedyaId artik Medya havuzu uzerinden GercekUrunFotograflariniKaydetAsync tarafindan yonetiliyor;
+            // burada UrunMedya.Id'ye atanmiyor (yanlis tablo - Medyalar ile UrunMedyalari ayri sekvanslar kullanir).
             await vt.SaveChangesAsync();
-
-            if (heroMedya != null)
-            {
-                urun.AnaGorselMedyaId = heroMedya.Id;
-                await vt.SaveChangesAsync();
-            }
         }
     }
 
