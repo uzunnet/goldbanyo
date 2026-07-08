@@ -1752,7 +1752,7 @@ button.gb-chip {
 }
 
 .gb-detail-alt-baslik {
-  font-size: 0.78rem;
+  font-size: 1.25rem !important;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
