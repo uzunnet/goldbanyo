@@ -50,17 +50,18 @@ public partial class UrunDetay : ComponentBase, IDisposable
 
     private static readonly Dictionary<string, string> OzellikIkonEslesmesi = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["Soft Kapak"] = MudBlazor.Icons.Material.Outlined.DoorSliding,
-        ["MDF Ahşap"] = MudBlazor.Icons.Material.Outlined.Forest,
-        ["Dokunmatik Ledli Ayna"] = MudBlazor.Icons.Material.Outlined.TouchApp,
-        ["Kolay Montaj"] = MudBlazor.Icons.Material.Outlined.Build,
-        ["Kolay Temizlenir"] = MudBlazor.Icons.Material.Outlined.CleaningServices,
-        ["Stone Lavabo"] = MudBlazor.Icons.Material.Outlined.Palette,
-        ["Cam Lavabo"] = MudBlazor.Icons.Material.Outlined.Palette,
+        ["Soft Kapak"] = "/img/ozellik-ikonlar/soft-kapak.svg",
+        ["MDF Ahşap"] = "/img/ozellik-ikonlar/mdf.svg",
+        ["Dokunmatik Ledli Ayna"] = "/img/ozellik-ikonlar/dokunmatik.svg",
+        ["Kolay Montaj"] = "/img/ozellik-ikonlar/kolay-montaj.svg",
+        ["Kolay Temizlenir"] = "/img/ozellik-ikonlar/kolay-temizlik.svg",
+        ["Renk Seçenekleri"] = "/img/ozellik-ikonlar/renk.svg",
+        ["Stone Lavabo"] = "/img/ozellik-ikonlar/stone-lavabo.svg",
+        ["Cam Lavabo"] = "/img/ozellik-ikonlar/stone-lavabo.svg",
     };
 
-    private static string OzellikIkonuBul(string ozellik) =>
-        OzellikIkonEslesmesi.TryGetValue(ozellik, out var ikon) ? ikon : MudBlazor.Icons.Material.Outlined.CheckCircleOutline;
+    private static string? OzellikIkonuBul(string ozellik) =>
+        OzellikIkonEslesmesi.TryGetValue(ozellik, out var ikon) ? ikon : null;
 
     protected override async Task OnParametersSetAsync()
     {

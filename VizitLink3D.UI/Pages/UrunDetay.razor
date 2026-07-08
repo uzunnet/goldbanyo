@@ -54,7 +54,14 @@
                             {
                                 <div class="gb-detail-ozellik-liste__oge gb-reveal">
                                     <span class="gb-detail-ozellik-liste__ikon">
-                                        <MudIcon Icon="@OzellikIkonuBul(ozellik)" Size="Size.Small" />
+                                        @if (OzellikIkonuBul(ozellik) is { } ikonYolu)
+                                        {
+                                            <span class="gb-detail-ozellik-liste__ikon-gorsel" style="mask-image:url('@ikonYolu');-webkit-mask-image:url('@ikonYolu')"></span>
+                                        }
+                                        else
+                                        {
+                                            <MudIcon Icon="@Icons.Material.Outlined.CheckCircleOutline" Size="Size.Small" />
+                                        }
                                     </span>
                                     <span>@ozellik</span>
                                 </div>
