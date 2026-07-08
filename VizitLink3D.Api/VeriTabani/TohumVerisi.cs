@@ -97,7 +97,7 @@ public static class TohumVerisi
                 vt.Kullanicilar.Add(new Kullanici
                 {
                     KullaniciAdi = "yonetici",
-                    SifreHash = "$2b$12$K87L8R/orPfsSJZ.at8ze.4G6Lzv5KZ3m30ca3/ao2j4XvMidOyti", // Şifre: 123456
+                    SifreHash = "$2b$12$K87L8R/orPfsSJZ.at8ze.4G6Lzv5KZ3m30ca3/ao2j4XvMidOyti",
                     AdSoyad = "Firma Yöneticisi",
                     Eposta = "yonetici@3dvizitlink.com.tr",
                     Rol = Rol.Admin,
@@ -118,6 +118,7 @@ public static class TohumVerisi
         await Bolum(vt, "KaplamaSecenekleri", async () => { if (!vt.KaplamaSecenekleri.Any()) await TohumlaKaplamaSecenekleriniAsync(vt); });
         await Bolum(vt, "ReferansUrunleri", async () => { if (!vt.Urunler.Any()) await TohumlaReferansUrunleriniAsync(vt); });
         await Bolum(vt, "DusakabinKaldir", async () => await DusakabinIcerigiPasifleAsync(vt));
+        await Bolum(vt, "GercekUrunFotograflari", async () => await GercekUrunFotograflariniKaydetAsync(vt));
 
         // === EKSIK SEED: Bulten, Eposta, Teklif, Sube, AI, Katalog ===
         await Bolum(vt, "BultenAboneleri", async () => { if (!vt.BultenAboneleri.Any()) await TohumlaBultenAboneleriniAsync(vt); });
@@ -2359,6 +2360,118 @@ public static class TohumVerisi
 
         if (urun is not null || aile is not null)
             await vt.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// GOLD-2026-KATALOG.pdf'ten (PyMuPDF ile) cikarilan gercek urun fotograflarini
+    /// (fiyat etiketi/metin icermeyen, gomulu orijinal kalite) her urune ozel olarak
+    /// kaydeder. Eski statik katalog-yansima gorselleri SILINMEZ, sadece "ResimArsiv"
+    /// olarak pasiflestirilir. Idempotent: urun zaten "-real-" gorseline sahipse atlanir.
+    /// </summary>
+    private static readonly (string Slug, int GorselSayisi)[] GercekFotografliUrunler =
+    [
+        ("hermes-120", 2),
+        ("hermes-80", 2),
+        ("bottega-120", 2),
+        ("bottega-100", 2),
+        ("bottega-80", 1),
+        ("giorgio-120", 2),
+        ("giorgio-100", 1),
+        ("giorgio-80", 1),
+        ("diago-120", 2),
+        ("diago-100", 2),
+        ("capelli-150", 2),
+        ("capelli-100", 2),
+        ("hera-120", 1),
+        ("hera-80", 1),
+        ("cavalli-110", 1),
+        ("cavalli-90", 1),
+        ("tiffany-120", 1),
+        ("tiffany-100", 1),
+        ("siena-80", 1),
+        ("valentino-100", 2),
+        ("zanussi-100", 3),
+        ("zanussi-80", 3),
+        ("perla-80", 2),
+        ("valencia-90", 2),
+        ("otto-100", 1),
+        ("otto-80", 1),
+        ("otto-65", 1),
+        ("lugano-100", 1),
+        ("lugano-80", 1),
+        ("lugano-plus-100", 1),
+        ("lugano-plus-80", 1),
+    ];
+
+    private static async Task GercekUrunFotograflariniKaydetAsync(VizitLink3DDbContext vt)
+    {
+        foreach (var (slug, gorselSayisi) in GercekFotografliUrunler)
+        {
+            var urun = await vt.Urunler.FirstOrDefaultAsync(u => u.Slug == slug && !u.SilindiMi);
+            if (urun is null)
+                continue;
+
+            var zatenVarMi = await vt.UrunMedyalari.AnyAsync(m =>
+                m.UrunId == urun.Id && m.MedyaTuru == "Resim" && m.MedyaUrl.Contains("-real-"));
+            if (zatenVarMi)
+                continue;
+
+            var eskiGorseller = await vt.UrunMedyalari
+                .Where(m => m.UrunId == urun.Id && m.MedyaTuru == "Resim" && m.MedyaUrl.StartsWith("/medya/gold-katalog/sayfa-"))
+                .ToListAsync();
+            foreach (var eski in eskiGorseller)
+                eski.MedyaTuru = "ResimArsiv";
+
+            for (var i = 1; i <= gorselSayisi; i++)
+            {
+                vt.UrunMedyalari.Add(new UrunMedya
+                {
+                    UrunId = urun.Id,
+                    MedyaUrl = $"/medya/gold-katalog/{slug}-real-{i}.png",
+                    MedyaTuru = "Resim",
+                    SiraNo = i
+                });
+            }
+
+            if (urun.AnaGorselMedyaId is null)
+            {
+                var dosyaAdi = $"{slug}-real-1.png";
+                var medya = new Medya
+                {
+                    Tip = MedyaTipi.Resim,
+                    Kaynak = MedyaKaynagi.Yerel,
+                    Ad = $"{slug} ana gorsel",
+                    OrijinalAd = dosyaAdi,
+                    DosyaYolu = $"medya/gold-katalog/{dosyaAdi}",
+                    KullanimSayisi = 1,
+                    OlusturulmaTarihi = DateTime.UtcNow
+                };
+                vt.Medyalar.Add(medya);
+                await vt.SaveChangesAsync();
+                urun.AnaGorselMedyaId = medya.Id;
+            }
+
+            await vt.SaveChangesAsync();
+        }
+
+        // Hermes 120 pilotu: teknik cizim ayrica tekli olarak eklendi
+        var hermes120 = await vt.Urunler.FirstOrDefaultAsync(u => u.Slug == "hermes-120" && !u.SilindiMi);
+        if (hermes120 is not null)
+        {
+            var teknikVarMi = await vt.UrunMedyalari.AnyAsync(m =>
+                m.UrunId == hermes120.Id && m.MedyaTuru == "TeknikCizim");
+            if (!teknikVarMi)
+            {
+                vt.UrunMedyalari.Add(new UrunMedya
+                {
+                    UrunId = hermes120.Id,
+                    MedyaUrl = "/medya/gold-katalog/hermes-120-teknik.svg",
+                    MedyaTuru = "TeknikCizim",
+                    SiraNo = 1
+                });
+                await vt.SaveChangesAsync();
+            }
+        }
     }
 
     private static async Task TohumlaReferansUrunleriniAsync(VizitLink3DDbContext vt)
