@@ -117,6 +117,7 @@ public static class TohumVerisi
         await Bolum(vt, "Malzemeler", async () => { if (!vt.Malzemeler.Any()) await TohumlaMalzemeleriAsync(vt); });
         await Bolum(vt, "KaplamaSecenekleri", async () => { if (!vt.KaplamaSecenekleri.Any()) await TohumlaKaplamaSecenekleriniAsync(vt); });
         await Bolum(vt, "ReferansUrunleri", async () => { if (!vt.Urunler.Any()) await TohumlaReferansUrunleriniAsync(vt); });
+        await Bolum(vt, "DusakabinKaldir", async () => await DusakabinIcerigiPasifleAsync(vt));
 
         // === EKSIK SEED: Bulten, Eposta, Teklif, Sube, AI, Katalog ===
         await Bolum(vt, "BultenAboneleri", async () => { if (!vt.BultenAboneleri.Any()) await TohumlaBultenAboneleriniAsync(vt); });
@@ -2331,6 +2332,33 @@ public static class TohumVerisi
             new KaplamaSecenegi { Ad = "Altin", Aciklama = "Altin rengi kaplama", MalzemeId = 8, SiraNo = 8, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow }
         );
         await vt.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Gold Banyo sadece banyo dolabi satiyor; eski Desadoor demo verisinden kalan
+    /// "Dusakabin" urun ailesi ve demo urunu vitrinlerde asla gorunmemeli.
+    /// Kural geregi satir silinmez, sadece soft-delete (SilindiMi/AktifMi) ile pasiflestirilir.
+    /// </summary>
+    private static async Task DusakabinIcerigiPasifleAsync(VizitLink3DDbContext vt)
+    {
+        var urun = await vt.Urunler.FirstOrDefaultAsync(u => u.Slug == "dusakabin-luna" && !u.SilindiMi);
+        if (urun is not null)
+        {
+            urun.AktifMi = false;
+            urun.SilindiMi = true;
+            urun.SilinmeTarihi = DateTime.UtcNow;
+        }
+
+        var aile = await vt.UrunAilesileri.FirstOrDefaultAsync(a => a.Slug == "dusakabin" && !a.SilindiMi);
+        if (aile is not null)
+        {
+            aile.AktifMi = false;
+            aile.SilindiMi = true;
+            aile.SilinmeTarihi = DateTime.UtcNow;
+        }
+
+        if (urun is not null || aile is not null)
+            await vt.SaveChangesAsync();
     }
 
     private static async Task TohumlaReferansUrunleriniAsync(VizitLink3DDbContext vt)
