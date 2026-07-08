@@ -45,23 +45,23 @@
                     <p class="gb-detail-aciklama">@AnaOzeti</p>
                 </div>
 
-                @if (KatalogOzellikleri.Count > 0)
-                {
-                    <div class="gb-detail-ozellik-liste">
-                        <h3 class="gb-detail-alt-baslik gb-reveal gb-reveal--gecikme-1">@dil.T("urun.ozellikler", "Özellikler")</h3>
-                        @foreach (var ozellik in KatalogOzellikleri)
-                        {
-                            <div class="gb-detail-ozellik-liste__oge gb-reveal">
-                                <span class="gb-detail-ozellik-liste__ikon">
-                                    <MudIcon Icon="@OzellikIkonuBul(ozellik)" Size="Size.Small" />
-                                </span>
-                                <span>@ozellik</span>
-                            </div>
-                        }
-                    </div>
-                }
+                <div class="gb-detail-ozellik-renk-satir gb-reveal gb-reveal--gecikme-1">
+                    @if (KatalogOzellikleri.Count > 0)
+                    {
+                        <div class="gb-detail-ozellik-liste">
+                            <h3 class="gb-detail-alt-baslik">@dil.T("urun.ozellikler", "Özellikler")</h3>
+                            @foreach (var ozellik in KatalogOzellikleri)
+                            {
+                                <div class="gb-detail-ozellik-liste__oge gb-reveal">
+                                    <span class="gb-detail-ozellik-liste__ikon">
+                                        <MudIcon Icon="@OzellikIkonuBul(ozellik)" Size="Size.Small" />
+                                    </span>
+                                    <span>@ozellik</span>
+                                </div>
+                            }
+                        </div>
+                    }
 
-                <div class="gb-detail-renk-fiyat gb-reveal gb-reveal--gecikme-4">
                     <div class="gb-detail-renk-blok">
                         <h3 class="gb-detail-alt-baslik">@dil.T("urun.renkler", "Renkler")</h3>
                         @if (RenkSwatchListesi.Count == 0)
@@ -73,21 +73,34 @@
                             <div class="gb-detail-renk-swatch-satir">
                                 @foreach (var renk in RenkSwatchListesi)
                                 {
-                                    <span class="gb-detail-renk-swatch" style="--swatch-renk:@renk.Hex" title="@renk.Ad"></span>
+                                    <div class="gb-detail-renk-oge">
+                                        <span class="gb-detail-renk-swatch" style="--swatch-renk:@renk.Hex"></span>
+                                        <span class="gb-detail-renk-ad">@renk.Ad</span>
+                                    </div>
                                 }
                             </div>
                         }
                     </div>
-                    <div class="gb-detail-fiyat-karti">
-                        <span class="gb-detail-fiyat-etiket">@dil.T("urun.listeFiyati", "Liste Fiyatı")</span>
-                        <strong class="gb-detail-fiyat-tutar">@FiyatMetni</strong>
-                    </div>
+                </div>
+
+                <div class="gb-detail-fiyat-karti gb-reveal gb-reveal--gecikme-4">
+                    <span class="gb-detail-fiyat-etiket">@dil.T("urun.listeFiyati", "Liste Fiyatı")</span>
+                    <strong class="gb-detail-fiyat-tutar">@FiyatMetni</strong>
                 </div>
 
                 @if (KatalogOlculer.Count > 0)
                 {
                     <div class="gb-detail-olcu-tablosu gb-reveal gb-reveal--gecikme-5">
-                        <h3 class="gb-detail-alt-baslik">@dil.T("urun.teknikOlculer", "Teknik Ölçüler")</h3>
+                        <h3 class="gb-detail-alt-baslik">
+                            @dil.T("urun.teknikOlculer", "Teknik Ölçüler")
+                            @if (_katalogVerisi is not null)
+                            {
+                                <span class="gb-detail-teknik-onizleme">
+                                    <MudIcon Icon="@Icons.Material.Outlined.ZoomIn" Size="Size.Small" />
+                                    <img src="@_katalogVerisi.TeknikGorselUrl" alt="@dil.T("urun.teknikOlculer", "Teknik Ölçüler")" class="gb-detail-teknik-onizleme__gorsel" />
+                                </span>
+                            }
+                        </h3>
                         <table class="gb-detail-olcu-tablosu__grid">
                             <thead>
                                 <tr>

@@ -1744,7 +1744,7 @@ button.gb-chip {
 
 .gb-detail-baslik-v2 {
   font-family: "Playfair Display", var(--tema-font-baslik, serif);
-  font-size: clamp(1.44rem, 2.64vw, 2.16rem);
+  font-size: clamp(0.58rem, 1.06vw, 0.86rem) !important;
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: var(--tema-metin, #e2e2e2);
@@ -1760,12 +1760,51 @@ button.gb-chip {
   margin: 0 0 14px;
 }
 
+.gb-detail-teknik-onizleme {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 8px;
+  color: var(--tema-vurgu, #d4af37);
+  cursor: help;
+}
+
+.gb-detail-teknik-onizleme__gorsel {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  width: 320px;
+  max-width: 70vw;
+  border-radius: 12px;
+  border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.18));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  background: #fff;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(6px) scale(0.96);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  z-index: 20;
+}
+
+.gb-detail-teknik-onizleme:hover .gb-detail-teknik-onizleme__gorsel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.gb-detail-ozellik-renk-satir {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--tema-cizgi, rgba(255, 255, 255, 0.10));
+}
+
 .gb-detail-ozellik-liste {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-top: 22px;
-  border-top: 1px solid var(--tema-cizgi, rgba(255, 255, 255, 0.10));
 }
 
 .gb-detail-ozellik-liste__oge {
@@ -1793,28 +1832,30 @@ button.gb-chip {
   color: var(--tema-metin-ters, #121414);
 }
 
-.gb-detail-renk-fiyat {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
-  padding-top: 22px;
-  border-top: 1px solid var(--tema-cizgi, rgba(255, 255, 255, 0.10));
-}
-
 .gb-detail-renk-blok {
   display: flex;
   flex-direction: column;
+  gap: 14px;
+  padding-left: 32px;
+  border-left: 1px solid var(--tema-cizgi, rgba(255, 255, 255, 0.10));
 }
 
 .gb-detail-renk-swatch-satir {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gb-detail-renk-oge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .gb-detail-renk-swatch {
   width: 34px;
   height: 34px;
+  flex: none;
   border-radius: 10px;
   background: var(--swatch-renk, #B0A99A);
   border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.18));
@@ -1822,8 +1863,12 @@ button.gb-chip {
   transition: transform var(--tema-gecis-hizli, 0.15s ease);
 }
 
-.gb-detail-renk-swatch:hover {
+.gb-detail-renk-oge:hover .gb-detail-renk-swatch {
   transform: translateY(-3px);
+}
+
+.gb-detail-renk-ad {
+  color: var(--tema-metin, #e2e2e2);
 }
 
 .gb-detail-fiyat-karti {
@@ -1832,6 +1877,7 @@ button.gb-chip {
   justify-content: center;
   gap: 6px;
   padding: 18px 20px;
+  margin-top: 22px;
   border-radius: 20px;
   border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.12));
   background: var(--tema-cam-bg, rgba(255, 255, 255, 0.05));
@@ -2001,8 +2047,15 @@ button.gb-chip {
 }
 
 @media (max-width: 760px) {
-  .gb-detail-renk-fiyat {
+  .gb-detail-ozellik-renk-satir {
     grid-template-columns: 1fr;
+  }
+
+  .gb-detail-renk-blok {
+    padding-left: 0;
+    padding-top: 22px;
+    border-left: none;
+    border-top: 1px solid var(--tema-cizgi, rgba(255, 255, 255, 0.10));
   }
 
   .gb-product-grid--iki-sutun {
