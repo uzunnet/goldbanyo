@@ -293,6 +293,27 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
         return Cevap<List<UrunMedya>>.Basarili(medyalar);
     }
 
+    [HttpPost("{id:int}/medya")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<Cevap<UrunMedya>> MedyaEkle(int id, [FromBody] UrunMedyaEkleIstek istek)
+    {
+        var urunVarMi = await vt.Urunler.AnyAsync(u => u.Id == id && !u.SilindiMi);
+        if (!urunVarMi)
+            return Cevap<UrunMedya>.Hata("Urun bulunamadi.");
+
+        var medya = new UrunMedya
+        {
+            UrunId = id,
+            MedyaUrl = istek.MedyaUrl,
+            MedyaTuru = istek.MedyaTuru,
+            SiraNo = istek.SiraNo
+        };
+        vt.UrunMedyalari.Add(medya);
+        await vt.SaveChangesAsync();
+
+        return Cevap<UrunMedya>.Basarili(medya, "Medya eklendi.");
+    }
+
     private async Task<int?> VarsayilanModelIdGetir(int urunId)
     {
         var urun = await vt.Urunler
@@ -619,3 +640,5 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
         return Cevap<List<Malzeme>>.Basarili(tumMalzemeler);
     }
 }
+
+public sealed record UrunMedyaEkleIstek(string MedyaUrl, string MedyaTuru, int SiraNo);

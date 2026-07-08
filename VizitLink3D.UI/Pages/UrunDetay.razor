@@ -135,16 +135,16 @@
             </div>
 
             <div class="gb-detail-foto-kolaj">
-                <div class="gb-detail-foto-kolaj__ana gb-glint-hover gb-reveal gb-reveal--gecikme-2">
+                <div class="gb-detail-foto-kolaj__ana gb-glint-hover gb-reveal gb-reveal--gecikme-2" @onclick="() => LightboxAc(0)">
                     <img src="@HeroGorselUrl" alt="@_urun.Ad" />
                 </div>
                 @if (GaleriGorselleri.Count > 1)
                 {
                     <div class="gb-detail-foto-kolaj__yan">
-                        @foreach (var gorsel in GaleriGorselleri.Skip(1).Take(2))
+                        @foreach (var gorsel in GaleriGorselleri.Skip(1).Select((g, i) => (Gorsel: g, Index: i + 1)))
                         {
-                            <div class="gb-detail-foto-kolaj__yan-kart gb-glint-hover gb-reveal">
-                                <img src="@gorsel" alt="@_urun.Ad" />
+                            <div class="gb-detail-foto-kolaj__yan-kart gb-glint-hover gb-reveal" @onclick="() => LightboxAc(gorsel.Index)">
+                                <img src="@gorsel.Gorsel" alt="@_urun.Ad" />
                             </div>
                         }
                     </div>
@@ -193,6 +193,23 @@
                     }
                 </div>
             </section>
+        }
+
+        @if (_lightboxAcik)
+        {
+            <div class="gb-lightbox" @onclick="LightboxKapat">
+                <button class="gb-lightbox__kapat" @onclick="LightboxKapat" @onclick:stopPropagation="true">✕</button>
+                @if (GaleriGorselleri.Count > 1)
+                {
+                    <button class="gb-lightbox__nav gb-lightbox__nav--onceki" @onclick="LightboxOnceki" @onclick:stopPropagation="true">‹</button>
+                }
+                <img class="gb-lightbox__gorsel" src="@GaleriGorselleri[_lightboxIndex]" alt="@_urun.Ad" @onclick:stopPropagation="true" />
+                @if (GaleriGorselleri.Count > 1)
+                {
+                    <button class="gb-lightbox__nav gb-lightbox__nav--sonraki" @onclick="LightboxSonraki" @onclick:stopPropagation="true">›</button>
+                    <div class="gb-lightbox__sayac">@(_lightboxIndex + 1) / @GaleriGorselleri.Count</div>
+                }
+            </div>
         }
     }
 </section>

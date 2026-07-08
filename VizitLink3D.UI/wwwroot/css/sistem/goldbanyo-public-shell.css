@@ -1954,6 +1954,7 @@ button.gb-chip {
   aspect-ratio: 5 / 4;
   background: rgba(255, 255, 255, 0.03);
   box-shadow: var(--tema-golge-lg, 0 20px 60px rgba(0, 0, 0, 0.35));
+  cursor: zoom-in;
 }
 
 .gb-detail-foto-kolaj__ana img {
@@ -1979,6 +1980,7 @@ button.gb-chip {
   overflow: hidden;
   aspect-ratio: 5 / 4;
   background: rgba(255, 255, 255, 0.03);
+  cursor: zoom-in;
 }
 
 .gb-detail-foto-kolaj__yan-kart img {
@@ -1999,6 +2001,95 @@ button.gb-chip {
   display: flex;
   gap: 8px;
   z-index: 1;
+}
+
+/* ── LIGHTBOX (urun galeri buyutme) ── */
+.gb-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 8, 10, 0.92);
+  cursor: zoom-out;
+  animation: gb-lightbox-fade 0.2s ease;
+}
+
+@keyframes gb-lightbox-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.gb-lightbox__gorsel {
+  max-width: min(90vw, 1100px);
+  max-height: 86vh;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  background: #fff;
+}
+
+.gb-lightbox__kapat {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gb-lightbox__kapat:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.gb-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gb-lightbox__nav:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.gb-lightbox__nav--onceki { left: 24px; }
+.gb-lightbox__nav--sonraki { right: 24px; }
+
+.gb-lightbox__sayac {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 640px) {
+  .gb-lightbox__nav { width: 40px; height: 40px; font-size: 1.5rem; }
+  .gb-lightbox__nav--onceki { left: 10px; }
+  .gb-lightbox__nav--sonraki { right: 10px; }
+  .gb-lightbox__kapat { top: 12px; right: 12px; }
 }
 
 /* ── ÜRÜN LİSTESİ — SIDEBAR FİLTRE + 2 SÜTUN GRID ── */

@@ -168,12 +168,12 @@ public static class UrunGorunumYardimcisi
 {
     public static string AnaGorselUrl(Urun urun, string apiBaseUrl)
     {
+        if (urun.AnaGorselMedyaId is long medyaId and > 0)
+            return $"{apiBaseUrl.TrimEnd('/')}/api/medya/dosya/{medyaId}";
+
         var katalogVerisi = KatalogVerisiBul(urun);
         if (katalogVerisi is not null)
             return katalogVerisi.HeroGorselUrl;
-
-        if (urun.AnaGorselMedyaId is long medyaId and > 0)
-            return $"{apiBaseUrl.TrimEnd('/')}/api/medya/dosya/{medyaId}";
 
         return "/medya/vizitlink3d_default.png";
     }

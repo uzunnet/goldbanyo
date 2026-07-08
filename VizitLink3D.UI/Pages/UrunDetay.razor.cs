@@ -43,6 +43,31 @@ public partial class UrunDetay : ComponentBase, IDisposable
     private List<string> KatalogOzellikleri => _katalogVerisi?.Ozellikler.ToList() ?? [];
     private List<GoldBanyoKatalogOlcusu> KatalogOlculer => _katalogVerisi?.Olculer.ToList() ?? [];
 
+    // ─── LIGHTBOX (galeri buyutme) ─────────────────────────────────────
+    private bool _lightboxAcik;
+    private int _lightboxIndex;
+
+    private void LightboxAc(int index)
+    {
+        if (index < 0 || index >= GaleriGorselleri.Count) return;
+        _lightboxIndex = index;
+        _lightboxAcik = true;
+    }
+
+    private void LightboxKapat() => _lightboxAcik = false;
+
+    private void LightboxOnceki()
+    {
+        if (GaleriGorselleri.Count == 0) return;
+        _lightboxIndex = (_lightboxIndex - 1 + GaleriGorselleri.Count) % GaleriGorselleri.Count;
+    }
+
+    private void LightboxSonraki()
+    {
+        if (GaleriGorselleri.Count == 0) return;
+        _lightboxIndex = (_lightboxIndex + 1) % GaleriGorselleri.Count;
+    }
+
     private List<(string Ad, string Hex)> RenkSwatchListesi =>
         _katalogVerisi is not null && _katalogVerisi.Renkler.Length > 0
             ? _katalogVerisi.Renkler.Select(r => (Ad: r, Hex: GoldBanyoKatalogRenkPaleti.HexBul(r))).ToList()
@@ -130,7 +155,23 @@ public partial class UrunDetay : ComponentBase, IDisposable
 
             HeroGorselUrl = UrunGorunumYardimcisi.AnaGorselUrl(urun, Api.ApiBaseUrl);
 
-            if (_katalogVerisi is not null)
+            // Admin'den urune ozel yuklenen gercek fotograflar varsa (MedyaTuru
+            // Resim/Gorsel) onlar kullanilir; yoksa (eski) statik katalog
+            // gorsellerine dusulur. Boylece her urunun galerisi admin'den
+            // bagimsiz olarak yonetilebilir, sayfa basina 1/2/3+ gorsel olabilir.
+            var dbGorseller = Medyalar
+                .Where(x => x.MedyaTuru.Equals("Gorsel", StringComparison.OrdinalIgnoreCase)
+                    || x.MedyaTuru.Equals("Resim", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(x => x.SiraNo)
+                .Select(x => x.MedyaUrl)
+                .Distinct()
+                .ToList();
+
+            if (dbGorseller.Count > 0)
+            {
+                GaleriGorselleri = dbGorseller;
+            }
+            else if (_katalogVerisi is not null)
             {
                 // Katalog ürünlerinin görselleri UI'nin kendi statik wwwroot'unda duruyor,
                 // API üzerinden değil — bu yüzden doğrudan (API taban URL'siz) kullanılır.
@@ -143,17 +184,13 @@ public partial class UrunDetay : ComponentBase, IDisposable
             }
             else
             {
-                GaleriGorselleri = Medyalar
-                    .Where(x => x.MedyaTuru.Equals("Gorsel", StringComparison.OrdinalIgnoreCase)
-                        || x.MedyaTuru.Equals("Resim", StringComparison.OrdinalIgnoreCase)
-                        || x.AnaGosterim)
-                    .Select(x => x.MedyaUrl)
-                    .Distinct()
-                    .ToList();
+                GaleriGorselleri = [];
             }
 
             if (GaleriGorselleri.Count == 0)
                 GaleriGorselleri = [HeroGorselUrl];
+            else
+                HeroGorselUrl = GaleriGorselleri[0];
         }
         catch (Exception ex)
         {
