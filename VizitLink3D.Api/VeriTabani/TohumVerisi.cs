@@ -2464,23 +2464,27 @@ public static class TohumVerisi
             }
         }
 
-        // Hermes 120 pilotu: teknik cizim ayrica tekli olarak eklendi
-        var hermes120 = await vt.Urunler.FirstOrDefaultAsync(u => u.Slug == "hermes-120" && !u.SilindiMi);
-        if (hermes120 is not null)
+        // Tum urunler icin PDF/CorelDRAW'dan fiyat etiketsiz kirpilmis teknik cizim eklenir.
+        // Hermes 120'nin pilot SVG'si zaten varsa dokunulmaz; digerleri icin yeni PNG kaydedilir.
+        foreach (var (slug, _) in GercekFotografliUrunler)
         {
+            var urun = await vt.Urunler.FirstOrDefaultAsync(u => u.Slug == slug && !u.SilindiMi);
+            if (urun is null)
+                continue;
+
             var teknikVarMi = await vt.UrunMedyalari.AnyAsync(m =>
-                m.UrunId == hermes120.Id && m.MedyaTuru == "TeknikCizim");
-            if (!teknikVarMi)
+                m.UrunId == urun.Id && m.MedyaTuru == "TeknikCizim");
+            if (teknikVarMi)
+                continue;
+
+            vt.UrunMedyalari.Add(new UrunMedya
             {
-                vt.UrunMedyalari.Add(new UrunMedya
-                {
-                    UrunId = hermes120.Id,
-                    MedyaUrl = "/medya/gold-katalog/hermes-120-teknik.svg",
-                    MedyaTuru = "TeknikCizim",
-                    SiraNo = 1
-                });
-                await vt.SaveChangesAsync();
-            }
+                UrunId = urun.Id,
+                MedyaUrl = $"/medya/gold-katalog/{slug}-teknik.png",
+                MedyaTuru = "TeknikCizim",
+                SiraNo = 1
+            });
+            await vt.SaveChangesAsync();
         }
     }
 
