@@ -2413,45 +2413,55 @@ public static class TohumVerisi
 
             var zatenVarMi = await vt.UrunMedyalari.AnyAsync(m =>
                 m.UrunId == urun.Id && m.MedyaTuru == "Resim" && m.MedyaUrl.Contains("-real-"));
-            if (zatenVarMi)
-                continue;
-
-            var eskiGorseller = await vt.UrunMedyalari
-                .Where(m => m.UrunId == urun.Id && m.MedyaTuru == "Resim" && m.MedyaUrl.StartsWith("/medya/gold-katalog/sayfa-"))
-                .ToListAsync();
-            foreach (var eski in eskiGorseller)
-                eski.MedyaTuru = "ResimArsiv";
-
-            for (var i = 1; i <= gorselSayisi; i++)
+            if (!zatenVarMi)
             {
-                vt.UrunMedyalari.Add(new UrunMedya
+                var eskiGorseller = await vt.UrunMedyalari
+                    .Where(m => m.UrunId == urun.Id && m.MedyaTuru == "Resim" && m.MedyaUrl.StartsWith("/medya/gold-katalog/sayfa-"))
+                    .ToListAsync();
+                foreach (var eski in eskiGorseller)
+                    eski.MedyaTuru = "ResimArsiv";
+
+                for (var i = 1; i <= gorselSayisi; i++)
                 {
-                    UrunId = urun.Id,
-                    MedyaUrl = $"/medya/gold-katalog/{slug}-real-{i}.png",
-                    MedyaTuru = "Resim",
-                    SiraNo = i
-                });
+                    vt.UrunMedyalari.Add(new UrunMedya
+                    {
+                        UrunId = urun.Id,
+                        MedyaUrl = $"/medya/gold-katalog/{slug}-real-{i}.png",
+                        MedyaTuru = "Resim",
+                        SiraNo = i
+                    });
+                }
+
+                await vt.SaveChangesAsync();
             }
 
-            if (urun.AnaGorselMedyaId is null)
+            // AnaGorselMedyaId duzeltmesi her calistirmada uygulanir (yukaridaki UrunMedya
+            // guncellemesinden BAGIMSIZ): orijinal seed'den kalan bozuk/var olmayan dosyaya
+            // isaret eden eski degerleri de duzeltmek (self-healing) icin "zatenVarMi"
+            // guard'inin disinda tutulur.
+            var dosyaAdi = $"{slug}-real-1.png";
+            var dosyaYolu = $"medya/gold-katalog/{dosyaAdi}";
+            var medya = await vt.Medyalar.FirstOrDefaultAsync(m => m.DosyaYolu == dosyaYolu && !m.SilindiMi);
+            if (medya is null)
             {
-                var dosyaAdi = $"{slug}-real-1.png";
-                var medya = new Medya
+                medya = new Medya
                 {
                     Tip = MedyaTipi.Resim,
                     Kaynak = MedyaKaynagi.Yerel,
                     Ad = $"{slug} ana gorsel",
                     OrijinalAd = dosyaAdi,
-                    DosyaYolu = $"medya/gold-katalog/{dosyaAdi}",
+                    DosyaYolu = dosyaYolu,
                     KullanimSayisi = 1,
                     OlusturulmaTarihi = DateTime.UtcNow
                 };
                 vt.Medyalar.Add(medya);
                 await vt.SaveChangesAsync();
-                urun.AnaGorselMedyaId = medya.Id;
             }
-
-            await vt.SaveChangesAsync();
+            if (urun.AnaGorselMedyaId != medya.Id)
+            {
+                urun.AnaGorselMedyaId = medya.Id;
+                await vt.SaveChangesAsync();
+            }
         }
 
         // Hermes 120 pilotu: teknik cizim ayrica tekli olarak eklendi
