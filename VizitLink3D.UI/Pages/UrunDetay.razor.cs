@@ -48,6 +48,14 @@ public partial class UrunDetay : ComponentBase, IDisposable
             ? _katalogVerisi.Renkler.Select(r => (Ad: r, Hex: GoldBanyoKatalogRenkPaleti.HexBul(r))).ToList()
             : Renkler.Select(r => (Ad: r.Ad, Hex: r.HexKod ?? "#B0A99A")).ToList();
 
+    /// <summary>
+    /// Admin panelinden urune ozel yuklenen teknik cizim varsa onu kullan;
+    /// yoksa (eski) statik katalog gorseline dus.
+    /// </summary>
+    private string? TeknikCizimUrl =>
+        Medyalar.FirstOrDefault(m => m.MedyaTuru.Equals("TeknikCizim", StringComparison.OrdinalIgnoreCase))?.MedyaUrl
+            ?? _katalogVerisi?.TeknikGorselUrl;
+
     private static readonly Dictionary<string, string> OzellikIkonEslesmesi = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Soft Kapak"] = "/img/ozellik-ikonlar/soft-kapak.svg",
@@ -203,9 +211,6 @@ public partial class UrunDetay : ComponentBase, IDisposable
         Medyalar.Count > 0
             ? $"{Medyalar.Count} medya"
             : "Medya bilgisi yok";
-
-    private string FiyatMetni =>
-        _urun?.Fiyat.HasValue == true ? $"{_urun.Fiyat.Value:N0} TL" : "Fiyat bilgisi yok";
 
     private string ModelBasligi(UrunUcBoyutModeli model) =>
         string.IsNullOrWhiteSpace(model.ModelAdi) ? "Model" : model.ModelAdi;

@@ -108,6 +108,10 @@ else if (_aktifSekme == 2)
                         <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.galeriUrlEkle", "Galeri URL ekle")</MudText>
                         <MudTextField @bind-Value="_galeriMedyaUrl" Label="URL" Variant="Variant.Outlined" />
                         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="GaleriEkle" Class="mt-2">@dil.T("admin.urun.galeriyeEkle", "Galeriye ekle")</MudButton>
+
+                        <MudText Typo="Typo.subtitle1" Class="mt-4">@dil.T("admin.urun.teknikCizimUrlEkle", "Teknik çizim URL ekle")</MudText>
+                        <MudTextField @bind-Value="_teknikCizimUrl" Label="URL" Variant="Variant.Outlined" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="TeknikCizimEkle" Class="mt-2">@dil.T("admin.urun.teknikCizimEkle", "Teknik çizim olarak işaretle")</MudButton>
                     </MudItem>
                 </MudGrid>
             }

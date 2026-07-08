@@ -55,6 +55,7 @@ public partial class UrunSihirbazi : ComponentBase
     // ─── TAB 2 ──────────────────────────────────────────────────────────
     private long? _secilenMedyaId;
     private string? _galeriMedyaUrl;
+    private string? _teknikCizimUrl;
     private bool _tab2Yukleniyor;
 
     // ─── TAB 3 ──────────────────────────────────────────────────────────
@@ -164,6 +165,14 @@ public partial class UrunSihirbazi : ComponentBase
         await Api.PostAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medya", new { MedyaUrl = _galeriMedyaUrl, MedyaTuru = "Gorsel", SiraNo = 1 });
         _galeriMedyaUrl = null;
         Snackbar.Add(dil.T("admin.urun.galeriyeEklendi", "Galeriye eklendi."), Severity.Success);
+    }
+
+    private async Task TeknikCizimEkle()
+    {
+        if (string.IsNullOrWhiteSpace(_teknikCizimUrl) || !_urunId.HasValue) return;
+        await Api.PostAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medya", new { MedyaUrl = _teknikCizimUrl, MedyaTuru = "TeknikCizim", SiraNo = 1 });
+        _teknikCizimUrl = null;
+        Snackbar.Add(dil.T("admin.urun.teknikCizimEklendi", "Teknik çizim eklendi."), Severity.Success);
     }
 
     // ─── TAB 3 ──────────────────────────────────────────────────────────

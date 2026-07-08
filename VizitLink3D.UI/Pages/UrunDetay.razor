@@ -90,21 +90,16 @@
                     </div>
                 </div>
 
-                <div class="gb-detail-fiyat-karti gb-reveal gb-reveal--gecikme-4">
-                    <span class="gb-detail-fiyat-etiket">@dil.T("urun.listeFiyati", "Liste Fiyatı")</span>
-                    <strong class="gb-detail-fiyat-tutar">@FiyatMetni</strong>
-                </div>
-
                 @if (KatalogOlculer.Count > 0)
                 {
                     <div class="gb-detail-olcu-tablosu gb-reveal gb-reveal--gecikme-5">
                         <h3 class="gb-detail-alt-baslik">
                             @dil.T("urun.teknikOlculer", "Teknik Ölçüler")
-                            @if (_katalogVerisi is not null)
+                            @if (TeknikCizimUrl is { } teknikCizimUrl)
                             {
                                 <span class="gb-detail-teknik-onizleme">
                                     <MudIcon Icon="@Icons.Material.Outlined.ZoomIn" Size="Size.Small" />
-                                    <img src="@_katalogVerisi.TeknikGorselUrl" alt="@dil.T("urun.teknikOlculer", "Teknik Ölçüler")" class="gb-detail-teknik-onizleme__gorsel" />
+                                    <img src="@teknikCizimUrl" alt="@dil.T("urun.teknikOlculer", "Teknik Ölçüler")" class="gb-detail-teknik-onizleme__gorsel" />
                                 </span>
                             }
                         </h3>
