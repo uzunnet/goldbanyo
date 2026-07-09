@@ -56,10 +56,14 @@ public partial class Urunler : ComponentBase, IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && _kancaHedefi is not null)
+        // Not: firstRender=true, OnInitializedAsync henuz tamamlanmadan (yukleniyor
+        // ekrani icin) da tetiklenebiliyor; bu yuzden kanca kontrolu firstRender'a
+        // degil, sadece _kancaHedefi'nin dolu olmasina bagli (bir kez tetiklenip null'lanir).
+        if (_kancaHedefi is not null)
         {
-            await JS.InvokeVoidAsync("vizitlink3dKancayaKaydir", _kancaHedefi);
+            var hedef = _kancaHedefi;
             _kancaHedefi = null;
+            await JS.InvokeVoidAsync("vizitlink3dKancayaKaydir", hedef);
         }
     }
 
