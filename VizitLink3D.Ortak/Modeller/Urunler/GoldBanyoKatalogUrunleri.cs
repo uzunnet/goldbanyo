@@ -659,6 +659,60 @@ public static class GoldBanyoKatalogUrunleri
                 new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "5 cm" },
                 new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
             ]
+        },
+        new()
+        {
+            Slug = "dolce-100",
+            Ad = "Dolce 100",
+            Kod = "DOLCE-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 48,
+            Fiyat = 40000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Beyaz", "Gri"],
+            Ozellikler = ["Soft Kapak", "Dokunmatik Ledli Ayna", "Mdf Ahşap", "Kolay Montaj", "Renk Seçenekleri", "Kolay Temizlenir"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "dolce-80",
+            Ad = "Dolce 80",
+            Kod = "DOLCE-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 49,
+            Fiyat = 37500m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Beyaz", "Gri"],
+            Ozellikler = ["Soft Kapak", "Dokunmatik Ledli Ayna", "Mdf Ahşap", "Kolay Montaj", "Renk Seçenekleri", "Kolay Temizlenir"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "dolce-plus-100-80",
+            Ad = "Dolce Plus 100-80",
+            Kod = "DOLCE-PLUS-100-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 50,
+            Fiyat = 40000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Beyaz", "Gri"],
+            Ozellikler = ["Soft Kapak", "Dokunmatik Ledli Ayna", "Mdf Ahşap", "Kolay Montaj", "Renk Seçenekleri", "Kolay Temizlenir"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
         }
     ];
 

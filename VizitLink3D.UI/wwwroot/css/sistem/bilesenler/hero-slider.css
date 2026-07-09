@@ -1,5 +1,6 @@
 .hero-loading { min-height: 80vh; display: flex; align-items: center; }
 .hero-grid { min-height: 80vh; }
+.hero-loading-bos { min-height: 100vh; background-color: var(--vizit-bg-base); }
 .hero-slider-wrapper { position: relative; min-height: 100vh; background-color: var(--vizit-bg-base); overflow: hidden; }
 .hero-bg { position: absolute; inset: 0; opacity: 0.55; background-size: cover; background-position: center; transition: opacity 0.8s ease; }
 .hero-bg::after {

@@ -2411,6 +2411,9 @@ public static class TohumVerisi
         ("lugano-80", 1),
         ("lugano-plus-100", 1),
         ("lugano-plus-80", 1),
+        ("dolce-100", 1),
+        ("dolce-80", 2),
+        ("dolce-plus-100-80", 1),
     ];
 
     private static async Task GercekUrunFotograflariniKaydetAsync(VizitLink3DDbContext vt)

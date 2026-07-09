@@ -13,18 +13,7 @@
 
 @if (_yukleniyor)
 {
-    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6 hero-loading">
-        <MudGrid Class="align-center hero-grid">
-            <MudItem xs="12" md="7">
-                <MudSkeleton SkeletonType="SkeletonType.Text" Width="120px" Height="18px" Class="mb-4" />
-                <MudSkeleton SkeletonType="SkeletonType.Text" Width="80%" Height="60px" Class="mb-2" />
-                <MudSkeleton SkeletonType="SkeletonType.Text" Width="50%" Height="60px" Class="mb-6" />
-                <MudSkeleton SkeletonType="SkeletonType.Text" Width="65%" Height="20px" Class="mb-2" />
-                <MudSkeleton SkeletonType="SkeletonType.Text" Width="55%" Height="20px" Class="mb-8" />
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="180px" Height="48px" />
-            </MudItem>
-        </MudGrid>
-    </MudContainer>
+    <div class="hero-loading-bos"></div>
 }
 else if (_slaytlar.Any())
 {
@@ -102,10 +91,5 @@ else if (_slaytlar.Any())
         </div>
     </div>
 }
-else if (SayfaKodu == "anasayfa")
-{
-    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6 text-center hero-empty">
-        <MudText Typo="Typo.h4" Style="color: var(--gb-text-muted);">@dil.T("slider.yukleme_hatasi", "Slayt yüklenemedi.")</MudText>
-    </MudContainer>
 }
 
