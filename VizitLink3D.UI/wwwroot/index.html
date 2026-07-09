@@ -56,13 +56,81 @@
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#C5A059" />
+
+    <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
+    <style>
+        .gb-ilk-yukleme {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            background: #0a0a0a;
+        }
+
+        .gb-ilk-yukleme-logo-sarmal {
+            position: relative;
+            width: 132px;
+            height: 132px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gb-ilk-yukleme-logo-sarmal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.18);
+            border-top-color: #d4af37;
+            animation: gbIlkYuklemeDondur 1.1s linear infinite;
+        }
+
+        .gb-ilk-yukleme-logo {
+            width: 84px;
+            height: 84px;
+            object-fit: contain;
+            animation: gbIlkYuklemeNefes 2.2s ease-in-out infinite;
+        }
+
+        .gb-ilk-yukleme-metin {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #d4af37;
+            opacity: 0.85;
+            animation: gbIlkYuklemeMetinNefes 2.2s ease-in-out infinite;
+        }
+
+        @keyframes gbIlkYuklemeDondur {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes gbIlkYuklemeNefes {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.94); opacity: 0.75; }
+        }
+
+        @keyframes gbIlkYuklemeMetinNefes {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 0.4; }
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
         <div class="gb-ilk-yukleme">
-            <div class="gb-ilk-yukleme-spinner"></div>
-            <p class="gb-ilk-yukleme-metin">Site yükleniyor…</p>
+            <div class="gb-ilk-yukleme-logo-sarmal">
+                <img class="gb-ilk-yukleme-logo" src="/img/goldbanyo-logo-kare.png" alt="Gold Banyo" />
+            </div>
+            <p class="gb-ilk-yukleme-metin">Yükleniyor…</p>
         </div>
     </div>
 
