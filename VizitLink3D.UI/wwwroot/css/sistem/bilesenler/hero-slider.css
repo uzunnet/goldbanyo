@@ -1,7 +1,13 @@
 .hero-loading { min-height: 80vh; display: flex; align-items: center; }
 .hero-grid { min-height: 80vh; }
 .hero-slider-wrapper { position: relative; min-height: 100vh; background-color: var(--vizit-bg-base); overflow: hidden; }
-.hero-bg { position: absolute; inset: 0; opacity: 0.12; background-size: cover; background-position: center; transition: opacity 0.8s ease; }
+.hero-bg { position: absolute; inset: 0; opacity: 0.55; background-size: cover; background-position: center; transition: opacity 0.8s ease; }
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--vizit-bg-base) 0%, transparent 30%, transparent 70%, var(--vizit-bg-base) 100%);
+}
 .hero-container { position: relative; z-index: 10; }
 .hero-grid-inner { min-height: 90vh; }
 .hero-subtitle { letter-spacing: 0.25em; font-size: 0.75rem; color: var(--vizit-accent); }

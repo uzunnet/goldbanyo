@@ -36,8 +36,8 @@ else if (_slaytlar.Any())
 
         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6 hero-container">
             <MudGrid Class="align-center hero-grid-inner" Spacing="6">
-                
-                <MudItem xs="12" md="7" Class="hero-content">
+
+                <MudItem xs="12" md="8" Class="hero-content">
                     @if (!string.IsNullOrEmpty(aktif.AltBaslik))
                     {
                         <MudText Typo="Typo.overline" Class="mb-4 d-block hero-subtitle anim-reveal-up" Style="animation-delay: 0.1s;">
@@ -77,17 +77,6 @@ else if (_slaytlar.Any())
                             </MudButton>
                         }
                     </MudStack>
-                </MudItem>
-
-                <MudItem xs="12" md="5" Class="d-none d-md-flex justify-end">
-                    @if (!string.IsNullOrEmpty(aktif.ArkaplanResim))
-                    {
-                        <div class="hero-image-wrapper">
-                            <MudImage Src="@ResimUrl(aktif.ArkaplanResim)" Alt="@aktif.Baslik"
-                                      ObjectFit="ObjectFit.Cover"
-                                      Class="hero-image" />
-                        </div>
-                    }
                 </MudItem>
             </MudGrid>
         </MudContainer>
