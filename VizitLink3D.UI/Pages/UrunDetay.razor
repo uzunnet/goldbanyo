@@ -195,6 +195,42 @@
             </section>
         }
 
+        @if (EnCokGezilenler.Count != 0)
+        {
+            <section class="gb-detail-blok">
+                <div class="gb-detail-blok__ust">
+                    <div>
+                        <span class="gb-kicker">@dil.T("urun.populer", "Ziyaretçilerin İlgisi")</span>
+                        <h2 class="gb-blok-baslik">@dil.T("urun.enCokGezilen", "En çok görüntülenenler")</h2>
+                    </div>
+                    <p class="gb-blok-aciklama">
+                        @dil.T("urun.enCokGezilenAciklama", "Sitede en çok ziyaret edilen modeller.")
+                    </p>
+                </div>
+
+                <div class="gb-product-grid">
+                    @foreach (var populer in EnCokGezilenler)
+                    {
+                        <a class="gb-product-card gb-glint-hover" href="/banyo-dolabi/@populer.Slug">
+                            <div class="gb-product-card__gorsel">
+                                <img src="@UrunGorunumYardimcisi.AnaGorselUrl(populer, api.ApiBaseUrl)" alt="@populer.Ad" />
+                                <div class="gb-product-card__overlay"></div>
+                            </div>
+                            <div class="gb-product-card__icerik">
+                                <div class="gb-product-card__ust">
+                                    <span class="gb-product-card__koleksiyon">@populer.Kod</span>
+                                    <span class="gb-product-card__kod">@populer.Slug</span>
+                                </div>
+                                <h4 class="gb-product-card__baslik">@populer.Ad</h4>
+                                <p class="gb-product-card__metin">@UrunGorunumYardimcisi.OzetMetniBul(populer)</p>
+                                <span class="gb-product-card__link">@dil.T("urun.detayAc", "Modeli aç")</span>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </section>
+        }
+
         @if (_lightboxAcik)
         {
             <div class="gb-lightbox" @onclick="LightboxKapat">

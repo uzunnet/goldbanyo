@@ -28,6 +28,7 @@ public partial class UrunDetay : ComponentBase, IDisposable
 
     private Urun? _urun;
     private List<Urun> BenzerUrunler { get; set; } = [];
+    private List<Urun> EnCokGezilenler { get; set; } = [];
     private List<string> GaleriGorselleri { get; set; } = [];
     private List<UrunUcBoyutModeli> Modeller { get; set; } = [];
     private List<RalRengi> Renkler { get; set; } = [];
@@ -105,6 +106,7 @@ public partial class UrunDetay : ComponentBase, IDisposable
             _urun = null;
             _katalogVerisi = null;
             BenzerUrunler = [];
+            EnCokGezilenler = [];
             GaleriGorselleri = [];
             Modeller = [];
             Renkler = [];
@@ -141,6 +143,10 @@ public partial class UrunDetay : ComponentBase, IDisposable
                 .OrderBy(x => x.SiraNo)
                 .ToList();
             BenzerUrunler = (await Api.GetAsync<List<Urun>>($"api/urunler/{urun.Id}/benzer?adet=6&dil=tr") ?? [])
+                .Where(x => x.AktifMi && !x.SilindiMi && x.Id != urun.Id)
+                .Take(3)
+                .ToList();
+            EnCokGezilenler = (await Api.GetAsync<List<Urun>>("api/urunler/en-cok-gezilen?adet=6&dil=tr") ?? [])
                 .Where(x => x.AktifMi && !x.SilindiMi && x.Id != urun.Id)
                 .Take(3)
                 .ToList();

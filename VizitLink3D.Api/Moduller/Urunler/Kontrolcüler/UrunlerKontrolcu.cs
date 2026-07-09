@@ -422,20 +422,27 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
         var kaynak = await vt.Urunler
             .AsNoTracking()
             .Where(u => u.Id == id && !u.SilindiMi)
-            .Select(u => new { u.UrunKategoriId, u.UrunAilesiId })
+            .Select(u => new { u.Kod, u.UrunKategoriId, u.UrunAilesiId })
             .FirstOrDefaultAsync();
 
         if (kaynak is null)
             return Cevap<List<Urun>>.Basarili([]);
 
-        var benzerler = await vt.Urunler
-            .AsNoTracking()
-            .Where(u => !u.SilindiMi && u.AktifMi && u.Id != id &&
-                        (u.UrunKategoriId == kaynak.UrunKategoriId || u.UrunAilesiId == kaynak.UrunAilesiId))
-            .OrderByDescending(u => u.OneCikanMi)
-            .ThenByDescending(u => u.OlusturulmaTarihi)
-            .Take(adet)
-            .ToListAsync();
+        // Ayni urun ailesi/kategori tum katalog urunlerinde ozdes oldugundan (orn. hepsi
+        // UrunAilesiId=3), gercek benzerlik icin Kod'un sondaki "-<boy>" ekini atarak
+        // model adini (orn. "HERMES-120" -> "HERMES") cikarip ayni model olanlari eslestiriyoruz.
+        var modelOneki = System.Text.RegularExpressions.Regex.Replace(
+            kaynak.Kod ?? string.Empty, @"-\d+[A-Z]?$", string.Empty, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        var benzerler = !string.IsNullOrWhiteSpace(modelOneki)
+            ? await vt.Urunler
+                .AsNoTracking()
+                .Where(u => !u.SilindiMi && u.AktifMi && u.Id != id && u.Kod.StartsWith(modelOneki + "-"))
+                .OrderByDescending(u => u.OneCikanMi)
+                .ThenBy(u => u.SiraNo)
+                .Take(adet)
+                .ToListAsync()
+            : [];
 
         if (!string.IsNullOrWhiteSpace(dil) && !dil.Equals("tr", StringComparison.OrdinalIgnoreCase))
         {
@@ -468,7 +475,7 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
     {
         var enCokGezilen = await vt.ZiyaretKayitlari
             .AsNoTracking()
-            .Where(z => z.Sayfa != null && z.Sayfa.StartsWith("/urun/"))
+            .Where(z => z.Sayfa != null && z.Sayfa.StartsWith("/banyo-dolabi/"))
             .GroupBy(z => z.Sayfa!)
             .OrderByDescending(g => g.Count())
             .Take(adet * 2)
@@ -476,7 +483,7 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
             .ToListAsync();
 
         var sluglar = enCokGezilen
-            .Select(url => url.Replace("/urun/", "").Trim('/'))
+            .Select(url => url.Replace("/banyo-dolabi/", "").Trim('/'))
             .Where(s => !string.IsNullOrEmpty(s))
             .Distinct()
             .ToList();

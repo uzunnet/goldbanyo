@@ -325,15 +325,13 @@ public static class TohumVerisi
     {
         var tohumlar = new List<Slayt>
         {
-            new Slayt { Dil = "tr", Baslik = "Her Mekana Her Yaşama", AltBaslik = "Özel Kapılar", Aciklama = "1992'den beri kalite ve estetik.", ArkaplanResim = "/medya/gold-katalog/sayfa-006-hero.png", ButonMetni1 = "Keşfet", ButonLink1 = "/kapak-sistemleri", SiraNo = 1 },
-            new Slayt { Dil = "tr", Baslik = "Çok Boyutlu Şıklık", AltBaslik = "Modern Mutfak Kapakları", Aciklama = "Lake, akrilik ve membran modelleri.", ArkaplanResim = "/medya/gold-katalog/sayfa-010-hero.png", ButonMetni1 = "Modelleri Gör", ButonLink1 = "/kapak-sistemleri", SiraNo = 2 },
-            new Slayt { Dil = "tr", Baslik = "Detaylarda Mükemmellik", AltBaslik = "Banyo Dolapları", Aciklama = "Suya dayanıklı özel çözümler.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", ButonMetni1 = "İncele", ButonLink1 = "/kapak-sistemleri", SiraNo = 3 },
-            new Slayt { Dil = "tr", Baslik = "Sanal Tur ile Keşfet", AltBaslik = "3D Fabrika Turu", Aciklama = "Üretim tesisimizi 3 boyutlu keşfedin.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", ButonMetni1 = "Turu Başlat", ButonLink1 = "/hakkimizda", SiraNo = 4 },
-            new Slayt { Dil = "en", Baslik = "A Lifetime for Every Space", AltBaslik = "Custom Doors", Aciklama = "Quality and aesthetics since 1992.", ArkaplanResim = "/medya/gold-katalog/sayfa-006-hero.png", ButonMetni1 = "Discover", ButonLink1 = "/kapak-sistemleri", SiraNo = 1 },
-            new Slayt { Dil = "en", Baslik = "Multi-Dimensional Style", AltBaslik = "Modern Kitchen Panels", Aciklama = "Lacquer, acrylic and membrane models.", ArkaplanResim = "/medya/gold-katalog/sayfa-010-hero.png", ButonMetni1 = "View Models", ButonLink1 = "/kapak-sistemleri", SiraNo = 2 },
-            new Slayt { Dil = "en", Baslik = "Perfection in Details", AltBaslik = "Bathroom Cabinets", Aciklama = "Water-resistant custom solutions.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", ButonMetni1 = "Explore", ButonLink1 = "/kapak-sistemleri", SiraNo = 3 },
-            new Slayt { Dil = "en", Baslik = "Discover with Virtual Tour", AltBaslik = "3D Factory Tour", Aciklama = "Discover our production facility in 3D.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", ButonMetni1 = "Start Tour", ButonLink1 = "/hakkimizda", SiraNo = 4 },
-            
+            new Slayt { Dil = "tr", Baslik = "Siz Hayal Edin, Biz Tasarlayalım.", AltBaslik = "Gold Banyo 2026 Koleksiyonu", Aciklama = "Premium malzemeler, kusursuz işçilik ve zamansız endüstriyel tasarım. Banyonuzu bir mimari şahesere dönüştürün.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-1.png", ButonMetni1 = "Koleksiyonları İncele", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Teklif Al", ButonLink2 = "/iletisim", SiraNo = 1 },
+            new Slayt { Dil = "tr", Baslik = "Zarafetin İzinde", AltBaslik = "Capelli Koleksiyonu", Aciklama = "Modern yaşamın her anına eşlik eden tasarımlar.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-2.png", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
+            new Slayt { Dil = "tr", Baslik = "Şehrin Silüetine Açılan Banyo", AltBaslik = "Hera Koleksiyonu", Aciklama = "Panoramik manzaralı, sade ve şık çözümler.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-3.png", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
+            new Slayt { Dil = "en", Baslik = "You Imagine, We Design.", AltBaslik = "Gold Banyo 2026 Collection", Aciklama = "Premium materials, flawless craftsmanship and timeless industrial design. Turn your bathroom into an architectural masterpiece.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-1.png", ButonMetni1 = "View Collections", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Get a Quote", ButonLink2 = "/iletisim", SiraNo = 1 },
+            new Slayt { Dil = "en", Baslik = "In Pursuit of Elegance", AltBaslik = "Capelli Collection", Aciklama = "Designs that accompany every moment of modern life.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-2.png", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
+            new Slayt { Dil = "en", Baslik = "A Bathroom Opening to the Skyline", AltBaslik = "Hera Collection", Aciklama = "Panoramic-view, minimal and elegant solutions.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-3.png", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
+
             // Dinamik Sayfa Slaytları
             new Slayt { Dil = "tr", SayfaKodu = "ekibimiz", Baslik = "Güçlü Ekibimiz", AltBaslik = "Profesyonel Ailesi", Aciklama = "Alanında uzman, yenilikçi ve dinamik ekibimiz.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "vizyon-misyon", Baslik = "Vizyonumuz & Misyonumuz", AltBaslik = "Geleceğe Bakış", Aciklama = "Global pazarda öncü olmak.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", SiraNo = 1 },
@@ -362,9 +360,21 @@ public static class TohumVerisi
                 mevcutSlayt.AltBaslik = tohum.AltBaslik;
                 mevcutSlayt.Aciklama = tohum.Aciklama;
                 mevcutSlayt.ButonMetni1 = tohum.ButonMetni1;
+                mevcutSlayt.ButonLink1 = tohum.ButonLink1;
+                mevcutSlayt.ButonMetni2 = tohum.ButonMetni2;
+                mevcutSlayt.ButonLink2 = tohum.ButonLink2;
                 mevcutSlayt.ArkaplanResim = tohum.ArkaplanResim;
             }
         }
+
+        // Anasayfa slaytlari 3'e indirildi (1-3); eski kapak-sistemleri temali dolgu
+        // slaytlari ve tekrar eden gorseller (SiraNo > 3) pasife alinir (silinmez).
+        var eskiAnasayfaSlaytlari = await vt.Slaytlar
+            .Where(s => s.SayfaKodu == "anasayfa" && s.SiraNo > 3 && s.AktifMi)
+            .ToListAsync();
+        foreach (var eski in eskiAnasayfaSlaytlari)
+            eski.AktifMi = false;
+
         await vt.SaveChangesAsync();
     }
 
