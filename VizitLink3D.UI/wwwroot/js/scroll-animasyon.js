@@ -69,4 +69,16 @@
             if (gozlemci) { gozlemci.disconnect(); gozlemci = null; }
         }
     };
+
+    // Blazor render'i JS'den once tamamlanmayabilir; birkac kez deneyerek
+    // hedef id olustuktan sonra yumusak sekilde oraya kaydirir.
+    window.vizitlink3dKancayaKaydir = function (id, denemeSayisi) {
+        denemeSayisi = denemeSayisi || 0;
+        var eleman = document.getElementById(id);
+        if (eleman) {
+            eleman.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (denemeSayisi < 20) {
+            setTimeout(function () { window.vizitlink3dKancayaKaydir(id, denemeSayisi + 1); }, 100);
+        }
+    };
 })();

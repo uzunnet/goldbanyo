@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using VizitLink3D.Ortak.Modeller.Urunler;
 using VizitLink3D.UI.Models;
 using VizitLink3D.UI.Servisler;
@@ -10,6 +11,8 @@ public partial class Urunler : ComponentBase, IDisposable
     private sealed record KoleksiyonGrubu(string Ad, string Anchor, string Aciklama, List<Urun> Urunler);
 
     [Inject] private ApiIstemcisi Api { get; set; } = default!;
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
 
     private List<Urun> _urunler = [];
     private Dictionary<int, UrunAilesi> _aileler = [];
@@ -17,6 +20,7 @@ public partial class Urunler : ComponentBase, IDisposable
     private bool _yukleniyor = true;
     private string? HataMesaji;
     private string? _seciliKoleksiyonSlug;
+    private string? _kancaHedefi;
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,6 +31,17 @@ public partial class Urunler : ComponentBase, IDisposable
             _yukleniyor = true;
             HataMesaji = null;
             await Task.WhenAll(UrunleriYukleAsync(), AileleriYukleAsync(), KategorileriYukleAsync());
+
+            var parca = new Uri(Nav.Uri).Fragment;
+            if (!string.IsNullOrWhiteSpace(parca))
+            {
+                var hedefSlug = parca.TrimStart('#').Trim().ToLowerInvariant();
+                if (!string.IsNullOrWhiteSpace(hedefSlug) && KoleksiyonAdlari.Any(ad => SlugaCevir(ad) == hedefSlug))
+                {
+                    _seciliKoleksiyonSlug = hedefSlug;
+                    _kancaHedefi = hedefSlug;
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -36,6 +51,15 @@ public partial class Urunler : ComponentBase, IDisposable
         finally
         {
             _yukleniyor = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && _kancaHedefi is not null)
+        {
+            await JS.InvokeVoidAsync("vizitlink3dKancayaKaydir", _kancaHedefi);
+            _kancaHedefi = null;
         }
     }
 
