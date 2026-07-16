@@ -78,15 +78,9 @@ public class KapakModeliDto
             Slug = u.Slug,
             OnYazi = u.KisaAciklama ?? string.Empty,
             Aciklama = u.Aciklama ?? string.Empty,
-            AnaGorselUrl = u.AnaGorselMedyaId is long medyaId and > 0
-                ? $"{api.ApiBaseUrl}/api/medya/dosya/{medyaId}"
-                : "/medya/vizitlink3d_default.png",
-            ResimUrl = u.AnaGorselMedyaId is long mId and > 0
-                ? $"{api.ApiBaseUrl}/api/medya/dosya/{mId}"
-                : "/medya/vizitlink3d_default.png",
-            GorselYolu = u.AnaGorselMedyaId is long mId2 and > 0
-                ? $"{api.ApiBaseUrl}/api/medya/dosya/{mId2}"
-                : "/medya/vizitlink3d_default.png",
+            AnaGorselUrl = UrunGorunumYardimcisi.AnaGorselUrl(u, api.ApiBaseUrl),
+            ResimUrl = UrunGorunumYardimcisi.AnaGorselUrl(u, api.ApiBaseUrl),
+            GorselYolu = UrunGorunumYardimcisi.AnaGorselUrl(u, api.ApiBaseUrl),
             Url = u.UrunAilesiId == 2 ? $"/kapi/{u.Id}/{u.Kod}" : $"/kapak/{u.Id}/{u.Kod}",
             YeniMi = u.YeniMi,
             OneCikanMi = u.OneCikanMi,
@@ -168,12 +162,12 @@ public static class UrunGorunumYardimcisi
 {
     public static string AnaGorselUrl(Urun urun, string apiBaseUrl)
     {
-        if (urun.AnaGorselMedyaId is long medyaId and > 0)
-            return $"{apiBaseUrl.TrimEnd('/')}/api/medya/dosya/{medyaId}";
-
         var katalogVerisi = KatalogVerisiBul(urun);
         if (katalogVerisi is not null)
             return katalogVerisi.HeroGorselUrl;
+
+        if (urun.AnaGorselMedyaId is long medyaId and > 0)
+            return $"{apiBaseUrl.TrimEnd('/')}/api/medya/dosya/{medyaId}";
 
         return "/medya/vizitlink3d_default.png";
     }
