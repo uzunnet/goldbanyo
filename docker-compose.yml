@@ -13,6 +13,7 @@ services:
       - VeriTabani__Yol=/app/Veri/vizitlink3d_v2.db
     volumes:
       - vizitlink3d_data_v2:/app/Veri
+      - vizitlink3d_medya:/app/wwwroot/medya
     restart: unless-stopped
 
   vizitlink3d-ui:
@@ -28,3 +29,4 @@ services:
 
 volumes:
   vizitlink3d_data_v2:
+  vizitlink3d_medya:

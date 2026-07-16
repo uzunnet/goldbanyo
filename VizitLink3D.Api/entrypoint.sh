@@ -6,4 +6,13 @@
 
 mkdir -p /app/Veri
 
+# Coolify kalici depolamasi /app/wwwroot/medya uzerine baglandiginda
+# Docker imajindaki katalog dosyalari gorunmez olur. Imaj olusturulurken
+# /app/medya-init altina alinan dosyalardan yalnizca eksik olanlari tamamla;
+# panelden yuklenen mevcut dosyalarin uzerine yazma.
+mkdir -p /app/wwwroot/medya
+if [ -d /app/medya-init ]; then
+    cp -rn /app/medya-init/. /app/wwwroot/medya/
+fi
+
 exec dotnet VizitLink3D.Api.dll
