@@ -9,11 +9,13 @@ public class AISaglayiciFabrikasi
 {
     private readonly IServiceProvider _sp;
     private readonly IApiKeySifrelemeServisi _sifrelemeServisi;
+    private readonly IHttpClientFactory _httpFabrikasi;
 
-    public AISaglayiciFabrikasi(IServiceProvider sp, IApiKeySifrelemeServisi sifrelemeServisi)
+    public AISaglayiciFabrikasi(IServiceProvider sp, IApiKeySifrelemeServisi sifrelemeServisi, IHttpClientFactory httpFabrikasi)
     {
         _sp = sp;
         _sifrelemeServisi = sifrelemeServisi;
+        _httpFabrikasi = httpFabrikasi;
     }
 
     public IAISaglayici SaglayiciOlustur(AISaglayicisi saglayici, HttpClient http)
@@ -49,7 +51,7 @@ public class AISaglayiciFabrikasi
 
         if (entity == null) return null;
 
-        var client = http ?? new HttpClient();
+        var client = http ?? _httpFabrikasi.CreateClient();
         return SaglayiciOlustur(entity, client);
     }
 }

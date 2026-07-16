@@ -301,17 +301,66 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
         if (!urunVarMi)
             return Cevap<UrunMedya>.Hata("Urun bulunamadi.");
 
+        if (string.IsNullOrWhiteSpace(istek.MedyaUrl))
+            return Cevap<UrunMedya>.Hata("Medya havuz yolu zorunludur.");
+
+        var havuzYolu = istek.MedyaUrl.Trim();
+        var havuzdanMi = havuzYolu.StartsWith("/api/medya/dosya/", StringComparison.OrdinalIgnoreCase)
+            || havuzYolu.StartsWith("api/medya/dosya/", StringComparison.OrdinalIgnoreCase);
+
+        if (!havuzdanMi)
+            return Cevap<UrunMedya>.Hata("Medya sadece havuzdan eklenebilir.");
+
+        var mevcut = await vt.UrunMedyalari
+            .FirstOrDefaultAsync(m =>
+                m.UrunId == id &&
+                m.MedyaUrl == havuzYolu &&
+                m.MedyaTuru == istek.MedyaTuru &&
+                !m.SilindiMi);
+
+        if (mevcut is not null)
+            return Cevap<UrunMedya>.Basarili(mevcut, "Medya zaten ekli.");
+
         var medya = new UrunMedya
         {
             UrunId = id,
-            MedyaUrl = istek.MedyaUrl,
+            MedyaUrl = havuzYolu,
             MedyaTuru = istek.MedyaTuru,
-            SiraNo = istek.SiraNo
+            SiraNo = istek.SiraNo > 0
+                ? istek.SiraNo
+                : await vt.UrunMedyalari.CountAsync(m => m.UrunId == id && !m.SilindiMi) + 1
         };
         vt.UrunMedyalari.Add(medya);
         await vt.SaveChangesAsync();
 
         return Cevap<UrunMedya>.Basarili(medya, "Medya eklendi.");
+    }
+
+    [HttpPut("{id:int}/medyalar/{medyaId:int}/sira")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<Cevap<UrunMedya>> MedyaSirasiGuncelle(int id, int medyaId, [FromBody] UrunMedya istek)
+    {
+        var medya = await vt.UrunMedyalari.FirstOrDefaultAsync(m => m.Id == medyaId && m.UrunId == id);
+        if (medya is null)
+            return Cevap<UrunMedya>.Hata("Urun medyasi bulunamadi.");
+
+        medya.SiraNo = Math.Max(1, istek.SiraNo);
+
+        await vt.SaveChangesAsync();
+        return Cevap<UrunMedya>.Basarili(medya, "Medya sirası guncellendi.");
+    }
+
+    [HttpDelete("{id:int}/medyalar/{medyaId:int}")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<Cevap<bool>> MedyaSil(int id, int medyaId)
+    {
+        var medya = await vt.UrunMedyalari.FirstOrDefaultAsync(m => m.Id == medyaId && m.UrunId == id);
+        if (medya is null)
+            return Cevap<bool>.Hata("Urun medyasi bulunamadi.");
+
+        medya.SilindiMi = true;
+        await vt.SaveChangesAsync();
+        return Cevap<bool>.Basarili(true, "Medya kaldirildi.");
     }
 
     private async Task<int?> VarsayilanModelIdGetir(int urunId)

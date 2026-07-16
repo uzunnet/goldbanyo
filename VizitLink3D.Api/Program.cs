@@ -160,7 +160,13 @@ using (var kapsam = uygulama.Services.CreateScope())
     vt.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsLock\";");
     await vt.Database.MigrateAsync();
     }
-    await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
+    // Tohum verisi sadece Development ortaminda calissin (best practice).
+    // Production'da DB zaten dolu, tohum verisi gereksiz islem + potansiyel AuditLog dongusu riski tasir.
+    // Gerekirse FOR_SEED=1 ortam degiskeni ile zorla calistirilabilir.
+    if (webEnv.IsDevelopment() || Environment.GetEnvironmentVariable("FORCE_SEED") == "1")
+    {
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
+    }
 
     // DeepSeek API anahtarını şifreli tohumla (env veya config'den; kayıt varsa dokunma)
     var deepSeekKey = Environment.GetEnvironmentVariable("DEEPSEEK_API_KEY")
@@ -213,29 +219,39 @@ using (var kapsam = uygulama.Services.CreateScope())
         Log.Information("OpenCode Zen modelleri tohumlandı (2 aktif ücretsiz + 3 pasif ücretli).");
     }
 
-    // Gold Banyo frontend varsayılanı gold olmalı; admin teması ayrı hatta kalır.
-    vt.Database.ExecuteSqlRaw("UPDATE Firmalar SET SiteTema = 'gold' WHERE Slug = 'goldbanyo' AND (SiteTema IS NULL OR SiteTema = '' OR SiteTema IN ('goldbanyo', 'goldbanyo-karanlik', 'gold-luxury-dark', 'altin-siyah', 'aurelian-onyx', 'endustri-karanlik'))");
+    var postStartupSyncAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_POST_STARTUP_SYNC"), "1", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_POST_STARTUP_SYNC"), "true", StringComparison.OrdinalIgnoreCase);
 
-    var cokluTemaServisi = kapsam.ServiceProvider.GetRequiredService<VizitLink3D.Api.Moduller.Tema.Servisler.CokluTemaServisi>();
-    await cokluTemaServisi.TemaVarliklariniEsitleVeIceriAktarAsync();
+    if (postStartupSyncAtla)
+    {
+        Log.Information("Baslangic sonrasi tema ve medya senkronlari ortam degiskeni ile atlandi.");
+    }
+    else
+    {
+        // Gold Banyo frontend varsayılanı gold olmalı; admin teması ayrı hatta kalır.
+        vt.Database.ExecuteSqlRaw("UPDATE Firmalar SET SiteTema = 'gold' WHERE Slug = 'goldbanyo' AND (SiteTema IS NULL OR SiteTema = '' OR SiteTema IN ('goldbanyo', 'goldbanyo-karanlik', 'gold-luxury-dark', 'altin-siyah', 'aurelian-onyx', 'endustri-karanlik'))");
 
-    // Eski VIZITLINK3D kaydini Gold Banyo demo kaydina cevir
-    vt.Database.ExecuteSqlRaw("UPDATE Firmalar SET Ad = 'Gold Banyo Demo', Unvan = 'Gold Banyo Demo', Slug = 'goldbanyo-demo', Aciklama = 'Gold Banyo demo firma kaydi', AciklamaKisa = 'Gold Banyo demo', Domain = 'demo.goldbanyom.local', YedekDomain = 'www.demo.goldbanyom.local', Eposta = 'demo@goldbanyom.local', Telefon1 = '', Telefon2 = '', Adres = '', Instagram = '', Facebook = '' WHERE Slug = 'VIZITLINK3D'");
+        var cokluTemaServisi = kapsam.ServiceProvider.GetRequiredService<VizitLink3D.Api.Moduller.Tema.Servisler.CokluTemaServisi>();
+        await cokluTemaServisi.TemaVarliklariniEsitleVeIceriAktarAsync();
 
-    // WebRootPath production'da null olabilir - skip et
-    if (!string.IsNullOrEmpty(webEnv.WebRootPath))
-        await TohumVerisi.TemizleSlaytResimlerAsync(vt, webEnv.WebRootPath);
+        // Eski VIZITLINK3D kaydini Gold Banyo demo kaydina cevir
+        vt.Database.ExecuteSqlRaw("UPDATE Firmalar SET Ad = 'Gold Banyo Demo', Unvan = 'Gold Banyo Demo', Slug = 'goldbanyo-demo', Aciklama = 'Gold Banyo demo firma kaydi', AciklamaKisa = 'Gold Banyo demo', Domain = 'demo.goldbanyom.local', YedekDomain = 'www.demo.goldbanyom.local', Eposta = 'demo@goldbanyom.local', Telefon1 = '', Telefon2 = '', Adres = '', Instagram = '', Facebook = '' WHERE Slug = 'VIZITLINK3D'");
 
-    // Kapak → Urun gocu (idempotent — tekrar calisinca cogaltmaz)
-    var goc = kapsam.ServiceProvider.GetRequiredService<KapakGocServisi>();
-    var gocSonuc = await goc.GogAsync();
-    Log.Information("Kapak gocu: {Gocen} goc etti, {Atlandi} atlandi", gocSonuc.Veri?.Gocen, gocSonuc.Veri?.Atlandi);
+        // WebRootPath production'da null olabilir - skip et
+        if (!string.IsNullOrEmpty(webEnv.WebRootPath))
+            await TohumVerisi.TemizleSlaytResimlerAsync(vt, webEnv.WebRootPath);
 
-    // NRD gorsel + 3D model baglama (idempotent — wwwroot/medya'daki standart dosyalari urunlere baglar)
-    var medyaBaglama = kapsam.ServiceProvider.GetRequiredService<UrunMedyaBaglamaServisi>();
-    var baglamaSonuc = await medyaBaglama.BaglaAsync();
-    Log.Information("Urun medya baglama: {Urun} urun, {Gorsel} gorsel, {Model} 3D model",
-        baglamaSonuc.Veri?.GuncellenenUrun, baglamaSonuc.Veri?.BaglananGorsel, baglamaSonuc.Veri?.BaglananModel);
+        // Kapak → Urun gocu (idempotent — tekrar calisinca cogaltmaz)
+        var goc = kapsam.ServiceProvider.GetRequiredService<KapakGocServisi>();
+        var gocSonuc = await goc.GogAsync();
+        Log.Information("Kapak gocu: {Gocen} goc etti, {Atlandi} atlandi", gocSonuc.Veri?.Gocen, gocSonuc.Veri?.Atlandi);
+
+        // NRD gorsel + 3D model baglama (idempotent — wwwroot/medya'daki standart dosyalari urunlere baglar)
+        var medyaBaglama = kapsam.ServiceProvider.GetRequiredService<UrunMedyaBaglamaServisi>();
+        var baglamaSonuc = await medyaBaglama.BaglaAsync();
+        Log.Information("Urun medya baglama: {Urun} urun, {Gorsel} gorsel, {Model} 3D model",
+            baglamaSonuc.Veri?.GuncellenenUrun, baglamaSonuc.Veri?.BaglananGorsel, baglamaSonuc.Veri?.BaglananModel);
+    }
 }
 
 if (uygulama.Environment.IsDevelopment())

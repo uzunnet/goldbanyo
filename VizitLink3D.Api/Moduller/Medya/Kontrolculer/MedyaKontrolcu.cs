@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.Ortak.Modeller.Medya;
+using VizitLink3D.Ortak.Modeller.Ayarlar;
+using VizitLink3D.Ortak.Sabitler;
 using VizitLink3D.Api.Moduller.Medya.Servisler;
 using MedyaModel = VizitLink3D.Ortak.Modeller.Medya.Medya;
 
@@ -17,13 +19,15 @@ namespace VizitLink3D.Api.Moduller.Medya.Kontrolculer;
 public class MedyaKontrolcu : ControllerBase
 {
     private readonly IMedyaServisi _medyaServisi;
+    private readonly IResimIslemcisi _resimIslemcisi;
     private readonly IWebHostEnvironment _cevre;
     private readonly VizitLink3DDbContext _db;
     private static readonly FileExtensionContentTypeProvider IcerikTipiSaglayici = new();
 
-    public MedyaKontrolcu(IMedyaServisi medyaServisi, IWebHostEnvironment cevre, VizitLink3DDbContext db)
+    public MedyaKontrolcu(IMedyaServisi medyaServisi, IResimIslemcisi resimIslemcisi, IWebHostEnvironment cevre, VizitLink3DDbContext db)
     {
         _medyaServisi = medyaServisi;
+        _resimIslemcisi = resimIslemcisi;
         _cevre = cevre;
         _db = db;
     }
@@ -150,6 +154,142 @@ public class MedyaKontrolcu : ControllerBase
     {
         var liste = await _medyaServisi.KullanimlariGetirAsync(id);
         return Cevap<List<MedyaKullanim>>.Basarili(liste);
+    }
+
+    // ─── Toplu yeniden boyutlandırma ────────────────────────────────────────────
+
+    [HttpPost("toplu-yeniden-boyutlandir")]
+    public async Task<Cevap<MedyaTopluIslemSonucDto>> TopluYenidenBoyutlandirAsync(
+        [FromQuery] string? klasorYolu, CancellationToken iptalToken)
+    {
+        var wwwroot = _cevre.WebRootPath ?? Path.Combine(_cevre.ContentRootPath, "wwwroot");
+        var medyaRoot = Path.GetFullPath(Path.Combine(wwwroot, "medya"));
+
+        // Ayar değerlerini oku
+        var maksimumKenar = AyarOkuInt(SistemAyariSabitleri.Resim.MaksimumKenar, 1000);
+        var kalite = AyarOkuInt(SistemAyariSabitleri.Resim.Kalite, 85);
+        var webpZorunlu = AyarOkuBool(SistemAyariSabitleri.Resim.WebpZorunlu, true);
+
+        // Dosya tarama
+        var aramaKlasoru = string.IsNullOrWhiteSpace(klasorYolu)
+            ? medyaRoot
+            : Path.GetFullPath(Path.Combine(medyaRoot, klasorYolu.TrimStart('/').Replace('/', Path.DirectorySeparatorChar)));
+
+        if (!aramaKlasoru.StartsWith(medyaRoot) || !Directory.Exists(aramaKlasoru))
+            return Cevap<MedyaTopluIslemSonucDto>.Hata("Geçersiz klasör yolu.");
+
+        var resimUzantilari = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { ".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif", ".tiff" };
+
+        var dosyalar = Directory.GetFiles(aramaKlasoru, "*.*", SearchOption.AllDirectories)
+            .Where(f => resimUzantilari.Contains(Path.GetExtension(f)))
+            .Where(f =>
+            {
+                var goreceliYol = Path.GetRelativePath(medyaRoot, f);
+                var parcalar = goreceliYol.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                // "_yedek" ile başlayan klasörleri (yedek/geri alma amaçlı) tarama dışı bırak
+                return !parcalar.Take(parcalar.Length - 1).Any(p => p.StartsWith("_yedek", StringComparison.OrdinalIgnoreCase));
+            })
+            .Take(500) // Maksimum 500 dosya
+            .ToList();
+
+        // Yedek klasörü
+        var yedekKlasor = Path.Combine(medyaRoot, $"_toplu_yedek_{DateTime.UtcNow:yyyyMMdd_HHmmss}");
+        Directory.CreateDirectory(yedekKlasor);
+
+        var sonuc = new MedyaTopluIslemSonucDto();
+        var islenenDbGuncellemeleri = new List<(string eskiYol, string yeniYol)>();
+
+        foreach (var dosyaYolu in dosyalar)
+        {
+            iptalToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                var uzanti = Path.GetExtension(dosyaYolu).ToLowerInvariant();
+                var eskiBoyut = new FileInfo(dosyaYolu).Length;
+                sonuc.EskiToplamBoyut += eskiBoyut;
+
+                var veri = await System.IO.File.ReadAllBytesAsync(dosyaYolu, iptalToken);
+                var yeniVeri = await _resimIslemcisi.OtomatikBoyutlandirAsync(veri, maksimumKenar, kalite, webpZorunlu, iptalToken);
+
+                // Ayar webpZorunlu=false ise ve girdi zaten webp değilse format/uzantı DEĞİŞMEZ.
+                var hedefUzanti = (uzanti == ".webp" || webpZorunlu) ? ".webp" : uzanti;
+                var uzantiDegisecekMi = hedefUzanti != uzanti;
+
+                if (yeniVeri.Length >= eskiBoyut && !uzantiDegisecekMi)
+                {
+                    // Ne format değişiyor ne de boyut küçülüyor: atla
+                    sonuc.YeniToplamBoyut += eskiBoyut;
+                    sonuc.Atlanan++;
+                    continue;
+                }
+
+                // Eski dosyayı yedekle
+                var goreceYol = Path.GetRelativePath(medyaRoot, dosyaYolu);
+                var yedekYol = Path.Combine(yedekKlasor, goreceYol.Replace(Path.DirectorySeparatorChar, '_'));
+                Directory.CreateDirectory(Path.GetDirectoryName(yedekYol)!);
+                System.IO.File.Move(dosyaYolu, yedekYol);
+
+                // Yeni dosyayı yaz (aynı uzantı korunur, sadece webpZorunlu=true ise .webp'ye döner)
+                var yeniYol = uzantiDegisecekMi ? Path.ChangeExtension(dosyaYolu, hedefUzanti) : dosyaYolu;
+                await System.IO.File.WriteAllBytesAsync(yeniYol, yeniVeri, iptalToken);
+
+                sonuc.YeniToplamBoyut += yeniVeri.Length;
+                sonuc.Islenen++;
+
+                if (uzantiDegisecekMi)
+                {
+                    // DB güncellemesi için kaydet (eski uzantı → yeni .webp)
+                    var dbdekiYol = "/" + Path.GetRelativePath(wwwroot, dosyaYolu).Replace('\\', '/');
+                    var dbYeniYol = "/" + Path.GetRelativePath(wwwroot, yeniYol).Replace('\\', '/');
+                    islenenDbGuncellemeleri.Add((dbdekiYol, dbYeniYol));
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                sonuc.Hata++;
+                sonuc.Hatalar.Add($"{Path.GetFileName(dosyaYolu)}: {ex.Message}");
+                sonuc.YeniToplamBoyut += new FileInfo(dosyaYolu).Length; // eski boyutu ekle
+            }
+        }
+
+        // DB güncellemeleri
+        foreach (var (eskiYol, yeniYol) in islenenDbGuncellemeleri)
+        {
+            var medyaKayitlari = await _db.Medyalar
+                .Where(m => m.DosyaYolu == eskiYol && !m.SilindiMi)
+                .ToListAsync(iptalToken);
+
+            foreach (var m in medyaKayitlari)
+            {
+                m.DosyaYolu = yeniYol;
+                m.MimeTipi = "image/webp";
+                m.GuncellenmeTarihi = DateTime.UtcNow;
+            }
+        }
+
+        if (islenenDbGuncellemeleri.Any())
+            await _db.SaveChangesAsync(iptalToken);
+
+        return Cevap<MedyaTopluIslemSonucDto>.Basarili(sonuc,
+            $"Toplu işlem tamamlandı. İşlenen: {sonuc.Islenen}, Atlanan: {sonuc.Atlanan}, Hata: {sonuc.Hata}");
+    }
+
+    private int AyarOkuInt(string anahtar, int varsayilan)
+    {
+        var ayar = _db.SistemAyarlari.AsNoTracking().FirstOrDefault(a => a.Anahtar == anahtar);
+        return ayar != null && int.TryParse(ayar.Deger, out var deger) ? deger : varsayilan;
+    }
+
+    private bool AyarOkuBool(string anahtar, bool varsayilan)
+    {
+        var ayar = _db.SistemAyarlari.AsNoTracking().FirstOrDefault(a => a.Anahtar == anahtar);
+        return ayar != null && bool.TryParse(ayar.Deger, out var deger) ? deger : varsayilan;
     }
 
     // ─── wwwroot fiziksel dosya yönetimi ───────────────────────────────────────

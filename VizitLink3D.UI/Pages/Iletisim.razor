@@ -1,27 +1,56 @@
 @page "/iletisim"
 @layout VizitLink3DDuzen
 
-<PageTitle>Iletisim</PageTitle>
+<PageTitle>@DilServisi.T("menu.iletisim", "İletişim")</PageTitle>
 
 <section class="gb-page">
     <div class="gb-card-grid">
         <div class="gb-card">
             <MudText Typo="Typo.h5">@DilServisi.T("iletisim.telefon", "Telefon")</MudText>
-            @if (_telefonlar != null)
+            @foreach (var tel in _telefonlar)
             {
-                @foreach (var tel in _telefonlar)
-                {
-                    <p>@tel</p>
-                }
+                <p><a href="@($"tel:{tel}")">@tel</a></p>
+            }
+            @if (!string.IsNullOrWhiteSpace(_whatsapp))
+            {
+                <MudButton Href="@($"https://wa.me/{new string(_whatsapp.Where(char.IsDigit).ToArray())}")" Target="_blank" Variant="Variant.Outlined" Class="mt-2">
+                    WhatsApp
+                </MudButton>
             }
         </div>
         <div class="gb-card">
             <MudText Typo="Typo.h5">@DilServisi.T("iletisim.adres", "Adres")</MudText>
             <p>@_adres</p>
+            @if (!string.IsNullOrWhiteSpace(_calismaSaatleri))
+            {
+                <p><strong>@DilServisi.T("iletisim.calismaSaatleri", "Çalışma Saatleri"):</strong> @_calismaSaatleri</p>
+            }
         </div>
         <div class="gb-card">
             <MudText Typo="Typo.h5">@DilServisi.T("iletisim.eposta", "E-Posta")</MudText>
-            <p>@_email</p>
+            @if (!string.IsNullOrWhiteSpace(_email))
+            {
+                <p><a href="@($"mailto:{_email}")">@_email</a></p>
+            }
+            @if (!string.IsNullOrWhiteSpace(_instagram))
+            {
+                <p><a href="@_instagram" target="_blank" rel="noopener">Instagram</a></p>
+            }
+            @if (!string.IsNullOrWhiteSpace(_facebook))
+            {
+                <p><a href="@_facebook" target="_blank" rel="noopener">Facebook</a></p>
+            }
+        </div>
+        <div class="gb-card">
+            <MudText Typo="Typo.h5">@DilServisi.T("iletisim.konum", "Konum")</MudText>
+            @if (!string.IsNullOrWhiteSpace(_haritaUrl))
+            {
+                <iframe src="@_haritaUrl" title="@DilServisi.T("iletisim.harita", "Harita")" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width:100%;min-height:320px;border:0;border-radius:16px;"></iframe>
+            }
+            else
+            {
+                <p>@DilServisi.T("iletisim.konumBulunamadi", "Konum bilgisi bulunamadı.")</p>
+            }
         </div>
     </div>
 </section>

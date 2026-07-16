@@ -11,4 +11,5 @@ public class UrunMedya
     public string? Aciklama { get; set; }
     public int SiraNo { get; set; }
     public bool AnaGosterim { get; set; }
+    public bool SilindiMi { get; set; }
 }

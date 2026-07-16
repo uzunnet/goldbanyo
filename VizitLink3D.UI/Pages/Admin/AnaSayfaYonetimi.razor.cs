@@ -81,6 +81,7 @@ public partial class AnaSayfaYonetimi
     private string _telefon1 = "";
     private string _telefon2 = "";
     private string _mesaiSaatleri = "";
+    private SayfaDuzenAyariDto? _anasayfaDuzenAyari;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -132,6 +133,12 @@ public partial class AnaSayfaYonetimi
                 _kat2Aciklama = anasayfaDict.GetValueOrDefault("Kat2Aciklama", "");
 
                 _oneCikanAdet = anasayfaDict.GetValueOrDefault("OneCikanAdet", "4");
+            }
+
+            _anasayfaDuzenAyari = await api.GetAsync<SayfaDuzenAyariDto>("api/sayfa-duzen-ayarlari/anasayfa");
+            if (_anasayfaDuzenAyari is not null && _anasayfaDuzenAyari.SayfaBasinaAdet > 0)
+            {
+                _oneCikanAdet = _anasayfaDuzenAyari.SayfaBasinaAdet.ToString();
             }
 
             // Genel ayarları yükle
@@ -286,7 +293,31 @@ public partial class AnaSayfaYonetimi
         _kaydediliyor = true;
         try
         {
-            await DegerKaydet("anasayfa", "OneCikanAdet", _oneCikanAdet);
+            var adet = int.TryParse(_oneCikanAdet, out var parsedAdet) && parsedAdet > 0 ? parsedAdet : 4;
+            await DegerKaydet("anasayfa", "OneCikanAdet", adet.ToString());
+            var duzen = new SayfaDuzenAyariDto
+            {
+                Id = _anasayfaDuzenAyari?.Id ?? 0,
+                SayfaKodu = "anasayfa",
+                SayfaAdi = "Ana Sayfa",
+                SutunAdet = 4,
+                SatirAdet = Math.Max(1, (int)Math.Ceiling(adet / 4.0)),
+                SayfaBasinaAdet = adet,
+                SayfalamaAktif = false,
+                AktifMi = true
+            };
+
+            if (_anasayfaDuzenAyari?.Id > 0)
+            {
+                await api.PutAsync<SayfaDuzenAyariDto>("api/sayfa-duzen-ayarlari/anasayfa", duzen);
+            }
+            else
+            {
+                await api.PostAsync<SayfaDuzenAyariDto>("api/sayfa-duzen-ayarlari", duzen);
+            }
+
+            _oneCikanAdet = adet.ToString();
+            _anasayfaDuzenAyari = duzen;
             snackbar.Add(dil.T("admin.anaSayfa.mimariGuncellendi", "Mimari Seçimler ürün sayısı güncellendi."), Severity.Success);
         }
         catch (Exception ex)

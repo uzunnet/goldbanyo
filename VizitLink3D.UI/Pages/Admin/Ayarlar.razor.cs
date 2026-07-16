@@ -12,6 +12,7 @@ public partial class Ayarlar : ComponentBase
     [Inject] private FirmaBilgisiServisi FirmaBilgisi { get; set; } = default!;
     [Inject] private ISnackbar Snackbar { get; set; } = default!;
     [Inject] private DilServisi DilServisi { get; set; } = default!;
+    [Inject] private IDialogService DialogServisi { get; set; } = default!;
 
     private bool _yukleniyor;
     private bool _yukleniyorSayfa = true;
@@ -32,10 +33,17 @@ public partial class Ayarlar : ComponentBase
     private string _eposta = "info@goldbanyom.com.tr";
     private string _adres = "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA";
     private string _whatsapp = "+90 533 597 32 14";
+    private string _enlem = "";
+    private string _boylam = "";
 
     private string _instagram = "https://www.instagram.com/gold.banyom/";
     private string _facebook = "https://www.facebook.com/gold.banyo";
     private string _youtube = "";
+
+    // Görsel optimizasyonu
+    private int _resimMaksimumKenar = 1000;
+    private int _resimKalite = 85;
+    private bool _resimWebpZorunlu = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,13 +79,110 @@ public partial class Ayarlar : ComponentBase
                 _eposta = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Eposta", _eposta), _eposta);
                 _adres = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Adres", _adres), _adres);
                 _whatsapp = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Whatsapp", _whatsapp), _whatsapp);
+                _enlem = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Enlem", _enlem), _enlem);
+                _boylam = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Boylam", _boylam), _boylam);
                 _instagram = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Instagram", sozluk.GetValueOrDefault("InstagramUrl", _instagram)), _instagram);
                 _facebook = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Facebook", sozluk.GetValueOrDefault("FacebookUrl", _facebook)), _facebook);
                 _youtube = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Youtube", sozluk.GetValueOrDefault("YoutubeUrl", _youtube)), _youtube);
             }
+
+            await ResimAyarlariYukle();
         }
         catch { /* ayarlar yüklenemezse varsayılan değerler kullanılır */ }
     }
+
+    private async Task ResimAyarlariYukle()
+    {
+        try
+        {
+            var dto = await Api.GetAsync<VizitLink3D.Ortak.Modeller.Ayarlar.ResimOptimizasyonuAyarDto>("api/ayarlar/resim-optimizasyonu");
+            if (dto != null)
+            {
+                _resimMaksimumKenar = dto.MaksimumKenar;
+                _resimKalite = dto.Kalite;
+                _resimWebpZorunlu = dto.WebpZorunlu;
+            }
+        }
+        catch { /* varsayılan değerler kalır */ }
+    }
+
+    private async Task ResimAyarlariKaydet()
+    {
+        _yukleniyor = true;
+        try
+        {
+            var dto = new VizitLink3D.Ortak.Modeller.Ayarlar.ResimOptimizasyonuAyarDto
+            {
+                MaksimumKenar = _resimMaksimumKenar,
+                Kalite = _resimKalite,
+                WebpZorunlu = _resimWebpZorunlu
+            };
+
+            var yanit = await Api.PostAsync<VizitLink3D.Ortak.Modeller.Ayarlar.ResimOptimizasyonuAyarDto>(
+                "api/ayarlar/resim-optimizasyonu", dto);
+
+            if (yanit?.BasariliMi == true)
+                Snackbar.Add(DilServisi.T("ayar.resimOptimizasyonu.kaydedildi", "Görsel optimizasyonu ayarları kaydedildi."), Severity.Success);
+            else
+                Snackbar.Add(yanit?.Mesaj ?? DilServisi.T("admin.ayarlar.hataOlustu", "Ayarlar kaydedilirken hata oluştu."), Severity.Error);
+        }
+        catch
+        {
+            Snackbar.Add(DilServisi.T("admin.ayarlar.hataOlustu", "Ayarlar kaydedilirken hata oluştu."), Severity.Error);
+        }
+        finally
+        {
+            _yukleniyor = false;
+        }
+    }
+
+    private async Task TopluYenidenBoyutlandir()
+    {
+        var onay = await DialogServisi.ShowMessageBoxAsync(
+            DilServisi.T("ayar.resimOptimizasyonu.topluOnayBaslik", "Toplu Yeniden Boyutlandırma"),
+            DilServisi.T("ayar.resimOptimizasyonu.topluOnayMesaj", "Bu işlem wwwroot/medya altındaki tüm görselleri yeniden boyutlandıracak ve WebP formatına dönüştürecektir. Orijinal dosyalar yedeklenecektir.\n\nDevam etmek istiyor musunuz?"),
+            yesText: DilServisi.T("ortak.evet", "Evet"),
+            cancelText: DilServisi.T("ortak.iptal", "İptal"));
+
+        if (onay != true) return;
+
+        _yukleniyor = true;
+        try
+        {
+            var yanit = await Api.PostAsync<VizitLink3D.Ortak.Modeller.Ayarlar.MedyaTopluIslemSonucDto>(
+                "api/medya/toplu-yeniden-boyutlandir", new {});
+
+            if (yanit?.BasariliMi == true && yanit.Veri != null)
+            {
+                var s = yanit.Veri;
+                Snackbar.Add(string.Format(
+                    DilServisi.T("ayar.resimOptimizasyonu.topluSonuc", "Tamamlandı: {0} işlendi, {1} atlandı, {2} hata. Boyut: {3} → {4}"),
+                    s.Islenen, s.Atlanan, s.Hata,
+                    DosyaBoyutuFormat(s.EskiToplamBoyut),
+                    DosyaBoyutuFormat(s.YeniToplamBoyut)), Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(yanit?.Mesaj ?? DilServisi.T("ayar.resimOptimizasyonu.topluHata", "Toplu işlem sırasında hata oluştu."), Severity.Error);
+            }
+        }
+        catch
+        {
+            Snackbar.Add(DilServisi.T("ayar.resimOptimizasyonu.topluHata", "Toplu işlem sırasında hata oluştu."), Severity.Error);
+        }
+        finally
+        {
+            _yukleniyor = false;
+        }
+    }
+
+    private static string DosyaBoyutuFormat(long byteSayisi) => byteSayisi switch
+    {
+        < 1024 => $"{byteSayisi} B",
+        < 1024 * 1024 => $"{byteSayisi / 1024.0:F1} KB",
+        < 1024 * 1024 * 1024 => $"{byteSayisi / (1024.0 * 1024):F1} MB",
+        _ => $"{byteSayisi / (1024.0 * 1024 * 1024):F2} GB"
+    };
 
     private async Task Kaydet(int bolum)
     {
@@ -108,6 +213,8 @@ public partial class Ayarlar : ComponentBase
                 ayarlar["Eposta"] = _eposta;
                 ayarlar["Adres"] = _adres;
                 ayarlar["Whatsapp"] = _whatsapp;
+                ayarlar["Enlem"] = _enlem;
+                ayarlar["Boylam"] = _boylam;
             }
             else if (bolum == 3)
             {

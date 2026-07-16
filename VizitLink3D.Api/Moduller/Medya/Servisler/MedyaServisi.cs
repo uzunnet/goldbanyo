@@ -1,6 +1,7 @@
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Ortak.Modeller.Medya;
 using VizitLink3D.Ortak.Modeller;
+using VizitLink3D.Ortak.Sabitler;
 using Microsoft.EntityFrameworkCore;
 using MedyaModel = VizitLink3D.Ortak.Modeller.Medya.Medya;
 
@@ -25,6 +26,11 @@ public class MedyaServisi : IMedyaServisi
     private readonly IYoutubeMetadataServisi _youtubeServisi;
     private readonly VizitLink3DDbContext _db;
 
+    private static readonly HashSet<string> ResimMimeTipleri = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "image/jpeg", "image/png", "image/webp", "image/bmp", "image/gif", "image/tiff"
+    };
+
     public MedyaServisi(IDepolamaAdaptoru depolama, IResimIslemcisi resimIslemcisi, IYoutubeMetadataServisi youtubeServisi, VizitLink3DDbContext db)
     {
         _depolama = depolama;
@@ -35,24 +41,62 @@ public class MedyaServisi : IMedyaServisi
 
     public async Task<MedyaModel> YukleAsync(Stream dosya, string orijinalAd, int? klasorId, int? kullaniciId, CancellationToken iptal = default)
     {
-        var hash = _resimIslemcisi.HashHesapla(dosya);
-        var mevcut = await _db.Medyalar.FirstOrDefaultAsync(m => m.Hash == hash && !m.SilindiMi, iptal);
-        if (mevcut != null) return mevcut; // duplicate - mevcut kaydi don
+        var uzanti = Path.GetExtension(orijinalAd).ToLowerInvariant();
+        var mimeTipi = $"image/{uzanti.TrimStart('.')}";
+        var resimMi = ResimMimeTipleri.Contains(mimeTipi);
 
-        var uzanti = Path.GetExtension(orijinalAd);
+        // Resim ise önce buffer'a al, optimize et
+        byte[] veri;
+        if (resimMi)
+        {
+            using var ms = new MemoryStream();
+            await dosya.CopyToAsync(ms, iptal);
+            veri = ms.ToArray();
+
+            var maksimumKenar = AyarOkuInt(SistemAyariSabitleri.Resim.MaksimumKenar, 1000);
+            var kalite = AyarOkuInt(SistemAyariSabitleri.Resim.Kalite, 85);
+            var webpZorunlu = AyarOkuBool(SistemAyariSabitleri.Resim.WebpZorunlu, true);
+
+            // Boyut sınırı her zaman uygulanır.
+            // Çıktı WebP olur eğer: ayar webpZorunlu=true İSE, ya da girdi zaten WebP İSE.
+            // webpZorunlu=false ve girdi PNG/JPEG ise orijinal format korunur (uzantı değişmez).
+            var hedefWebpMi = uzanti == ".webp" || webpZorunlu;
+            veri = await _resimIslemcisi.OtomatikBoyutlandirAsync(veri, maksimumKenar, kalite, webpZorunlu, iptal);
+            if (hedefWebpMi)
+            {
+                uzanti = ".webp";
+                mimeTipi = "image/webp";
+            }
+        }
+        else
+        {
+            using var ms = new MemoryStream();
+            await dosya.CopyToAsync(ms, iptal);
+            veri = ms.ToArray();
+        }
+
+        // Hash hesapla (yeni optimize edilmiş veriden)
+        using var hashAkisi = new MemoryStream(veri);
+        var hash = _resimIslemcisi.HashHesapla(hashAkisi);
+
+        var mevcut = await _db.Medyalar.FirstOrDefaultAsync(m => m.Hash == hash && !m.SilindiMi, iptal);
+        if (mevcut != null) return mevcut; // duplicate
+
         var guvenliAd = $"{Guid.NewGuid()}{uzanti}";
         var klasor = klasorId?.ToString() ?? "genel";
 
-        var depoYolu = await _depolama.YukleAsync(dosya, guvenliAd, klasor, iptal);
+        // Optimize edilmiş veriyi depolamaya yaz
+        using var yuklenecekAkis = new MemoryStream(veri);
+        var depoYolu = await _depolama.YukleAsync(yuklenecekAkis, guvenliAd, klasor, iptal);
 
         var medya = new MedyaModel
         {
             Ad = Path.GetFileNameWithoutExtension(orijinalAd),
             OrijinalAd = orijinalAd,
             DosyaYolu = depoYolu,
-            BoyutByte = dosya.Length,
+            BoyutByte = veri.Length,
             Hash = hash,
-            MimeTipi = $"image/{uzanti.TrimStart('.')}",
+            MimeTipi = mimeTipi,
             Tip = MedyaTipi.Resim,
             Kaynak = MedyaKaynagi.Yerel,
             KlasorId = klasorId,
@@ -63,6 +107,18 @@ public class MedyaServisi : IMedyaServisi
         _db.Medyalar.Add(medya);
         await _db.SaveChangesAsync(iptal);
         return medya;
+    }
+
+    private int AyarOkuInt(string anahtar, int varsayilan)
+    {
+        var ayar = _db.SistemAyarlari.AsNoTracking().FirstOrDefault(a => a.Anahtar == anahtar);
+        return ayar != null && int.TryParse(ayar.Deger, out var deger) ? deger : varsayilan;
+    }
+
+    private bool AyarOkuBool(string anahtar, bool varsayilan)
+    {
+        var ayar = _db.SistemAyarlari.AsNoTracking().FirstOrDefault(a => a.Anahtar == anahtar);
+        return ayar != null && bool.TryParse(ayar.Deger, out var deger) ? deger : varsayilan;
     }
 
     public async Task<MedyaModel?> YoutubeEkleAsync(string url, int? klasorId, int? kullaniciId, CancellationToken iptal = default)

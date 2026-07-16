@@ -113,9 +113,11 @@ window.vizitlink3dTema = {
 
     adminTemaIzoleEt: function () {
         var root = document.documentElement;
+        var mevcutMod = localStorage.getItem('temaMod') || 'koyu';
         root.removeAttribute('data-tema-id');
         root.removeAttribute('data-site-tema');
-        root.removeAttribute('data-tema-mod');
+        root.setAttribute('data-tema-mod', mevcutMod);
+        root.style.colorScheme = mevcutMod === 'acik' ? 'light' : 'dark';
 
         var temaLinkleri = document.querySelectorAll('link[data-tema-parca]');
         temaLinkleri.forEach(function (link) {

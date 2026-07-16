@@ -1,11 +1,12 @@
-﻿using VizitLink3D.Api.VeriTabani;
-using VizitLink3D.Ortak.Modeller;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using VizitLink3D.Api.VeriTabani;
+using VizitLink3D.Ortak.Modeller;
 
 namespace VizitLink3D.Api.Kontrolculer.Kimlik;
 
@@ -16,8 +17,15 @@ public class KimlikKontrolcu(VizitLink3DDbContext vt, IConfiguration yapilandirm
     public record GirisIstegi(string KullaniciAdi, string Sifre);
 
     [HttpPost("giris")]
+    [EnableRateLimiting("Giris")]
     public async Task<Cevap<GirisYaniti>> Giris([FromBody] GirisIstegi istek)
     {
+        if (string.IsNullOrWhiteSpace(istek.KullaniciAdi) || string.IsNullOrWhiteSpace(istek.Sifre))
+            return Cevap<GirisYaniti>.Hata("Kullanici adi veya sifre hatali.");
+
+        if (istek.KullaniciAdi.Length > 128 || istek.Sifre.Length > 256)
+            return Cevap<GirisYaniti>.Hata("Kullanici adi veya sifre hatali.");
+
         var kullanici = await vt.Kullanicilar
             .FirstOrDefaultAsync(k => k.KullaniciAdi == istek.KullaniciAdi && k.AktifMi);
 
@@ -64,4 +72,3 @@ public class KimlikKontrolcu(VizitLink3DDbContext vt, IConfiguration yapilandirm
 }
 
 public record GirisYaniti(string Token, string KullaniciAdi, string AdSoyad, string Rol, string Eposta);
-

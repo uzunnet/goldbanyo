@@ -65,7 +65,7 @@ public partial class VizitLink3DDuzen : IDisposable
         _aktifDil = DilServisi.AktifDil;
         _diller = DilServisi.DesteklenenDiller.ToList();
 
-        var firma = firmaTask.Result;
+        var firma = await firmaTask;
         if (firma == null)
         {
             return;
@@ -173,12 +173,19 @@ public partial class VizitLink3DDuzen : IDisposable
         var menuler = await Api.GetAsync<List<MenuOgesi>>("api/menu/ana");
         if (menuler == null || menuler.Count == 0)
         {
+            // API'den menu gelmezse (ag hatasi, soguk baslangic vb.) guncel
+            // Gold Banyo menu yapisini yansitan yedek - eski/kaldirilmis menu
+            // ("Banyo Dolaplari" tek basligi, kisa 5 ogeli yapi) ASLA gosterilmemeli.
             _menu =
             [
                 new("Ana Sayfa", "/", []),
-                new("Hakkımızda", "/hakkimizda", []),
-                new("Banyo Dolapları", "/banyo-dolaplari", []),
+                new("Ürünler", "/banyo-dolaplari", []),
                 new("Katalog", "/katalog", []),
+                new("Projeler", "/projeler", []),
+                new("Kurumsal", "/hakkimizda", []),
+                new("Referanslar", "/referanslar", []),
+                new("Haber", "/haber", []),
+                new("SSS", "/sss", []),
                 new("İletişim", "/iletisim", [])
             ];
             return;

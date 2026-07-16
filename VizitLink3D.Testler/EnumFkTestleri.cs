@@ -26,7 +26,7 @@ public class EnumFkTestleri
     public void AISaglayiciTipi_TumDegerler_Gecerli()
     {
         var tipler = Enum.GetValues<VizitLink3D.Ortak.Modeller.AI.AISaglayiciTipi>();
-        Assert.Equal(5, tipler.Length);
+        Assert.Equal(7, tipler.Length);
     }
 
     [Fact]

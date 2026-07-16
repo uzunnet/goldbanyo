@@ -1,13 +1,15 @@
-﻿using VizitLink3D.Api.Modeller;
-using VizitLink3D.Api.VeriTabani;
-using VizitLink3D.Ortak.Modeller;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VizitLink3D.Api.Modeller;
+using VizitLink3D.Api.VeriTabani;
+using VizitLink3D.Ortak.Modeller;
 
 namespace VizitLink3D.Api.Kontrolculer.Sistem;
 
 [ApiController]
 [Route("api/denetim-log")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class DenetimLogKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 {
     [HttpGet]
@@ -33,7 +35,6 @@ public class DenetimLogKontrolcu(VizitLink3DDbContext vt) : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(Cevap<object>.Basarili(new { liste, toplam, sayfa, sayfaBoyutu }));
+        return Ok(Cevap<object>.Basarili(new { liste, toplam, sayfa, sayfaBoyutu })); 
     }
 }
-

@@ -281,6 +281,8 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
             .HasQueryFilter(k => !k.SilindiMi);
         modelOlusturucu.Entity<UrunUcBoyutModeli>()
             .HasQueryFilter(m => !m.SilindiMi);
+        modelOlusturucu.Entity<UrunMedya>()
+            .HasQueryFilter(m => !m.SilindiMi);
         modelOlusturucu.Entity<Malzeme>()
             .HasQueryFilter(m => !m.SilindiMi);
         modelOlusturucu.Entity<KaplamaSecenegi>()

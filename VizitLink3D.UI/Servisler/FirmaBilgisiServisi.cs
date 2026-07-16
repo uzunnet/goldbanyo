@@ -58,7 +58,7 @@ public class FirmaBilgisiServisi
             _cachedFirma = new Firma
             {
                 Slug = tema?.Slug ?? "varsayilan",
-                Ad = string.IsNullOrWhiteSpace(tema?.Ad) ? "VizitLink3D" : tema.Ad,
+                Ad = string.IsNullOrWhiteSpace(tema?.Ad) ? "Gold Banyo" : tema.Ad,
                 AdminTema = tema?.AdminTema,
                 SiteTema = string.IsNullOrWhiteSpace(tema?.SiteTema) ? "gold" : tema.SiteTema,
                 TasarimRengi1 = tema?.TasarimRengi1,
@@ -131,7 +131,7 @@ public class FirmaBilgisiServisi
     public async Task<string> GetAdAsync()
     {
         var firma = await GetFirmaAsync();
-        return firma?.Ad ?? "VizitLink 3D";
+        return firma?.Ad ?? "Gold Banyo";
     }
 
     /// <summary>Frontend teması (Gold, Desadoor, vb.).</summary>

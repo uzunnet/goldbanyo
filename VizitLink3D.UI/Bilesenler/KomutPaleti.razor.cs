@@ -40,6 +40,7 @@ public partial class KomutPaleti : ComponentBase
             new() { Baslik = dil.T("admin.seo", "SEO Yönetimi"), Aciklama = "/admin/seo-yonetimi", Ikon = Icons.Material.Filled.TrendingUp, Url = "/admin/seo-yonetimi" },
             new() { Baslik = dil.T("admin.ceviri", "Çeviri Yönetimi"), Aciklama = "/admin/ceviri-yonetimi", Ikon = Icons.Material.Filled.Translate, Url = "/admin/ceviri-yonetimi" },
             new() { Baslik = dil.T("admin.medya", "Medya Galerisi"), Aciklama = "/admin/medya-galerisi", Ikon = Icons.Material.Filled.PhotoLibrary, Url = "/admin/medya-galerisi" },
+            new() { Baslik = dil.T("admin.medya.youtubeEkle", "YouTube Ekle"), Aciklama = "/admin/medya-youtube-ekle", Ikon = Icons.Material.Filled.PlayCircle, Url = "/admin/medya-youtube-ekle" },
             new() { Baslik = dil.T("admin.blog", "Haber Yönetimi"), Aciklama = "/admin/haber-yonetimi", Ikon = Icons.Material.Filled.Article, Url = "/admin/haber-yonetimi" },
             new() { Baslik = dil.T("admin.referans", "Referans Yönetimi"), Aciklama = "/admin/referans-yonetimi", Ikon = Icons.Material.Filled.Handshake, Url = "/admin/referans-yonetimi" },
             new() { Baslik = dil.T("menu.anasayfa", "Anasayfa"), Aciklama = "/", Ikon = Icons.Material.Filled.Home, IkonRengi = Color.Success, Url = "/" },

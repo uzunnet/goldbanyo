@@ -23,9 +23,40 @@ public sealed class GoldBanyoKatalogUrunu
     public bool YeniMi { get; init; } = true;
 
     public IReadOnlyList<int> TumSayfalar => [SayfaNo, .. EkGaleriSayfalari];
-    public string HeroGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-hero.png";
-    public string KatalogGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-spread.png";
-    public string TeknikGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-detay.png";
+    public string HeroGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-hero.{GoldKatalogUzantiGetir($"sayfa-{SayfaNo:000}-hero")}";
+    public string KatalogGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-spread.{GoldKatalogUzantiGetir($"sayfa-{SayfaNo:000}-spread")}";
+    public string TeknikGorselUrl => $"/medya/gold-katalog/sayfa-{SayfaNo:000}-detay.{GoldKatalogUzantiGetir($"sayfa-{SayfaNo:000}-detay")}";
+
+    /// <summary>
+    /// Gold Banyo katalog gorselleri kismen buyuk PNG'lerden webp'e donusturuldu (kucuk
+    /// olanlar PNG olarak kaldi). Bu yuzden uzanti sabit degil; API ve UI wwwroot'unda
+    /// gercekte hangi dosya varsa o kullanilir (self-healing).
+    /// </summary>
+    private static string GoldKatalogUzantiGetir(string dosyaAdiUzantisiz)
+    {
+        var kok = GoldKatalogMedyaKokunuBul();
+        if (kok != null && File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+        {
+            return "webp";
+        }
+
+        return "png";
+    }
+
+    private static string? GoldKatalogMedyaKokunuBul()
+    {
+        var adaylar = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "VizitLink3D.Api", "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "VizitLink3D.UI", "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "..", "VizitLink3D.Api", "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "..", "VizitLink3D.UI", "wwwroot", "medya", "gold-katalog")
+        };
+
+        return adaylar.FirstOrDefault(Directory.Exists);
+    }
 
     public string KisaAciklamaOlustur()
     {
@@ -712,6 +743,756 @@ public static class GoldBanyoKatalogUrunleri
                 new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
                 new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
                 new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-100",
+            Ad = "Rocco 100",
+            Kod = "ROCCO-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 51,
+            Fiyat = 47750m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "45 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-80",
+            Ad = "Rocco 80",
+            Kod = "ROCCO-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 52,
+            Fiyat = 45000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "45 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-65",
+            Ad = "Rocco 65",
+            Kod = "ROCCO-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 53,
+            Fiyat = 41000m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "45 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "60 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-plus-100",
+            Ad = "Rocco Plus 100",
+            Kod = "ROCCO-PLUS-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 54,
+            Fiyat = 47750m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-plus-80",
+            Ad = "Rocco Plus 80",
+            Kod = "ROCCO-PLUS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 55,
+            Fiyat = 45000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rocco-plus-65",
+            Ad = "Rocco Plus 65",
+            Kod = "ROCCO-PLUS-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 56,
+            Fiyat = 41000m,
+            Renkler = ["Antrasit", "Bej", "Ay Taşı"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "vedenda-80",
+            Ad = "Vedenda 80",
+            Kod = "VEDENDA-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 57,
+            EkGaleriSayfalari = [58],
+            Fiyat = 45000m,
+            BoyDolabiFiyati = 31000m,
+            Renkler = ["Yeşil", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "80 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "vedenda-plus-80",
+            Ad = "Vedenda Plus 80",
+            Kod = "VEDENDA-PLUS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 59,
+            EkGaleriSayfalari = [60],
+            Fiyat = 45000m,
+            BoyDolabiFiyati = 31000m,
+            Renkler = ["Vizon", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "80 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "arte-80",
+            Ad = "Arte 80",
+            Kod = "ARTE-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 61,
+            Fiyat = 32500m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Antrasit", "Bej"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "arte-100",
+            Ad = "Arte 100",
+            Kod = "ARTE-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 62,
+            Fiyat = 35000m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Antrasit", "Bej"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri", "Doğal Ağaç"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "70 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "elsa-120",
+            Ad = "Elsa 120",
+            Kod = "ELSA-120",
+            KoleksiyonGrubu = "Trend",
+            SayfaNo = 63,
+            Fiyat = 55000m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "120 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "85 cm", Genislik = "55 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "elsa-80",
+            Ad = "Elsa 80",
+            Kod = "ELSA-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 64,
+            EkGaleriSayfalari = [65],
+            Fiyat = 35000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "85 cm", Genislik = "55 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "elsa-plus-80",
+            Ad = "Elsa Plus 80",
+            Kod = "ELSA-PLUS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 66,
+            EkGaleriSayfalari = [67],
+            Fiyat = 35000m,
+            BoyDolabiFiyati = 27500m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "elsa-60",
+            Ad = "Elsa 60",
+            Kod = "ELSA-60",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 68,
+            Fiyat = 31000m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "60 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "60 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "oscar-100",
+            Ad = "Oscar 100",
+            Kod = "OSCAR-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 69,
+            Fiyat = 48000m,
+            Renkler = ["Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "70 cm", Genislik = "100 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "120 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "oscar-80",
+            Ad = "Oscar 80",
+            Kod = "OSCAR-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 70,
+            Fiyat = 43800m,
+            BoyDolabiFiyati = 23750m,
+            Renkler = ["Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "70 cm", Genislik = "80 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "120 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "picasso-80",
+            Ad = "Picasso 80",
+            Kod = "PICASSO-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 71,
+            EkGaleriSayfalari = [72],
+            Fiyat = 45000m,
+            BoyDolabiFiyati = 25800m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "53 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "75 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "mabel-100",
+            Ad = "Mabel 100",
+            Kod = "MABEL-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 73,
+            Fiyat = 40000m,
+            BoyDolabiFiyati = 25800m,
+            Renkler = ["Gri", "Kum Beji"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "120 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "mabel-80",
+            Ad = "Mabel 80",
+            Kod = "MABEL-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 74,
+            Fiyat = 37500m,
+            BoyDolabiFiyati = 25800m,
+            Renkler = ["Gri", "Kum Beji"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "120 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "valery-80",
+            Ad = "Valery 80",
+            Kod = "VALERY-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 75,
+            Fiyat = 43000m,
+            BoyDolabiFiyati = 25500m,
+            Renkler = ["Bej", "Krem"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "75 cm", Derinlik = "5 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "hira-115",
+            Ad = "Hira 115",
+            Kod = "HIRA-115",
+            KoleksiyonGrubu = "Trend",
+            SayfaNo = 78,
+            Fiyat = 57500m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "115 cm", Derinlik = "45 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "70 cm", Genislik = "50 cm", Derinlik = "16 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "perimelis-100",
+            Ad = "Perimelis 100",
+            Kod = "PERIMELIS-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 79,
+            Fiyat = 33000m,
+            Renkler = ["Ceviz", "Erik", "Florida"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "perimelis-80",
+            Ad = "Perimelis 80",
+            Kod = "PERIMELIS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 80,
+            Fiyat = 27500m,
+            Renkler = ["Ceviz", "Erik", "Florida"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "perimelis-65",
+            Ad = "Perimelis 65",
+            Kod = "PERIMELIS-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 80,
+            Fiyat = 22500m,
+            BoyDolabiFiyati = 18000m,
+            Renkler = ["Ceviz", "Erik", "Florida"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "aria-100",
+            Ad = "Aria 100",
+            Kod = "ARIA-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 81,
+            Fiyat = 32500m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "120 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "aria-80",
+            Ad = "Aria 80",
+            Kod = "ARIA-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 82,
+            Fiyat = 30000m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "aria-65",
+            Ad = "Aria 65",
+            Kod = "ARIA-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 83,
+            Fiyat = 25800m,
+            Renkler = ["Beyaz", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "tria-80",
+            Ad = "Tria 80",
+            Kod = "TRIA-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 84,
+            EkGaleriSayfalari = [85],
+            Fiyat = 27500m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Gri", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "piedra-55",
+            Ad = "Piedra 55",
+            Kod = "PIEDRA-55",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 86,
+            EkGaleriSayfalari = [87, 88],
+            Fiyat = 37500m,
+            Renkler = ["Antrasit", "Kahve", "Gri"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "55 cm", Derinlik = "34 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "70 cm", Genislik = "50 cm", Derinlik = "5 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "rio-80",
+            Ad = "Rio 80",
+            Kod = "RIO-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 89,
+            EkGaleriSayfalari = [90, 91],
+            Fiyat = 30000m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Luna Gri", "Vizon", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "risus-80",
+            Ad = "Risus 80",
+            Kod = "RISUS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 92,
+            EkGaleriSayfalari = [93, 94],
+            Fiyat = 30000m,
+            BoyDolabiFiyati = 22500m,
+            Renkler = ["Luna Gri", "Vizon", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "verto-50",
+            Ad = "Verto 50",
+            Kod = "VERTO-50",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 95,
+            Fiyat = 23800m,
+            Renkler = ["Erik", "Florida", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "50 cm", Derinlik = "40 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "85 cm", Genislik = "55 cm", Derinlik = "5 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "verto-60",
+            Ad = "Verto 60",
+            Kod = "VERTO-60",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 95,
+            Fiyat = 24500m,
+            Renkler = ["Erik", "Florida", "Antrasit"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "60 cm", Derinlik = "40 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "85 cm", Genislik = "55 cm", Derinlik = "5 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "eco-80",
+            Ad = "Eco 80",
+            Kod = "ECO-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 96,
+            Fiyat = 15000m,
+            Renkler = ["Gri", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "eco-65",
+            Ad = "Eco 65",
+            Kod = "ECO-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 96,
+            Fiyat = 14000m,
+            Renkler = ["Gri", "Beyaz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "eco-plus-80",
+            Ad = "Eco Plus 80",
+            Kod = "ECO-PLUS-80",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 97,
+            Fiyat = 20000m,
+            Renkler = ["Vizon", "Antrasit", "Gri"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "80 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "80 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "eco-plus-65",
+            Ad = "Eco Plus 65",
+            Kod = "ECO-PLUS-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 97,
+            Fiyat = 19000m,
+            Renkler = ["Vizon", "Antrasit", "Gri"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "eco-plus-100",
+            Ad = "Eco Plus 100",
+            Kod = "ECO-PLUS-100",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 98,
+            Fiyat = 22000m,
+            BoyDolabiFiyati = 17500m,
+            Renkler = ["Vizon", "Antrasit", "Gri"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "100 cm", Derinlik = "46 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "100 cm", Derinlik = "16 cm" },
+                new() { Baslik = "Boy Dolap", Yukseklik = "140 cm", Genislik = "38 cm", Derinlik = "33 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "paco-65",
+            Ad = "Paco 65",
+            Kod = "PACO-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 99,
+            Fiyat = 22500m,
+            Renkler = ["Erik", "Antrasit", "Beyaz", "Ceviz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "33 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "60 cm", Genislik = "60 cm", Derinlik = "5 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "paco-plus-65",
+            Ad = "Paco Plus 65",
+            Kod = "PACO-PLUS-65",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 100,
+            Fiyat = 20000m,
+            Renkler = ["Erik", "Antrasit", "Beyaz", "Ceviz"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "65 cm", Derinlik = "33 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "65 cm", Derinlik = "16 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "nicci-60",
+            Ad = "Nicci 60",
+            Kod = "NICCI-60",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 101,
+            Fiyat = 14000m,
+            Renkler = ["Beyaz", "Ceviz", "Antrasit", "Ahşap"],
+            Ozellikler = ["MDF Ahşap", "Kolay Montaj", "Kolay Temizlenir"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "60 cm", Derinlik = "25,5 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "90 cm", Genislik = "40 cm", Derinlik = "5 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "adonis-50",
+            Ad = "Adonis 50",
+            Kod = "ADONIS-50",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 102,
+            Fiyat = 14000m,
+            Renkler = ["Antrasit", "Beyaz", "Ceviz", "Vizon"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "50 cm", Derinlik = "38 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "75 cm", Genislik = "50 cm", Derinlik = "16 cm" }
+            ]
+        },
+        new()
+        {
+            Slug = "oliy-45",
+            Ad = "Oliy 45",
+            Kod = "OLIY-45",
+            KoleksiyonGrubu = "Standart",
+            SayfaNo = 103,
+            Fiyat = 9200m,
+            Renkler = ["Antrasit", "Beyaz", "Vizon"],
+            Ozellikler = ["Soft Kapak", "MDF Ahşap", "Dokunmatik Ledli Ayna", "Kolay Montaj", "Kolay Temizlenir", "Renk Seçenekleri"],
+            Olculer =
+            [
+                new() { Baslik = "Dolap", Yukseklik = "85 cm", Genislik = "45 cm", Derinlik = "28 cm" },
+                new() { Baslik = "Ayna", Yukseklik = "53 cm", Genislik = "39 cm", Derinlik = "5 cm" }
             ]
         }
     ];

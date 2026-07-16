@@ -104,6 +104,7 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
             return;
         }
 
+        var oncekiTemaModu = _aktifTemaModu;
         await JS.InvokeVoidAsync("vizitlink3dTema.adminTemaIzoleEt");
         await JS.InvokeVoidAsync("vizitlink3dDil.htmlDiliniAyarla", dil.AktifDil);
 
@@ -113,6 +114,11 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
             : (kayitliTemaModu.Equals("acik", StringComparison.OrdinalIgnoreCase) ? "acik" : "koyu");
 
         await AdminTemaModuUygulaAsync(_aktifTemaModu);
+
+        if (!string.Equals(oncekiTemaModu, _aktifTemaModu, StringComparison.OrdinalIgnoreCase))
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private void BildirimGuncelle()

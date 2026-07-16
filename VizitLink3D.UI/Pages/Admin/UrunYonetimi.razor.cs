@@ -4,6 +4,7 @@ using VizitLink3D.Ortak.Modeller.Medya;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using VizitLink3D.UI.Servisler;
+using VizitLink3D.UI.Models;
 
 namespace VizitLink3D.UI.Pages.Admin;
 
@@ -29,6 +30,12 @@ public partial class UrunYonetimi : ComponentBase
     private Urun _form = new();
     private int? _duzenlenenId;
     private string _arama = string.Empty;
+    private int? _secilenKategoriId;
+    private int _sutunAdet = 4;
+    private int _satirAdet = 3;
+    private int _sayfaBasinaAdet = 12;
+    private bool _sayfalamaAktif = true;
+    private int _aktifSayfa = 1;
     private AdminCeviriAnalizSonucu? _ceviriAnalizi;
 
     protected override async Task OnInitializedAsync() => await Yukle();
@@ -39,13 +46,29 @@ public partial class UrunYonetimi : ComponentBase
         StateHasChanged();
         await Task.WhenAll(UrunleriYukleAsync(), ReferansVerileriYukleAsync());
         _ceviriAnalizi = await AdminCeviriServisi.AnalizEtAsync("Urun", _liste.Select(UrunCeviriKaydiOlustur));
+        _aktifSayfa = 1;
         _yukleniyor = false;
     }
 
     private async Task UrunleriYukleAsync()
     {
-        _liste = await Api.GetAsync<List<Urun>>("api/urunler") ?? [];
-        AramaUygula();
+        var sorgu = new List<string>();
+        if (_secilenKategoriId is int kategoriId && kategoriId > 0)
+        {
+            sorgu.Add($"kategoriId={kategoriId}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(_arama))
+        {
+            sorgu.Add($"arama={Uri.EscapeDataString(_arama)}");
+        }
+
+        var url = sorgu.Count > 0
+            ? $"api/urunler?{string.Join("&", sorgu)}"
+            : "api/urunler";
+
+        _liste = await Api.GetAsync<List<Urun>>(url) ?? [];
+        _filtreliListe = _liste;
     }
 
     private async Task ReferansVerileriYukleAsync()
@@ -56,6 +79,14 @@ public partial class UrunYonetimi : ComponentBase
         if (kategoriler != null) _kategoriler = kategoriler;
         var modeller = await Api.GetAsync<List<UrunUcBoyutModeli>>("api/uc-boyut/modeller");
         if (modeller != null) _ucBoyutModeller = modeller;
+        var duzen = await Api.GetAsync<SayfaDuzenAyariDto>("api/sayfa-duzen-ayarlari/urun-havuzu");
+        if (duzen != null)
+        {
+            _sutunAdet = duzen.SutunAdet > 0 ? duzen.SutunAdet : 4;
+            _satirAdet = duzen.SatirAdet > 0 ? duzen.SatirAdet : 3;
+            _sayfaBasinaAdet = duzen.SayfaBasinaAdet > 0 ? duzen.SayfaBasinaAdet : _sutunAdet * _satirAdet;
+            _sayfalamaAktif = duzen.SayfalamaAktif;
+        }
     }
 
     private string UcBoyutTooltip(Urun urun)
@@ -77,22 +108,32 @@ public partial class UrunYonetimi : ComponentBase
     // Urune varsayilan 3D model atanmis mi.
     private static bool UcBoyutModeliVarMi(Urun urun) => urun.VarsayilanUcBoyutModeliId is not null;
 
-    private void AramaYap() => AramaUygula();
-
-    private void AramaUygula()
+    private async Task AramaYap()
     {
-        var a = _arama?.ToLowerInvariant() ?? string.Empty;
-        _filtreliListe = string.IsNullOrWhiteSpace(a)
-            ? _liste
-            : _liste.Where(x =>
-                (x.Ad?.ToLowerInvariant().Contains(a) ?? false) ||
-                (x.Kod?.ToLowerInvariant().Contains(a) ?? false) ||
-                (x.Slug?.ToLowerInvariant().Contains(a) ?? false)).ToList();
+        await UrunleriYukleAsync();
+        StateHasChanged();
+    }
+
+    private async Task KategoriDegistir(int? kategoriId)
+    {
+        _secilenKategoriId = kategoriId;
+        _aktifSayfa = 1;
+        await UrunleriYukleAsync();
+        StateHasChanged();
+    }
+
+    private async Task FiltreleriTemizle()
+    {
+        _arama = string.Empty;
+        _secilenKategoriId = null;
+        _aktifSayfa = 1;
+        await UrunleriYukleAsync();
+        StateHasChanged();
     }
 
     private void YeniAc()
     {
-        _form = new Urun { AktifMi = true };
+        _form = new Urun { AktifMi = true, UrunKategoriId = _secilenKategoriId };
         _duzenlenenId = null;
         _duzenlemeModu = false;
         _formAcik = true;
@@ -192,6 +233,21 @@ public partial class UrunYonetimi : ComponentBase
         }
     }
 
+    private string KategoriAdi(int? kategoriId)
+    {
+        if (kategoriId is null || kategoriId <= 0)
+            return dil.T("ortak.bos", "Yok");
+
+        return _kategoriler.FirstOrDefault(k => k.Id == kategoriId)?.Ad
+               ?? string.Format(dil.T("admin.urun.kategoriId", "Kategori #{0}"), kategoriId);
+    }
+
+    private string AileAdi(int aileId)
+    {
+        return _aileler.FirstOrDefault(a => a.Id == aileId)?.Ad
+               ?? string.Format(dil.T("admin.urun.aileId", "Aile #{0}"), aileId);
+    }
+
     private async Task AICeviriDialogAc(Urun u)
     {
         var parameters = new DialogParameters
@@ -289,5 +345,42 @@ public partial class UrunYonetimi : ComponentBase
             new("SeoBaslik", urun.SeoBaslik ?? string.Empty),
             new("SeoAciklama", urun.SeoAciklama ?? string.Empty)
         ]);
+    }
+
+    private IEnumerable<Urun> GosterilecekUrunler()
+    {
+        if (_sayfalamaAktif)
+        {
+            return _filtreliListe
+                .Skip((_aktifSayfa - 1) * _sayfaBasinaAdet)
+                .Take(_sayfaBasinaAdet);
+        }
+
+        return _filtreliListe;
+    }
+
+    private int ToplamSayfa => Math.Max(1, (int)Math.Ceiling((double)_filtreliListe.Count / Math.Max(1, _sayfaBasinaAdet)));
+
+    private int GridMd => _sutunAdet switch
+    {
+        <= 2 => 6,
+        3 => 4,
+        4 => 3,
+        5 => 3,
+        _ => 2
+    };
+
+    private int GridLg => _sutunAdet switch
+    {
+        <= 2 => 6,
+        3 => 4,
+        4 => 3,
+        5 => 2,
+        _ => 2
+    };
+
+    private void SayfaDegistir(int sayfa)
+    {
+        _aktifSayfa = Math.Clamp(sayfa, 1, ToplamSayfa);
     }
 }

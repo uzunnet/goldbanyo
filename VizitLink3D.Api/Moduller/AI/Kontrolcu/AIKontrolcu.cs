@@ -16,6 +16,7 @@ public class AIKontrolcu : ControllerBase
     private readonly IAIMaliyetTakipServisi _maliyetTakip;
     private readonly IPIIFiltreServisi _piiServisi;
     private readonly IApiKeySifrelemeServisi _sifrelemeServisi;
+    private readonly IHttpClientFactory _httpFabrikasi;
     private readonly VizitLink3DDbContext _db;
 
     public AIKontrolcu(
@@ -23,12 +24,14 @@ public class AIKontrolcu : ControllerBase
         IAIMaliyetTakipServisi maliyetTakip,
         IPIIFiltreServisi piiServisi,
         IApiKeySifrelemeServisi sifrelemeServisi,
+        IHttpClientFactory httpFabrikasi,
         VizitLink3DDbContext db)
     {
         _fabrika = fabrika;
         _maliyetTakip = maliyetTakip;
         _piiServisi = piiServisi;
         _sifrelemeServisi = sifrelemeServisi;
+        _httpFabrikasi = httpFabrikasi;
         _db = db;
     }
 
@@ -124,7 +127,7 @@ public class AIKontrolcu : ControllerBase
         if (saglayiciEntity == null)
             return Cevap<bool>.Hata("Sağlayıcı bulunamadı.");
 
-        var saglayici = _fabrika.SaglayiciOlustur(saglayiciEntity, new HttpClient());
+        var saglayici = _fabrika.SaglayiciOlustur(saglayiciEntity, _httpFabrikasi.CreateClient());
         var sonuc = await saglayici.SaglikTestiAsync();
         return Cevap<bool>.Basarili(sonuc, sonuc ? "Bağlantı başarılı" : "Bağlantı başarısız");
     }

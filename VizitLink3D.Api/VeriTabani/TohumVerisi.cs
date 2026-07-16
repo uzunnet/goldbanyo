@@ -79,6 +79,7 @@ public static class TohumVerisi
             await TohumlaFooterMenuleriAsync(vt);
         });
         await Bolum(vt, "Ayarlar", async () => { if (!vt.SayfaIcerikleri.Any(s => s.Bolum == "ayarlar")) await TohumlaAyarlariAsync(vt); });
+        await Bolum(vt, "ResimOptimizasyonuAyarlari", async () => await TohumlaResimOptimizasyonuAyarlariAsync(vt));
         await Bolum(vt, "Firma", async () => { if (!vt.Firmalar.Any()) await TohumlaFirmaAsync(vt); });
         await Bolum(vt, "Lisans", async () => await TohumlaLisansAsync(vt));
         await Bolum(vt, "ProjeKategorileri", async () => { if (!vt.ProjeKategorileri.Any()) await TohumlaProjeKategorileriAsync(vt); });
@@ -117,6 +118,13 @@ public static class TohumVerisi
         await Bolum(vt, "Malzemeler", async () => { if (!vt.Malzemeler.Any()) await TohumlaMalzemeleriAsync(vt); });
         await Bolum(vt, "KaplamaSecenekleri", async () => { if (!vt.KaplamaSecenekleri.Any()) await TohumlaKaplamaSecenekleriniAsync(vt); });
         await Bolum(vt, "ReferansUrunleri", async () => { if (!vt.Urunler.Any()) await TohumlaReferansUrunleriniAsync(vt); });
+        // GoldBanyoKatalogUrunleriniTohumlaAsync kendi icinde Slug'a gore idempotent'tir (yoksa ekler,
+        // varsa gunceller) - bu yuzden yukaridaki "Urunler.Any()" kapisindan BAGIMSIZ, her baslangicta
+        // calistirilir. Aksi halde GoldBanyoKatalogUrunleri.Tum listesine sonradan eklenen yeni urunler
+        // (ör. Rocco/Vedenda/Arte/... 2026 katalog eklemeleri) mevcut (bos olmayan) veritabanina hic
+        // islenmez.
+        await Bolum(vt, "GoldKatalogUzantiDuzelt", async () => await GoldKatalogMedyaUzantilariniDuzeltAsync(vt));
+        await Bolum(vt, "GoldBanyoKatalogUrunleri", async () => await GoldBanyoKatalogUrunleriniTohumlaAsync(vt, DateTime.UtcNow));
         await Bolum(vt, "DusakabinKaldir", async () => await DusakabinIcerigiPasifleAsync(vt));
         await Bolum(vt, "GercekUrunFotograflari", async () => await GercekUrunFotograflariniKaydetAsync(vt));
 
@@ -213,6 +221,9 @@ public static class TohumVerisi
 
         await Bolum(vt, "SayfaDuzenAyarlariVeMenuEklendi", async () =>
         {
+            if (!await vt.SayfaDuzenAyarlari.AnyAsync(a => a.SayfaKodu == "anasayfa"))
+                vt.SayfaDuzenAyarlari.Add(new SayfaDuzenAyari { SayfaKodu = "anasayfa", SayfaAdi = "Ana Sayfa", SutunAdet = 4, SatirAdet = 1, SayfaBasinaAdet = 4, SayfalamaAktif = false, AktifMi = true });
+
             if (!await vt.SayfaDuzenAyarlari.AnyAsync(a => a.SayfaKodu == "kapak-sistemleri"))
                 vt.SayfaDuzenAyarlari.Add(new SayfaDuzenAyari { SayfaKodu = "kapak-sistemleri", SayfaAdi = "Kapak Sistemleri", SutunAdet = 4, SatirAdet = 3, SayfaBasinaAdet = 12, SayfalamaAktif = true, AktifMi = true });
 
@@ -325,12 +336,12 @@ public static class TohumVerisi
     {
         var tohumlar = new List<Slayt>
         {
-            new Slayt { Dil = "tr", Baslik = "Siz Hayal Edin, Biz Tasarlayalım.", AltBaslik = "Gold Banyo 2026 Koleksiyonu", Aciklama = "Premium malzemeler, kusursuz işçilik ve zamansız endüstriyel tasarım. Banyonuzu bir mimari şahesere dönüştürün.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-1.png", ButonMetni1 = "Koleksiyonları İncele", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Teklif Al", ButonLink2 = "/iletisim", SiraNo = 1 },
-            new Slayt { Dil = "tr", Baslik = "Zarafetin İzinde", AltBaslik = "Capelli Koleksiyonu", Aciklama = "Modern yaşamın her anına eşlik eden tasarımlar.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-2.png", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
-            new Slayt { Dil = "tr", Baslik = "Şehrin Silüetine Açılan Banyo", AltBaslik = "Hera Koleksiyonu", Aciklama = "Panoramik manzaralı, sade ve şık çözümler.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-3.png", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
-            new Slayt { Dil = "en", Baslik = "You Imagine, We Design.", AltBaslik = "Gold Banyo 2026 Collection", Aciklama = "Premium materials, flawless craftsmanship and timeless industrial design. Turn your bathroom into an architectural masterpiece.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-1.png", ButonMetni1 = "View Collections", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Get a Quote", ButonLink2 = "/iletisim", SiraNo = 1 },
-            new Slayt { Dil = "en", Baslik = "In Pursuit of Elegance", AltBaslik = "Capelli Collection", Aciklama = "Designs that accompany every moment of modern life.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-2.png", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
-            new Slayt { Dil = "en", Baslik = "A Bathroom Opening to the Skyline", AltBaslik = "Hera Collection", Aciklama = "Panoramic-view, minimal and elegant solutions.", ArkaplanResim = "/medya/gold-katalog/anasayfa-slayt-3.png", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
+            new Slayt { Dil = "tr", Baslik = "Siz Hayal Edin, Biz Tasarlayalım.", AltBaslik = "Gold Banyo 2026 Koleksiyonu", Aciklama = "Premium malzemeler, kusursuz işçilik ve zamansız endüstriyel tasarım. Banyonuzu bir mimari şahesere dönüştürün.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-1.{GoldKatalogUzanti("anasayfa-slayt-1")}", ButonMetni1 = "Koleksiyonları İncele", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Teklif Al", ButonLink2 = "/iletisim", SiraNo = 1 },
+            new Slayt { Dil = "tr", Baslik = "Zarafetin İzinde", AltBaslik = "Capelli Koleksiyonu", Aciklama = "Modern yaşamın her anına eşlik eden tasarımlar.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-2.{GoldKatalogUzanti("anasayfa-slayt-2")}", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
+            new Slayt { Dil = "tr", Baslik = "Şehrin Silüetine Açılan Banyo", AltBaslik = "Hera Koleksiyonu", Aciklama = "Panoramik manzaralı, sade ve şık çözümler.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-3.{GoldKatalogUzanti("anasayfa-slayt-3")}", ButonMetni1 = "Koleksiyonu Gör", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
+            new Slayt { Dil = "en", Baslik = "You Imagine, We Design.", AltBaslik = "Gold Banyo 2026 Collection", Aciklama = "Premium materials, flawless craftsmanship and timeless industrial design. Turn your bathroom into an architectural masterpiece.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-1.{GoldKatalogUzanti("anasayfa-slayt-1")}", ButonMetni1 = "View Collections", ButonLink1 = "/banyo-dolaplari", ButonMetni2 = "Get a Quote", ButonLink2 = "/iletisim", SiraNo = 1 },
+            new Slayt { Dil = "en", Baslik = "In Pursuit of Elegance", AltBaslik = "Capelli Collection", Aciklama = "Designs that accompany every moment of modern life.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-2.{GoldKatalogUzanti("anasayfa-slayt-2")}", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 2 },
+            new Slayt { Dil = "en", Baslik = "A Bathroom Opening to the Skyline", AltBaslik = "Hera Collection", Aciklama = "Panoramic-view, minimal and elegant solutions.", ArkaplanResim = $"/medya/gold-katalog/anasayfa-slayt-3.{GoldKatalogUzanti("anasayfa-slayt-3")}", ButonMetni1 = "View Collection", ButonLink1 = "/banyo-dolaplari", SiraNo = 3 },
 
             // Dinamik Sayfa Slaytları
             new Slayt { Dil = "tr", SayfaKodu = "ekibimiz", Baslik = "Güçlü Ekibimiz", AltBaslik = "Profesyonel Ailesi", Aciklama = "Alanında uzman, yenilikçi ve dinamik ekibimiz.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
@@ -759,6 +770,7 @@ public static class TohumVerisi
         ("admin.yeniBlog", "Yeni Haber", "New Article"),
         ("admin.yeniSlayt", "Yeni Slayt", "New Slide"),
         ("admin.medyaYukle", "Medya Yükle", "Upload Media"),
+        ("admin.medya.youtubeEkle", "YouTube Ekle", "Add YouTube"),
         ("admin.temaDuzenle", "Tema Düzenle", "Edit Theme"),
         ("admin.aktiviteGecmisi", "Son Etkinlikler", "Recent Activity"),
         ("admin.icerikSagligi", "İçerik Sağlığı", "Content Health"),
@@ -1837,8 +1849,9 @@ public static class TohumVerisi
                 new MenuOgesi { FirmaId = firma.Id, Baslik = "Medya", Url = "", Sira = 6, Konum = "AdminSol", Ikon = "PermMedia", GerekliRol = "Admin", AltMenuler = new List<MenuOgesi> {
                     new() { FirmaId = firma.Id, Baslik = "Medya Havuzu", Url = "admin/medya-havuzu", Sira = 1, Konum = "AdminSol", Ikon = "CloudQueue" },
                     new() { FirmaId = firma.Id, Baslik = "Medya Galerisi", Url = "admin/galeri", Sira = 2, Konum = "AdminSol", Ikon = "PhotoLibrary" },
-                    new() { FirmaId = firma.Id, Baslik = "PDF Katalog", Url = "admin/pdf-katalog-yonetimi", Sira = 3, Konum = "AdminSol", Ikon = "PictureAsPdf" },
-                    new() { FirmaId = firma.Id, Baslik = "PDF Uygulama Esleme", Url = "admin/pdf-uygulama-esleme", Sira = 4, Konum = "AdminSol", Ikon = "ContentCut" }
+                    new() { FirmaId = firma.Id, Baslik = "YouTube Ekle", Url = "admin/medya-youtube-ekle", Sira = 3, Konum = "AdminSol", Ikon = "PlayCircle" },
+                    new() { FirmaId = firma.Id, Baslik = "PDF Katalog", Url = "admin/pdf-katalog-yonetimi", Sira = 4, Konum = "AdminSol", Ikon = "PictureAsPdf" },
+                    new() { FirmaId = firma.Id, Baslik = "PDF Uygulama Esleme", Url = "admin/pdf-uygulama-esleme", Sira = 5, Konum = "AdminSol", Ikon = "ContentCut" }
                 }},
                 new MenuOgesi { FirmaId = firma.Id, Baslik = "Pazarlama", Url = "", Sira = 7, Konum = "AdminSol", Ikon = "Campaign", GerekliRol = "Admin", AltMenuler = new List<MenuOgesi> {
                     new() { FirmaId = firma.Id, Baslik = "Proje Yonetimi", Url = "admin/proje-yonetimi", Sira = 1, Konum = "AdminSol", Ikon = "Engineering" },
@@ -2107,6 +2120,84 @@ public static class TohumVerisi
         return adaylar.FirstOrDefault(Directory.Exists);
     }
 
+    private static string? GoldKatalogMedyaKokunuBul()
+    {
+        var adaylar = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "VizitLink3D.Api", "wwwroot", "medya", "gold-katalog"),
+            Path.Combine(Directory.GetCurrentDirectory(), "..", "VizitLink3D.UI", "wwwroot", "medya", "gold-katalog")
+        };
+
+        return adaylar.FirstOrDefault(Directory.Exists);
+    }
+
+    /// <summary>
+    /// Gold Banyo katalog gorselleri buyuk PNG'lerden webp'e donusturulurken bazi dosyalar
+    /// webp'e cevrildi (orijinal PNG "_yedek_20260709" klasorune tasindi), bazilari ise
+    /// kucuk oldugu icin PNG olarak kaldi. Bu yuzden uzanti tek bir sabit degil; diskte
+    /// hangisi varsa o kullanilir (self-healing).
+    /// </summary>
+    private static string GoldKatalogUzanti(string dosyaAdiUzantisiz)
+    {
+        var kok = GoldKatalogMedyaKokunuBul();
+        if (kok != null && File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+        {
+            return "webp";
+        }
+
+        return "png";
+    }
+
+    /// <summary>
+    /// Onceki seed calismalarindan DB'de kalmis, artik diskte bulunmayan ".png" uzantili
+    /// gold-katalog medya kayitlarini ilgili gercek dosya ".webp" ise otomatik duzeltir.
+    /// Bu adim GoldBanyoKatalogUrunleriniTohumlaAsync ve GercekUrunFotograflariniKaydetAsync'ten
+    /// ONCE calistirilmalidir; boylece o metotlardaki "zaten var mi" / URL esitligi
+    /// kontrolleri duzeltilmis (guncel) kayitlarla calisir ve mukerrer satir olusmaz.
+    /// </summary>
+    private static async Task GoldKatalogMedyaUzantilariniDuzeltAsync(VizitLink3DDbContext vt)
+    {
+        var urunMedyalari = await vt.UrunMedyalari
+            .Where(m => m.MedyaUrl.StartsWith("/medya/gold-katalog/") && m.MedyaUrl.EndsWith(".png"))
+            .ToListAsync();
+
+        var degisti = false;
+        foreach (var m in urunMedyalari)
+        {
+            var dosyaAdiUzantisiz = Path.GetFileNameWithoutExtension(m.MedyaUrl)!;
+            if (GoldKatalogUzanti(dosyaAdiUzantisiz) == "webp")
+            {
+                m.MedyaUrl = $"/medya/gold-katalog/{dosyaAdiUzantisiz}.webp";
+                degisti = true;
+            }
+        }
+
+        var medyalar = await vt.Medyalar
+            .Where(m => m.DosyaYolu.StartsWith("medya/gold-katalog/") && m.DosyaYolu.EndsWith(".png"))
+            .ToListAsync();
+
+        foreach (var m in medyalar)
+        {
+            var dosyaAdiUzantisiz = Path.GetFileNameWithoutExtension(m.DosyaYolu)!;
+            if (GoldKatalogUzanti(dosyaAdiUzantisiz) == "webp")
+            {
+                m.DosyaYolu = $"medya/gold-katalog/{dosyaAdiUzantisiz}.webp";
+                if (!string.IsNullOrWhiteSpace(m.OrijinalAd) && m.OrijinalAd.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    m.OrijinalAd = $"{dosyaAdiUzantisiz}.webp";
+                }
+                degisti = true;
+            }
+        }
+
+        if (degisti)
+        {
+            await vt.SaveChangesAsync();
+        }
+    }
+
     private static (string ModelAdi, string ModelKodu, string Slug, string Kategori, string[] Nitelikler) KapiModelBilgisiOlustur(string bagilYol)
     {
         var parcalar = bagilYol.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -2170,6 +2261,25 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FooterAciklama", Deger = "Gold Banyo delivers premium, trend and exclusive bathroom furniture collections from its production base in Bursa Nilufer to dealers and project partners.", Dil = "en" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "MesaiSaatleri", Deger = "09:00 - 18:00", Dil = "en" }
         );
+    }
+
+    private static async Task TohumlaResimOptimizasyonuAyarlariAsync(VizitLink3DDbContext vt)
+    {
+        var mevcutAnahtarlar = await vt.SistemAyarlari
+            .Where(a => a.Anahtar.StartsWith("Resim."))
+            .Select(a => a.Anahtar)
+            .ToListAsync();
+
+        if (!mevcutAnahtarlar.Contains("Resim.MaksimumKenar"))
+            vt.SistemAyarlari.Add(new SistemAyari { Anahtar = "Resim.MaksimumKenar", Deger = "1000", Tip = "int", Aciklama = "Yüklenen görseller için maksimum uzun kenar (px). 1K = 1024, 2K = 2048.", OlusturulmaTarihi = DateTime.UtcNow });
+
+        if (!mevcutAnahtarlar.Contains("Resim.Kalite"))
+            vt.SistemAyarlari.Add(new SistemAyari { Anahtar = "Resim.Kalite", Deger = "85", Tip = "int", Aciklama = "WebP dönüşüm kalitesi (50-100 önerilir).", OlusturulmaTarihi = DateTime.UtcNow });
+
+        if (!mevcutAnahtarlar.Contains("Resim.WebpZorunlu"))
+            vt.SistemAyarlari.Add(new SistemAyari { Anahtar = "Resim.WebpZorunlu", Deger = "true", Tip = "bool", Aciklama = "Tüm yüklenen görselleri WebP'ye dönüştür.", OlusturulmaTarihi = DateTime.UtcNow });
+
+        await vt.SaveChangesAsync();
     }
 
     private static async Task TohumlaProjeleriAsync(VizitLink3DDbContext vt)
@@ -2414,6 +2524,49 @@ public static class TohumVerisi
         ("dolce-100", 1),
         ("dolce-80", 2),
         ("dolce-plus-100-80", 1),
+        ("rocco-100", 1),
+        ("rocco-80", 1),
+        ("rocco-65", 1),
+        ("rocco-plus-100", 1),
+        ("rocco-plus-80", 1),
+        ("rocco-plus-65", 1),
+        ("vedenda-80", 2),
+        ("vedenda-plus-80", 2),
+        ("arte-80", 1),
+        ("arte-100", 2),
+        ("elsa-120", 1),
+        ("elsa-80", 2),
+        ("elsa-plus-80", 2),
+        ("elsa-60", 2),
+        ("oscar-100", 1),
+        ("oscar-80", 1),
+        ("picasso-80", 2),
+        ("mabel-100", 1),
+        ("mabel-80", 1),
+        ("valery-80", 2),
+        ("hira-115", 2),
+        ("perimelis-100", 1),
+        ("perimelis-80", 1),
+        ("perimelis-65", 1),
+        ("aria-100", 2),
+        ("aria-80", 2),
+        ("aria-65", 1),
+        ("tria-80", 2),
+        ("piedra-55", 3),
+        ("rio-80", 3),
+        ("risus-80", 3),
+        ("verto-50", 2),
+        ("verto-60", 1),
+        ("eco-80", 1),
+        ("eco-65", 1),
+        ("eco-plus-80", 2),
+        ("eco-plus-65", 1),
+        ("eco-plus-100", 2),
+        ("paco-65", 3),
+        ("paco-plus-65", 3),
+        ("nicci-60", 3),
+        ("adonis-50", 3),
+        ("oliy-45", 3),
     ];
 
     private static async Task GercekUrunFotograflariniKaydetAsync(VizitLink3DDbContext vt)
@@ -2439,7 +2592,7 @@ public static class TohumVerisi
                     vt.UrunMedyalari.Add(new UrunMedya
                     {
                         UrunId = urun.Id,
-                        MedyaUrl = $"/medya/gold-katalog/{slug}-real-{i}.png",
+                        MedyaUrl = $"/medya/gold-katalog/{slug}-real-{i}.{GoldKatalogUzanti($"{slug}-real-{i}")}",
                         MedyaTuru = "Resim",
                         SiraNo = i
                     });
@@ -2452,7 +2605,7 @@ public static class TohumVerisi
             // guncellemesinden BAGIMSIZ): orijinal seed'den kalan bozuk/var olmayan dosyaya
             // isaret eden eski degerleri de duzeltmek (self-healing) icin "zatenVarMi"
             // guard'inin disinda tutulur.
-            var dosyaAdi = $"{slug}-real-1.png";
+            var dosyaAdi = $"{slug}-real-1.{GoldKatalogUzanti($"{slug}-real-1")}";
             var dosyaYolu = $"medya/gold-katalog/{dosyaAdi}";
             var medya = await vt.Medyalar.FirstOrDefaultAsync(m => m.DosyaYolu == dosyaYolu && !m.SilindiMi);
             if (medya is null)
@@ -2493,7 +2646,7 @@ public static class TohumVerisi
             vt.UrunMedyalari.Add(new UrunMedya
             {
                 UrunId = urun.Id,
-                MedyaUrl = $"/medya/gold-katalog/{slug}-teknik.png",
+                MedyaUrl = $"/medya/gold-katalog/{slug}-teknik.{GoldKatalogUzanti($"{slug}-teknik")}",
                 MedyaTuru = "TeknikCizim",
                 SiraNo = 1
             });
@@ -2966,7 +3119,7 @@ public static class TohumVerisi
 
             medyaKuyrugu.AddRange(
                 katalogUrunu.EkGaleriSayfalari.Select((sayfa, index) => (
-                    Url: $"/medya/gold-katalog/sayfa-{sayfa:000}-spread.png",
+                    Url: $"/medya/gold-katalog/sayfa-{sayfa:000}-spread.{GoldKatalogUzanti($"sayfa-{sayfa:000}-spread")}",
                     Ana: false,
                     Sira: index + 4)));
 

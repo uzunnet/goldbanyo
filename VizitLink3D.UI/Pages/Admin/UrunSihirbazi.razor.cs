@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
 using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.Ortak.Modeller.Medya;
@@ -25,13 +26,38 @@ public partial class UrunSihirbazi : ComponentBase
 
     // ─── OZET URL'LERI ──────────────────────────────────────────────────
     private string UrunOnizlemeUrl => $"/urunler/{_urunForm.Slug}";
+    private UrunUcBoyutModeli? SeciliUcBoyutModel =>
+        _seciliModelId.HasValue
+            ? _modeller.FirstOrDefault(m => m.Id == _seciliModelId.Value)
+            : _modeller.OrderByDescending(m => m.VarsayilanMi).ThenBy(m => m.OlusturulmaTarihi).FirstOrDefault();
+
+    private string? ModelDosyaUrl(UrunUcBoyutModeli? model)
+    {
+        if (model is null)
+            return null;
+
+        var yol = string.IsNullOrWhiteSpace(model.ModelYolu) ? model.ModelDosyaYolu : model.ModelYolu;
+        if (string.IsNullOrWhiteSpace(yol))
+            return null;
+
+        return yol.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? yol
+            : $"{Api.ApiBaseUrl}{(yol.StartsWith("/") ? yol : "/" + yol)}";
+    }
 
     // ─── DURUM ──────────────────────────────────────────────────────────
     private bool _kaydedildi;
     private int? _urunId;
 
     // ─── BUTON METODLARI ────────────────────────────────────────────────
-    private void YeniUrunBaslat() { _kaydedildi = false; _urunId = null; _urunForm = new Urun { AktifMi = true }; }
+    private void YeniUrunBaslat()
+    {
+        _kaydedildi = false;
+        _urunId = null;
+        _urunForm = new Urun { AktifMi = true };
+        _secilenMedyaId = null;
+        _urunMedyalari = [];
+    }
     private void Sekme1() => _aktifSekme = 1;
     private async Task Sekme2() { _aktifSekme = 2; await Tab2Yukle(); }
     private async Task Sekme3() { _aktifSekme = 3; await Tab3Yukle(); }
@@ -54,9 +80,10 @@ public partial class UrunSihirbazi : ComponentBase
 
     // ─── TAB 2 ──────────────────────────────────────────────────────────
     private long? _secilenMedyaId;
-    private string? _galeriMedyaUrl;
-    private string? _teknikCizimUrl;
+    private List<UrunMedya> _urunMedyalari = [];
     private bool _tab2Yukleniyor;
+
+    private static readonly Regex MedyaIdRegex = new(@"/api/medya/dosya/(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     // ─── TAB 3 ──────────────────────────────────────────────────────────
     private List<UrunUcBoyutModeli> _modeller = [];
@@ -132,11 +159,17 @@ public partial class UrunSihirbazi : ComponentBase
     // ─── TAB 2 ──────────────────────────────────────────────────────────
     private async Task Tab2Yukle()
     {
-        _tab2Yukleniyor = true; StateHasChanged();
+        _tab2Yukleniyor = true;
+        StateHasChanged();
         if (_urunId.HasValue)
         {
             var u = await Api.GetAsync<Urun>($"api/urunler/{_urunId.Value}");
-            if (u != null) { _urunForm = u; _secilenMedyaId = u.AnaGorselMedyaId; }
+            if (u != null)
+            {
+                _urunForm = u;
+                _secilenMedyaId = u.AnaGorselMedyaId;
+                _urunMedyalari = await Api.GetAsync<List<UrunMedya>>($"api/urunler/{_urunId.Value}/medyalar") ?? [];
+            }
         }
         _tab2Yukleniyor = false;
     }
@@ -156,26 +189,175 @@ public partial class UrunSihirbazi : ComponentBase
                 await Api.PutAsync<Urun>($"api/urunler/{_urunId.Value}", _urunForm);
             }
             Snackbar.Add(dil.T("admin.urun.anaGorselSecildi", "Ana görsel seçildi."), Severity.Success);
+            await Tab2Yukle();
         }
+    }
+
+    private async Task GaleriMedyaSec()
+    {
+        if (!_urunId.HasValue)
+            return;
+
+        var mevcutIdler = _urunMedyalari
+            .Select(m => UrunMedyaIdCikar(m.MedyaUrl))
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .ToList();
+
+        var parametreler = new DialogParameters
+        {
+            { "CokluSecim", true },
+            { "MevcutSeciliIdler", mevcutIdler },
+            { "BaslangicTipi", MedyaTipi.Resim }
+        };
+        var secenekler = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true, CloseButton = true };
+        var dialog = await DialogServisi.ShowAsync<VizitLink3D.UI.Bilesenler.Medya.MedyaSecici>(dil.T("admin.medya.gorselSec", "Görsel seç"), parametreler, secenekler);
+        var sonuc = await dialog.Result;
+        if (sonuc is not { Canceled: false, Data: List<long> medyaIdleri } || medyaIdleri.Count == 0)
+            return;
+
+        var sira = _urunMedyalari.Count + 1;
+        foreach (var medyaId in medyaIdleri.Where(medyaId => !_urunMedyalari.Any(m => UrunMedyaIdCikar(m.MedyaUrl) == medyaId)))
+            await GaleriMedyaEkleAsync($"/api/medya/dosya/{medyaId}", "Resim", sira++);
+
+        await Tab2Yukle();
     }
 
     private async Task GaleriEkle()
     {
-        if (string.IsNullOrWhiteSpace(_galeriMedyaUrl) || !_urunId.HasValue) return;
-        await Api.PostAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medya", new { MedyaUrl = _galeriMedyaUrl, MedyaTuru = "Gorsel", SiraNo = 1 });
-        _galeriMedyaUrl = null;
-        Snackbar.Add(dil.T("admin.urun.galeriyeEklendi", "Galeriye eklendi."), Severity.Success);
+        // Havuz dışı URL ekleme kapatildi.
+        Snackbar.Add(dil.T("admin.urun.sadeceHavuz", "Yalnızca medya havuzundan seçim yapabilirsiniz."), Severity.Info);
     }
 
-    private async Task TeknikCizimEkle()
+    private async Task TeknikCizimMedyaSec()
     {
-        if (string.IsNullOrWhiteSpace(_teknikCizimUrl) || !_urunId.HasValue) return;
-        await Api.PostAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medya", new { MedyaUrl = _teknikCizimUrl, MedyaTuru = "TeknikCizim", SiraNo = 1 });
-        _teknikCizimUrl = null;
-        Snackbar.Add(dil.T("admin.urun.teknikCizimEklendi", "Teknik çizim eklendi."), Severity.Success);
+        if (!_urunId.HasValue)
+            return;
+
+        var mevcutIdler = _urunMedyalari
+            .Select(m => UrunMedyaIdCikar(m.MedyaUrl))
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .ToList();
+
+        var parametreler = new DialogParameters
+        {
+            { "CokluSecim", false },
+            { "MevcutSeciliIdler", mevcutIdler },
+            { "BaslangicTipi", MedyaTipi.Resim }
+        };
+        var secenekler = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true, CloseButton = true };
+        var dialog = await DialogServisi.ShowAsync<VizitLink3D.UI.Bilesenler.Medya.MedyaSecici>(dil.T("admin.medya.gorselSec", "Görsel seç"), parametreler, secenekler);
+        var sonuc = await dialog.Result;
+        if (sonuc is not { Canceled: false, Data: List<long> medyaIdleri } || medyaIdleri.Count == 0)
+            return;
+
+        var medyaId = medyaIdleri[0];
+        await GaleriMedyaEkleAsync($"/api/medya/dosya/{medyaId}", "TeknikCizim", _urunMedyalari.Count + 1);
+        await Tab2Yukle();
+    }
+
+    private async Task GaleriMedyaEkleAsync(string medyaUrl, string medyaTuru, int siraNo)
+    {
+        if (!_urunId.HasValue)
+            return;
+
+        var cevap = await Api.PostAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medya", new
+        {
+            MedyaUrl = medyaUrl,
+            MedyaTuru = medyaTuru,
+            SiraNo = siraNo
+        });
+
+        if (cevap?.BasariliMi == true)
+            Snackbar.Add(dil.T("admin.urun.galeriyeEklendi", "Galeriye eklendi."), Severity.Success);
+        else
+            Snackbar.Add(cevap?.Mesaj ?? dil.T("ortak.islemBasarisiz", "İşlem tamamlanamadı."), Severity.Error);
+    }
+
+    private async Task MedyaSirasiniDegistir(UrunMedya medya, int fark)
+    {
+        if (!_urunId.HasValue)
+            return;
+
+        var cevap = await Api.PutAsync<UrunMedya>($"api/urunler/{_urunId.Value}/medyalar/{medya.Id}/sira", new UrunMedya
+        {
+            SiraNo = Math.Max(1, medya.SiraNo + fark)
+        });
+
+        Snackbar.Add(
+            cevap?.BasariliMi == true
+                ? dil.T("admin.urun.gorselSirasiGuncellendi", "Görsel sırası güncellendi.")
+                : cevap?.Mesaj ?? dil.T("ortak.islemBasarisiz", "İşlem tamamlanamadı."),
+            cevap?.BasariliMi == true ? Severity.Success : Severity.Error);
+        await Tab2Yukle();
+    }
+
+    private async Task AnaGorselYap(UrunMedya medya)
+    {
+        if (!_urunId.HasValue)
+            return;
+
+        var medyaId = UrunMedyaIdCikar(medya.MedyaUrl);
+        if (!medyaId.HasValue)
+        {
+            Snackbar.Add(dil.T("admin.urun.anaGorselHavuzGerekli", "Ana görsel için medya havuzundaki bir görsel seçin."), Severity.Warning);
+            return;
+        }
+
+        _urunForm.AnaGorselMedyaId = medyaId.Value;
+        var cevap = await Api.PutAsync<Urun>($"api/urunler/{_urunId.Value}", _urunForm);
+        Snackbar.Add(
+            cevap?.BasariliMi == true
+                ? dil.T("admin.urun.anaGorselSecildi", "Ana görsel seçildi.")
+                : cevap?.Mesaj ?? dil.T("ortak.islemBasarisiz", "İşlem tamamlanamadı."),
+            cevap?.BasariliMi == true ? Severity.Success : Severity.Error);
+        await Tab2Yukle();
+    }
+
+    private async Task MedyaBaglantisiniKaldirOnay(UrunMedya medya)
+    {
+        if (!_urunId.HasValue)
+            return;
+
+        var onay = await DialogServisi.ShowMessageBoxAsync(
+            dil.T("admin.urun.gorselKaldirma", "Görseli galeriden kaldır"),
+            dil.T("admin.urun.gorselKaldirmaAciklama", "Görsel bu ürüne bağlı olmaktan çıkarılacak. Devam edilsin mi?"),
+            yesText: dil.T("ortak.kaldir", "Kaldır"),
+            cancelText: dil.T("ortak.iptal", "İptal"));
+
+        if (onay != true)
+            return;
+
+        var cevap = await Api.DeleteAsync($"api/urunler/{_urunId.Value}/medyalar/{medya.Id}");
+        Snackbar.Add(
+            cevap?.BasariliMi == true
+                ? dil.T("admin.urun.galeriGorselKaldirildi", "Görsel galeriden kaldırıldı.")
+                : cevap?.Mesaj ?? dil.T("ortak.islemBasarisiz", "İşlem tamamlanamadı."),
+            cevap?.BasariliMi == true ? Severity.Success : Severity.Error);
+        await Tab2Yukle();
+    }
+
+    private static long? UrunMedyaIdCikar(string medyaUrl)
+    {
+        if (string.IsNullOrWhiteSpace(medyaUrl))
+            return null;
+
+        var eslesme = MedyaIdRegex.Match(medyaUrl);
+        return eslesme.Success && long.TryParse(eslesme.Groups[1].Value, out var id) ? id : null;
     }
 
     // ─── TAB 3 ──────────────────────────────────────────────────────────
+    private string UrunMedyaGorselUrl(UrunMedya medya)
+    {
+        if (string.IsNullOrWhiteSpace(medya.MedyaUrl))
+            return "/medya/vizitlink3d_default.png";
+
+        return medya.MedyaUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? medya.MedyaUrl
+            : $"{Api.ApiBaseUrl}{(medya.MedyaUrl.StartsWith("/") ? medya.MedyaUrl : "/" + medya.MedyaUrl)}";
+    }
+
     private async Task Tab3Yukle()
     {
         _tab3Yukleniyor = true; StateHasChanged();

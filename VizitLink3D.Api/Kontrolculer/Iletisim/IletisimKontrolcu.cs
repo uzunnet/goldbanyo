@@ -1,30 +1,34 @@
-﻿using VizitLink3D.Api.Modeller;
-using VizitLink3D.Api.VeriTabani;
-using VizitLink3D.Ortak.Modeller;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using VizitLink3D.Api.Modeller;
+using VizitLink3D.Api.VeriTabani;
+using VizitLink3D.Ortak.Modeller;
 
 namespace VizitLink3D.Api.Kontrolculer.Iletisim;
 
 /// <summary>
-/// IletisimKontrolcu � �leti�im formu mesajlar�n� y�neten kontrolc�d�r.
-/// POST /api/iletisim � Yeni mesaj veritaban�na kaydeder (herkes eri�ebilir).
-/// GET /api/iletisim/mesajlar � Admin: t�m mesajlar� listeler (yetki gerekir).
-/// PATCH /api/iletisim/mesajlar/{id}/okundu � Admin: mesaj� okundu i�aretler.
-/// DELETE /api/iletisim/mesajlar/{id} � Admin: mesaj� siler.
+/// IletisimKontrolcu - iletişim formu mesajlarını yöneten kontrolcü.
+/// POST /api/iletisim - yeni mesajı veritabanına kaydeder.
+/// GET /api/iletisim/mesajlar - admin mesaj listesini alır.
+/// PATCH /api/iletisim/mesajlar/{id}/okundu - admin okundu işaretler.
+/// DELETE /api/iletisim/mesajlar/{id} - admin arşivler.
 /// </summary>
 [ApiController]
 [Route("api/iletisim")]
 public class IletisimKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 {
-    // ��� Yeni Mesaj Kaydet (Herkese a��k) �����������������������������������
     [HttpPost]
     [AllowAnonymous]
+    [EnableRateLimiting("Genel")]
     public async Task<IActionResult> MesajKaydet([FromBody] IletisimMesajiGiris giris)
     {
         if (string.IsNullOrWhiteSpace(giris.AdSoyad) || string.IsNullOrWhiteSpace(giris.Email) || string.IsNullOrWhiteSpace(giris.Mesaj))
             return BadRequest(new { BasariliMi = false, Mesaj = "Zorunlu alanlar eksik." });
+
+        if (giris.AdSoyad.Length > 200 || giris.Email.Length > 254 || (giris.Telefon?.Length ?? 0) > 50 || (giris.Konu?.Length ?? 0) > 2000 || giris.Mesaj.Length > 8000)
+            return BadRequest(new { BasariliMi = false, Mesaj = "Gonderim cok buyuk." });
 
         var yeniMesaj = new IletisimMesaji
         {
@@ -40,10 +44,9 @@ public class IletisimKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         vt.IletisimMesajlari.Add(yeniMesaj);
         await vt.SaveChangesAsync();
 
-        return Ok(new { BasariliMi = true, Mesaj = "Mesaj�n�z al�nd�. En k�sa s�rede d�n�� yapaca��z." });
+        return Ok(new { BasariliMi = true, Mesaj = "Mesajiniz alindi. En kisa surede donus yapacagiz." });
     }
 
-    // ��� T�m Mesajlar� Listele (Admin) ���������������������������������������
     [HttpGet("mesajlar")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> MesajlariniGetir([FromQuery] bool? okundu = null, [FromQuery] int sayfa = 1, [FromQuery] int sayfaBoyutu = 20)
@@ -70,7 +73,6 @@ public class IletisimKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         return Ok(new { BasariliMi = true, Veri = new { Toplam = toplam, Mesajlar = mesajlar } });
     }
 
-    // ��� Mesaj� Okundu ��aretle (Admin) �������������������������������������
     [HttpPatch("mesajlar/{id:int}/okundu")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> OkunduIsaretle(int id)
@@ -82,22 +84,18 @@ public class IletisimKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         return Ok(new { BasariliMi = true });
     }
 
-    // ��� Mesaj� Ar�ivle / Sil (Admin) ����������������������������������������
     [HttpDelete("mesajlar/{id:int}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> MesajiSil(int id)
     {
         var mesaj = await vt.IletisimMesajlari.FindAsync(id);
         if (mesaj is null) return NotFound();
-        mesaj.CevaplandiMi = true; // Ar�ivleme yerine Cevapland� i�aretle
+        mesaj.CevaplandiMi = true;
         await vt.SaveChangesAsync();
         return Ok(new { BasariliMi = true });
     }
 }
 
-/// <summary>
-/// IletisimMesajiGiris � Kullan�c�n�n ileti�im formunda doldurdu�u alanlar� temsil eden DTO.
-/// </summary>
 public record IletisimMesajiGiris(
     string AdSoyad,
     string Email,
@@ -105,7 +103,3 @@ public record IletisimMesajiGiris(
     string? Konu,
     string Mesaj
 );
-
-
-
-

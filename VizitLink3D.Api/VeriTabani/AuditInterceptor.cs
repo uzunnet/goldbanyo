@@ -33,6 +33,9 @@ public class AuditInterceptor : SaveChangesInterceptor
 
         var degisiklikler = baglam.ChangeTracker.Entries()
             .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+            // AuditLog entity'sinin kendisi icin AuditLog yazma (sonsuz dongu / recursion onleyici).
+            // Tohum verisi ve toplu islemlerde yuzlerce gereksiz AuditLog satirini de engeller.
+            .Where(e => e.Entity is not AuditLog)
             .ToList();
 
         if (!degisiklikler.Any())

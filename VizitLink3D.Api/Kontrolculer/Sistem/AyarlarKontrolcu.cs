@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Ortak.Modeller;
+using VizitLink3D.Ortak.Modeller.Ayarlar;
+using VizitLink3D.Ortak.Sabitler;
+using VizitLink3D.Api.Moduller.Ayarlar.Dogrulayicilar;
 
 namespace VizitLink3D.Api.Kontrolculer.Sistem;
 
@@ -59,6 +62,47 @@ public class AyarlarKontrolcu(VizitLink3DDbContext db) : ControllerBase
         return Ok(new Cevap<object> { BasariliMi = true, Mesaj = "Ayarlar kaydedildi" });
     }
 
+    [HttpGet("resim-optimizasyonu")]
+    public async Task<Cevap<ResimOptimizasyonuAyarDto>> GetResimOptimizasyonu(CancellationToken iptalToken)
+    {
+        var maks = await db.SistemAyarlari.AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Anahtar == SistemAyariSabitleri.Resim.MaksimumKenar, iptalToken);
+        var kalite = await db.SistemAyarlari.AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Anahtar == SistemAyariSabitleri.Resim.Kalite, iptalToken);
+        var webp = await db.SistemAyarlari.AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Anahtar == SistemAyariSabitleri.Resim.WebpZorunlu, iptalToken);
+
+        return Cevap<ResimOptimizasyonuAyarDto>.Basarili(new ResimOptimizasyonuAyarDto
+        {
+            MaksimumKenar = maks != null && int.TryParse(maks.Deger, out var mk) ? mk : 1000,
+            Kalite = kalite != null && int.TryParse(kalite.Deger, out var k) ? k : 85,
+            WebpZorunlu = webp != null && bool.TryParse(webp.Deger, out var w) ? w : true
+        });
+    }
+
+    [HttpPost("resim-optimizasyonu")]
+    public async Task<Cevap<ResimOptimizasyonuAyarDto>> KaydetResimOptimizasyonuAsync(
+        [FromBody] ResimOptimizasyonuAyarDto dto, CancellationToken iptalToken)
+    {
+        var dogrulayici = new ResimOptimizasyonuAyarDogrulayici();
+        var dogrulamaSonucu = await dogrulayici.ValidateAsync(dto, iptalToken);
+        if (!dogrulamaSonucu.IsValid)
+        {
+            var hatalar = dogrulamaSonucu.Errors.Select(e => e.ErrorMessage).ToList();
+            return Cevap<ResimOptimizasyonuAyarDto>.Hata("Doğrulama hatası.", hatalar);
+        }
+
+        await AyarUpsertAsync(SistemAyariSabitleri.Resim.MaksimumKenar, dto.MaksimumKenar.ToString(), "int",
+            "Yüklenen görseller için maksimum uzun kenar (px). 1K = 1024, 2K = 2048.", iptalToken);
+        await AyarUpsertAsync(SistemAyariSabitleri.Resim.Kalite, dto.Kalite.ToString(), "int",
+            "WebP dönüşüm kalitesi (50-100 önerilir).", iptalToken);
+        await AyarUpsertAsync(SistemAyariSabitleri.Resim.WebpZorunlu, dto.WebpZorunlu.ToString().ToLowerInvariant(), "bool",
+            "Tüm yüklenen görselleri WebP'ye dönüştür.", iptalToken);
+
+        await db.SaveChangesAsync(iptalToken);
+        return Cevap<ResimOptimizasyonuAyarDto>.Basarili(dto, "Görsel optimizasyonu ayarları kaydedildi.");
+    }
+
     [HttpPost("analytics")]
     public async Task<IActionResult> AnalyticsKaydet([FromBody] AnalyticsAyarIstegi istek)
     {
@@ -112,6 +156,27 @@ public class AyarlarKontrolcu(VizitLink3DDbContext db) : ControllerBase
 
         mevcut.Deger = deger ?? string.Empty;
         mevcut.GuncellenmeTarihi = DateTime.UtcNow;
+    }
+
+    private async Task AyarUpsertAsync(string anahtar, string deger, string tip, string aciklama, CancellationToken iptalToken)
+    {
+        var mevcut = await db.SistemAyarlari.FirstOrDefaultAsync(a => a.Anahtar == anahtar, iptalToken);
+        if (mevcut is null)
+        {
+            db.SistemAyarlari.Add(new SistemAyari
+            {
+                Anahtar = anahtar,
+                Deger = deger,
+                Tip = tip,
+                Aciklama = aciklama,
+                OlusturulmaTarihi = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            mevcut.Deger = deger;
+            mevcut.GuncellenmeTarihi = DateTime.UtcNow;
+        }
     }
 
     public sealed record AnalyticsAyarIstegi(string? GoogleAnalyticsId, string? FacebookPixelId, string? GoogleTagManagerId);

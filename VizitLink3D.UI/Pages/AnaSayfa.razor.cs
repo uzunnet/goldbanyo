@@ -24,15 +24,7 @@ public partial class AnaSayfa : IDisposable
         }
 
         await JS.InvokeVoidAsync("eval", @"
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('gorunur');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.gb-reveal').forEach(el => observer.observe(el));
+            document.querySelectorAll('.gb-reveal').forEach(el => el.classList.add('gorunur'));
         ");
     }
 

@@ -146,6 +146,14 @@
                 <MudTextField @bind-Value="_eposta" Label="@dil.T("admin.ayarlar.eposta", "E-Posta Adresi")" Variant="Variant.Outlined" Class="mb-4" />
                 <MudTextField @bind-Value="_adres" Label="@dil.T("admin.ayarlar.adres", "Adres")" Variant="Variant.Outlined" Lines="2" Class="mb-4" />
                 <MudTextField @bind-Value="_whatsapp" Label="@dil.T("admin.ayarlar.whatsapp", "WhatsApp Numarası")" Variant="Variant.Outlined" Class="mb-4" />
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="_enlem" Label="@dil.T("admin.ayarlar.enlem", "Enlem")" Variant="Variant.Outlined" Class="mb-4" Placeholder="40.2025" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="_boylam" Label="@dil.T("admin.ayarlar.boylam", "Boylam")" Variant="Variant.Outlined" Class="mb-4" Placeholder="28.8871" />
+                    </MudItem>
+                </MudGrid>
             </MudCardContent>
             <MudCardActions>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Kaydet(2)" Disabled="@_yukleniyor">
@@ -170,6 +178,44 @@
             <MudCardActions>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Kaydet(3)" Disabled="@_yukleniyor">
                     @(_yukleniyor ? dil.T("ortak.kaydediliyor", "Kaydediliyor...") : dil.T("ortak.kaydet", "Kaydet"))
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudCard Elevation="2" Class="mb-4">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@dil.T("ayar.resimOptimizasyonu.baslik", "Görsel Optimizasyonu")</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">@dil.T("ayar.resimOptimizasyonu.aciklama", "Yüklenen görsellerin otomatik boyutlandırma ve WebP dönüşüm ayarları.")</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.body2" Class="mb-2">
+                            @dil.T("ayar.resimOptimizasyonu.maksimumKenar", "Maksimum Kenar (px):") <strong>@_resimMaksimumKenar</strong>
+                        </MudText>
+                        <MudSlider @bind-Value="_resimMaksimumKenar" Min="256" Max="4096" Step="64" Class="mb-4" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.body2" Class="mb-2">
+                            @dil.T("ayar.resimOptimizasyonu.kalite", "WebP Kalitesi:") <strong>@_resimKalite</strong>
+                        </MudText>
+                        <MudSlider @bind-Value="_resimKalite" Min="50" Max="100" Step="1" Class="mb-4" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudSwitch T="bool" @bind-Checked="_resimWebpZorunlu" Label="@dil.T("ayar.resimOptimizasyonu.webpZorunlu", "Tüm görselleri WebP formatına dönüştür")" Color="Color.Primary" Class="mb-4" />
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ResimAyarlariKaydet" Disabled="@_yukleniyor">
+                    @(_yukleniyor ? dil.T("ortak.kaydediliyor", "Kaydediliyor...") : dil.T("ortak.kaydet", "Kaydet"))
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="TopluYenidenBoyutlandir" Disabled="@_yukleniyor">
+                    @dil.T("ayar.resimOptimizasyonu.topluIslem", "Tüm Mevcut Görselleri Şimdi Yeniden Boyutlandır")
                 </MudButton>
             </MudCardActions>
         </MudCard>

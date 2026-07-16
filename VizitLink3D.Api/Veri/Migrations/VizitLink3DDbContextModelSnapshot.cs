@@ -3226,6 +3226,9 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("SiraNo")
                         .HasColumnType("INTEGER");
 

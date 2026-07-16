@@ -1,7 +1,4 @@
 @page "/yonetim/firmalar"
-@using VizitLink3D.Ortak.Modeller
-@inject ApiIstemcisi api
-@inject MudBlazor.ISnackbar Snackbar
 
 <PageTitle>Firma Yönetim - VizitLink3D</PageTitle>
 
@@ -103,78 +100,4 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    private List<Firma>? _firmalar;
-    private Firma? _seciliFirma;
-    private bool _duzenleDialoguAcik = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await FirmalariYukleAsync();
-    }
-
-    private async Task FirmalariYukleAsync()
-    {
-        try
-        {
-            _firmalar = await api.GetAsync<List<Firma>>("api/firma");
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Firmalar yüklenemedi: {ex.Message}", Severity.Error);
-        }
-    }
-
-    private async Task DuzenleAcAsync(Firma firma)
-    {
-        _seciliFirma = new Firma
-        {
-            Id = firma.Id,
-            Ad = firma.Ad,
-            Unvan = firma.Unvan,
-            Logo = firma.Logo,
-            SiteTema = firma.SiteTema,
-            AdminTema = firma.AdminTema,
-            TasarimRengi1 = firma.TasarimRengi1,
-            TasarimRengi2 = firma.TasarimRengi2,
-            TasarimRengi3 = firma.TasarimRengi3
-        };
-        _duzenleDialoguAcik = true;
-        await Task.CompletedTask;
-    }
-
-    private void DuzenleKapat()
-    {
-        _duzenleDialoguAcik = false;
-        _seciliFirma = null;
-    }
-
-    private async Task KaydetAsync()
-    {
-        if (_seciliFirma == null) return;
-
-        try
-        {
-            var dto = new
-            {
-                _seciliFirma.Ad,
-                _seciliFirma.Unvan,
-                _seciliFirma.Logo,
-                _seciliFirma.SiteTema,
-                _seciliFirma.AdminTema,
-                _seciliFirma.TasarimRengi1,
-                _seciliFirma.TasarimRengi2,
-                _seciliFirma.TasarimRengi3
-            };
-
-            await api.PutAsync<Firma>($"api/firma/{_seciliFirma.Id}", dto);
-            Snackbar.Add($"{_seciliFirma.Ad} başarıyla güncellendi.", Severity.Success);
-            DuzenleKapat();
-            await FirmalariYukleAsync();
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Kayıt başarısız: {ex.Message}", Severity.Error);
-        }
-    }
-}

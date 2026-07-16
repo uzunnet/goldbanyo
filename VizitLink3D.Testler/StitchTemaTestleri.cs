@@ -14,14 +14,14 @@ public class StitchTemaTestleri
     // ─── A) TEMA SABİTLERİ (CokluTemaServisi) ──────────────────────────
 
     [Fact]
-    public void CokluTemaServisi_VarsayilanTema_AurelianOnyxOlmali()
+    public void CokluTemaServisi_VarsayilanTema_GoldOlmali()
     {
         var alan = typeof(CokluTemaServisi).GetField("VARSAYILAN_TEMA",
             BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
 
         Assert.NotNull(alan);
         var deger = alan!.GetValue(null) as string;
-        Assert.Equal("aurelian-onyx", deger);
+        Assert.Equal("gold", deger);
     }
 
     [Fact]
@@ -101,14 +101,14 @@ public class StitchTemaTestleri
 
     private static readonly string TemaKlasoru = Path.Combine(
         AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..",
-        "VizitLink3D.UI", "wwwroot", "css", "temalar", "aurelian-onyx");
+        "VizitLink3D.UI", "wwwroot", "css", "temalar", "gold");
 
     [Fact]
     public void AurelianOnyx_TokensCss_TemaVurguTanimli()
     {
         var tamYol = Path.GetFullPath(Path.Combine(TemaKlasoru, "tokens.css"));
         var icerik = File.ReadAllText(tamYol);
-        Assert.Contains("--tema-vurgu: #d4af37", icerik);
+        Assert.Contains("--tema-vurgu: #FFD700", icerik);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class StitchTemaTestleri
         var tamYol = Path.GetFullPath(Path.Combine(TemaKlasoru, "bilesenler.css"));
         var icerik = File.ReadAllText(tamYol);
 
-        var siniflar = new[] { ".navbar", ".urun-kart", ".hero-overlay", ".footer" };
+        var siniflar = new[] { ".navbar", ".urun-kart", ".gb-rozet", ".footer" };
         foreach (var sinif in siniflar)
         {
             Assert.Contains(sinif, icerik);
@@ -130,7 +130,7 @@ public class StitchTemaTestleri
         var tamYol = Path.GetFullPath(Path.Combine(TemaKlasoru, "animasyonlar.css"));
         var icerik = File.ReadAllText(tamYol);
 
-        Assert.Contains("@keyframes tema-goruntu-belir", icerik);
+        Assert.Contains("@keyframes gold-goruntu-belir", icerik);
     }
 
     // ─── D) YENİ SAYFALAR ───────────────────────────────────────────────
@@ -254,7 +254,7 @@ public class StitchTemaTestleri
             AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..",
             "VizitLink3D.UI", "Layout", "VizitLink3DDuzen.razor.cs"));
         var icerik = File.ReadAllText(layoutYolu);
-        Assert.Contains("'aurelian-onyx'", icerik);
+        Assert.Contains("\"gold\"", icerik);
     }
 
     [Fact]
@@ -264,6 +264,6 @@ public class StitchTemaTestleri
             AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..",
             "VizitLink3D.UI", "wwwroot", "index.html"));
         var icerik = File.ReadAllText(indexYolu);
-        Assert.Contains("data-tema-id=\"aurelian-onyx\"", icerik);
+        Assert.Contains("data-tema-id=\"gold\"", icerik);
     }
 }
