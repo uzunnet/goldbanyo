@@ -19,6 +19,9 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
+    - name: Blazor WebAssembly araclarini kur
+      run: dotnet workload install wasm-tools
+
     - name: Bagimliliklari geri yukle
       run: dotnet restore VizitLink3D.slnx
 
