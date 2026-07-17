@@ -169,6 +169,10 @@ using (var kapsam = uygulama.Services.CreateScope())
     vt.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsLock\";");
     await vt.Database.MigrateAsync();
     }
+    // Bu düzeltme, üretimde tohumlama kapalı olsa bile statik katalog dosyası
+    // PNG'den WebP'ye dönüştürülmüş ürünlerin medya yolunu güvenli biçimde güncel tutar.
+    await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
+
     // Tohum verisi sadece Development ortaminda calissin (best practice).
     // Production'da DB zaten dolu, tohum verisi gereksiz islem + potansiyel AuditLog dongusu riski tasir.
     // Gerekirse FOR_SEED=1 ortam degiskeni ile zorla calistirilabilir.

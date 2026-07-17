@@ -2291,7 +2291,7 @@ public static class TohumVerisi
     /// ONCE calistirilmalidir; boylece o metotlardaki "zaten var mi" / URL esitligi
     /// kontrolleri duzeltilmis (guncel) kayitlarla calisir ve mukerrer satir olusmaz.
     /// </summary>
-    private static async Task GoldKatalogMedyaUzantilariniDuzeltAsync(VizitLink3DDbContext vt)
+    public static async Task GoldKatalogMedyaUzantilariniDuzeltAsync(VizitLink3DDbContext vt)
     {
         var urunMedyalari = await vt.UrunMedyalari
             .Where(m => m.MedyaUrl.StartsWith("/medya/gold-katalog/") && m.MedyaUrl.EndsWith(".png"))
