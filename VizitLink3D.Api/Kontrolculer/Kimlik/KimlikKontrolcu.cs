@@ -51,7 +51,10 @@ public class KimlikKontrolcu(VizitLink3DDbContext vt, IConfiguration yapilandirm
 
     private string TokenOlustur(Kullanici kullanici)
     {
-        var anahtar = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(yapilandirma["Jwt:Anahtar"]!));
+        var jwtAnahtar = Environment.GetEnvironmentVariable("VIZITLINK3D_JWT_KEY")
+            ?? yapilandirma["Jwt:Anahtar"]
+            ?? throw new InvalidOperationException("JWT anahtarı yapılandırılmamış.");
+        var anahtar = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAnahtar));
         var imzaLayici = new SigningCredentials(anahtar, SecurityAlgorithms.HmacSha256);
         var talepler = new[]
         {

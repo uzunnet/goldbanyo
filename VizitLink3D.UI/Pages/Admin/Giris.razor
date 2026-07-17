@@ -32,6 +32,7 @@
                             </span>
                             <MudTextField @bind-Value="_kullaniciAdi"
                                           Variant="Variant.Text"
+                                          Immediate="true"
                                           Class="dl-login-field-input"
                                           Required="true"
                                           RequiredError="@dil.T("admin.giris.kullaniciadi.zorunlu","Kullanıcı adı zorunludur.")"
@@ -50,6 +51,7 @@
                             <MudTextField @bind-Value="_sifre"
                                           Variant="Variant.Text"
                                           InputType="InputType.Password"
+                                          Immediate="true"
                                           Class="dl-login-field-input"
                                           Required="true"
                                           RequiredError="@dil.T("admin.giris.sifre.zorunlu","Şifre zorunludur.")"
