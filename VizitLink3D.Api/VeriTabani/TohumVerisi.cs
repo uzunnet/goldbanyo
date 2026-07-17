@@ -394,7 +394,10 @@ public static class TohumVerisi
         var yolHaritasi = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             { "/medya/slaytlar/Lake Kapılar, DSL  C110, Camlı Model.jpg", "/medya/gold-katalog/sayfa-010-hero.png" },
-            { "/medya/slaytlar/Lake Kapılar, DSL 113,.jpg",                "/medya/gold-katalog/sayfa-006-hero.png" }
+            { "/medya/slaytlar/Lake Kapılar, DSL 113,.jpg",                "/medya/gold-katalog/sayfa-006-hero.png" },
+            { "/medya/gold-katalog/anasayfa-slayt-1.png",                  "/medya/gold-katalog/anasayfa-slayt-1.webp" },
+            { "/medya/gold-katalog/anasayfa-slayt-2.png",                  "/medya/gold-katalog/anasayfa-slayt-2.webp" },
+            { "/medya/gold-katalog/anasayfa-slayt-3.png",                  "/medya/gold-katalog/anasayfa-slayt-3.webp" }
         };
 
         var guncelleme = false;
@@ -402,6 +405,9 @@ public static class TohumVerisi
         {
             var slaytlar = await vt.Slaytlar.Where(s => s.ArkaplanResim == eski).ToListAsync();
             foreach (var s in slaytlar) { s.ArkaplanResim = yeni; guncelleme = true; }
+
+            var mobilSlaytlar = await vt.Slaytlar.Where(s => s.ArkaplanResimMobil == eski).ToListAsync();
+            foreach (var s in mobilSlaytlar) { s.ArkaplanResimMobil = yeni; guncelleme = true; }
         }
         if (guncelleme) await vt.SaveChangesAsync();
     }
