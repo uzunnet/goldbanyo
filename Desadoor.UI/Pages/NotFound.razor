@@ -1,9 +1,0 @@
-@page "/not-found"
-@layout Layout.DesaDoorDuzen
-@inject Desadoor.UI.Servisler.DilServisi dil
-
-<h3>@dil.T("hata.404.baslik", "Sayfa Bulunamadı")</h3>
-<p>@dil.T("hata.404.aciklama", "Aradığınız sayfa taşınmış veya kaldırılmış olabilir.")</p>
-<MudButton Href="/" Variant="Variant.Filled" Color="Color.Primary">
-    @dil.T("hata.404.anasayfa", "Anasayfaya Dön")
-</MudButton>

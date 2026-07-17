@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 using Microsoft.Data.Sqlite;
 
 var kok = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
-var vtYolu = Path.Combine(kok, "Desadoor.Api", "desadoor.db");
-var manifestYolu = Path.Combine(kok, "Desadoor.UI", "wwwroot", "medya", "katalog", "manifest.json");
+var vtYolu = Path.Combine(kok, "VIZITLINK3D.Api", "VIZITLINK3D.db");
+var manifestYolu = Path.Combine(kok, "VIZITLINK3D.UI", "wwwroot", "medya", "katalog", "manifest.json");
 
 if (!File.Exists(vtYolu))
 {
@@ -72,13 +72,13 @@ try
                 P("$slug", slug),
                 P("$kod", urunKodu),
                 P("$ad", ad),
-                P("$kisa", "DesaDoor katalog varliklarindan otomatik eslestirilen urun."),
+                P("$kisa", "VIZITLINK3D katalog varliklarindan otomatik eslestirilen urun."),
                 P("$aciklama", "Bu urun kaydi katalog gorselleri, slayt kaynaklari ve 3D GLB dosyalari eslestirilerek olusturuldu."),
                 P("$aile", urunAilesiId),
                 P("$kategori", kategoriId),
                 P("$sira", SiraNo(kod)),
                 P("$simdi", simdi),
-                P("$seoBaslik", $"{ad} | DesaDoor"),
+                P("$seoBaslik", $"{ad} | VIZITLINK3D"),
                 P("$seoAciklama", $"{ad} icin katalog gorselleri ve 3D model dosyalari."));
             eklenenUrun++;
         }
@@ -238,7 +238,7 @@ try
                         ($baslik, $aciklama, NULL, $yol, $mb, NULL, 2026, 0, $sira, 1, $simdi);
                     """,
                     P("$baslik", TemizAd(baslik)),
-                    P("$aciklama", "DesaDoor katalog PDF dosyasi."),
+                    P("$aciklama", "VIZITLINK3D katalog PDF dosyasi."),
                     P("$yol", webYolu),
                     P("$mb", Math.Round((pdf.TryGetProperty("boyut", out var b) ? b.GetInt64() : 0) / 1024d / 1024d, 2)),
                     P("$sira", pdfSira++),
@@ -269,7 +269,7 @@ try
                      ButonMetni2, ButonLink2, AnimasyonTipi, GecisHizi, GosterimSuresi, MetinHizalama, MetinRengi,
                      SiraNo, AktifMi, BaslangicTarihi, BitisTarihi, OlusturulmaTarihi, SilindiMi)
                 VALUES
-                    ('tr', $baslik, 'DesaDoor', 'Katalog varliklarindan otomatik eklenen slayt gorseli.', $yol, NULL,
+                    ('tr', $baslik, 'VIZITLINK3D', 'Katalog varliklarindan otomatik eklenen slayt gorseli.', $yol, NULL,
                      'Urunleri Incele', '/urunler', NULL, NULL, 'fade', 800, 5000, 'sol', NULL,
                      $sira, 1, NULL, NULL, $simdi, 0);
                 """,

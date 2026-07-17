@@ -21,6 +21,7 @@ _framework/*.br
 *.nuget.targets
 
 # Veritabanı
+*.db
 *.db-shm
 *.db-wal
 *.db-journal
@@ -38,6 +39,7 @@ ai.config.json
 # Ortam Değişkenleri (Gizli Anahtarlar)
 .env
 .env.*
+!.env.example
 appsettings.Production.json
 appsettings.*.local.json
 .codex/config.toml
@@ -65,6 +67,10 @@ TestResults/
 
 # Publish çıktısı
 yayin/
+publish/
+publish-*/
+ui-live/
+_ui_serve/
 
 # Python scriptleri (yasak)
 *.py
@@ -73,6 +79,22 @@ yayin/
 *.tmp
 *.temp
 ~$*
+tmp/
+*.zip
+*.binlog
+api_*.txt
+ui_*.txt
+*_err.txt
+
+# Yerel ajan ve tarayıcı çalışma çıktıları
+.abacusai/
+.mimocode/
+.playwright-cli/
+.playwright-mcp/
+.artifacts-*/
+
+# Medya dönüşüm yedekleri kaynak depoya girmez
+**/_yedek_*/
 
 # Yedekler (anayasa yedekleri hariç)
 Yedekler/db/

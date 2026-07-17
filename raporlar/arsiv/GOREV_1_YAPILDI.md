@@ -1,4 +1,4 @@
-# DesaDoor — Tamamlanan Görevler
+# VIZITLINK3D — Tamamlanan Görevler
 
 > **Anayasa:** KURALLAR.md (Vizitlink v11.0 adaptasyonu)
 > **Düzelme Planı:** DUZELT.md
@@ -38,7 +38,7 @@
 - [x] Hakkimizda.razor sayfasındaki 401 Unauthorized hatası çözüldü
 - [x] baslat.ps1 ile sistem ayağa kaldırıldı (API:5015, UI:5013)
 - [x] .NET 10 + Blazor WASM + MudBlazor 9.4 altyapısı kurulu
-- [x] SQLite desadoor.db + 7 temel tablo oluşturuldu
+- [x] SQLite VIZITLINK3D.db + 7 temel tablo oluşturuldu
 - [x] Three.js 3D motor scripti entegre edildi
 - [x] SignalR SohbetHub kuruldu
 - [x] JWT + BCrypt auth altyapısı hazır

@@ -4,6 +4,7 @@ using VizitLink3D.Ortak.Modeller;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VizitLink3D.Ortak.Yardimcilar;
 
 namespace VizitLink3D.Api.Kontrolculer.Sistem;
 
@@ -542,7 +543,8 @@ public class KurumsalKontrolcu(VizitLink3DDbContext vt, PdfOnizlemeServisi pdfOn
     private bool KatalogDosyasiVarMi(Katalog katalog)
     {
         return PdfOnizlemeServisi.PdfMi(katalog.PdfDosyaYolu)
-            && pdfOnizlemeServisi.FizikselBelgeYolu(katalog.PdfDosyaYolu) is not null;
+            && (KatalogYolu.GuvenliGenelKatalogYolu(katalog.PdfDosyaYolu) is not null
+                || pdfOnizlemeServisi.FizikselBelgeYolu(katalog.PdfDosyaYolu) is not null);
     }
 
     private bool SertifikaDosyasiVarMi(Sertifika sertifika)

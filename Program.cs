@@ -1,5 +1,5 @@
 using Microsoft.Data.Sqlite;
-var db = @"I:\desedoorweb\Desadoor.Api\desadoor.db";
+var db = @"I:\desedoorweb\VIZITLINK3D.Api\VIZITLINK3D.db";
 using var c = new SqliteConnection($"Data Source={db}");
 c.Open();
 var cmd = c.CreateCommand();

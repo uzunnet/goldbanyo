@@ -1,6 +1,6 @@
-# DesaDoor 3D Model ve Endustriyel Urun Konfigurator Plani
+# VIZITLINK3D 3D Model ve Endustriyel Urun Konfigurator Plani
 
-> Amaç: DesaDoor icin GLB/GLTF 3D modelleri, PDF katalogdan cikan urun gorsellerini, RAL renklerini, parca bazli malzeme/renk secimini ve admin tarafindan tam yonetilen urun detay sayfalarini tek endustriyel sisteme toplamak.
+> Amaç: VIZITLINK3D icin GLB/GLTF 3D modelleri, PDF katalogdan cikan urun gorsellerini, RAL renklerini, parca bazli malzeme/renk secimini ve admin tarafindan tam yonetilen urun detay sayfalarini tek endustriyel sisteme toplamak.
 > Bu dosya, projede calisacak modellerin hatasiz uygulama yapmasi icin kapsamli is emri ve kabul kriteridir.
 
 ## 0. Zorunlu Okuma Sirasi
@@ -19,7 +19,7 @@ Kod yazmadan once su dosyalar sirayla okunacak:
 
 Aktif proje bilgisi:
 
-- Proje: DesaDoor
+- Proje: VIZITLINK3D
 - Sektor: kapi/mobilya
 - Tema: Industrial Luxury
 - Admin: `/admin`
@@ -36,7 +36,7 @@ Aktif proje bilgisi:
 
 Projede 3D icin kullanilabilecek temel parcalar var:
 
-- `Desadoor.UI/Servisler/UcBoyutServisi.cs`
+- `VIZITLINK3D.UI/Servisler/UcBoyutServisi.cs`
   - GLB/GLTF model baslatma
   - model degistirme
   - ekran goruntusu alma
@@ -47,21 +47,21 @@ Projede 3D icin kullanilabilecek temel parcalar var:
   - kapak derece/acilma
   - isik ayari
   - parca secim callback
-- `Desadoor.UI/Bilesenler/UcBoyutGoruntuleyici.razor`
+- `VIZITLINK3D.UI/Bilesenler/UcBoyutGoruntuleyici.razor`
   - gorsel/3D tab gecisi
   - kamera sifirlama
   - otomatik dondurme
   - tam ekran
-- `Desadoor.UI/Pages/Vitrin/PiedraKonfigurator.razor`
+- `VIZITLINK3D.UI/Pages/Vitrin/PiedraKonfigurator.razor`
   - banyo dolabi icin deneysel parca secimi
   - parca renk/malzeme
   - kapak acisi
   - isik ayari
-- `Desadoor.UI/Bilesenler/RenkSecici.razor`
+- `VIZITLINK3D.UI/Bilesenler/RenkSecici.razor`
   - RAL benzeri renk secimi var fakat islevsel urun/parca baglantisi eksik
-- `Desadoor.Api/Moduller/Medya/Servisler/MedyaServisi.cs`
+- `VIZITLINK3D.Api/Moduller/Medya/Servisler/MedyaServisi.cs`
   - resim, PDF, GLB yukleme tipi taniniyor
-- `Desadoor.Api/Moduller/Medya/Kontrolcu/PdfTeklifKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/Medya/Kontrolcu/PdfTeklifKontrolcu.cs`
   - teklif PDF uretimi var fakat urun konfigurasyonu ve 3D ekran goruntusu ile tam entegre degil
 
 Eksik olan ana parca:
@@ -283,7 +283,7 @@ Kabul kriteri:
 
 ## 6. Veri Modeli Plani
 
-Yeni modeller `Desadoor.Ortak/Modeller/Urunler/` altinda toplanacak. Tablo ve sutun adlari ASCII olacak.
+Yeni modeller `VIZITLINK3D.Ortak/Modeller/Urunler/` altinda toplanacak. Tablo ve sutun adlari ASCII olacak.
 
 ### 6.1 Ana Entityler
 
@@ -466,7 +466,7 @@ Yeni moduller Vertical Slice yapisinda kurulacak.
 
 Konum:
 
-- `Desadoor.Api/Moduller/Urunler/`
+- `VIZITLINK3D.Api/Moduller/Urunler/`
 
 Endpointler:
 
@@ -484,7 +484,7 @@ Her endpoint `Cevap<T>` donecek.
 
 Konum:
 
-- `Desadoor.Api/Moduller/UcBoyut/`
+- `VIZITLINK3D.Api/Moduller/UcBoyut/`
 
 Endpointler:
 
@@ -505,7 +505,7 @@ Not:
 
 Konum:
 
-- `Desadoor.Api/Moduller/PdfKatalog/`
+- `VIZITLINK3D.Api/Moduller/PdfKatalog/`
 
 Endpointler:
 
@@ -526,8 +526,8 @@ Wrapper servisleri:
 
 Konum:
 
-- `Desadoor.Api/Moduller/Renkler/`
-- `Desadoor.Api/Moduller/Malzemeler/`
+- `VIZITLINK3D.Api/Moduller/Renkler/`
+- `VIZITLINK3D.Api/Moduller/Malzemeler/`
 
 Endpointler:
 
@@ -543,17 +543,17 @@ Endpointler:
 
 Yeni veya yenilenecek admin sayfalari:
 
-- `Desadoor.UI/Pages/Admin/UrunYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/UrunDuzenle.razor`
-- `Desadoor.UI/Pages/Admin/UrunAilesiYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/UrunKategoriYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/UcBoyutModelYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/UcBoyutParcaEsleme.razor`
-- `Desadoor.UI/Pages/Admin/PdfKatalogYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/RalRenkYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/MalzemeYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/KonfigurasyonSablonuYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/TeklifSablonuYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunDuzenle.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunAilesiYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunKategoriYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UcBoyutModelYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UcBoyutParcaEsleme.razor`
+- `VIZITLINK3D.UI/Pages/Admin/PdfKatalogYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/RalRenkYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/MalzemeYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/KonfigurasyonSablonuYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/TeklifSablonuYonetimi.razor`
 
 Her sayfanin `.razor.cs` partial class dosyasi olacak.
 
@@ -599,15 +599,15 @@ Kabul kriteri:
 
 Yeni bilesenler:
 
-- `Desadoor.UI/Bilesenler/Urunler/UrunListeKart.razor`
-- `Desadoor.UI/Bilesenler/Urunler/UrunDetayHero.razor`
-- `Desadoor.UI/Bilesenler/Urunler/UrunMedyaGalerisi.razor`
-- `Desadoor.UI/Bilesenler/Urunler/UrunKonfigurator.razor`
-- `Desadoor.UI/Bilesenler/Urunler/UcBoyutParcaPaneli.razor`
-- `Desadoor.UI/Bilesenler/Urunler/ParcaRenkPaneli.razor`
-- `Desadoor.UI/Bilesenler/Urunler/MalzemeSecimPaneli.razor`
-- `Desadoor.UI/Bilesenler/Urunler/KonfigurasyonOzeti.razor`
-- `Desadoor.UI/Bilesenler/Urunler/TeklifIstegiFormu.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunListeKart.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunDetayHero.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunMedyaGalerisi.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunKonfigurator.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UcBoyutParcaPaneli.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/ParcaRenkPaneli.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/MalzemeSecimPaneli.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/KonfigurasyonOzeti.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/TeklifIstegiFormu.razor`
 
 Konfigurator ozellikleri:
 
@@ -913,8 +913,8 @@ Her ana ozellik icin minimum 5 test:
 
 Bir sonraki model su sirayla baslamali:
 
-1. `Desadoor.Ortak/Modeller/Urunler/` altinda yeni entity taslaklarini olustur.
-2. `Desadoor.Api/Moduller/Urunler/`, `UcBoyut`, `Renkler`, `Malzemeler` vertical slice klasorlerini kur.
+1. `VIZITLINK3D.Ortak/Modeller/Urunler/` altinda yeni entity taslaklarini olustur.
+2. `VIZITLINK3D.Api/Moduller/Urunler/`, `UcBoyut`, `Renkler`, `Malzemeler` vertical slice klasorlerini kur.
 3. RAL renklerini DB kaynakli hale getir ve mevcut `RenkSecici` bilesenini API verisine bagla.
 4. `UcBoyutModelYonetimi` ve `UcBoyutParcaEsleme` admin sayfalarini tasarla.
 5. Mevcut `PiedraKonfigurator` kodunu genelleserek `UrunKonfigurator` bilesenine donustur.

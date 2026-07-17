@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gold Banyo - Catalogue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "charcoal-muted": "#333333",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cfc6ad",
+                        "on-tertiary": "#ffffff",
+                        "gold-light": "#E5C94D",
+                        "background": "#fff9ee",
+                        "inverse-on-surface": "#f8f0e0",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-bright": "#fff9ee",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#221b00",
+                        "error": "#ba1a1a",
+                        "primary": "#6f5d00",
+                        "inverse-primary": "#e6c429",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-container": "#ccac00",
+                        "surface-tint": "#6f5d00",
+                        "secondary-container": "#e2dfde",
+                        "surface-variant": "#e9e2d2",
+                        "primary-fixed": "#ffe16b",
+                        "surface": "#fff9ee",
+                        "tertiary-container": "#8eacff",
+                        "on-surface-variant": "#4c4734",
+                        "surface-container-highest": "#e9e2d2",
+                        "surface-container-high": "#efe7d7",
+                        "on-tertiary-container": "#193d89",
+                        "on-primary-fixed-variant": "#544600",
+                        "outline": "#7e7761",
+                        "inverse-surface": "#343025",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-background": "#1e1b12",
+                        "surface-container-low": "#fbf3e2",
+                        "surface-container": "#f5eddd",
+                        "on-tertiary-fixed-variant": "#20438f",
+                        "on-primary-container": "#4e4100",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#e6c429",
+                        "surface-dim": "#e1d9c9",
+                        "on-surface": "#1e1b12",
+                        "tertiary-fixed-dim": "#b2c5ff",
+                        "on-secondary-container": "#636262",
+                        "on-tertiary-fixed": "#001848",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#dae2ff",
+                        "tertiary": "#3b5ba8",
+                        "warm-grey": "#F5F5F4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-padding-mobile": "64px",
+                        "section-padding-desktop": "120px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Overpass"],
+                        "display-lg-mobile": ["Overpass"],
+                        "body-lg": ["Overpass"],
+                        "label-caps": ["Overpass"],
+                        "headline-md": ["Overpass"],
+                        "display-lg": ["Overpass"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-nav {
+                @apply bg-surface/80 backdrop-blur-md;
+            }
+            .nav-link {
+                @apply font-body-md text-body-md transition-colors duration-300;
+            }
+            .nav-link-inactive {
+                @apply text-secondary hover:text-primary;
+            }
+            .nav-link-active {
+                @apply text-primary font-bold border-b-2 border-primary;
+            }
+            .btn-primary {
+                @apply bg-primary text-on-primary font-label-caps text-label-caps rounded-full px-8 py-3 transition-opacity hover:opacity-90;
+            }
+            .btn-secondary {
+                @apply border border-charcoal-muted text-charcoal-muted font-label-caps text-label-caps rounded-full px-8 py-3 transition-colors hover:bg-surface-container;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased pt-20">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-section-padding-desktop max-w-container-max mx-auto h-20 glass-nav">
+<a class="font-display-lg text-headline-md tracking-tighter text-primary" href="#">Gold Banyo</a>
+<div class="hidden md:flex space-x-8">
+<a class="nav-link nav-link-inactive" href="#">Collections</a>
+<a class="nav-link nav-link-inactive" href="#">About Us</a>
+<a class="nav-link nav-link-active" href="#">Catalogue</a>
+<a class="nav-link nav-link-inactive" href="#">Contact</a>
+</div>
+<div class="flex space-x-4">
+<button class="text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</nav>
+<main class="max-w-container-max mx-auto px-6 md:px-section-padding-desktop py-section-padding-mobile md:py-section-padding-desktop">
+<!-- Catalogue Header Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
+<div class="space-y-8 order-2 lg:order-1">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary">2021-22 Bathroom Furniture Catalog</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-lg">
+                    Discover our latest collection of premium bathroom furniture. Designed with an aesthetic touch and quality production in mind. Explore the elegant series that bring tranquility and luxury to your space.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="btn-primary flex items-center justify-center gap-2">
+                        View Digital Catalog
+                        <span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+<button class="btn-secondary flex items-center justify-center gap-2">
+                        Download PDF
+                        <span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+<div class="relative order-1 lg:order-2 rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(51,51,51,0.04)] group">
+<img alt="Gold Banyo 2021-22 Catalogue Cover featuring Diessa Goldexclusive series" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AP1WRLtg1PcHUIY6H05M8dlVBQj3i6EoOev23CaqibYn1ouHIZ6eQ_2lmo9tnxM0c9Mm8PzUa4OqiVFXtHVR51HXQEViQJNN-B2bXtgqNZc0i7Et6uZIwnzrVCKFj-Mbk3P5BsWWw8JWu5IlWck63y6YgmjVahIMK2L-vngJvWoOM7eos-Fc4iK9iZJhAAwZI85XMW0yMDfoG6VYT1Ym48LnPruuqwKYr3cbFOOFuYYUQslhiv5TO1YTXj-17Hcb"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+</div>
+</section>
+<!-- Product Highlights Grid -->
+<section class="mb-32">
+<div class="flex justify-between items-end mb-12">
+<h2 class="font-headline-md text-headline-md text-primary">Catalog Highlights</h2>
+<a class="font-label-caps text-label-caps text-secondary hover:text-primary uppercase tracking-widest flex items-center gap-1" href="#">
+                    Explore All <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Highlight 1 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden mb-4 bg-surface-container aspect-[4/5]">
+<img class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist luxury bathroom vanity unit in deep navy blue with subtle gold trim. The vanity is set against a bright, airy white marble wall. The lighting is soft and natural, creating a serene, high-end showroom atmosphere. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8meaPkLYWNOdG5s7eIZyHI8cq2bkSm1F_4iqV74uu2lqJryoEVM0CkKU220CCUJLLWGdNVTXZjP_qpIQ8TghJXgZjXjIcecfX55wt8roxUQerQmxuz8nj0oq6ymgzmVfennyKG0DtM7G-2Zdcqs6oi3pyqp3rr5Dvn9cNzWkZ0xsUI_eUsviaC2UBcrPk4oDYny3alco_Vb-KHPh7RzfM6C2VjtuTTnAiWZMFRAUMuBKyH1eDVlBOiIuxr-4qg1jbm1RmUg5pQ2nh"/>
+<div class="absolute top-4 left-4 bg-surface/90 px-3 py-1 rounded-full border border-outline-variant">
+<span class="font-label-caps text-label-caps text-primary">Diessa Series</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg text-primary">Navy &amp; Gold Vanity</h3>
+<p class="font-body-md text-body-md text-secondary">Goldexclusive Collection</p>
+</div>
+<!-- Highlight 2 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden mb-4 bg-surface-container aspect-[4/5]">
+<img class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" data-alt="A sleek, modern floating bathroom sink made of dark, textured charcoal stone. It features a minimalist chrome faucet. Set in a spacious bathroom with large windows letting in bright daylight. The overall tone is luxurious, clean, and spacious." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwK8i0mivHoWpNawItAa3Dg9yE2nehUUvpYL2iiokbnrTWcmQa--8BY1sfbNwpeJz28-kGA9JvPmnb6kGxfwEHL8VsNNUqwgfoe2mQy6lTyAJA_f7W7f9pc3CryBbw_KmsElmk21QUm-fxNgBmMGKIE4SzAYTg3eQDGeqjRJJ-aSsKmwpNGHIhiybFudKE4OqXK7srAwTjblXR4VpjCbIIavuT0CPGt8saknFEjud7Io02Yb6_lWfgHWGY_QFpllA-wvmRARROwp23"/>
+<div class="absolute top-4 left-4 bg-surface/90 px-3 py-1 rounded-full border border-outline-variant">
+<span class="font-label-caps text-label-caps text-primary">Tiran Series</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg text-primary">Floating Stone Sink</h3>
+<p class="font-body-md text-body-md text-secondary">Premium Collection</p>
+</div>
+<!-- Highlight 3 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden mb-4 bg-surface-container aspect-[4/5]">
+<img class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" data-alt="An elegant, freestanding white bathtub centered in a pristine, minimalist bathroom setting. The tub has subtle, classic detailing but maintains a modern silhouette. Warm sunlight casts gentle shadows on the light oak wood floor. High-end, tranquil showroom vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdQvUJMYLkLTcszBX6heMwn9Smh2nvIGh2J-HE3aeEYDl5DnFCC6jU7rCzb2mVZ06LdB8s05MDvg1Wc-ifAZ8URkvtMkuruZieWo0ptsjyWMF1ZRvoPn4bmOV_3H10ODo7QjbCVEG-41764796fD8kJtRzYJ_3qFK091a-gGY3zQJNV_Px3B-pV2XVmGxF9kBMFx2T_Z0M_O4RRtd4aglgN_uT0zVvHDb-2NI6Yi1k5FiLZdQ2nVxjAlM-GbSUMM_at-91GkHQFBJk"/>
+<div class="absolute top-4 left-4 bg-surface/90 px-3 py-1 rounded-full border border-outline-variant">
+<span class="font-label-caps text-label-caps text-primary">Exclusive Series</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg text-primary">Freestanding Bathtub</h3>
+<p class="font-body-md text-body-md text-secondary">Classic Elegance</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-padding-desktop px-section-padding-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter max-w-container-max mx-auto bg-surface-container-low text-on-surface">
+<div class="space-y-4">
+<h2 class="font-display-lg text-headline-md text-primary">Gold Banyo</h2>
+<p class="font-body-md text-body-md text-secondary max-w-xs">Quality Production and Aesthetic Touch for modern bathrooms.</p>
+</div>
+<div class="grid grid-cols-2 gap-8 md:col-span-2">
+<div class="space-y-4">
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Collections</h3>
+<ul class="space-y-2">
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Exclusive</a></li>
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Premium</a></li>
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Trend</a></li>
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Standart</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Company</h3>
+<ul class="space-y-2">
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Information</a></li>
+<li><a class="font-body-md text-body-md text-secondary hover:text-gold-light transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 pt-8 mt-8 border-t border-surface-dim">
+<p class="font-body-md text-body-md text-secondary text-sm">© 2024 Gold Banyo. All rights reserved.</p>
+</div>
+</footer>
+</body></html>

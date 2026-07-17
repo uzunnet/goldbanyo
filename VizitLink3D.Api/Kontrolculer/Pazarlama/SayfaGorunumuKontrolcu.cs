@@ -13,12 +13,17 @@ namespace VizitLink3D.Api.Kontrolculer.Pazarlama;
 [Route("api/sayfa-gorunumu")]
 public class SayfaGorunumuKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 {
+    private string ApiMedyaDosyaUrl(long medyaId)
+        => $"{Request.Scheme}://{Request.Host}/api/medya/dosya/{medyaId}";
+
     [HttpGet("{slug}")]
     public async Task<Cevap<SayfaGorunumDto>> SayfaGorunumuGetir(string slug, [FromQuery] string dil = "tr")
     {
+        var apiTemeli = $"{Request.Scheme}://{Request.Host}".TrimEnd('/');
+
         // Sayfa icerigini bolum bazli getir
         var icerikler = await vt.SayfaIcerikleri
-            .Where(s => s.Bolum == slug)
+            .Where(s => s.Bolum == slug && s.Dil == dil && !s.SilindiMi)
             .ToListAsync();
 
         if (!icerikler.Any() && slug == "anasayfa")
@@ -26,23 +31,26 @@ public class SayfaGorunumuKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 
         // Hero slider
         var slaytlar = await vt.Slaytlar
-            .Where(s => s.AktifMi)
+            .Where(s => s.AktifMi && !s.SilindiMi && s.Dil == dil && s.SayfaKodu == slug)
             .OrderBy(s => s.SiraNo)
             .ToListAsync();
 
         // Urunler
-        var urunler = await vt.Urunler
+        var urunEntityler = await vt.Urunler
             .Where(u => u.AktifMi && !u.SilindiMi && u.OneCikanMi)
             .OrderBy(u => u.SiraNo)
+            .ToListAsync();
+
+        var urunler = urunEntityler
             .Take(8)
             .Select(u => new BlokDto
             {
                 BlokTipi = "Urun",
                 Icerik = u.Ad,
-                GorselUrl = u.AnaGorselMedyaId.HasValue ? u.AnaGorselMedyaId.Value.ToString() : null,
+                GorselUrl = u.AnaGorselMedyaId.HasValue ? $"{apiTemeli}/api/medya/dosya/{u.AnaGorselMedyaId.Value}" : null,
                 Link = "/urun/" + u.Slug
             })
-            .ToListAsync();
+            .ToList();
 
         var sayfa = new SayfaGorunumDto
         {

@@ -7,7 +7,7 @@ namespace VizitLink3D.Api.Servisler.Kimlik;
 public class LisansUreticiServisi(IConfiguration yapilandirma)
 {
     private readonly string _gizliAnahtar = yapilandirma["LisansAyarlari:GizliAnahtar"]
-        ?? "VIZITLINK3D_HMAC_2026_SECRET_KEY_min_32char";
+        ?? throw new InvalidOperationException("LisansAyarlari:GizliAnahtar ortam değişkeni tanımlanmalıdır.");
 
     public string LisansAnahtariUret(string domain, DateTime baslangic, DateTime bitis, string lisansTipi)
     {

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gold Exclusive Series - Gold Banyo</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#20438f",
+                        "on-secondary-container": "#636262",
+                        "inverse-surface": "#343025",
+                        "surface-container": "#f5eddd",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary-container": "#4e4100",
+                        "secondary-container": "#e2dfde",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f8f0e0",
+                        "on-surface": "#1e1b12",
+                        "on-primary-fixed": "#221b00",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#dae2ff",
+                        "primary-fixed": "#ffe16b",
+                        "on-surface-variant": "#4c4734",
+                        "on-background": "#1e1b12",
+                        "outline-variant": "#cfc6ad",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#001848",
+                        "outline": "#7e7761",
+                        "gold-light": "#E5C94D",
+                        "surface-bright": "#fff9ee",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fff9ee",
+                        "background": "#fff9ee",
+                        "warm-grey": "#F5F5F4",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-container-high": "#efe7d7",
+                        "surface-container-low": "#fbf3e2",
+                        "on-tertiary-container": "#193d89",
+                        "surface-container-highest": "#e9e2d2",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#6f5d00",
+                        "charcoal-muted": "#333333",
+                        "tertiary-fixed-dim": "#b2c5ff",
+                        "tertiary-container": "#8eacff",
+                        "surface-variant": "#e9e2d2",
+                        "on-primary-fixed-variant": "#544600",
+                        "inverse-primary": "#e6c429",
+                        "surface-dim": "#e1d9c9",
+                        "primary-fixed-dim": "#e6c429",
+                        "primary": "#6f5d00",
+                        "tertiary": "#3b5ba8",
+                        "primary-container": "#ccac00",
+                        "on-secondary-fixed": "#1c1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-padding-desktop": "120px",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "section-padding-mobile": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Overpass"],
+                        "headline-md": ["Overpass"],
+                        "body-md": ["Overpass"],
+                        "body-lg": ["Overpass"],
+                        "display-lg-mobile": ["Overpass"],
+                        "display-lg": ["Overpass"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Smooth scrolling and basic resets */
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-slide-up {
+            animation: fadeSlideUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md pt-20">
+<!-- TopNavBar Component -->
+<nav class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-section-padding-desktop max-w-container-max mx-auto h-20 bg-transparent flat no shadows border-none">
+<div class="font-display-lg text-headline-md tracking-tighter text-primary dark:text-primary-fixed uppercase">
+            Gold Banyo
+        </div>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary pb-1" href="#">Collections</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors hover:opacity-80 pb-1" href="#">About Us</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors hover:opacity-80 pb-1" href="#">Catalogue</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors hover:opacity-80 pb-1" href="#">Contact</a>
+</div>
+<div class="flex space-x-4 items-center">
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</nav>
+<!-- Header Section -->
+<header class="w-full pt-section-padding-mobile md:pt-section-padding-desktop pb-12 px-6 md:px-section-padding-desktop max-w-container-max mx-auto text-center md:text-left bg-surface-bright animate-fade-slide-up">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-4 block">The Pinnacle of Craftsmanship</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6">Gold Exclusive Series</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto md:mx-0">
+            A curated collection of luxury bathroom vanities, defined by traditional lines, superior materiality, and a commitment to aesthetic perfection. Designed for the modern sanctuary.
+        </p>
+</header>
+<!-- Integrated Category Navigation -->
+<div class="w-full max-w-container-max mx-auto px-6 md:px-section-padding-desktop mb-12 animate-fade-slide-up delay-100">
+<div class="flex flex-wrap gap-4 items-center justify-center md:justify-start border-b border-surface-variant pb-6">
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-label-caps text-label-caps uppercase tracking-widest transition-transform hover:scale-105 shadow-md">All Collections</button>
+<button class="px-6 py-2 rounded-full border border-surface-variant text-secondary hover:border-primary hover:text-primary hover:bg-surface-container-low font-label-caps text-label-caps uppercase tracking-widest transition-all">Matte White</button>
+<button class="px-6 py-2 rounded-full border border-surface-variant text-secondary hover:border-primary hover:text-primary hover:bg-surface-container-low font-label-caps text-label-caps uppercase tracking-widest transition-all">Classic Premium</button>
+<button class="px-6 py-2 rounded-full border border-surface-variant text-secondary hover:border-primary hover:text-primary hover:bg-surface-container-low font-label-caps text-label-caps uppercase tracking-widest transition-all">Neoclassical</button>
+<div class="w-full md:w-auto md:ml-auto flex items-center justify-center md:justify-end gap-3 mt-4 md:mt-0">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Sort by:</span>
+<select class="bg-surface-container-lowest border border-surface-variant rounded-full py-2 px-4 pr-8 font-body-md text-body-md text-primary focus:ring-primary focus:border-primary cursor-pointer appearance-none shadow-sm">
+<option>Newest Arrivals</option>
+<option>Price: High to Low</option>
+<option>Price: Low to High</option>
+<option>Popularity</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Main Content: Grid -->
+<main class="w-full px-6 md:px-section-padding-desktop pb-section-padding-desktop max-w-container-max mx-auto">
+<!-- Product Grid -->
+<section class="w-full">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-gutter gap-y-16">
+<!-- Product Card 1 -->
+<article class="group cursor-pointer flex flex-col relative animate-fade-slide-up delay-200">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-6 overflow-hidden flex items-center justify-center p-4 rounded-xl">
+<img class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]" src="https://lh3.googleusercontent.com/aida/AP1WRLsJKZXc83n-Taf7OqDlGz8sJKsu4WZp6G7N2QZy2b3JboBPVQ5RfNh6Ey7CCNPnzWGrVpkyRVtwHJr6VTni0U7RYNkHBQaG4-kAgiV8mbBcMtwXkip5yYW8OLp5yug-kfaI1RvJaAr39kKfKdhzLL9FGskO6IBdmPzeP5CSr3EZSeb8tkqL__uE4B0zF15Vt5_FtctYv_SXbsC5WGeVzTN83qLziderneZMYbnoD0ls1lHuND2aDiN2s08"/>
+<div class="absolute inset-0 bg-inverse-surface/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-6 text-center backdrop-blur-[2px]">
+<span class="text-gold-light font-display-lg-mobile mb-2">$4,250</span>
+<span class="text-on-primary/90 font-body-md mb-6 leading-relaxed">W: 110cm | D: 55cm | H: 85cm<br/>Soft-close drawers<br/>Integrated LED mirror included</span>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:bg-gold-light transition-colors shadow-lg transform translate-y-4 group-hover:translate-y-0 duration-500 ease-out">Quick View</button>
+</div>
+<div class="absolute top-4 left-4 bg-gold-light text-on-primary-fixed px-3 py-1 rounded-full font-label-caps text-label-caps uppercase tracking-wider shadow-sm z-10">Exclusive</div>
+</div>
+<div class="flex flex-col flex-1 px-2">
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Armani Vanity Set</h2>
+<p class="font-body-md text-body-md text-secondary mb-3">110cm • Matte White finish</p>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="group cursor-pointer flex flex-col relative animate-fade-slide-up delay-300">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-6 overflow-hidden flex items-center justify-center p-4 rounded-xl">
+<img class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]" src="https://lh3.googleusercontent.com/aida/AP1WRLvv0dw1Jh8A82BrhUclNRGBn4Vt0NvYxFPo55zFBS4vlYAU3QR2wzDyZvM_DoduYfpdX63vC87VgW_dLDeP9UL4agDU4R6eR9ZMP-iOKmtrPwhBsUnpp9_BMbVUFqCx09vhhxEbAR99IVI7BR-knmYOBO7RlW_sKvnhYiQ5U1ZtMljXQc57TmxiO25OLO-uQPhKOUH39GRKxafsfAqZQj5UyBUYZHHBFm4TSVGngxEH3nN0WQTeiwP9ob51"/>
+<div class="absolute inset-0 bg-inverse-surface/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-6 text-center backdrop-blur-[2px]">
+<span class="text-gold-light font-display-lg-mobile mb-2">$6,800</span>
+<span class="text-on-primary/90 font-body-md mb-6 leading-relaxed">W: 140cm | D: 60cm | H: 90cm<br/>Premium brass hardware<br/>Neoclassical detailing</span>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:bg-gold-light transition-colors shadow-lg transform translate-y-4 group-hover:translate-y-0 duration-500 ease-out">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col flex-1 px-2">
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Versailles Double Sink</h2>
+<p class="font-body-md text-body-md text-secondary mb-3">140cm • Premium hardware</p>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="group cursor-pointer flex flex-col relative animate-fade-slide-up delay-400">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-6 overflow-hidden flex items-center justify-center p-4 rounded-xl">
+<img class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHrFctKxn0sEoEbU8hmfkofaKnl6XSlPmHp4WqoSB9hs2hyCiP6x9yiKcg2VawDfH-1UPci1JGUUajNis4wZo5j0SB4deDUvcXF3zgrSigd-qjmWIkV_ZM3yupzL9RU6oUs8PRvCVmnTztm2shWveWyP7IyjhcW7XqyFgBzEnHGCoB-o5JOfRYq26ElSRYuijfbJLAR49D84blLGGopTbJ-EovqAF5M44JLaOXyo8y9I3UjT9LLecrwNuwPmQTSao_IgUlxGnUPd6t"/>
+<div class="absolute inset-0 bg-inverse-surface/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-6 text-center backdrop-blur-[2px]">
+<span class="text-gold-light font-display-lg-mobile mb-2">$3,100</span>
+<span class="text-on-primary/90 font-body-md mb-6 leading-relaxed">W: 80cm | D: 50cm | H: 85cm<br/>Compact luxury<br/>Marble countertop</span>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:bg-gold-light transition-colors shadow-lg transform translate-y-4 group-hover:translate-y-0 duration-500 ease-out">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col flex-1 px-2">
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Elegance Freestanding</h2>
+<p class="font-body-md text-body-md text-secondary mb-3">80cm • Marble countertop</p>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="group cursor-pointer flex flex-col relative animate-fade-slide-up delay-500">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-6 overflow-hidden flex items-center justify-center p-4 rounded-xl">
+<img class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeaS3jngT08gZZ2_O7teyju-yiXSxYBpdGI3chogCddPOKy6JT9ZV3WgwWMwaPFfbNkJ0DWLA0TJU0UYpA9OcwjU2vw5dnIsaE74jKXcCOKoICa36HiBn67sNKrPKdZYr58FG0IJHYtVmiLDCD63XGu8C4PtELGnn0ZtyZujeg2ZbsS_SVe_-hf-NtEvs7sdxYFtnv3288ot6CMVcQlJAncpnJYB-uSlgwhk1V5eUl7slI-rGPB59qnHMpcIaHbyKiT6gi3eR4di8_"/>
+<div class="absolute inset-0 bg-inverse-surface/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-6 text-center backdrop-blur-[2px]">
+<span class="text-gold-light font-display-lg-mobile mb-2">$8,500</span>
+<span class="text-on-primary/90 font-body-md mb-6 leading-relaxed">W: 160cm | D: 60cm | H: 90cm<br/>Dual lit mirrors<br/>Ultimate spaciousness</span>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:bg-gold-light transition-colors shadow-lg transform translate-y-4 group-hover:translate-y-0 duration-500 ease-out">Quick View</button>
+</div>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full font-label-caps text-label-caps uppercase tracking-wider shadow-sm z-10">New Arrival</div>
+</div>
+<div class="flex flex-col flex-1 px-2">
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Palace Dual Concept</h2>
+<p class="font-body-md text-body-md text-secondary mb-3">160cm • Ultimate spaciousness</p>
+</div>
+</article>
+</div>
+<!-- Advanced Pagination -->
+<div class="w-full flex justify-center items-center mt-20 gap-3 animate-fade-slide-up delay-500">
+<button class="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center text-secondary hover:border-primary hover:text-primary transition-colors hover:bg-surface-container-low"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center font-body-lg shadow-md transition-transform hover:scale-105">1</button>
+<button class="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center text-secondary hover:border-primary hover:text-primary transition-all hover:bg-surface-container-low font-body-lg">2</button>
+<button class="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center text-secondary hover:border-primary hover:text-primary transition-all hover:bg-surface-container-low font-body-lg">3</button>
+<span class="text-secondary font-body-lg px-2">...</span>
+<button class="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center text-secondary hover:border-primary hover:text-primary transition-all hover:bg-surface-container-low font-body-lg">8</button>
+<button class="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center text-secondary hover:border-primary hover:text-primary transition-colors hover:bg-surface-container-low"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</section>
+</main>
+<!-- Product Recommendations Section -->
+<section class="w-full py-20 bg-surface-container-low mt-16 animate-fade-slide-up">
+<div class="max-w-container-max mx-auto px-6 md:px-section-padding-desktop">
+<div class="flex justify-between items-end mb-10">
+<h2 class="font-display-lg-mobile md:text-display-lg text-primary">Recommended for You</h2>
+<a class="hidden md:inline-block font-label-caps text-label-caps text-primary uppercase tracking-widest border-b border-primary pb-1 hover:text-gold-light hover:border-gold-light transition-colors" href="#">View All</a>
+</div>
+<div class="flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
+<!-- Rec Item 1 -->
+<div class="snap-start flex-shrink-0 w-[280px] md:w-[350px] group cursor-pointer">
+<div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida/AP1WRLvneXDFJmWurGUDMoNpbvROSqjRAo4DlPM51VOAvBIl-aeLotABEY7r1UKgSJ3BeVidQqmU3dYclrA9sXyxctdT7D7gvfH14JYHi_jixraN867K-x9mLibODb1rarhynbDlV20w-JL65JPknpNXTtoOgFM4xrybgNz3lBsCilnqErrMtEtcVP3oFz_lpAfa5yVU_wFbH49oQekxktT-CcCepcGcrm1EgygQSZh7IiLR4R7SYD6fyNmJYbU"/>
+<div class="absolute inset-0 bg-inverse-surface/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<h3 class="font-headline-md text-[20px] text-primary mb-1">Aura Floating Vanity</h3>
+<p class="font-body-md text-secondary">$5,200</p>
+</div>
+<!-- Rec Item 2 -->
+<div class="snap-start flex-shrink-0 w-[280px] md:w-[350px] group cursor-pointer">
+<div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida/AP1WRLuc75TVntKM2YEmY_21nA7FF2TnjrTURYWBWAFXQ9UuTabdAgV6OLz2_stt3lVBz9UNLVwY2KcywPaB0i2qoNz2sw2vB_eV7FNBZYaMDhcM_UyRXBEQTSgeUHyLdzmpeubCVH5kLwY2fWuf4cl2gN-ltn3lRzhIesmkbwAIbzj-bLr6i8_jyZBfOCRHZe_dMua27rR5BoQu5Of5I1QCd2mLg7zBbIOPDWj-MpcDsuPoppnoNRVtD4rpi9c"/>
+<div class="absolute inset-0 bg-inverse-surface/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<h3 class="font-headline-md text-[20px] text-primary mb-1">Onyx Marble Series</h3>
+<p class="font-body-md text-secondary">$7,850</p>
+</div>
+<!-- Rec Item 3 -->
+<div class="snap-start flex-shrink-0 w-[280px] md:w-[350px] group cursor-pointer">
+<div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida/AP1WRLuYebvHI34gRZVqs7sjy-jDcVPIKbCWbemMDPExDFyYOyEjrnmyfONYWUv9BFyzv0nuVs1X0yYTV2pZpGqxIqTfuLIzGFaB5oqpC8Al-HKE1ET-padMsBDq0rn8_OWrsJxxS174NhqOD5enZcJHwSsSWQ06w-W9pS9bCjxhl-d3dyGy2CO7TiTxJjTC_Ac19wskp64YsjzUoM98vzVeDYKP2md-c5JpRO4TT2RwFpI9qOJWYgOQuC1avyU"/>
+<div class="absolute inset-0 bg-inverse-surface/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<h3 class="font-headline-md text-[20px] text-primary mb-1">Signature Gold Faucet</h3>
+<p class="font-body-md text-secondary">$1,250</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Suggestion Engine / Floating Widget -->
+<div class="fixed bottom-6 right-6 z-50 animate-fade-slide-up delay-500 hidden md:block">
+<div class="bg-surface shadow-2xl rounded-2xl p-4 flex items-center gap-4 border border-surface-variant w-80 transform translate-y-0 hover:-translate-y-2 transition-transform duration-300 relative group cursor-pointer">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-low border border-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLvXkAE2rLhULkkgTrqI9vB3oZkfFxodZfZ_oO-issLXvqkjOgZRXj8ozhYWrq2XZmGV3VI3fCz7QU6kY9v1C47nj2par8nbDYoGlleHqQr5aQ7SUH44G2EqaiHAApU2hnsMsZlGMYtwvgE-_GudvIumaLUCQHU9DxJVX7kUpBh3LwIKNj0xm7hTMvGpopN8qAHhQUmRfViEyY1dreaEmPWlG7O5swOoeTAGF2amuQYCI8FWId5G38XJKqgJ"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-gold-light uppercase tracking-widest text-[10px] mb-1">Product of the Day</span>
+<span class="font-headline-md text-base text-primary leading-tight mb-1">Imperial Gold Basin</span>
+<span class="font-body-md text-xs text-secondary hover:text-primary transition-colors">Discover the collection →</span>
+</div>
+<button class="absolute -top-3 -right-3 w-8 h-8 bg-surface border border-surface-variant rounded-full flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container-lowest shadow-md transition-colors z-10" onclick="this.parentElement.style.display='none'">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Footer Component -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface w-full py-section-padding-desktop px-6 md:px-section-padding-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter max-w-container-max mx-auto flat no shadows relative">
+<!-- Brand & Copyright -->
+<div class="flex flex-col items-start space-y-4">
+<span class="font-display-lg text-headline-md text-primary dark:text-primary-fixed uppercase tracking-tighter">Gold Banyo</span>
+<p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed mt-auto">
+                © 2024 Gold Banyo. All rights reserved.
+            </p>
+</div>
+<!-- Navigation Columns -->
+<div class="flex flex-col space-y-3">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Information</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Exclusive</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Premium</a>
+</div>
+<div class="flex flex-col space-y-3">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Trend</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Standart</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Contact</a>
+</div>
+</footer>
+</body></html>

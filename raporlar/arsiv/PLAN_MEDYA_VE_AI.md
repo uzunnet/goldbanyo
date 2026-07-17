@@ -25,17 +25,17 @@ Bu plan iki bağımsız özelliği kapsar — sırayla yapılır:
 ## A.0 — Hazırlık (yarım gün)
 
 ### A.0.1 — DB Yedek Al (anayasa §6.1)
-- `Yedekler/db/desadoor_YYYYMMDD_medya_oncesi.db`
+- `Yedekler/db/VIZITLINK3D_YYYYMMDD_medya_oncesi.db`
 
 ### A.0.2 — Klasör İskeleti
 ```
-Desadoor.Ortak/Modeller/Medya/
+VIZITLINK3D.Ortak/Modeller/Medya/
 ├── Medya.cs
 ├── MedyaKlasoru.cs
 ├── MedyaKullanim.cs
 └── Enumlar.cs   (MedyaTipi, MedyaKaynagi)
 
-Desadoor.Api/Moduller/Medya/     (vertical slice — anayasa §9.4)
+VIZITLINK3D.Api/Moduller/Medya/     (vertical slice — anayasa §9.4)
 ├── Komutlar/
 ├── Sorgular/
 ├── Dtolar/
@@ -43,7 +43,7 @@ Desadoor.Api/Moduller/Medya/     (vertical slice — anayasa §9.4)
 ├── Servisler/   (DepolamaAdaptoru, ResimIslemcisi, YoutubeMetadataServisi)
 └── Kontrolcu/   (MedyaKontrolcu.cs)
 
-Desadoor.UI/Bilesenler/Medya/
+VIZITLINK3D.UI/Bilesenler/Medya/
 ├── MedyaHavuzu.razor       (ana havuz sayfası)
 ├── MedyaSecici.razor       (her yerde kullanılan picker)
 ├── MedyaKart.razor         (tek bir medya kartı)
@@ -83,7 +83,7 @@ Desadoor.UI/Bilesenler/Medya/
 - Index: `(EntiteAdi, EntiteId)` + `(MedyaId)`
 
 ### A.1.4 — DbContext + Migration
-- `DesadoorDbContext`'e 3 DbSet
+- `VIZITLINK3DDbContext`'e 3 DbSet
 - Unique index: `Medya.Hash` (kısmi — null hariç)
 - Migration adı: `MedyaHavuzuEklendi`
 - `dotnet ef database update` test
@@ -221,7 +221,7 @@ Endpoint'ler:
 - Thumbnail 50KB altı
 
 ### A.4.3 — Yedek Al
-- `Yedekler/db/desadoor_YYYYMMDD_paket_medya.db`
+- `Yedekler/db/VIZITLINK3D_YYYYMMDD_paket_medya.db`
 
 ---
 
@@ -235,12 +235,12 @@ Endpoint'ler:
 
 ### B.0.2 — Klasör İskeleti
 ```
-Desadoor.Ortak/Modeller/AI/
+VIZITLINK3D.Ortak/Modeller/AI/
 ├── AISaglayicisi.cs
 ├── AICagrisiKaydi.cs
 └── Enumlar.cs   (AISaglayiciTipi, AICagriDurumu)
 
-Desadoor.Api/Moduller/AI/
+VIZITLINK3D.Api/Moduller/AI/
 ├── Servisler/
 │   ├── IAISaglayici.cs           (interface)
 │   ├── OpenAISaglayici.cs
@@ -252,7 +252,7 @@ Desadoor.Api/Moduller/AI/
 ├── Komutlar/
 └── Kontrolcu/   (AIKontrolcu.cs)
 
-Desadoor.UI/Bilesenler/AI/
+VIZITLINK3D.UI/Bilesenler/AI/
 ├── AIYazButonu.razor       (her metin alanında "✨ AI ile Yaz")
 ├── AIStreamMetinKutusu.razor  (canlı streaming gösterimi)
 └── AIAyarlariSayfasi.razor    (admin → ayarlar → AI)

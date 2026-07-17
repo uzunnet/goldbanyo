@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Resimden 3D Üretim — Test Aracı</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Segoe UI", Arial, sans-serif;
+    background: #14151a; color: #eee; display: flex; height: 100vh;
+  }
+  .panel {
+    width: 380px; padding: 24px; overflow-y: auto;
+    background: #1c1e26; border-right: 1px solid #333;
+  }
+  h1 { font-size: 1.2rem; margin: 0 0 6px; color: #d4af37; }
+  .alt-baslik { font-size: 0.8rem; color: #999; margin-bottom: 20px; }
+  .yukleme-alani {
+    border: 2px dashed #444; border-radius: 8px; padding: 24px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .yukleme-alani:hover, .yukleme-alani.surukleniyor { border-color: #d4af37; background: #22242e; }
+  .yukleme-alani img { max-width: 100%; max-height: 160px; border-radius: 4px; margin-top: 12px; }
+  input[type="file"] { display: none; }
+  button {
+    width: 100%; padding: 12px; margin-top: 16px; border: none; border-radius: 6px;
+    background: #d4af37; color: #14151a; font-weight: 700; cursor: pointer; font-size: 0.95rem;
+  }
+  button:disabled { background: #555; color: #999; cursor: not-allowed; }
+  .durum { margin-top: 16px; padding: 12px; border-radius: 6px; font-size: 0.85rem; display: none; }
+  .durum.gorunur { display: block; }
+  .durum.bekliyor { background: #2b3550; color: #9fc0ff; }
+  .durum.basarili { background: #1e3a2b; color: #7ee8a0; }
+  .durum.hata { background: #3a1e1e; color: #ff8a8a; }
+  .spinner {
+    width: 18px; height: 18px; border: 3px solid #9fc0ff; border-top-color: transparent;
+    border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: middle;
+    animation: don 1s linear infinite;
+  }
+  @keyframes don { to { transform: rotate(360deg); } }
+  .indir-link {
+    display: inline-block; margin-top: 10px; color: #d4af37; text-decoration: none; font-weight: 600;
+  }
+  .gorunum { flex: 1; position: relative; }
+  #canvas { width: 100%; height: 100%; display: block; }
+  .ipucu { font-size: 0.75rem; color: #777; margin-top: 20px; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Resimden 3D Üretim</h1>
+    <div class="alt-baslik">TripoSR ile tek fotoğraftan statik 3D model üretimi (test aracı, Gold Banyo sitesinden bağımsız)</div>
+
+    <label class="yukleme-alani" id="yuklemeAlani">
+      <input type="file" id="dosyaSecici" accept="image/*">
+      <div id="yuklemeMetni">📷 Resim seç veya sürükle-bırak</div>
+      <img id="onizlemeResim" style="display:none">
+    </label>
+
+    <button id="uretButon" disabled>3D Model Üret</button>
+
+    <div class="durum" id="durumKutusu"></div>
+
+    <div class="ipucu">
+      Not: CPU üzerinde çalıştığı için işlem ~30-90 saniye sürebilir.<br>
+      En iyi sonuç için: düz/nötr arka planlı, önden çekilmiş, tek nesneli fotoğraflar kullanın.
+    </div>
+  </div>
+
+  <div class="gorunum">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script src="/statik/js/lib/three/three.min.js"></script>
+  <script src="/statik/js/lib/three/OrbitControls.js"></script>
+  <script src="/statik/js/lib/three/GLTFLoader.js"></script>
+  <script>
+    const dosyaSecici = document.getElementById('dosyaSecici');
+    const yuklemeAlani = document.getElementById('yuklemeAlani');
+    const yuklemeMetni = document.getElementById('yuklemeMetni');
+    const onizlemeResim = document.getElementById('onizlemeResim');
+    const uretButon = document.getElementById('uretButon');
+    const durumKutusu = document.getElementById('durumKutusu');
+
+    let secilenDosya = null;
+
+    dosyaSecici.addEventListener('change', () => {
+      if (dosyaSecici.files.length > 0) {
+        secilenDosya = dosyaSecici.files[0];
+        onizlemeResim.src = URL.createObjectURL(secilenDosya);
+        onizlemeResim.style.display = 'block';
+        yuklemeMetni.textContent = secilenDosya.name;
+        uretButon.disabled = false;
+      }
+    });
+
+    ['dragover', 'dragleave', 'drop'].forEach(evt => {
+      yuklemeAlani.addEventListener(evt, (e) => {
+        e.preventDefault();
+        yuklemeAlani.classList.toggle('surukleniyor', evt === 'dragover');
+        if (evt === 'drop' && e.dataTransfer.files.length > 0) {
+          dosyaSecici.files = e.dataTransfer.files;
+          dosyaSecici.dispatchEvent(new Event('change'));
+        }
+      });
+    });
+
+    function durumGoster(sinif, metin) {
+      durumKutusu.className = 'durum gorunur ' + sinif;
+      durumKutusu.innerHTML = metin;
+    }
+
+    uretButon.addEventListener('click', async () => {
+      if (!secilenDosya) return;
+      uretButon.disabled = true;
+      durumGoster('bekliyor', '<span class="spinner"></span>Model üretiliyor, lütfen bekleyin (CPU üzerinde ~30-90sn sürebilir)...');
+
+      const formData = new FormData();
+      formData.append('dosya', secilenDosya);
+
+      try {
+        const yanit = await fetch('/uret', { method: 'POST', body: formData });
+        if (!yanit.ok) {
+          const hataMetni = await yanit.text();
+          throw new Error(`HTTP ${yanit.status}: ${hataMetni}`);
+        }
+        const blob = await yanit.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        durumGoster('basarili', `✅ Model üretildi (${(blob.size / 1024 / 1024).toFixed(2)} MB)<br><a class="indir-link" href="${blobUrl}" download="model.glb">⬇ GLB dosyasını indir</a>`);
+        modeliGoster(blobUrl);
+      } catch (hata) {
+        durumGoster('hata', `❌ Hata: ${hata.message}`);
+      } finally {
+        uretButon.disabled = false;
+      }
+    });
+
+    // === Basit Three.js Görüntüleyici ===
+    const canvas = document.getElementById('canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const sahne = new THREE.Scene();
+    sahne.background = new THREE.Color(0x1a1b22);
+
+    const kamera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+    kamera.position.set(2, 1.5, 2);
+
+    const kontroller = new THREE.OrbitControls(kamera, canvas);
+    kontroller.enableDamping = true;
+
+    sahne.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
+    const yonluIsik = new THREE.DirectionalLight(0xffffff, 1.2);
+    yonluIsik.position.set(3, 5, 2);
+    sahne.add(yonluIsik);
+
+    let mevcutModel = null;
+
+    function boyutAyarla() {
+      const genislik = canvas.parentElement.clientWidth;
+      const yukseklik = canvas.parentElement.clientHeight;
+      renderer.setSize(genislik, yukseklik);
+      kamera.aspect = genislik / yukseklik;
+      kamera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', boyutAyarla);
+    boyutAyarla();
+
+    function modeliGoster(glbUrl) {
+      if (mevcutModel) {
+        sahne.remove(mevcutModel);
+      }
+      const yukleyici = new THREE.GLTFLoader();
+      yukleyici.load(glbUrl, (gltf) => {
+        const model = gltf.scene;
+
+        const kutu = new THREE.Box3().setFromObject(model);
+        const boyut = kutu.getSize(new THREE.Vector3());
+        const merkez = kutu.getCenter(new THREE.Vector3());
+        const enBuyuk = Math.max(boyut.x, boyut.y, boyut.z) || 1;
+        const olcek = 1.5 / enBuyuk;
+        model.scale.setScalar(olcek);
+        model.position.sub(merkez.multiplyScalar(olcek));
+
+        sahne.add(model);
+        mevcutModel = model;
+
+        kontroller.target.set(0, 0, 0);
+        kamera.position.set(1.8, 1.2, 1.8);
+        kontroller.update();
+      }, undefined, (hata) => {
+        console.error('GLB yukleme hatasi:', hata);
+      });
+    }
+
+    function canlandir() {
+      requestAnimationFrame(canlandir);
+      kontroller.update();
+      renderer.render(sahne, kamera);
+    }
+    canlandir();
+  </script>
+</body>
+</html>

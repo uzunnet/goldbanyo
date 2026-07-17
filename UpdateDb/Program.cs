@@ -1,108 +1,66 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 
-class Program {
-    static void Main() {
-        string dbPath = @"i:\desedoorweb\Desadoor.Api\desadoor.db";
-        string backupDir = @"i:\desedoorweb\Yedekler\db";
-        
-        Console.WriteLine("=== REFERANS EKLEME BAŞLADI ===");
-        
-        if (!File.Exists(dbPath)) {
+class Program
+{
+    static void Main()
+    {
+        string dbPath = @"I:\goldbanyo_web\VizitLink3D.Api\vizitlink3d.db";
+
+        Console.WriteLine("=== FIRMA TEMA DOGRULAMA ===");
+
+        if (!File.Exists(dbPath))
+        {
             Console.WriteLine($"HATA: Veritabanı dosyası bulunamadı: {dbPath}");
             return;
         }
 
-        try {
-            if (!Directory.Exists(backupDir)) {
-                Directory.CreateDirectory(backupDir);
-            }
-            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string backupPath = Path.Combine(backupDir, $"desadoor_{timestamp}_guncelleme_oncesi.db");
-            File.Copy(dbPath, backupPath, true);
-            Console.WriteLine($"YEDEK ALINDI: {backupPath}");
-        }
-        catch (Exception ex) {
-            Console.WriteLine($"YEDEKLEME HATASI: {ex.Message}");
-            return;
-        }
-
-        var referanslar = new List<(string Ad, string Aciklama)>
+        try
         {
-            ("SERTEPE İNŞAAT", "45 DAİRE"),
-            ("ALPİŞ İNŞAAT", "120 DAİRE"),
-            ("YG GÖKTAŞ İNŞ.", "96 DAİRE"),
-            ("KUMOVA İNŞAAT", "196 DAİRE"),
-            ("CELAL İNŞAAT", "40 DAİRE"),
-            ("ULU ÇINAR", "16 VİLLA KOMPLE"),
-            ("SADRİOĞULLARI İNŞ.", "200 DAİRE"),
-            ("BEZEK MİMARLIK", "150 DAİRE"),
-            ("FAHRETTİN DENGİZ İNŞ.", "60 DAİRE"),
-            ("OLCAY ANIK İNŞAAT", "50 DAİRE"),
-            ("SÜLEYMAN GARİP İNŞAAT", "30 DAİRE"),
-            ("DİRLİK İNŞAAT", "35 DAİRE"),
-            ("CEM İNŞAAT", "40 DAİRE"),
-            ("KUDU İNŞAAT", "70 DAİRE"),
-            ("SADİ ALAGÖZ İNŞAAT", "50 DAİRE"),
-            ("KLAS İNŞAAT", "30 DAİRE"),
-            ("YASİN TEKİN İNŞAAT", "40 DAİRE"),
-            ("ŞURA İNŞAAT", "70 DAİRE"),
-            ("AKAR İNŞAAT", "60 DAİRE"),
-            ("EDT TEKSTİL", "30 DAİRE"),
-            ("ZENGİN İNŞAAT", "60 DAİRE")
-        };
-
-        try {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
-            
-            // Get current max SiraNo
-            int maxSiraNo = 0;
-            using (var cmd = new SqliteCommand("SELECT MAX(SiraNo) FROM Referanslar WHERE SilindiMi = 0", connection)) {
-                var result = cmd.ExecuteScalar();
-                if (result != DBNull.Value && result != null) {
-                    maxSiraNo = Convert.ToInt32(result);
+
+            using (var oku = new SqliteCommand("""
+SELECT Id, Slug, Ad, AdminTema, SiteTema
+FROM Firmalar
+WHERE Slug IN ('goldbanyo', 'goldbanyo-demo', 'VIZITLINK3D')
+ORDER BY Id;
+""", connection))
+            using (var okuyucu = oku.ExecuteReader())
+            {
+                while (okuyucu.Read())
+                {
+                    Console.WriteLine($"{okuyucu.GetInt32(0)} | {okuyucu.GetString(1)} | {okuyucu.GetString(2)} | admin={okuyucu["AdminTema"]} | site={okuyucu["SiteTema"]}");
                 }
             }
 
-            int eklenen = 0;
-            string nowStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-
-            foreach (var r in referanslar) {
-                // Check if already exists
-                using (var checkCmd = new SqliteCommand("SELECT COUNT(1) FROM Referanslar WHERE Ad = @Ad AND SilindiMi = 0", connection)) {
-                    checkCmd.Parameters.AddWithValue("@Ad", r.Ad);
-                    long count = (long)checkCmd.ExecuteScalar();
-                    if (count > 0) {
-                        Console.WriteLine($"ATLANDI: {r.Ad} (Zaten var)");
-                        continue;
-                    }
-                }
-
-                maxSiraNo++;
-                string sql = @"
-                    INSERT INTO Referanslar (Ad, Tip, Aciklama, SiraNo, AktifMi, OlusturulmaTarihi, SilindiMi)
-                    VALUES (@Ad, 'Müşteri', @Aciklama, @SiraNo, 1, @OlusturulmaTarihi, 0)";
-                
-                using (var cmd = new SqliteCommand(sql, connection)) {
-                    cmd.Parameters.AddWithValue("@Ad", r.Ad);
-                    cmd.Parameters.AddWithValue("@Aciklama", r.Aciklama);
-                    cmd.Parameters.AddWithValue("@SiraNo", maxSiraNo);
-                    cmd.Parameters.AddWithValue("@OlusturulmaTarihi", nowStr);
-                    
-                    int rows = cmd.ExecuteNonQuery();
-                    if (rows > 0) {
-                        Console.WriteLine($"EKLENDI: {r.Ad} ({r.Aciklama})");
-                        eklenen++;
-                    }
-                }
+            using (var guncelle = new SqliteCommand("""
+UPDATE Firmalar
+SET SiteTema = 'gold',
+    AdminTema = COALESCE(NULLIF(AdminTema, ''), 'endustri-karanlik')
+WHERE Slug = 'goldbanyo';
+""", connection))
+            {
+                int rows = guncelle.ExecuteNonQuery();
+                Console.WriteLine($"Guncellenen satir: {rows}");
             }
 
-            Console.WriteLine($"İŞLEM TAMAMLANDI. Toplam {eklenen} yeni referans eklendi.");
+            using (var tekrarOku = new SqliteCommand("""
+SELECT Id, Slug, Ad, AdminTema, SiteTema
+FROM Firmalar
+WHERE Slug = 'goldbanyo';
+""", connection))
+            using (var okuyucu = tekrarOku.ExecuteReader())
+            {
+                while (okuyucu.Read())
+                {
+                    Console.WriteLine($"SONUC => {okuyucu.GetInt32(0)} | {okuyucu.GetString(1)} | {okuyucu.GetString(2)} | admin={okuyucu["AdminTema"]} | site={okuyucu["SiteTema"]}");
+                }
+            }
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Console.WriteLine($"HATA OLUŞTU: {ex.Message}");
         }
     }

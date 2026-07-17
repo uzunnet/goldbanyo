@@ -8,7 +8,7 @@
 
 ## 1. OZET (3 cumle)
 
-1. **Build SORUNSUZ** — `dotnet build Desadoor.slnx` → `0 Uyari, 0 Hata`.
+1. **Build SORUNSUZ** — `dotnet build VIZITLINK3D.slnx` → `0 Uyari, 0 Hata`.
 2. Sistemin "calismama" sebebi **port cakismasi**: eski `dotnet run` surecleri
    olmedi, 5015 ve 5013'u hala tutuyor; yeni instance "address already in use"
    ile patliyor.
@@ -42,7 +42,7 @@ Unhandled exception. ... Failed to bind to address http://127.0.0.1:5015
 
 ### 2.3 Portu tutan zombi surecler (PID kaniti)
 ```
-Port 5015 -> PID 31352  Desadoor.Api   (baslangic 18:39:44)
+Port 5015 -> PID 31352  VIZITLINK3D.Api   (baslangic 18:39:44)
 Port 5013 -> PID 21964  dotnet         (baslangic 18:40:15)
 
 Acik dotnet surecleri: 31352, 4848, 7868, 21964, 26648, 30716, 34520
@@ -52,10 +52,10 @@ gercekte **portu birakmadan** ayakta kaldi + uzerine yeni denemeler birikti
 (7+ dotnet sureci). Bu yuzden her yeni `dotnet run` 10048 ile dusuyor.
 
 ### 2.4 Migration uyumsuzlugu (gizli)
-- Bu oturumda `DesadoorDbContext.cs`'te 20 DbSet acildi (Urunler, RalRenkleri,
+- Bu oturumda `VIZITLINK3DDbContext.cs`'te 20 DbSet acildi (Urunler, RalRenkleri,
   Malzemeler, KaplamaSecenekleri, UrunUcBoyutParcalari, ...).
 - Startup logu: `No migrations were applied. The database is already up to date.`
-- Yani EF yeni tablolari OLUSTURMADI; `desadoor.db` eski semada.
+- Yani EF yeni tablolari OLUSTURMADI; `VIZITLINK3D.db` eski semada.
 - Sonuc: calisan eski binary (PID 31352) sorun gostermez (eski derleme), ama
   GUNCEL binary calistiginda `Urunler`/`RalRenkleri` vb. sorgulari
   "no such table" ile patlar.
@@ -78,9 +78,9 @@ duzeltilmeden urun sistemi calismaz. KN-3 sadece dokuman guncelligi.
 ## 4. COZUM PLANI (sirayla)
 
 ### Adim 1 — Port temizligi (KN-1) [ZORUNLU, ILK]
-- [ ] Tum eski Desadoor surecleri kapat:
+- [ ] Tum eski VIZITLINK3D surecleri kapat:
   ```
-  Get-Process dotnet,Desadoor.Api -ErrorAction SilentlyContinue |
+  Get-Process dotnet,VIZITLINK3D.Api -ErrorAction SilentlyContinue |
     Stop-Process -Force
   ```
   veya yalniz portu tutanlar:
@@ -95,13 +95,13 @@ duzeltilmeden urun sistemi calismaz. KN-3 sadece dokuman guncelligi.
   baslatilmamali.
 
 ### Adim 2 — Migration hizalama (KN-2) [ZORUNLU]
-- [ ] DB yedek: `Yedekler/db/desadoor_YYYYMMDD_urun_oncesi.db`.
+- [ ] DB yedek: `Yedekler/db/VIZITLINK3D_YYYYMMDD_urun_oncesi.db`.
 - [ ] `UrunParcaEslemesi.cs` saf POCO mu dogrula (build yesil oldugu icin
   muhtemelen tamam — yine de gozden gecir).
 - [ ] Migration olustur:
   ```
-  dotnet ef migrations add UrunOmurgasiEklendi --project Desadoor.Api
-  dotnet ef database update --project Desadoor.Api
+  dotnet ef migrations add UrunOmurgasiEklendi --project VIZITLINK3D.Api
+  dotnet ef database update --project VIZITLINK3D.Api
   ```
 - [ ] `__EFMigrationsHistory`'de yeni kaydin ve yeni tablolarin
   (`Urunler`, `RalRenkleri`, `Malzemeler` ...) olustugunu dogrula.
@@ -144,7 +144,7 @@ duzeltilmeden urun sistemi calismaz. KN-3 sadece dokuman guncelligi.
 
 | Konu | Durum |
 |---|---|
-| `dotnet build Desadoor.slnx` | YESIL (0 hata) |
+| `dotnet build VIZITLINK3D.slnx` | YESIL (0 hata) |
 | `UrunParcaEslemesi.cs` | Build'i kirmiyor (eksilermd bayat) |
 | Port 5015 / 5013 | Zombi sureclerce tutulu → temizlenmeli (Adim 1) |
 | DbContext yeni DbSet'ler | Acik, migration YOK → Adim 2 |

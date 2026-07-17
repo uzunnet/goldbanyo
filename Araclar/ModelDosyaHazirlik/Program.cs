@@ -27,8 +27,8 @@ var konumArgs = args.Where(a => !a.StartsWith("--")).ToArray();
 bool silmeyiUygula = args.Contains("--sil"); // bayraksiz: silinecekleri sadece listeler (guvenli kuru calisma)
 string kaynak = konumArgs.Length > 0 ? konumArgs[0] : @"I:\modeller";
 string projeKok = konumArgs.Length > 1 ? konumArgs[1] : @"I:\desedoorweb";
-string kapaklarHedef = Path.Combine(projeKok, "Desadoor.UI", "wwwroot", "medya", "kapaklar");
-string glbHedef = Path.Combine(projeKok, "Desadoor.UI", "wwwroot", "medya", "3d");
+string kapaklarHedef = Path.Combine(projeKok, "VIZITLINK3D.UI", "wwwroot", "medya", "kapaklar");
+string glbHedef = Path.Combine(projeKok, "VIZITLINK3D.UI", "wwwroot", "medya", "3d");
 
 // 3D modeli olan 41 hedef numara (sade NRD {N}.glb mevcut olanlar).
 int[] hedefNumaralar =

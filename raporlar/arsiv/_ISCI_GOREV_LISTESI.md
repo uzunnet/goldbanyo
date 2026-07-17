@@ -42,7 +42,7 @@
 - **Dil:** %100 Türkçe açıklama. Kod örnekleri C# 14 / Razor / CSS.
 - **Frontmatter:** Mevcut iskeletteki `name`, `description`, `status` korunur. `status: TAMAM` yapılır.
 - **Marka-nötr:**
-  - ❌ `KapiModeli`, `KapiKategorisi`, `desadoor.com.tr`, `bronz`, `kapı`, `mobilya`
+  - ❌ `KapiModeli`, `KapiKategorisi`, `VIZITLINK3D.com.tr`, `bronz`, `kapı`, `mobilya`
   - ✅ `Urun`, `Kategori`, `Musteri`, `Siparis`, `Fatura`, `[PROJE_ADI]`, `[FIRMA_ADI]`, `[URL_BIRINCIL]`
 - **Yer Tutucu Sözdizimi:** `[TEMA.ANA_RENK]`, `[00_PROJE_BILGISI.port_api]` (çift köşeli parantez içinde dot notation)
 - **Kod örnekleri:** Minimum 5-10 örnek. Hem yanlış (`❌`) hem doğru (`✅`) gösterilir.
@@ -230,7 +230,7 @@ Her işçi dosyasını teslim ettikten sonra **gözden geçirme**:
 
 ```
 [ ] Frontmatter doğru (name, description, status: TAMAM)
-[ ] Marka-nötr (DesaDoor / kapı / bronz YOK)
+[ ] Marka-nötr (VIZITLINK3D / kapı / bronz YOK)
 [ ] %100 Türkçe açıklama
 [ ] Kod örnekleri C# 14 / .NET 10 / Blazor 10
 [ ] Wrapper isimleri kullanıldı

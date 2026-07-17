@@ -35,5 +35,19 @@ public partial class DinamikSayfaRenderer : ComponentBase
         catch { _sayfa = null; }
         _yukleniyor = false;
     }
+
+    private string GorselAdresi(string? yol)
+    {
+        if (string.IsNullOrWhiteSpace(yol))
+            return string.Empty;
+
+        if (yol.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            return yol;
+
+        if (yol.StartsWith("/api/", StringComparison.OrdinalIgnoreCase))
+            return $"{Api.ApiBaseUrl.TrimEnd('/')}{yol}";
+
+        return yol;
+    }
 }
 

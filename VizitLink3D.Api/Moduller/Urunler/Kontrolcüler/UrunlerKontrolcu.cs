@@ -70,22 +70,6 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
             }
         }
 
-        var gorselsizIdler = liste.Where(u => u.AnaGorselMedyaId == null || u.AnaGorselMedyaId == 0).Select(u => u.Id).ToList();
-        if (gorselsizIdler.Any())
-        {
-            var fallbackMedya = await vt.Medyalar
-                .AsNoTracking()
-                .Where(m => !m.SilindiMi && m.DosyaYolu != null && m.DosyaYolu.Contains("kapaklar"))
-                .OrderByDescending(m => m.OlusturulmaTarihi)
-                .Select(m => m.Id)
-                .FirstOrDefaultAsync();
-            if (fallbackMedya > 0)
-            {
-                foreach (var urun in liste.Where(u => u.AnaGorselMedyaId == null || u.AnaGorselMedyaId == 0))
-                    urun.AnaGorselMedyaId = fallbackMedya;
-            }
-        }
-
         if (!string.IsNullOrWhiteSpace(dil) && !dil.Equals("tr", StringComparison.OrdinalIgnoreCase))
         {
             var aktifDil = dil.ToLowerInvariant();
@@ -286,7 +270,7 @@ public class UrunlerKontrolcu(VizitLink3DDbContext vt, IOtomatikCeviriServisi ot
     {
         var medyalar = await vt.UrunMedyalari
             .AsNoTracking()
-            .Where(m => m.UrunId == id)
+            .Where(m => m.UrunId == id && !m.SilindiMi)
             .OrderBy(m => m.SiraNo)
             .ToListAsync();
 

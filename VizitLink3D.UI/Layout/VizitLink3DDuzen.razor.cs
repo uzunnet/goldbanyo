@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using VizitLink3D.Ortak.Yardimcilar;
 using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.UI.Servisler;
 
@@ -23,9 +24,12 @@ public partial class VizitLink3DDuzen : IDisposable
     private string? _logoUrl;
     private List<DilServisi.DilBilgisi> _diller = [];
     private bool _ilkRenderTamamlandi;
+    private bool _mobilMenuAcik;
 
     private List<MenuBaglantisi> _menu = [];
     private bool KoyuTemaMi => _aktifTemaModu != "acik";
+    private string MobilMenuClass => MobilMenuGorunumYardimcisi.MenuSinifi(_mobilMenuAcik);
+    private string MobilMenuDugmeClass => MobilMenuGorunumYardimcisi.DugmeSinifi(_mobilMenuAcik);
 
     private readonly MudTheme _tema = new()
     {
@@ -266,6 +270,10 @@ public partial class VizitLink3DDuzen : IDisposable
     }
 
     private string TemaModuClass(string mod) => _aktifTemaModu == mod ? "gb-mod-btn aktif" : "gb-mod-btn";
+
+    private void MobilMenuDegistir() => _mobilMenuAcik = !_mobilMenuAcik;
+
+    private void MobilMenuKapat() => _mobilMenuAcik = false;
 
     private void DilDegisti()
     {

@@ -1,7 +1,7 @@
-# YENPLAN - DesaDoor Endustriyel Sistem Toparlama Plani
+# YENPLAN - VIZITLINK3D Endustriyel Sistem Toparlama Plani
 
 > Olusturulma: 2026-05-16  
-> Amac: DesaDoor sistemini parca parca calisan ekrandan, admin-DB-frontend-3D-medya baglantilari tek omurgaya oturan endustriyel urun yonetimi sistemine cevirmek.  
+> Amac: VIZITLINK3D sistemini parca parca calisan ekrandan, admin-DB-frontend-3D-medya baglantilari tek omurgaya oturan endustriyel urun yonetimi sistemine cevirmek.  
 ---
 
 ## 1. Ana Teshis
@@ -308,7 +308,7 @@ Basari kriteri:
 ---
 
 
-- [ ] `Desadoor.Ortak` build context icinde gorunur olacak.
+- [ ] `VIZITLINK3D.Ortak` build context icinde gorunur olacak.
 - [ ] Production UI `localhost:5015` yerine relative API/proxy kullanacak.
 - [ ] CDN bagimliliklari yerel dosyaya alinacak veya kontrollu CSP yazilacak.
 - [ ] Production smoke test otomatiklesecek.

@@ -5,30 +5,30 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 # === PROJE KİMLİĞİ ===
-proje_adi: "DesaDoor"
-firma_adi: "DesaDoor A.Ş."
-firma_unvan: "DesaDoor Mobilya Kapak ve Kapı Sistemleri"
-sektor: "kapı/mobilya"
-slogan: "Her mekana özel kapılar"
-kurulus_yili: 1992
+proje_adi: "Gold Banyo"
+firma_adi: "Gold Banyo A.Ş."
+firma_unvan: "Gold Banyo Özel Tasarım Mobilyaları"
+sektor: "banyo mobilyaları"
+slogan: "Lüks banyolara altın dokunuşlar"
+kurulus_yili: 2005
 
 # === DOMAIN / URL ===
-url_birincil: "desadoor.com.tr"
-url_yedek: "www.desadoor.com.tr"
+url_birincil: "goldbanyo.com.tr"
+url_yedek: "www.goldbanyo.com.tr"
 admin_url: "/admin"
 api_base_url: "/api"
 
 # === PORTLAR ===
-port_api: 5015
-port_ui: 5013
-port_signalr: 5015
+port_api: 5115
+port_ui: 5113
+port_signalr: 5115
 
 # === İLETİŞİM ===
 iletisim:
-  eposta: "info@desadoor.com.tr"
+  eposta: "info@goldbanyom.com.tr"
   telefon_1: "+90 224 482 24 00"
   telefon_2: "+90 533 597 32 14"
-  whatsapp: ""
+  whatsapp: "+90 533 597 32 14"
   adres: "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA"
   sehir: "Bursa"
   ilce: "Nilüfer"
@@ -39,8 +39,8 @@ iletisim:
 
 # === SOSYAL MEDYA ===
 sosyal:
-  instagram: "https://instagram.com/desadoor.com.tr"
-  facebook: "https://facebook.com/desadoor"
+  instagram: "https://www.instagram.com/gold.banyom/"
+  facebook: "https://www.facebook.com/gold.banyo"
   twitter: ""
   linkedin: ""
   youtube: ""
@@ -49,7 +49,7 @@ sosyal:
 
 # === TEMA / RENK PALETİ ===
 tema:
-  varyant: "Industrial Luxury"
+  varyant: "Gold Luxury Modern"
   ana_renk: "#1A1A27"
   ana_renk_2: "#0a0a0a"
   ikincil_renk: "#C8952A"
@@ -76,7 +76,7 @@ font:
 
 # === STITCH (Google) ENTEGRASYONU ===
 stitch:
-  aktif: false
+  aktif: true
   design_md_yolu: "tasarim/DESIGN.md"
   hot_reload: false
   fallback_palet: "tema"
@@ -155,14 +155,14 @@ deploy:
   csp_aktif: true
 ---
 
-# DesaDoor Proje Bilgisi
+# VizitLink3D Proje Bilgisi
 
 Bu dosya `AGENTS.md` standardına göre doldurulmuştur. Tüm kural dosyaları bu değerlere referans verir.
 
 ## Bağlantılar
 
-- **Domain:** desadoor.com.tr
-- **API:** http://localhost:5015
-- **UI:** http://localhost:5013
-- **Admin:** http://localhost:5013/admin/giris
-- **Admin Kullanıcı:** admin / desadoor2024
+- **Domain:** 3dvizitlink.com.tr
+- **API:** http://localhost:5115
+- **UI:** http://localhost:5113
+- **Admin:** http://localhost:5113/admin/giris
+- **Admin Kullanıcı:** admin / vizitlink3d2024

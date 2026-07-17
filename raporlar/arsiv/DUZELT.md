@@ -1,10 +1,10 @@
-# 🛠️ DESADOOR DÜZELT.md — SİSTEM DÜZELTME VE TAMAMLAMA TAKİP DOSYASI
+# 🛠️ VIZITLINK3D DÜZELT.md — SİSTEM DÜZELTME VE TAMAMLAMA TAKİP DOSYASI
 
 > **Hazırlayan (Araştırma):** Claude Haiku 4.5
 > **Uygulanacak:** Başka model (Opus / Sonnet) veya geliştirici
-> **Proje:** I:\desedoorweb (DesaDoor — Kapı/Mobilya Kurumsal Site)
+> **Proje:** I:\desedoorweb (VIZITLINK3D — Kapı/Mobilya Kurumsal Site)
 > **Anayasa:** I:\desedoorweb\KURALLAR.md (uyulacak)
-> **Referans Site:** https://www.desadoor.com.tr/
+> **Referans Site:** https://www.VIZITLINK3D.com.tr/
 > **Tarih:** 2026-05-14
 
 ---
@@ -28,7 +28,7 @@
 - Three.js 3D motor scripti var (§28 hazır)
 - AOS + GSAP animasyon kütüphaneleri kurulu
 - API port **5015**, UI port **5013** çalışıyor
-- SQLite desadoor.db dosyası var
+- SQLite VIZITLINK3D.db dosyası var
 - 7 temel tablo migration ile oluşturulmuş
 - Admin paneli 14 sayfa iskeleti var (Pages/Admin/)
 - SignalR SohbetHub kurulu
@@ -61,17 +61,17 @@
 
 ### ☐ 0.1 — KURALLAR.md oluştur
 - **Konum:** `I:\desedoorweb\KURALLAR.md`
-- **İçerik:** Ustam'ın verdiği orijinal vizitlink anayasasını **DesaDoor için adapte et**:
-  - "Vizitlink" → "DesaDoor" (uygun yerlerde)
-  - Port 5005/5003 → **5015/5013** (DesaDoor portları)
-  - Multi-tenant başlangıçta opsiyonel (DesaDoor tek firma ama altyapı SaaS-ready kalsın)
+- **İçerik:** Ustam'ın verdiği orijinal vizitlink anayasasını **VIZITLINK3D için adapte et**:
+  - "Vizitlink" → "VIZITLINK3D" (uygun yerlerde)
+  - Port 5005/5003 → **5015/5013** (VIZITLINK3D portları)
+  - Multi-tenant başlangıçta opsiyonel (VIZITLINK3D tek firma ama altyapı SaaS-ready kalsın)
   - SQLite üretim → SQLite geliştirme + PostgreSQL üretim (mevcut yapıyı koru)
   - "Ustam Ahmet" hitabını koru
-- **Önemli:** Anayasanın "DOSYA ASLA KISALTILAMAZ" kuralı (§0 sonu) — tam orijinal halini al, sadece DesaDoor adaptasyon notu olarak başa ekle:
+- **Önemli:** Anayasanın "DOSYA ASLA KISALTILAMAZ" kuralı (§0 sonu) — tam orijinal halini al, sadece VIZITLINK3D adaptasyon notu olarak başa ekle:
   ```
-  > **DesaDoor Adaptasyon Notu:** Bu anayasa Vizitlink SaaS için yazılmıştır.
-  > DesaDoor projesi bu anayasanın kapı/mobilya kurumsal site adaptasyonudur.
-  > Multi-tenant başlangıçta tek firma (DesaDoor) için çalışır ama altyapı SaaS-ready.
+  > **VIZITLINK3D Adaptasyon Notu:** Bu anayasa Vizitlink SaaS için yazılmıştır.
+  > VIZITLINK3D projesi bu anayasanın kapı/mobilya kurumsal site adaptasyonudur.
+  > Multi-tenant başlangıçta tek firma (VIZITLINK3D) için çalışır ama altyapı SaaS-ready.
   ```
 - **Doğrulama:** Dosya I:\desedoorweb kökünde, satır sayısı 2500+ olmalı
 
@@ -79,7 +79,7 @@
 - **Konum:** `I:\desedoorweb\GOREV_1_YAPILDI.md`
 - **Format:**
   ```markdown
-  # DesaDoor — Tamamlanan Görevler
+  # VIZITLINK3D — Tamamlanan Görevler
   
   ## 2026-05-XX
   - [x] Anayasa (KURALLAR.md) kuruldu
@@ -121,7 +121,7 @@
 ### ☐ 0.5 — Yedekler/ klasörü oluştur
 - **Konum:** `I:\desedoorweb\Yedekler\`
 - **Alt klasörler:** `db/`, `anayasa_yedek_2026XXXX/`
-- **İçerik:** Mevcut desadoor.db dosyasını `Yedekler/db/desadoor_20260514_baslangic.db` olarak kopyala
+- **İçerik:** Mevcut VIZITLINK3D.db dosyasını `Yedekler/db/VIZITLINK3D_20260514_baslangic.db` olarak kopyala
 - **Doğrulama:** Yedek dosyası var
 
 ### ☐ 0.6 — .gitignore güncelle
@@ -154,13 +154,13 @@
 
 ### ☐ 1.A.1 — Mevcut 7 model dosyasını incele
 **Dosyalar:**
-- `Desadoor.Api/Modeller/KapakModeli.cs`
-- `Desadoor.Api/Modeller/SayfaIcerigi.cs`
-- `Desadoor.Api/Modeller/GaleriGorseli.cs`
-- `Desadoor.Api/Modeller/YoneticiKullanici.cs`
-- `Desadoor.Api/Modeller/CanliSohbetMesaji.cs`
-- `Desadoor.Ortak/Modeller/Icerik/MenuOgesi.cs`
-- `Desadoor.Ortak/Modeller/Icerik/BlogYazisi.cs` vb.
+- `VIZITLINK3D.Api/Modeller/KapakModeli.cs`
+- `VIZITLINK3D.Api/Modeller/SayfaIcerigi.cs`
+- `VIZITLINK3D.Api/Modeller/GaleriGorseli.cs`
+- `VIZITLINK3D.Api/Modeller/YoneticiKullanici.cs`
+- `VIZITLINK3D.Api/Modeller/CanliSohbetMesaji.cs`
+- `VIZITLINK3D.Ortak/Modeller/Icerik/MenuOgesi.cs`
+- `VIZITLINK3D.Ortak/Modeller/Icerik/BlogYazisi.cs` vb.
 
 **Kontrol kriterleri:**
 - [ ] Tüm property'ler Türkçe (PascalCase)
@@ -187,11 +187,11 @@
 ## 1.B — Eksik Tabloları Ekle (Sıralı)
 
 ### ☐ 1.B.1 — Firma (SaaS-ready, başlangıçta tek kayıt)
-**Konum:** `Desadoor.Ortak/Modeller/Core/Firma.cs` (mevcut, zenginleştir)
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Core/Firma.cs` (mevcut, zenginleştir)
 **Alanlar:**
 ```
 Id, Slug, Ad, AciklamaKisa, Aciklama,
-Domain (desadoor.com.tr), YedekDomain (www.desadoor.com.tr),
+Domain (VIZITLINK3D.com.tr), YedekDomain (www.VIZITLINK3D.com.tr),
 Logo, Favicon, Eposta, Telefon1, Telefon2, Whatsapp,
 Adres, Sehir, Ilce, PostaKodu, Ulke,
 Enlem, Boylam (harita için),
@@ -200,10 +200,10 @@ Twitter, Facebook, Instagram, YoutubeKanal, Pinterest, LinkedIn, TiktokKanal,
 TasarimRengi1, TasarimRengi2, TasarimRengi3 (tema renkleri),
 AktifMi, OlusturulmaTarihi
 ```
-**Seed:** DesaDoor firma kaydı (Bursa Çalı adresi, tel: 0224 482 24 00, vb.)
+**Seed:** VIZITLINK3D firma kaydı (Bursa Çalı adresi, tel: 0224 482 24 00, vb.)
 
 ### ☐ 1.B.2 — KapiKategorisi tablosu
-**Konum:** `Desadoor.Ortak/Modeller/Sektorler/KapiKategorisi.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Sektorler/KapiKategorisi.cs`
 **Alanlar:**
 ```
 Id, Slug ("membran", "lake", "laminant", "melamin", "kaplama"),
@@ -241,7 +241,7 @@ OlusturulmaTarihi, GuncellenmeTarihi
 **Yerelleştirme + Resim tabloları ekle**
 
 ### ☐ 1.B.5 — Proje + ProjeKategorisi + ProjeResim
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/Proje.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/Proje.cs`
 **ProjeKategorisi:** Mutfak, Banyo, Yatak Odası, Ofis, Taç, Aksesuar (6 kategori)
 **Proje alanları:**
 ```
@@ -254,7 +254,7 @@ OlusturulmaTarihi, GuncellenmeTarihi
 **+ ProjeYerellestirme + ProjeResim (1:N — galeri için)**
 
 ### ☐ 1.B.6 — Slayt (Hero Slider)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/Slayt.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/Slayt.cs`
 **Alanlar:**
 ```
 Id, Baslik, AltBaslik, Aciklama,
@@ -267,10 +267,10 @@ SiraNo, AktifMi, BaslangicTarihi, BitisTarihi (zaman bazlı yayın),
 OlusturulmaTarihi
 ```
 **+ SlaytYerellestirme**
-**Seed:** 4 slayt (desadoor.com.tr'deki gibi — "Her mekana her yaşama özel kapılar" vb.)
+**Seed:** 4 slayt (VIZITLINK3D.com.tr'deki gibi — "Her mekana her yaşama özel kapılar" vb.)
 
 ### ☐ 1.B.7 — Referans (TV kanalları + Müşteri logoları)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/Referans.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/Referans.cs`
 **Alanlar:**
 ```
 Id, Ad, Logo, Tip (enum: Medya, Musteri, Tedarikçi, Sertifika),
@@ -280,7 +280,7 @@ OlusturulmaTarihi
 **Seed:** Show TV, ATV, Kanal D, TRT, Eczacıbaşı + 10 müşteri logosu (placeholder)
 
 ### ☐ 1.B.8 — MusteriYorumu (Testimonial)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/MusteriYorumu.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/MusteriYorumu.cs`
 **Alanlar:**
 ```
 Id, MusteriAdi, MusteriUnvan, MusteriSehir,
@@ -292,7 +292,7 @@ YorumTarihi, OlusturulmaTarihi
 **+ MusteriYorumuYerellestirme**
 
 ### ☐ 1.B.9 — HizmetAdimi (4 Adımlı Süreç)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/HizmetAdimi.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/HizmetAdimi.cs`
 **Alanlar:**
 ```
 Id, Baslik, Aciklama, Ikon (FontAwesome class veya SVG),
@@ -302,7 +302,7 @@ AdimNo, SiraNo, AktifMi
 **Seed:** 4 adım (Ölçüm, Ön Tasarım, Detaylı Tasarım, Kurulum)
 
 ### ☐ 1.B.10 — SSS (Sıkça Sorulan Sorular)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/SikSorulanSoru.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/SikSorulanSoru.cs`
 **Alanlar:**
 ```
 Id, Soru, Cevap, KategoriAdi (Genel/Ürün/Hizmet/Garanti),
@@ -315,7 +315,7 @@ OlusturulmaTarihi
 **Alanlar:** Id, Ad, Aciklama, Resim, PdfDosya, VerilmeTarihi, GecerlilikTarihi, VerenKurum, SiraNo, AktifMi
 
 ### ☐ 1.B.12 — Katalog (PDF Dosyaları)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/Katalog.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/Katalog.cs`
 **Alanlar:**
 ```
 Id, Baslik, Aciklama, KapakResim, PdfDosyaYolu,
@@ -323,7 +323,7 @@ DosyaBoyutuMb, SayfaSayisi, Yil,
 IndirilmeSayisi, SiraNo, AktifMi,
 OlusturulmaTarihi
 ```
-**Seed:** "DesaDoor Kapı Kataloğu 2024", "DesaDoor Kapak Kataloğu 2025"
+**Seed:** "VIZITLINK3D Kapı Kataloğu 2024", "VIZITLINK3D Kapak Kataloğu 2025"
 
 ### ☐ 1.B.13 — Bulten (Newsletter Aboneleri)
 **Alanlar:** Id, Eposta, AdSoyad, AbonelikTarihi, IptalTarihi, AktifMi, DogrulamaToken, DogrulandiMi, KaynakSayfa, IP
@@ -355,7 +355,7 @@ SiraNo, AktifMi
 - `sosyal.twitter`, `sosyal.instagram`, vb.
 
 ### ☐ 1.B.18 — Ceviri (FusionCache cache'lenecek)
-**Konum:** `Desadoor.Ortak/Modeller/Icerik/Ceviri.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Icerik/Ceviri.cs`
 **Alanlar:**
 ```
 Id, Anahtar (ör: "ortak.kaydet"), Dil (tr/en/ar),
@@ -380,11 +380,11 @@ OlusturulmaTarihi, GuncellenmeTarihi
 - `IPAdresi`, `Tarayici`, `Cihaz` (analitik için)
 
 ### ☐ 1.B.22 — Lisans (anayasa §5)
-**Konum:** `Desadoor.Ortak/Modeller/Core/Lisans.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Core/Lisans.cs`
 **Alanlar:** (anayasa §5.2'deki tam yapı)
 
 ### ☐ 1.B.23 — AuditLog (anayasa §33.3 — append-only)
-**Konum:** `Desadoor.Ortak/Modeller/Core/AuditLog.cs`
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Core/AuditLog.cs`
 **Alanlar:**
 ```
 Id (long), ZamanDamgasi, CorrelationId,
@@ -405,7 +405,7 @@ IPAdresi, Tarayici, ImzaHash (bütünlük için)
 
 ## 1.C — DbContext Güncelle
 
-### ☐ 1.C.1 — DesadoorDbContext.cs'e tüm DbSet'leri ekle
+### ☐ 1.C.1 — VIZITLINK3DDbContext.cs'e tüm DbSet'leri ekle
 ```csharp
 public DbSet<Firma> Firmalar => Set<Firma>();
 public DbSet<KapiKategorisi> KapiKategorileri => Set<KapiKategorisi>();
@@ -430,11 +430,11 @@ public DbSet<Dil> Diller => Set<Dil>();
 - 5 KapiKategorisi seed
 - 20 KapiModeli seed (her kategoriden 4)
 - 4 HizmetAdimi seed
-- 4 Slayt seed (desadoor.com.tr referans metinleri)
+- 4 Slayt seed (VIZITLINK3D.com.tr referans metinleri)
 - 10 SSS seed
 - 5 Referans (Show TV, ATV, Kanal D, TRT, NTV)
 - 5 MusteriYorumu seed
-- 1 Firma (DesaDoor — Bursa Çalı)
+- 1 Firma (VIZITLINK3D — Bursa Çalı)
 - 2 Dil (TR, EN)
 - Tüm Ceviri kayıtları (mevcut tr.json + en.json'dan aktarılacak)
 
@@ -442,7 +442,7 @@ public DbSet<Dil> Diller => Set<Dil>();
 
 ### ☐ 1.D.1 — Adım adım migration (parçalı — anayasa §0.4)
 ```bash
-cd I:\desedoorweb\Desadoor.Api
+cd I:\desedoorweb\VIZITLINK3D.Api
 
 # Adım 1: Kullanıcı genişletme
 dotnet ef migrations add KullaniciModeliGenisletildi
@@ -475,10 +475,10 @@ dotnet ef database update
 ## ✅ İŞ PAKETİ 1 DOĞRULAMA
 - [ ] `dotnet ef migrations list` → 8+ yeni migration görünüyor
 - [ ] `dotnet ef database update` → hatasız çalışıyor
-- [ ] desadoor.db ~25+ tablo içeriyor (sqlite browser ile kontrol)
+- [ ] VIZITLINK3D.db ~25+ tablo içeriyor (sqlite browser ile kontrol)
 - [ ] Tüm Yerellestirme tablolarında unique index var
 - [ ] Seed verisi yüklendi (Firma, Kategori, Slayt, vb. boş değil)
-- [ ] DB yedeği `Yedekler/db/desadoor_20260514_paket1.db` alındı
+- [ ] DB yedeği `Yedekler/db/VIZITLINK3D_20260514_paket1.db` alındı
 
 ---
 
@@ -490,7 +490,7 @@ dotnet ef database update
 ### ☐ 2.A.1 — Kontrolcüleri grupla
 **Hedef yapı:**
 ```
-Desadoor.Api/Kontrolcüler/
+VIZITLINK3D.Api/Kontrolcüler/
 ├── Icerik/
 │   ├── KapiKategorisiKontrolcu.cs
 │   ├── KapiModeliKontrolcu.cs
@@ -539,7 +539,7 @@ Desadoor.Api/Kontrolcüler/
 ### ☐ 2.A.2 — Servisleri modüler yap
 **Hedef yapı:**
 ```
-Desadoor.Api/Servisler/
+VIZITLINK3D.Api/Servisler/
 ├── Iletisim/
 │   ├── IEpostaServisi.cs + EpostaServisi.cs (MailKit wrapper)
 │   ├── BultenServisi.cs
@@ -563,10 +563,10 @@ Desadoor.Api/Servisler/
 ## 2.B — Merkezi Hata Yönetimi (§7)
 
 ### ☐ 2.B.1 — Cevap<T> sınıfı oluştur
-**Konum:** `Desadoor.Ortak/Modeller/Core/Cevap.cs` (mevcut, anayasa §7.3'e göre tamamla)
+**Konum:** `VIZITLINK3D.Ortak/Modeller/Core/Cevap.cs` (mevcut, anayasa §7.3'e göre tamamla)
 
 ### ☐ 2.B.2 — HataYonetimiMiddleware
-**Konum:** `Desadoor.Api/AraYazilimlar/HataYonetimiMiddleware.cs`
+**Konum:** `VIZITLINK3D.Api/AraYazilimlar/HataYonetimiMiddleware.cs`
 **Görev:**
 - Tüm exception'ları yakala
 - Production'da detay verme, dev'de stack trace dön
@@ -586,7 +586,7 @@ Desadoor.Api/Servisler/
 ```
 
 ### ☐ 2.C.2 — Her DTO için Dogrulayici sınıfı
-**Örnek:** `Desadoor.Api/Dogrulayicilar/KapiModeliDogrulayici.cs`
+**Örnek:** `VIZITLINK3D.Api/Dogrulayicilar/KapiModeliDogrulayici.cs`
 ```csharp
 public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 {
@@ -622,30 +622,30 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 2.E — Lisans ve Domain Kilidi (§5)
 
 ### ☐ 2.E.1 — LisansDogrulamaMiddleware
-**Konum:** `Desadoor.Api/AraYazilimlar/LisansDogrulamaMiddleware.cs`
+**Konum:** `VIZITLINK3D.Api/AraYazilimlar/LisansDogrulamaMiddleware.cs`
 **Mantık:** anayasa §5.4 — domain kontrol + tarih kontrol + HMAC doğrula
 
 ### ☐ 2.E.2 — LisansUretici
-**Konum:** `Desadoor.Api/Servisler/Kimlik/LisansUreticiServisi.cs`
+**Konum:** `VIZITLINK3D.Api/Servisler/Kimlik/LisansUreticiServisi.cs`
 **Mantık:** anayasa §5.5
 
 ### ☐ 2.E.3 — appsettings.json
 ```json
 "LisansAyarlari": {
-  "GizliAnahtar": "DESADOOR_HMAC_2026_SECRET_KEY_min_32char",
+  "GizliAnahtar": "VIZITLINK3D_HMAC_2026_SECRET_KEY_min_32char",
   "HardLockGunSayisi": 7
 }
 ```
 
-### ☐ 2.E.4 — Seed: DesaDoor için lisans kaydı
-- BirincilDomain: "desadoor.com.tr"
-- YedekDomain: "www.desadoor.com.tr"
+### ☐ 2.E.4 — Seed: VIZITLINK3D için lisans kaydı
+- BirincilDomain: "VIZITLINK3D.com.tr"
+- YedekDomain: "www.VIZITLINK3D.com.tr"
 - LisansTipi: "Omurboyu" veya 5 yıllık
 
 ## 2.F — Audit Log (§33.3)
 
 ### ☐ 2.F.1 — AuditServisi
-**Konum:** `Desadoor.Api/Servisler/Sistem/AuditServisi.cs`
+**Konum:** `VIZITLINK3D.Api/Servisler/Sistem/AuditServisi.cs`
 **Metotlar:**
 - `KaydetAsync(eylem, eskiDeger, yeniDeger)`
 - Otomatik: KullaniciId, FirmaId, IPAdresi HttpContext'ten
@@ -668,24 +668,24 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 - [ ] Tüm endpoint'ler Cevap<T> dönüyor
 - [ ] Serilog konsol ve dosyaya log yazıyor (`logs/gunluk-YYYYMMDD.log`)
 - [ ] FluentValidation çalışıyor (boş ad gönderince 400 dönüyor)
-- [ ] LisansDogrulamaMiddleware desadoor.com.tr için 200, başka domain için 403
+- [ ] LisansDogrulamaMiddleware VIZITLINK3D.com.tr için 200, başka domain için 403
 - [ ] AuditLog tablosunda kayıt oluşuyor (test: bir kapı modeli oluştur)
 - [ ] DB yedeği `paket2.db` alındı
 - [ ] `dotnet test` çalışıyor (eğer test eklendiyse)
 
 ---
 
-# ▶ İŞ PAKETİ 3 — FRONTEND ANIMASYONLU SAYFALAR (desadoor.com.tr Birebir)
+# ▶ İŞ PAKETİ 3 — FRONTEND ANIMASYONLU SAYFALAR (VIZITLINK3D.com.tr Birebir)
 > **Tahmini süre:** 5-7 gün | **Öncelik:** YÜKSEK | **Anayasa:** §12, §25, §28
 
 ## 3.A — Tasarım Sistemi Hazırlığı
 
 ### ☐ 3.A.1 — tokens.css zenginleştir
-**Konum:** `Desadoor.UI/wwwroot/css/sistem/temeller/degiskenler.css`
-**DesaDoor için renk paleti (Industrial Luxury):**
+**Konum:** `VIZITLINK3D.UI/wwwroot/css/sistem/temeller/degiskenler.css`
+**VIZITLINK3D için renk paleti (Industrial Luxury):**
 ```css
 :root {
-  /* Ana renkler — Siyah/Beyaz/Bronze (desadoor.com.tr referans) */
+  /* Ana renkler — Siyah/Beyaz/Bronze (VIZITLINK3D.com.tr referans) */
   --renk-ana: #0a0a0a;
   --renk-ikinci: #c19b76;  /* Bronze */
   --renk-vurgu: #d4a574;
@@ -724,7 +724,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ```
 
 ### ☐ 3.A.2 — MudThemeProvider tokens.css ile besle
-**Konum:** `Desadoor.UI/Bilesenler/TemaSaglayici.razor` (yeni)
+**Konum:** `VIZITLINK3D.UI/Bilesenler/TemaSaglayici.razor` (yeni)
 **Görev:** MudTheme nesnesini CSS değişkenlerinden oluştur
 - Anayasa §12.3 zorunluluğu
 
@@ -735,7 +735,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 3.B — Hero Slider (Anasayfa)
 
 ### ☐ 3.B.1 — HeroSlider bileşeni
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/HeroSlider.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/HeroSlider.razor`
 **Özellikler:**
 - Tam ekran (100vh)
 - API'den Slayt listesi çek
@@ -747,7 +747,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 - Pagination (alt noktalar)
 - "Aşağı kaydır" oku (animasyonlu)
 
-### ☐ 3.B.2 — Slayt'larda kullanılacak içerik (desadoor.com.tr referans)
+### ☐ 3.B.2 — Slayt'larda kullanılacak içerik (VIZITLINK3D.com.tr referans)
 **Seed metinler:**
 1. "Her Mekana Her Yaşama Özel Kapılar" / "1992'den beri kalite ve estetik"
 2. "Çok Boyutlu Şıklık" / "Modern mutfak kapak modellerimiz"
@@ -757,46 +757,46 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 3.C — Ana Sayfa Bölümleri
 
 ### ☐ 3.C.1 — Kategori Vitrini Bölümü
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/KategoriVitrini.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/KategoriVitrini.razor`
 **Görsel:** 5 kategori kart (Membran, Lake, Laminant, Melamin, Kaplama)
 **Animasyon:** AOS scroll reveal (`data-aos="fade-up"`, stagger 100ms)
 **Hover:** Resim zoom + overlay metin
 
 ### ☐ 3.C.2 — Öne Çıkan Projeler Bölümü
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/OneCikanProjeler.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/OneCikanProjeler.razor`
 **Görsel:** Masonry grid, 6 proje
 **Animasyon:** AOS fade-in
 **Tıklayınca:** Lightbox açılır
 
 ### ☐ 3.C.3 — Hizmet Süreci Bölümü (4 Adımlı)
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/HizmetSureciBolumu.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/HizmetSureciBolumu.razor`
 **Görsel:** Yatay timeline (mobilde dikey)
 **Animasyon:** Scroll'a göre çizgi dolma + adımlar görünme
 
 ### ☐ 3.C.4 — Müşteri Yorumları Carousel
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/MusteriYorumlariCarousel.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/MusteriYorumlariCarousel.razor`
 **Özellikler:**
 - MudCarousel veya custom GSAP
 - Avatar + isim + yıldız + yorum
 - Otomatik geçiş
 
 ### ☐ 3.C.5 — Referans Şeridi (Sonsuz Kayan)
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/ReferansSeridi.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/ReferansSeridi.razor`
 **Özellikler:**
 - CSS animation: `marquee infinite`
 - Show TV, ATV, Kanal D, TRT logoları yan yana
 - Hover'da durdurma
 
-### ☐ 3.C.6 — Sayılarla DesaDoor (Counter)
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/SayilarlaDesadoor.razor`
+### ☐ 3.C.6 — Sayılarla VIZITLINK3D (Counter)
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/SayilarlaVIZITLINK3D.razor`
 **İçerik:** 1992'den beri, 1600+ proje, 1620+ müşteri, 5 kategori
 **Animasyon:** Sayı sayma efekti (görünür olunca)
 
 ### ☐ 3.C.7 — Blog Şeridi (Son 3 Yazı)
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/BlogSeridi.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/BlogSeridi.razor`
 
 ### ☐ 3.C.8 — İletişim CTA Bölümü
-**Konum:** `Desadoor.UI/Bilesenler/Anasayfa/IletisimCTA.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Anasayfa/IletisimCTA.razor`
 **Görsel:** Büyük arkaplan + "Hemen Randevu Al" butonu + telefon
 
 ## 3.D — Kategori ve Ürün Sayfaları
@@ -879,7 +879,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 
 ## 3.F — Düzen (Layout) ve Navigasyon
 
-### ☐ 3.F.1 — DesaDoorDuzen.razor zenginleştir
+### ☐ 3.F.1 — VIZITLINK3DDuzen.razor zenginleştir
 - Üstte ince haber bandı (telefon, sosyal medya)
 - Logo + ana menü + dil seçici + sepet + arama ikonu
 - Sticky header (scroll'da küçülür)
@@ -898,7 +898,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 3.G — Animasyonlar (Anayasa §28 — GSAP/AOS)
 
 ### ☐ 3.G.1 — AnimasyonMotoruServisi tamamla
-**Konum:** `Desadoor.UI/Servisler/AnimasyonMotoruServisi.cs` (mevcut, zenginleştir)
+**Konum:** `VIZITLINK3D.UI/Servisler/AnimasyonMotoruServisi.cs` (mevcut, zenginleştir)
 **Metodlar:**
 - `SayfaGirisAnimasyonAsync()` — fade-in + slight slide
 - `SayfaCikisAnimasyonAsync()` — fade-out
@@ -941,7 +941,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 - Dark/light tema toggle (MudThemeProvider)
 
 ### ☐ 4.A.2 — Komut Paleti (Ctrl+K) — §57.3
-**Konum:** `Desadoor.UI/Bilesenler/Admin/KomutPaleti.razor`
+**Konum:** `VIZITLINK3D.UI/Bilesenler/Admin/KomutPaleti.razor`
 - MudAutocomplete + glassmorphism overlay
 - Fuzzy arama: menü, sayfa, müşteri, mesaj, ürün
 - Klavye navigasyonu (↑↓ Enter Esc)
@@ -1077,7 +1077,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 - AI otomatik yanıt ayarları
 
 ## ✅ İŞ PAKETİ 4 DOĞRULAMA
-- [ ] /admin/giris → giriş yapılabiliyor (admin / desadoor2024)
+- [ ] /admin/giris → giriş yapılabiliyor (admin / VIZITLINK3D2024)
 - [ ] Dashboard açılıyor, widget'lar veri gösteriyor
 - [ ] Tüm 24+ CRUD sayfası çalışıyor (en azından liste + ekleme)
 - [ ] Ctrl+K Komut Paleti açılıyor, arama yapılıyor
@@ -1093,7 +1093,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 5.A — UcBoyutMotoru Wrapper Tamamla
 
 ### ☐ 5.A.1 — UcBoyutServisi.cs zenginleştir
-**Konum:** `Desadoor.UI/Servisler/UcBoyutServisi.cs` (mevcut)
+**Konum:** `VIZITLINK3D.UI/Servisler/UcBoyutServisi.cs` (mevcut)
 **Metodlar:**
 - `SahneBaslatAsync(string canvasId, string modelUrl)`
 - `ModeliYukleAsync(string modelUrl)` — .glb/.gltf/.obj
@@ -1105,7 +1105,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 - `OtomatikDondurBaslatAsync(bool aktif)`
 
 ### ☐ 5.A.2 — uc-boyut-motoru.js geliştir
-**Konum:** `Desadoor.UI/wwwroot/js/uc-boyut-motoru.js` (mevcut)
+**Konum:** `VIZITLINK3D.UI/wwwroot/js/uc-boyut-motoru.js` (mevcut)
 - Three.js + OrbitControls + GLTFLoader (kurulu)
 - DRACOLoader ekle (sıkıştırılmış model desteği)
 - Aydınlatma sistemi (HDR environment map)
@@ -1127,11 +1127,11 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 5.C — RAL Renk Sistemi (mevcut zenginleştir)
 
 ### ☐ 5.C.1 — RalKatalogu.cs incele
-**Konum:** `Desadoor.UI/RalKatalogu.cs` (mevcut)
+**Konum:** `VIZITLINK3D.UI/RalKatalogu.cs` (mevcut)
 - 213 RAL kodu olmalı
 
 ### ☐ 5.C.2 — RenkSecici.razor zenginleştir
-**Konum:** `Desadoor.UI/Bilesenler/RenkSecici.razor` (mevcut)
+**Konum:** `VIZITLINK3D.UI/Bilesenler/RenkSecici.razor` (mevcut)
 - Kategoriye göre filtre (Sarı, Mavi, Yeşil, Kahve, vb.)
 - Arama
 - Favori RAL kodları (localStorage)
@@ -1139,7 +1139,7 @@ public class KapiModeliDogrulayici : AbstractValidator<KapiModeliDto>
 ## 5.D — Sepete Ekleme (3D Config JSON — §28.3)
 
 ### ☐ 5.D.1 — KapakDetay'da "Sepete Ekle" butonu
-**Konum:** `Desadoor.UI/Pages/KapakDetay.razor.cs`
+**Konum:** `VIZITLINK3D.UI/Pages/KapakDetay.razor.cs`
 **Mantık:**
 ```csharp
 var konfig = new {
@@ -1175,7 +1175,7 @@ await SepetServisi.EkleAsync(konfig);
 ## 6.A — DilServisi DB+Cache (§35)
 
 ### ☐ 6.A.1 — OnbellekYonetici.cs (FusionCache wrapper)
-**Konum:** `Desadoor.Api/Servisler/Sistem/OnbellekYonetici.cs`
+**Konum:** `VIZITLINK3D.Api/Servisler/Sistem/OnbellekYonetici.cs`
 **NuGet:** `ZiggyCreatures.FusionCache`
 **Metodlar:**
 - `GetirVeyaOlusturAsync<T>(string anahtar, Func<Task<T>> uretici, TimeSpan? sure)`
@@ -1183,7 +1183,7 @@ await SepetServisi.EkleAsync(konfig);
 - `SilDesenAsync(string desen)` — ör: "ceviri:*"
 
 ### ☐ 6.A.2 — CeviriServisi (API tarafı)
-**Konum:** `Desadoor.Api/Servisler/Sistem/CeviriServisi.cs`
+**Konum:** `VIZITLINK3D.Api/Servisler/Sistem/CeviriServisi.cs`
 - DB'den çek + 30dk cache
 - Admin update edince cache temizle
 
@@ -1194,7 +1194,7 @@ await SepetServisi.EkleAsync(konfig);
 ## 6.B — DilServisi (UI tarafı)
 
 ### ☐ 6.B.1 — DilServisi.cs zenginleştir
-**Konum:** `Desadoor.UI/Servisler/DilServisi.cs` (mevcut)
+**Konum:** `VIZITLINK3D.UI/Servisler/DilServisi.cs` (mevcut)
 - App başlangıcında API'den TR ve EN çevirileri çek
 - `T(string anahtar, string varsayilan = "")` metodu
 - `DilDegistir(string yeniDil)` → localStorage + event
@@ -1251,11 +1251,11 @@ await SepetServisi.EkleAsync(konfig);
 
 ## 7.A — Test Projesi
 
-### ☐ 7.A.1 — Desadoor.Testler projesi oluştur
+### ☐ 7.A.1 — VIZITLINK3D.Testler projesi oluştur
 ```bash
 cd I:\desedoorweb
-dotnet new xunit -n Desadoor.Testler
-dotnet sln Desadoor.slnx add Desadoor.Testler/Desadoor.Testler.csproj
+dotnet new xunit -n VIZITLINK3D.Testler
+dotnet sln VIZITLINK3D.slnx add VIZITLINK3D.Testler/VIZITLINK3D.Testler.csproj
 ```
 
 ### ☐ 7.A.2 — Testcontainers kurulumu
@@ -1278,7 +1278,7 @@ dotnet sln Desadoor.slnx add Desadoor.Testler/Desadoor.Testler.csproj
 - [ ] JWT anahtarı env variable'dan alınıyor
 - [ ] SMTP şifresi env variable'dan
 - [ ] LisansAyarlari:GizliAnahtar env variable'dan
-- [ ] CORS sadece desadoor.com.tr ve www.desadoor.com.tr
+- [ ] CORS sadece VIZITLINK3D.com.tr ve www.VIZITLINK3D.com.tr
 
 ### ☐ 7.B.2 — HTTPS zorunlu (production)
 - `RequireHttpsMetadata = true`
@@ -1379,12 +1379,12 @@ Tüm paketler tamamlandığında bu liste FULL olmalı:
 1. **Mevcut KapakModeli.cs** — sadece KapakModeli adıyla var, anayasa "KapiModeli" daha doğru olur. Veya iki ayrı tablo: KapakModeli (mutfak kapağı) + KapiModeli (iç/dış kapı)
 2. **CanliSohbetMesaji** — mevcut, ama SohbetOturumu tablosuyla bağlanmalı
 3. **wwwroot/i18n/tr.json** — içeriğini incele ve DB'ye aktarma migration'ını yaz
-4. **DesadoorDuzen.razor** — Layout mevcut ama footer/header eksik
-5. **DesaDoor renk paleti** — site siyah/beyaz/bronze. Industrial Luxury anayasa renkleri (#c19b76) tam uyum
+4. **VIZITLINK3DDuzen.razor** — Layout mevcut ama footer/header eksik
+5. **VIZITLINK3D renk paleti** — site siyah/beyaz/bronze. Industrial Luxury anayasa renkleri (#c19b76) tam uyum
 6. **Üç boyutlu görüntüleme** — Three.js r128 kurulu, OrbitControls + GLTFLoader hazır
-7. **Anayasa §31 (Yerel AI/Ollama)** — DesaDoor için opsiyonel, ileri faza alınabilir
-8. **Anayasa §38 (Split Payments) ve §40 (Dynamic Pricing)** — DesaDoor kurumsal site, e-ticaret minimal olduğu için skip edilebilir
-9. **Anayasa §27 (Meta-Platform)** — DesaDoor tek firma, ama altyapı SaaS-ready olmalı (FirmaId opsiyonel)
+7. **Anayasa §31 (Yerel AI/Ollama)** — VIZITLINK3D için opsiyonel, ileri faza alınabilir
+8. **Anayasa §38 (Split Payments) ve §40 (Dynamic Pricing)** — VIZITLINK3D kurumsal site, e-ticaret minimal olduğu için skip edilebilir
+9. **Anayasa §27 (Meta-Platform)** — VIZITLINK3D tek firma, ama altyapı SaaS-ready olmalı (FirmaId opsiyonel)
 10. **Bugünkü test:** http://localhost:5013 UI çalışıyor, http://localhost:5015 API çalışıyor — temel iskelet hazır
 
 ## Önerilen sıralama (kritik yol):
@@ -1424,4 +1424,4 @@ Paket 3 (Frontend) başlamadan önce mutlaka:
 *Hazırlık tarihi: 2026-05-14*
 *Araştırma: Claude Haiku 4.5*
 *Uygulama: Başka model veya geliştirici*
-*Anayasa: I:\desedoorweb\KURALLAR.md (Vizitlink v11.0 — DesaDoor adaptasyonu)*
+*Anayasa: I:\desedoorweb\KURALLAR.md (Vizitlink v11.0 — VIZITLINK3D adaptasyonu)*

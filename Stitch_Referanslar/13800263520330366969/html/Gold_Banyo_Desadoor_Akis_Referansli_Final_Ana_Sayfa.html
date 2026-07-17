@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gold Banyo | Desadoor Akış Referanslı Final Ana Sayfa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#e2dfde",
+                        "inverse-surface": "#343027",
+                        "on-surface": "#1f1b13",
+                        "secondary": "#5f5e5e",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fff8f0",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#636262",
+                        "tertiary": "#5e5e5b",
+                        "primary-fixed": "#ffe088",
+                        "outline-variant": "#d0c5af",
+                        "tertiary-container": "#b4b3af",
+                        "primary-fixed-dim": "#e9c349",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#4d4635",
+                        "surface-container-low": "#fbf3e5",
+                        "on-tertiary-fixed": "#1b1c19",
+                        "surface-container-highest": "#eae1d4",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#454542",
+                        "tertiary-fixed-dim": "#c8c6c2",
+                        "surface-variant": "#eae1d4",
+                        "primary": "#735c00",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e4e2dd",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-tint": "#735c00",
+                        "on-primary-fixed": "#241a00",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474744",
+                        "inverse-on-surface": "#f8f0e2",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-background": "#1f1b13",
+                        "surface-dim": "#e1d9cc",
+                        "on-primary-container": "#554300",
+                        "surface-container": "#f5eddf",
+                        "background": "#fff8f0",
+                        "inverse-primary": "#e9c349",
+                        "surface-container-high": "#efe7da",
+                        "surface": "#fff8f0",
+                        "primary-container": "#d4af37",
+                        "outline": "#7f7663",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Overpass"],
+                        "headline-md": ["Overpass"],
+                        "headline-sm": ["Overpass"],
+                        "label-caps": ["Overpass"],
+                        "display-lg": ["Overpass"],
+                        "body-lg": ["Overpass"],
+                        "display-lg-mobile": ["Overpass"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "700" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.inverse-surface'); color: theme('colors.surface'); scroll-behavior: smooth; }
+        .glint-hover:hover::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            animation: glint 1s infinite;
+        }
+        @keyframes glint { 100% { left: 200%; } }
+        .glass-panel { background: rgba(52, 48, 39, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(208, 197, 175, 0.2); }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm transition-all duration-700 ease-in-out">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-6 w-full max-w-container-max mx-auto">
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary dark:text-gold-light uppercase" href="#">GOLD BANYO</a>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-body-md text-body-md text-on-surface dark:text-on-surface-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-500 hover:opacity-80" href="#">Ana Sayfa</a>
+<a class="font-body-md text-body-md text-primary dark:text-gold-accent border-b-2 border-primary dark:border-gold-accent pb-1 transition-colors duration-500 hover:opacity-80" href="#">Koleksiyonlar</a>
+<a class="font-body-md text-body-md text-on-surface dark:text-on-surface-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-500 hover:opacity-80" href="#">Bespoke</a>
+<a class="font-body-md text-body-md text-on-surface dark:text-on-surface-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-500 hover:opacity-80" href="#">Showroom</a>
+<a class="font-body-md text-body-md text-on-surface dark:text-on-surface-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-500 hover:opacity-80" href="#">Heritage</a>
+</div>
+<div class="flex gap-4 items-center">
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-all duration-700 ease-in-out">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-all duration-700 ease-in-out">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="A highly detailed, ultra-realistic rendering of a luxury industrial bathroom showroom. Deep onyx marble walls, brushed gold fixtures, and minimalist cabinetry. High contrast lighting with soft dramatic shadows, evoking an exclusive, high-end architectural feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1TDUgxyt1QmrNQwS8I-tcSdXOdxYtCWgrtEBfCBVbzy9-6AkKTp0Phh-4aznDoa_lRTIamjL4-l6EmU2RnM2FkNYIo3IKgzE-0k65NvJPbb_CrEuOD_QafrEYW4sBNAscNJZc1EFIxPGvdSlvlVeDHKv8jEoZRLbQhTpJgsxLVhEMvVhZnTjORs-OggvvD4cB3qBAL2uhoFrrzX1KLnLHHdtK8yDaeR1RWnk_tRQ5GeJ2_YehBL4quPTTbDyh6L7xjn8DORnQJRZs"/>
+<div class="absolute inset-0 bg-gradient-to-b from-inverse-surface/80 via-inverse-surface/40 to-inverse-surface"></div>
+</div>
+<div class="relative z-10 text-center px-margin-mobile max-w-4xl mx-auto fade-up">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-surface-container-lowest mb-6">Siz Hayal Edin, Biz Tasarlayalım.</h1>
+<p class="font-body-lg text-body-lg text-outline-variant mb-10 max-w-2xl mx-auto">Premium malzemeler, kusursuz işçilik ve zamansız endüstriyel tasarım. Banyonuzu bir mimari şahesere dönüştürün.</p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<button class="px-8 py-4 bg-primary-container text-on-primary-container font-label-caps uppercase tracking-widest border border-primary-container hover:bg-transparent hover:text-primary-container transition-all duration-300">Koleksiyonları İncele</button>
+<button class="px-8 py-4 bg-transparent text-surface-container-lowest font-label-caps uppercase tracking-widest border border-outline-variant hover:bg-outline-variant/10 transition-all duration-300">Teklif Al</button>
+</div>
+</div>
+</header>
+<!-- Metrics Bar -->
+<section class="py-12 border-y border-outline/20 bg-inverse-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-outline/20">
+<div class="fade-up">
+<div class="font-display-lg text-display-lg-mobile text-primary-fixed-dim">35+</div>
+<div class="font-label-caps text-outline-variant mt-2">YIL TECRÜBE</div>
+</div>
+<div class="fade-up" style="transition-delay: 100ms;">
+<div class="font-display-lg text-display-lg-mobile text-primary-fixed-dim">10K+</div>
+<div class="font-label-caps text-outline-variant mt-2">PROJE</div>
+</div>
+<div class="fade-up" style="transition-delay: 200ms;">
+<div class="font-display-lg text-display-lg-mobile text-primary-fixed-dim">20+</div>
+<div class="font-label-caps text-outline-variant mt-2">ÖZEL KOLEKSİYON</div>
+</div>
+<div class="fade-up" style="transition-delay: 300ms;">
+<div class="font-display-lg text-display-lg-mobile text-primary-fixed-dim">Global</div>
+<div class="font-label-caps text-outline-variant mt-2">İHRACAT AĞI</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Collections Bento -->
+<section class="py-24 md:py-32 bg-inverse-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<h2 class="font-headline-md text-headline-md text-surface-container-lowest mb-16 text-center fade-up">Koleksiyonlar</h2>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter auto-rows-[400px]">
+<!-- Gold Exclusive (Span 8) -->
+<div class="md:col-span-8 relative group overflow-hidden border border-outline/20 glint-hover fade-up">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A breathtaking master bathroom featuring a massive dark marble soaking tub overlooking a serene misty forest through floor-to-ceiling windows. Warm sunlight streams in. Minimalist brushed brass fixtures and dark wood flooring complete the luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNHXxS3_A62cmsTMgJ0pZ8HGNRrIafPMfpVp1L-G9VR4pqp3VwE9EATZY106JsPO-Ee8tKSuIsO6fba_YkGb4zKlXMCdf7plNyy58zbmbCM4a7x2l-ACqeGBa-erssoZJ0wN3iTigW4hfZiNEGlRXLEJ4h8e25ayZkms3BamYoEW2zh_pbx_YQgY7zaSD_blwTAsplkqGT8wZS2ibSj6_vcM9MgT4LJ9ttr69mGI6_RKOL4thdiSZNmiuQDcsBNPfwxpJdna1LUd6P"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<span class="font-label-caps text-primary-fixed-dim border border-primary-fixed-dim px-3 py-1 mb-3 inline-block">PREMİUM SERİ</span>
+<h3 class="font-headline-sm text-headline-sm text-surface-container-lowest mb-2">Gold Exclusive</h3>
+<p class="font-body-md text-outline-variant">Sınırları zorlayan mimari çizgiler.</p>
+</div>
+</div>
+<!-- Premium (Span 4) -->
+<div class="md:col-span-4 relative group overflow-hidden border border-outline/20 glint-hover fade-up" style="transition-delay: 100ms;">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close up of a sleek, modern bathroom vanity. Matte black fluted cabinetry with a striking black marble countertop featuring heavy gold veining. Premium polished brass faucets and minimal accessories on display." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmmwui2eb_h2woF9bmOE9tZp25aWaa82QtuWw6Jb6GSY-b2iV5t9EOJVlaym5wbNeNfkfK-PErZCOe8L6O7nirmomsBXrnVXqEWUEeSY0P5OMFsRelDLQ147y5YsWbZ3zxYRsSXmGzU9jcgBO_HIryQwCt_cc3YpR67Dl7lJfLmZAiovodEcVglTl4seGdr3CXMX8T-_OzvPLlLIz-j3kG3tahpbcnjp3waeGS08f6QRL3nvsbtKKgR_I8-gOCjilqNJcHtnr8Aq1l"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<h3 class="font-headline-sm text-headline-sm text-surface-container-lowest mb-2">Premium Serisi</h3>
+<p class="font-body-md text-outline-variant">Zarafet ve fonksiyonellik.</p>
+</div>
+</div>
+<!-- Trend (Span 6) -->
+<div class="md:col-span-6 relative group overflow-hidden border border-outline/20 glint-hover fade-up">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A contemporary, industrial-chic bathroom scene. Warm concrete walls, a minimalist floating vanity in dark ash wood, and matte black hardware. Soft, recessed LED lighting highlighting the textures of the space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlIuroH8i_F-3Q5U9zKLi8fhvnnxJXmOCyGHhbXzrddO3KTkBgnQXh-HF0VL-wbMH4Ymahl3XYE5-MuzLRzmjChsiCSriVYh0iTx47sSyi1cAVvk2dvEE-i3aitHh1ynCzZodzN74cPm5qxq5O20K5SM_9P0etr0wplbPzhKtyolKGELiKitgm16XNMUVspHWd5KnVEc3-YFUYRdHrGKA6tI-1Kh0UHbauhtxCHY5B_TrJVE7wLhQxHgBSwPuh918v9L_evtVFVvf1"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<h3 class="font-headline-sm text-headline-sm text-surface-container-lowest mb-2">Trend Serisi</h3>
+<p class="font-body-md text-outline-variant">Modern yaşam alanları için.</p>
+</div>
+</div>
+<!-- Standard (Span 6) -->
+<div class="md:col-span-6 relative group overflow-hidden border border-outline/20 glint-hover fade-up" style="transition-delay: 100ms;">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A clean, bright, and minimal bathroom design. White terrazzo flooring, a simple yet elegant freestanding bathtub, and sleek chrome fixtures. The mood is fresh, airy, and impeccably clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2dXBhBNLWgC2WtsHy8gjnD0dSoi7awPK7it3rSRbeJwCC-aGx9UEOPYsUM0ON1vkUBS5vKUFDd16jhyXIgKD5MgTMbbdLv4unX8RC98gohBiAyHMOGEndmbZ65t_qVCKCqd-h_OSXmI15AYSgjw5xgKRIhYbZl628Bm7D1Y4hG7Jo5GaTt01EECzkVEm0LnFFLIG-NqWPWNM84JCtPDBumnyaOFm9rGle0iEPvdTB8uIV83H1rBngNnP7T79N6gxjdS-Yv3xZwxDR"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<h3 class="font-headline-sm text-headline-sm text-surface-container-lowest mb-2">Standard Seri</h3>
+<p class="font-body-md text-outline-variant">Zamansız klasikler.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full pt-24 pb-12 bg-surface-container-lowest dark:bg-inverse-surface">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="md:col-span-12 flex justify-center mb-12">
+<span class="font-display-lg text-display-lg-mobile text-primary dark:text-gold-light uppercase">GOLD BANYO</span>
+</div>
+<div class="md:col-span-12 flex flex-wrap justify-center gap-6 mb-12 border-t border-outline/10 pt-8">
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Collections</a>
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Bespoke</a>
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Showroom</a>
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Heritage</a>
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-muted-text dark:text-outline-variant hover:text-primary dark:hover:text-gold-light transition-colors duration-300" href="#">Contact</a>
+</div>
+<div class="md:col-span-12 text-center">
+<p class="font-body-md text-body-md text-muted-text dark:text-outline-variant">© 2024 Gold Banyo. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-up').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body></html>

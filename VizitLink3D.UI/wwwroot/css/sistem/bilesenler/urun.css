@@ -138,15 +138,17 @@
 .gb-urun-kart-gorsel-sarici {
     position: relative;
     width: 100%;
-    aspect-ratio: 4/3;
+    /* Tüm ürün listesi görselleri aynı vitrin oranında kalır. */
+    aspect-ratio: 5 / 4;
     overflow: hidden;
     background: var(--vizit-bg-alt);
-    border-radius: var(--vizit-radius-md, 4px);
+    border-radius: var(--tema-kose-xl, var(--vizit-radius-md, 4px));
 }
 
 .gb-urun-kart-gorsel-sarici img {
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
     transition: transform var(--vizit-transition-slow, 0.6s ease);
 }

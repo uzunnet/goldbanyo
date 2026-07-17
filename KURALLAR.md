@@ -1,6 +1,6 @@
-# 📜 DESADOOR — KODLAMA ANAYASASI
+# 📜 VIZITLINK3D — KODLAMA ANAYASASI
 
-> **Proje:** DesaDoor (Kapı/Mobilya Kurumsal Site)
+> **Proje:** VIZITLINK3D (Kapı/Mobilya Kurumsal Site)
 > **Versiyon:** 3.0 — Saf Kodlama Kuralları (SaaS artıkları temizlendi)
 > **Yedek:** [Yedekler/anayasa_yedek_20260514_v2/](Yedekler/anayasa_yedek_20260514_v2/)
 > **Tarih:** 2026-05-14
@@ -387,7 +387,7 @@ Türkçe açıklayıcı:
 
 ### 7.2 Klasör Hiyerarşisi
 ```
-Desadoor.UI/wwwroot/css/sistem/
+VIZITLINK3D.UI/wwwroot/css/sistem/
 ├── tokens.css              (TEK giriş noktası — sadece @import)
 ├── temeller/
 │   ├── degiskenler.css     (yukarıdaki :root)
@@ -422,7 +422,7 @@ button {
 Geçici animasyonlar (`@keyframes`), modal CSS — hepsi `bilesenler/` veya `moduller/` altına gider.
 
 ### 7.5 MudThemeProvider tokens.css ile Beslenir
-`Desadoor.UI/Bilesenler/TemaSaglayici.razor` MudTheme nesnesini CSS değişkenlerinden üretir.
+`VIZITLINK3D.UI/Bilesenler/TemaSaglayici.razor` MudTheme nesnesini CSS değişkenlerinden üretir.
 
 ### 7.6 Encoding ve Yorum
 - CSS dosyaları **UTF-8 BOM** olarak kaydedilir
@@ -487,7 +487,7 @@ Razor dosyasının içine `<style>` etiketi ile CSS yazmak **KESİNLİKLE YASAK*
 ### 9.2 Zorunlu Önlemler
 - **Kimlik:** JWT Bearer + opsiyonel 2FA (TOTP)
 - **Şifre:** BCrypt.Net-Next ile hash
-- **CORS:** Üretimde sadece `desadoor.com.tr` + `www.desadoor.com.tr`
+- **CORS:** Üretimde sadece `VIZITLINK3D.com.tr` + `www.VIZITLINK3D.com.tr`
 - **HTTPS:** Üretimde `RequireHttpsMetadata = true` + HSTS
 - **Rate Limiting:** `Microsoft.AspNetCore.RateLimiting` (IP bazlı)
 - **Input Validation:** FluentValidation (sunucu tarafı zorunlu)
@@ -652,7 +652,7 @@ public class KapiOlusturDogrulayici : AbstractValidator<KapiOlusturDto>
 
 ### 15.1 Backend
 ```
-Desadoor.Api/Moduller/
+VIZITLINK3D.Api/Moduller/
 ├── Kapilar/
 │   ├── Komutlar/         (KapiOlusturKomutu.cs + İsleyici)
 │   ├── Sorgular/
@@ -673,7 +673,7 @@ Desadoor.Api/Moduller/
 
 ### 15.2 Frontend
 ```
-Desadoor.UI/
+VIZITLINK3D.UI/
 ├── Pages/
 │   ├── Public/           (Anasayfa, KapiDetay, vb.)
 │   └── Admin/            (yönetim sayfaları)
@@ -705,7 +705,7 @@ Desadoor.UI/
 Sahte (in-memory) DB **kabul edilmez** — gerçek PostgreSQL container'ı (`Testcontainers.PostgreSql`).
 
 ### 16.3 DB Yedek Zorunlu
-- Her büyük değişiklik öncesi: `Yedekler/db/desadoor_YYYYMMDD_aciklama.db`
+- Her büyük değişiklik öncesi: `Yedekler/db/VIZITLINK3D_YYYYMMDD_aciklama.db`
 - Her migration öncesi/sonrası
 - Anayasa değişikliği öncesi: `Yedekler/anayasa_yedek_YYYYMMDD/`
 
@@ -772,4 +772,4 @@ Bir önceki sürüm: [Yedekler/anayasa_yedek_20260514_v2/KURALLAR_yedek.md](Yede
 ---
 
 *Versiyon: 3.0 — Saf Kodlama Kuralları | Tarih: 2026-05-14*
-*Vizitlink'in SaaS/pazaryeri/gamification/omnichannel/NFC bölümleri DesaDoor'a uygulanmaz — bu anayasa sadece kodlama disiplinini tanımlar.*
+*Vizitlink'in SaaS/pazaryeri/gamification/omnichannel/NFC bölümleri VIZITLINK3D'a uygulanmaz — bu anayasa sadece kodlama disiplinini tanımlar.*

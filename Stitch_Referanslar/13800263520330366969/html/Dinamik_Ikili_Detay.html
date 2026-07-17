@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gold Banyo - Premium Bathroom Furniture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#e2dfde",
+                      "outline": "#7e7761",
+                      "warm-grey": "#F5F5F4",
+                      "surface-container-low": "#fbf3e2",
+                      "primary-container": "#ccac00",
+                      "surface": "#fff9ee",
+                      "tertiary-fixed": "#dae2ff",
+                      "surface-tint": "#6f5d00",
+                      "inverse-primary": "#e6c429",
+                      "on-tertiary-fixed": "#001848",
+                      "error": "#ba1a1a",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#20438f",
+                      "primary-fixed-dim": "#e6c429",
+                      "surface-bright": "#fff9ee",
+                      "charcoal-muted": "#333333",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#b2c5ff",
+                      "tertiary": "#3b5ba8",
+                      "primary": "#6f5d00",
+                      "background": "#fff9ee",
+                      "on-secondary-container": "#636262",
+                      "on-surface-variant": "#4c4734",
+                      "on-background": "#1e1b12",
+                      "inverse-surface": "#343025",
+                      "surface-container-highest": "#e9e2d2",
+                      "surface-container-high": "#efe7d7",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#474746",
+                      "surface-variant": "#e9e2d2",
+                      "outline-variant": "#cfc6ad",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "secondary-fixed": "#e5e2e1",
+                      "surface-dim": "#e1d9c9",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#221b00",
+                      "inverse-on-surface": "#f8f0e0",
+                      "primary-fixed": "#ffe16b",
+                      "on-primary-container": "#4e4100",
+                      "tertiary-container": "#8eacff",
+                      "gold-light": "#E5C94D",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#193d89",
+                      "on-error-container": "#93000a",
+                      "secondary": "#5f5e5e",
+                      "surface-container": "#f5eddd",
+                      "on-surface": "#1e1b12",
+                      "on-primary-fixed-variant": "#544600"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-padding-desktop": "120px",
+                      "gutter": "24px",
+                      "section-padding-mobile": "64px",
+                      "unit": "8px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Overpass"
+                      ],
+                      "display-lg-mobile": [
+                              "Overpass"
+                      ],
+                      "body-md": [
+                              "Overpass"
+                      ],
+                      "body-lg": [
+                              "Overpass"
+                      ],
+                      "display-lg": [
+                              "Overpass"
+                      ],
+                      "headline-md": [
+                              "Overpass"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased relative overflow-x-hidden">
+<!-- Interactive Golden Silk Shader Background -->
+<!-- STITCH_SHADER_START:ANIMATION_34 class="fixed inset-0 w-full h-full z-[-1] pointer-events-none opacity-50" -->
+<div class="fixed inset-0 w-full h-full z-[-1] pointer-events-none opacity-50" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_34" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_34');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Deep luxury dark background
+    vec3 color = vec3(0.02, 0.02, 0.02);
+    
+    // Golden silk-like waves
+    float wave1 = sin(uv.x * 3.0 + u_time * 0.5) * 0.5 + 0.5;
+    float wave2 = sin(uv.y * 2.0 - u_time * 0.3) * 0.5 + 0.5;
+    float combined = pow(wave1 * wave2, 4.0);
+    
+    // Golden sparks
+    float sparkle = fract(sin(dot(uv + u_time * 0.02, vec2(12.9898, 78.233))) * 43758.5453);
+    sparkle = pow(sparkle, 120.0);
+    
+    vec3 gold = vec3(0.85, 0.7, 0.3);
+    vec3 lightGold = vec3(1.0, 0.9, 0.6);
+    
+    color += gold * combined * 0.2;
+    color += lightGold * sparkle * 1.5;
+    
+    // Edge glow
+    float glow = smoothstep(1.0, 0.0, length(uv - 0.5));
+    color += gold * glow * 0.05;
+
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_34 -->
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-section-padding-desktop max-w-container-max mx-auto h-20 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md">
+<a class="font-display-lg text-headline-md tracking-tighter text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity" href="#">
+            Gold Banyo
+        </a>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Collections</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed font-bold border-b-2 border-primary pb-1" href="#">Catalogue</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button aria-label="Search" class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button aria-label="Shopping Bag" class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</nav>
+<!-- Main Content: Split Layout -->
+<main class="min-h-screen pt-32 pb-section-padding-desktop px-gutter md:px-section-padding-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-section-padding-desktop lg:gap-16 items-center">
+<!-- Section 1: Premium Mirror Concepts -->
+<section class="flex flex-col gap-8 w-full h-full justify-center">
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden animate-scale-in group">
+<div class="absolute inset-0 bg-cover bg-center w-full h-full transform transition-transform duration-700 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACxmZJCrqQ2QprAZJJApSkHFDsMNtFPm8DZiT2EtWbHcmcsabyuqwqydZX1kDcZfaEYQZYEqPr4ziRMa7tW6EU7jLmWgvJiathqOyevWZq6a4_GMEptZqkXwQzSz6SI4lCNiyqyimS2VI0B7YlNgq6U0qNdsJYlRxrHCWJoD8QmWHXlrbngY10CY7cSNzCc398gyip6xFgLyAyhEIqK1GoZFI5u9VjobUXIfBz6GV3vknINDH753jW-1P05vQWtKIMtgvLCKKyAT6g')"></div>
+<div class="absolute inset-0 bg-charcoal-muted/10 group-hover:bg-transparent transition-colors duration-500"></div>
+<!-- Floating Detail Card -->
+<div class="absolute bottom-8 left-8 right-8 bg-surface/90 backdrop-blur-md p-6 rounded-lg border border-outline-variant/30 animate-fade-in-up delay-200">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-gold-light text-sm">lightbulb</span>
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase">Intelligent Lighting</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Integrated circadian LED systems that adapt to natural light rhythms.
+                    </p>
+</div>
+</div>
+<div class="flex flex-col gap-4 px-4 lg:px-0">
+<span class="font-label-caps text-label-caps text-outline tracking-widest uppercase animate-fade-in-up delay-100">Lumina Collection</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface animate-fade-in-up delay-200">Premium Mirror Concepts</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md animate-fade-in-up delay-300">
+                    Reflect true elegance with handcrafted precision. Our mirrors blend flawless clarity with architectural form, elevating the atmosphere of any modern sanctuary.
+                </p>
+<div class="mt-4 flex gap-4 animate-fade-in-up delay-400">
+<button class="px-8 py-4 bg-primary text-on-primary font-label-caps text-label-caps rounded-full hover:bg-primary-fixed-dim transition-colors duration-300 flex items-center gap-2">
+                        Discover Lumina
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Section 2: Signature Vanity Sets -->
+<section class="flex flex-col-reverse lg:flex-col gap-8 w-full h-full justify-center lg:mt-32">
+<div class="flex flex-col gap-4 px-4 lg:px-0 lg:pl-16">
+<span class="font-label-caps text-label-caps text-outline tracking-widest uppercase animate-fade-in-up delay-200">Aura Series</span>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface animate-fade-in-up delay-300">Signature Vanity Sets</h2>
+<!-- Specs List -->
+<ul class="flex flex-col gap-4 mt-4 mb-6 border-t border-outline-variant/30 pt-6 animate-fade-in-up delay-400">
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="font-body-md text-body-md text-charcoal-muted font-semibold">Height</span>
+<span class="font-body-md text-body-md text-secondary">85cm</span>
+</li>
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="font-body-md text-body-md text-charcoal-muted font-semibold">Width</span>
+<span class="font-body-md text-body-md text-secondary">120cm</span>
+</li>
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="font-body-md text-body-md text-charcoal-muted font-semibold">Depth</span>
+<span class="font-body-md text-body-md text-secondary">50cm</span>
+</li>
+</ul>
+<div class="flex gap-4 animate-fade-in-up delay-500">
+<button class="px-8 py-4 border border-charcoal-muted text-charcoal-muted font-label-caps text-label-caps rounded-full hover:bg-surface-variant transition-colors duration-300 flex items-center gap-2">
+                        View Specifications
+                    </button>
+</div>
+</div>
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden animate-scale-in delay-100 group lg:ml-16">
+<div class="absolute inset-0 bg-cover bg-center w-full h-full transform transition-transform duration-700 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChuQj7v5S988qlMHTBssWDXp2DPtTk4YpS07ywxn7Cgdt5EB4TOilctArxQlYtt-0p3DtsLRX8PHB3cSjEqJaLrYajJWossVygcGCh2P6Di4J5GrwuDkzAHoR-u-dgOH1_y9J3ghssVMBRWGYyUUAnjoUXIF_pmMlkStx0B4ThdV2pXZPceiy-CfN9mG4SuuLoIXS44-RKchFCjwLSnjVQbLI88paBY_L0-OCnRmrbspASJEMrrqDyqUXEw_-OT3LrHAWyKKHhmKy_')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-charcoal-muted/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<!-- Badge -->
+<div class="absolute top-6 right-6 bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-caps text-[10px] tracking-widest uppercase">
+                     Exclusive Finish
+                 </div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low dark:bg-inverse-surface mt-20">
+<div class="w-full py-section-padding-desktop px-section-padding-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter max-w-container-max mx-auto">
+<div class="flex flex-col gap-4">
+<span class="font-display-lg text-headline-md text-primary dark:text-primary-fixed">Gold Banyo</span>
+<p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed max-w-xs mt-2">
+                    Quality Production and Aesthetic Touch.
+                </p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-body-lg text-body-lg text-on-surface dark:text-inverse-on-surface mb-2">Collections</h4>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Exclusive</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Premium</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Trend</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Standart</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-body-lg text-body-lg text-on-surface dark:text-inverse-on-surface mb-2">Company</h4>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Information</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors" href="#">Contact</a>
+</div>
+</div>
+<div class="w-full border-t border-outline-variant/20 py-8 text-center">
+<p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed">© 2024 Gold Banyo. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Simple intersection observer to trigger animations on scroll if needed later
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-fade-in-up, .animate-scale-in').forEach(el => {
+                // Pause animations initially if they are below the fold, 
+                // but since this is a hero section, we let css handle the initial load
+                // observer.observe(el); 
+            });
+        });
+    </script>
+</body></html>

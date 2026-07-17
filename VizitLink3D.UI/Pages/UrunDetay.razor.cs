@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using VizitLink3D.Ortak.Modeller.Renkler;
 using VizitLink3D.Ortak.Modeller.Urunler;
+using VizitLink3D.Ortak.Yardimcilar;
 using VizitLink3D.UI.Models;
 using VizitLink3D.UI.Servisler;
 
@@ -161,37 +162,9 @@ public partial class UrunDetay : ComponentBase, IDisposable
 
             HeroGorselUrl = UrunGorunumYardimcisi.AnaGorselUrl(urun, Api.ApiBaseUrl);
 
-            // Admin'den urune ozel yuklenen gercek fotograflar varsa (MedyaTuru
-            // Resim/Gorsel) onlar kullanilir; yoksa (eski) statik katalog
-            // gorsellerine dusulur. Boylece her urunun galerisi admin'den
-            // bagimsiz olarak yonetilebilir, sayfa basina 1/2/3+ gorsel olabilir.
-            var dbGorseller = Medyalar
-                .Where(x => x.MedyaTuru.Equals("Gorsel", StringComparison.OrdinalIgnoreCase)
-                    || x.MedyaTuru.Equals("Resim", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(x => x.SiraNo)
-                .Select(x => x.MedyaUrl)
-                .Distinct()
-                .ToList();
-
-            if (dbGorseller.Count > 0)
-            {
-                GaleriGorselleri = dbGorseller;
-            }
-            else if (_katalogVerisi is not null)
-            {
-                // Katalog ürünlerinin görselleri UI'nin kendi statik wwwroot'unda duruyor,
-                // API üzerinden değil — bu yüzden doğrudan (API taban URL'siz) kullanılır.
-                GaleriGorselleri = new List<string>
-                {
-                    _katalogVerisi.HeroGorselUrl,
-                    _katalogVerisi.KatalogGorselUrl,
-                    _katalogVerisi.TeknikGorselUrl
-                }.Distinct().ToList();
-            }
-            else
-            {
-                GaleriGorselleri = [];
-            }
+            // Yönetilen ürün görsellerinin tek kaynağı medya havuzudur. Eski statik
+            // katalog ve harici WordPress yolları galeriyi artık geçersiz kılamaz.
+            GaleriGorselleri = MedyaHavuzuYolu.UrunGalerisiOlustur(urun, Medyalar, Api.ApiBaseUrl);
 
             if (GaleriGorselleri.Count == 0)
                 GaleriGorselleri = [HeroGorselUrl];

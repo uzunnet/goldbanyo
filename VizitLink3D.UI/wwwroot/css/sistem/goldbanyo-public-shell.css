@@ -166,6 +166,83 @@ a { color: inherit; text-decoration: none; }
   color: var(--tema-vurgu, #d4af37);
 }
 
+/* ── MOBIL MENÜ ── */
+.gb-mobil-menu-dugme,
+.gb-mobil-menu {
+  display: none;
+}
+
+.gb-mobil-menu-dugme {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.10));
+  border-radius: var(--tema-kose-md, 4px);
+  background: var(--tema-cam-bg, rgba(255, 255, 255, 0.04));
+  color: var(--tema-metin, #e2e2e2);
+  cursor: pointer;
+}
+
+.gb-mobil-menu-dugme span {
+  width: 20px;
+  height: 2px;
+  border-radius: var(--tema-kose-tam, 999px);
+  background: currentColor;
+  transition: transform var(--tema-gecis-normal, 0.3s ease), opacity var(--tema-gecis-hizli, 0.15s ease);
+}
+
+.gb-mobil-menu-dugme--acik span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.gb-mobil-menu-dugme--acik span:nth-child(2) {
+  opacity: 0;
+}
+
+.gb-mobil-menu-dugme--acik span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.gb-mobil-menu__link,
+.gb-mobil-menu__alt-link {
+  display: block;
+  color: var(--tema-metin-ikincil, #c4c7c7);
+  transition: color var(--tema-gecis-hizli, 0.15s ease), background var(--tema-gecis-hizli, 0.15s ease);
+}
+
+.gb-mobil-menu__link {
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.10));
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gb-mobil-menu__alt {
+  display: grid;
+  gap: 2px;
+  padding: 6px 0 10px 18px;
+  border-bottom: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.10));
+}
+
+.gb-mobil-menu__alt-link {
+  padding: 9px 10px;
+  border-radius: var(--tema-kose-sm, 2px);
+  font-size: 0.8rem;
+}
+
+.gb-mobil-menu__link:hover,
+.gb-mobil-menu__alt-link:hover {
+  color: var(--tema-vurgu, #d4af37);
+  background: var(--tema-cam-bg, rgba(255, 255, 255, 0.04));
+}
+
 /* ── CTA BUTTON ── */
 .gb-cta {
   display: inline-flex;
@@ -255,6 +332,49 @@ a { color: inherit; text-decoration: none; }
 /* ── MAIN ── */
 .gb-main {
   flex: 1;
+}
+
+/* ── SIKÇA SORULAN SORULAR ── */
+.gb-sss-sayfasi {
+  padding: var(--tema-bosluk-3xl, 4rem) var(--tema-kenar-bosluk, 80px);
+}
+
+.gb-sss-sayfasi__icerik {
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.gb-sss-sayfasi__etiket {
+  display: inline-block;
+  margin-bottom: var(--tema-bosluk-sm, 0.5rem);
+  color: var(--tema-vurgu, #d4af37);
+  font-size: var(--tema-yazi-xs, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.gb-sss-sayfasi__baslik {
+  margin: 0;
+  color: var(--tema-metin, #e2e2e2);
+  font-family: var(--tema-font-baslik, serif);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.gb-sss-sayfasi__aciklama {
+  max-width: 700px;
+  margin: var(--tema-bosluk-md, 1rem) 0 var(--tema-bosluk-2xl, 2rem);
+  color: var(--tema-metin-ikincil, #c4c7c7);
+  line-height: 1.7;
+}
+
+.gb-sss-sayfasi__liste {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .gb-sss-sayfasi {
+    padding: var(--tema-bosluk-2xl, 2rem) 24px;
+  }
 }
 
 /* ── HERO SECTION (Fullscreen parallax) ── */
@@ -611,13 +731,15 @@ a { color: inherit; text-decoration: none; }
 }
 
 .gb-urun-kart__gorsel {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
+  border-radius: var(--tema-kose-xl, 16px);
 }
 
 .gb-urun-kart__gorsel img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -827,10 +949,28 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 1024px) {
   .gb-header {
     padding: 0 24px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 72px;
   }
 
   .gb-nav {
     display: none;
+  }
+
+  .gb-mobil-menu-dugme {
+    display: inline-flex;
+  }
+
+  .gb-mobil-menu--acik {
+    order: 4;
+    display: flex;
+    width: 100%;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    flex-direction: column;
+    padding: 10px 0 18px;
+    background: var(--tema-arkaplan, #121414);
   }
 
   .gb-header__actions {
@@ -882,9 +1022,19 @@ a { color: inherit; text-decoration: none; }
   }
 
   .gb-header__actions {
+    order: 3;
     width: 100%;
     justify-content: flex-end;
     flex-wrap: wrap;
+  }
+
+  .gb-brand {
+    order: 1;
+  }
+
+  .gb-mobil-menu-dugme {
+    order: 2;
+    margin-left: auto;
   }
 
   .gb-dil-secici {
@@ -1221,12 +1371,14 @@ button.gb-chip {
   aspect-ratio: 5 / 4;
   background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
+  border-radius: var(--tema-kose-xl, 16px);
 }
 
 .gb-product-card__gorsel img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: block;
+  object-fit: cover;
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1375,7 +1527,7 @@ button.gb-chip {
 }
 
 .gb-detail-medya__ana {
-  aspect-ratio: 4 / 4.6;
+  aspect-ratio: 5 / 4;
 }
 
 .gb-detail-medya__ana img,
@@ -1392,7 +1544,7 @@ button.gb-chip {
 }
 
 .gb-detail-medya__kart {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 5 / 4;
   background: rgba(255,255,255,0.04);
 }
 
@@ -1672,9 +1824,9 @@ button.gb-chip {
 }
 
 .gb-detail-galeri__kart {
-  border-radius: 22px;
+  border-radius: var(--tema-kose-xl, 16px);
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 5 / 4;
   border: 1px solid rgba(197, 160, 89, 0.16);
   background: rgba(255,255,255,0.04);
 }
@@ -1744,7 +1896,7 @@ button.gb-chip {
 
 .gb-detail-baslik-v2 {
   font-family: "Playfair Display", var(--tema-font-baslik, serif);
-  font-size: clamp(0.58rem, 1.06vw, 0.86rem) !important;
+  font-size: clamp(0.78rem, 1.18vw, 1rem) !important;
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: var(--tema-metin, #e2e2e2);
@@ -1949,7 +2101,7 @@ button.gb-chip {
 
 .gb-detail-foto-kolaj__ana {
   position: relative;
-  border-radius: 32px;
+  border-radius: var(--tema-kose-xl, 16px);
   overflow: hidden;
   aspect-ratio: 5 / 4;
   background: rgba(255, 255, 255, 0.03);
@@ -1960,7 +2112,8 @@ button.gb-chip {
 .gb-detail-foto-kolaj__ana img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: block;
+  object-fit: cover;
   transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1976,7 +2129,7 @@ button.gb-chip {
 
 .gb-detail-foto-kolaj__yan-kart {
   position: relative;
-  border-radius: 20px;
+  border-radius: var(--tema-kose-xl, 16px);
   overflow: hidden;
   aspect-ratio: 5 / 4;
   background: rgba(255, 255, 255, 0.03);
@@ -1986,7 +2139,8 @@ button.gb-chip {
 .gb-detail-foto-kolaj__yan-kart img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: block;
+  object-fit: cover;
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -2205,4 +2359,167 @@ button.gb-chip {
   line-height: 1.15;
   color: var(--tema-metin, #e2e2e2);
   margin: 4px 0 0;
+}
+
+/* ── KATALOG VE PDF GÖSTERİCİ ── */
+.gb-katalog-sayfasi,
+.gb-pdf-gosterici-sayfasi {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--tema-bosluk-2xl, 2rem);
+  padding-top: var(--tema-bosluk-3xl, 4rem);
+  padding-bottom: var(--tema-bosluk-3xl, 4rem);
+}
+
+.gb-katalog-hero {
+  max-width: 920px;
+}
+
+.gb-katalog-etiket,
+.gb-pdf-gosterici-etiket {
+  color: var(--tema-vurgu, #d4af37);
+  letter-spacing: 0.16em;
+}
+
+.gb-katalog-baslik,
+.gb-pdf-gosterici-baslik,
+.gb-katalog-kart__baslik {
+  font-family: "Playfair Display", var(--tema-font-baslik, serif);
+}
+
+.gb-katalog-aciklama,
+.gb-katalog-kart__aciklama {
+  color: var(--tema-metin-soluk, #aeb0b2);
+  max-width: 760px;
+}
+
+.gb-katalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--tema-bosluk-xl, 1.5rem);
+}
+
+.gb-katalog-kart {
+  padding: 0;
+  overflow: hidden;
+}
+
+.gb-katalog-kart--iskelet {
+  min-height: 520px;
+}
+
+.gb-katalog-kart__onizleme {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--tema-arkaplan-zemin, #101112);
+}
+
+.gb-katalog-kart__onizleme img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform var(--tema-gecis-normal, 0.3s ease);
+}
+
+.gb-katalog-kart:hover .gb-katalog-kart__onizleme img {
+  transform: scale(1.035);
+}
+
+.gb-katalog-kart__yil {
+  position: absolute;
+  top: var(--tema-bosluk-md, 1rem);
+  right: var(--tema-bosluk-md, 1rem);
+  padding: var(--tema-bosluk-xs, 0.4rem) var(--tema-bosluk-sm, 0.75rem);
+  border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  background: var(--tema-arkaplan-zemin, #101112);
+  color: var(--tema-vurgu, #d4af37);
+  font-weight: 700;
+}
+
+.gb-katalog-kart__govde {
+  display: grid;
+  gap: var(--tema-bosluk-md, 1rem);
+  padding: var(--tema-bosluk-xl, 1.5rem);
+}
+
+.gb-katalog-kart__meta,
+.gb-katalog-kart__aksiyonlar,
+.gb-pdf-gosterici-aksiyonlar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tema-bosluk-md, 1rem);
+}
+
+.gb-katalog-kart__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tema-bosluk-xs, 0.4rem);
+  color: var(--tema-metin-soluk, #aeb0b2);
+}
+
+.gb-katalog-bos,
+.gb-pdf-gosterici-bos {
+  display: grid;
+  place-items: center;
+  gap: var(--tema-bosluk-md, 1rem);
+  min-height: 280px;
+  text-align: center;
+}
+
+.gb-pdf-gosterici-ust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tema-bosluk-xl, 1.5rem);
+}
+
+.gb-pdf-gosterici-panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gb-pdf-gosterici-cerceve,
+.gb-pdf-gosterici-yerel-okuyucu {
+  min-height: 0;
+  height: 100%;
+}
+
+.gb-pdf-gosterici-cerceve {
+  height: calc(100dvh - 8rem);
+  min-height: 32rem;
+  overflow: hidden;
+  border-radius: var(--tema-kose-xl, 16px);
+}
+
+.gb-pdf-gosterici-yerel-okuyucu {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--tema-arkaplan, #111);
+  overscroll-behavior: contain;
+}
+
+.gb-pdf-gosterici-gorsel img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 760px) {
+  .gb-katalog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gb-pdf-gosterici-ust {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gb-pdf-gosterici-aksiyonlar {
+    width: 100%;
+  }
 }

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DIAGO 100 - Luxury Bathroom Furniture</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#3b5ba8",
+                        "primary-fixed": "#ffe16b",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001848",
+                        "on-surface": "#1e1b12",
+                        "surface-container-high": "#efe7d7",
+                        "surface-tint": "#6f5d00",
+                        "on-tertiary-container": "#193d89",
+                        "on-primary-container": "#4e4100",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-primary-fixed": "#221b00",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-fixed-variant": "#544600",
+                        "inverse-surface": "#343025",
+                        "primary-container": "#ccac00",
+                        "on-primary": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e9e2d2",
+                        "surface-bright": "#fff9ee",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#7e7761",
+                        "tertiary-container": "#8eacff",
+                        "charcoal-muted": "#333333",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#4c4734",
+                        "outline-variant": "#cfc6ad",
+                        "surface-dim": "#e1d9c9",
+                        "primary": "#6f5d00",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#20438f",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#b2c5ff",
+                        "surface": "#fff9ee",
+                        "inverse-on-surface": "#f8f0e0",
+                        "on-secondary-fixed-variant": "#474746",
+                        "gold-light": "#E5C94D",
+                        "inverse-primary": "#e6c429",
+                        "warm-grey": "#F5F5F4",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-variant": "#e9e2d2",
+                        "primary-fixed-dim": "#e6c429",
+                        "on-secondary-container": "#636262",
+                        "surface-container": "#f5eddd",
+                        "tertiary-fixed": "#dae2ff",
+                        "background": "#fff9ee",
+                        "surface-container-low": "#fbf3e2",
+                        "error": "#ba1a1a",
+                        "on-background": "#1e1b12"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "section-padding-desktop": "120px",
+                        "section-padding-mobile": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Overpass"],
+                        "label-caps": ["Overpass"],
+                        "body-md": ["Overpass"],
+                        "body-lg": ["Overpass"],
+                        "headline-md": ["Overpass"],
+                        "display-lg-mobile": ["Overpass"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom Animations */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeRight {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes revealLine {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        
+        .anim-element { opacity: 0; } /* Initial state for JS observer */
+        
+        .animate-fade-up { animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-right { animation: fadeRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-scale-in { animation: scaleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-reveal-line { transform-origin: left; animation: revealLine 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Stagger Delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-600 { animation-delay: 600ms; }
+        .delay-700 { animation-delay: 700ms; }
+        
+        /* Material Symbols overrides */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Ambient Image Shadow */
+        .ambient-shadow {
+            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.08), 0 20px 30px -10px rgba(0,0,0,0.04);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
+<!-- Background Shader -->
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-section-padding-desktop max-w-container-max mx-auto h-20 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md bg-transparent flat no shadows border-none transition-all duration-300" id="topNav">
+<!-- Logo -->
+<div class="font-display-lg text-headline-md tracking-tighter text-primary dark:text-primary-fixed anim-element delay-100" data-anim="animate-scale-in">
+            Gold Banyo
+        </div>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors anim-element delay-200" data-anim="animate-fade-up" href="#">Collections</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors anim-element delay-300" data-anim="animate-fade-up" href="#">About Us</a>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed font-bold border-b-2 border-primary anim-element delay-400" data-anim="animate-fade-up" href="#">Catalogue</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-primary dark:hover:text-primary-fixed transition-colors anim-element delay-500" data-anim="animate-fade-up" href="#">Contact</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center space-x-4">
+<button class="text-secondary hover:text-primary transition-colors anim-element delay-600" data-anim="animate-scale-in">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<button class="text-secondary hover:text-primary transition-colors anim-element delay-700" data-anim="animate-scale-in">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-section-padding-mobile md:px-section-padding-desktop pt-[140px] pb-section-padding-desktop relative">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-[64px] items-start">
+<!-- Left Column: Details & Specs -->
+<div class="lg:col-span-5 flex flex-col space-y-12 z-10 relative">
+<!-- Header / Title -->
+<div class="space-y-2 relative">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tight anim-element" data-anim="animate-fade-up">
+                        DIAGO <span class="font-light text-primary/70">100</span>
+</h1>
+<p class="font-label-caps text-label-caps text-secondary uppercase tracking-[0.2em] anim-element delay-100" data-anim="animate-fade-right">
+                        Bathroom Furniture
+                    </p>
+<div class="h-[1px] w-1/3 bg-outline-variant mt-6 anim-element delay-200" data-anim="animate-reveal-line"></div>
+</div>
+<!-- Features List -->
+<div class="space-y-6">
+<h3 class="font-body-lg text-body-lg text-on-surface-variant border-b border-outline-variant pb-2 inline-block anim-element delay-200" data-anim="animate-fade-up">Özellikler / Features</h3>
+<ul class="space-y-5">
+<li class="flex items-center space-x-4 group anim-element delay-300" data-anim="animate-fade-right">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">door_front</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Soft Kapak / <span class="text-secondary">Soft Close</span></span>
+</li>
+<li class="flex items-center space-x-4 group anim-element delay-400" data-anim="animate-fade-right">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">forest</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Mdf Ahşap / <span class="text-secondary">Mdf Wood</span></span>
+</li>
+<li class="flex items-center space-x-4 group anim-element delay-500" data-anim="animate-fade-right">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">touch_app</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Dokunmatik Ledli Ayna / <span class="text-secondary">Touch Led Mirror</span></span>
+</li>
+<li class="flex items-center space-x-4 group anim-element delay-600" data-anim="animate-fade-right">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">build</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Kolay Montaj / <span class="text-secondary">Easy Assembly</span></span>
+</li>
+<li class="flex items-center space-x-4 group anim-element delay-700" data-anim="animate-fade-right">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">palette</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Renk Seçenekleri / <span class="text-secondary">Color Options</span></span>
+</li>
+</ul>
+</div>
+<!-- Colors & Specs Grid -->
+<div class="grid grid-cols-2 gap-8 anim-element delay-600" data-anim="animate-fade-up">
+<!-- Colors -->
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 border-b border-outline-variant pb-2">Renkler / Colours</h3>
+<div class="flex space-x-4">
+<div class="flex flex-col items-center space-y-2">
+<div class="w-12 h-12 bg-black rounded-sm border border-outline-variant"></div>
+<span class="font-body-md text-body-md text-xs text-secondary text-center leading-tight">Siyah<br/>Black</span>
+</div>
+<div class="flex flex-col items-center space-y-2">
+<div class="w-12 h-12 bg-[#5c4033] rounded-sm border border-outline-variant"></div>
+<span class="font-body-md text-body-md text-xs text-secondary text-center leading-tight">Kahve Rengi<br/>Brown</span>
+</div>
+</div>
+</div>
+<!-- Price Tag -->
+<div class="flex items-end justify-end relative">
+<!-- Decorative hanging string line -->
+<svg class="absolute -top-12 right-12 w-16 h-20 text-primary-container/60 pointer-events-none" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M50 0 C 80 40, 20 60, 50 100" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+</svg>
+<div class="bg-primary-container/20 backdrop-blur-md border border-primary-container rounded-lg p-6 w-full text-center relative overflow-hidden group hover:bg-primary-container/30 transition-colors duration-500">
+<!-- Subtle highlight -->
+<div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/20 to-transparent"></div>
+<p class="font-label-caps text-label-caps text-primary-fixed-variant mb-1">Liste Fiyatı / List Price</p>
+<p class="font-display-lg text-headline-md text-primary font-bold">99.500 ₺</p>
+</div>
+</div>
+</div>
+<!-- Technical Dimensions -->
+<div class="bg-surface-container-low rounded-xl p-6 border border-outline-variant/30 anim-element delay-700" data-anim="animate-fade-up">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 border-b border-outline-variant pb-2">Teknik Ölçüler / Technical Dimensions</h3>
+<table class="w-full text-left font-body-md text-body-md text-sm text-secondary">
+<thead>
+<tr>
+<th class="font-normal pb-2 text-primary"></th>
+<th class="font-normal pb-2 text-primary">H</th>
+<th class="font-normal pb-2 text-primary">W</th>
+<th class="font-normal pb-2 text-primary">D</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr>
+<td class="py-2 text-on-surface">Dolap / <span class="text-xs">Wash basin</span></td>
+<td class="py-2">85</td>
+<td class="py-2">100</td>
+<td class="py-2">46</td>
+</tr>
+<tr>
+<td class="py-2 text-on-surface">Ayna / <span class="text-xs">Mirror</span></td>
+<td class="py-2">75</td>
+<td class="py-2">75</td>
+<td class="py-2">5</td>
+</tr>
+<tr>
+<td class="py-2 text-on-surface">Boy Dolap / <span class="text-xs">Side Cabinet</span></td>
+<td class="py-2">140</td>
+<td class="py-2">38</td>
+<td class="py-2">33</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Right Column: Hero Image Canvas -->
+<div class="lg:col-span-7 relative h-full min-h-[60vh] flex items-center justify-center anim-element delay-300" data-anim="animate-scale-in">
+<!-- Asymmetric Decorative Background Box -->
+<div class="absolute inset-0 bg-surface-container-high rounded-t-full rounded-bl-3xl rounded-br-[100px] transform translate-x-8 translate-y-12 -z-10 opacity-60"></div>
+<!-- Main Image -->
+<div class="relative w-full h-full max-h-[800px] rounded-2xl overflow-hidden ambient-shadow border border-white/40">
+<!-- Glassmorphism overlay corner -->
+<div class="absolute top-4 right-4 bg-white/10 backdrop-blur-md rounded-full p-3 border border-white/20 text-primary-container z-20">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">verified</span>
+</div>
+<img class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-[1.5s] ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsjxyeipoPOMUU4WzGZlY1hwjGj-iUBSvwLYgcb2xYrFlBCUqy6ALm11AQPynciWNjuvdzXANimmYhdi7O-nqH-pRnDtXYow9medzt8uCuRwUJtENGJQ1UtrYFIiVHAsUiEY_cGLEFS1BuSRnGPGQPH5ukvxQTs0v18WZs30xHNxkR_Id7qQnb1hHRUWF9Zpju3wyzokI9k9B0-J2XDZDebibJtnB5fCHAqBwGCn3fJcyffCph6l4vi9Vecksegyrg7tdWrg5miAdR"/>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-low dark:bg-inverse-surface py-section-padding-desktop px-section-padding-desktop flex flex-col md:flex-row items-center justify-between z-10 relative">
+<div class="font-display-lg text-headline-md text-primary dark:text-primary-fixed mb-6 md:mb-0 anim-element" data-anim="animate-fade-up">
+            Gold Banyo
+        </div>
+<div class="flex flex-wrap justify-center gap-6 md:gap-8 mb-6 md:mb-0">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-100" data-anim="animate-fade-up" href="#">Information</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-200" data-anim="animate-fade-up" href="#">Exclusive</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-300" data-anim="animate-fade-up" href="#">Premium</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-400" data-anim="animate-fade-up" href="#">Trend</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-500" data-anim="animate-fade-up" href="#">Standart</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed hover:text-gold-light transition-colors anim-element delay-600" data-anim="animate-fade-up" href="#">Contact</a>
+</div>
+<div class="font-body-md text-body-md text-secondary dark:text-secondary-fixed text-sm text-center md:text-right anim-element delay-700" data-anim="animate-fade-up">
+            © 2024 Gold Banyo. All rights reserved.
+        </div>
+</footer>
+<!-- Intersection Observer Script for staggered animations -->
+<script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const animClass = entry.target.getAttribute('data-anim');
+                        if (animClass) {
+                            entry.target.classList.add(animClass);
+                        }
+                        // Optional: stop observing once animated
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.anim-element').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body></html>

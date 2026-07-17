@@ -1,4 +1,4 @@
-# 🗺️ DESEPLAN — DesaDoor Ana Takip ve Yol Haritası
+# 🗺️ DESEPLAN — VIZITLINK3D Ana Takip ve Yol Haritası
 
 > **Oluşturulma:** 2026-05-14
 > **Amaç:** Tüm iş paketlerini, mevcut durumu ve eksikleri tek yerden takip etmek
@@ -50,7 +50,7 @@
 
 | # | Tablo | Durum | Not |
 |---|-------|-------|-----|
-| 1 | Firmalar | ✅ | DesaDoor Bursa seed mevcut |
+| 1 | Firmalar | ✅ | VIZITLINK3D Bursa seed mevcut |
 | 2 | Kullanicilar | ✅ | Genişletilmiş (Rol, 2FA, audit alanları), admin seed mevcut |
 | 3 | KapiKategorileri | ✅ | 5 kategori seed |
 | 4 | KapiKategorisiYerellestirmeleri | ✅ | Composite unique index |
@@ -235,7 +235,7 @@
 |---|-------|-------|
 | 3.A.1 | tokens.css + degiskenler.css (Industrial Luxury palette) | ✅ 113 satır |
 | 3.A.3 | efektler.css (187 satır animasyon) + kartlar.css | ✅ |
-| 3.F.1 | DesaDoorDuzen.razor (266 satır — glassmorphism nav, footer, mobil) | ✅ |
+| 3.F.1 | VIZITLINK3DDuzen.razor (266 satır — glassmorphism nav, footer, mobil) | ✅ |
 | 3.F.1 | AdminDuzen.razor (73 satır — sidebar, dinamik menü) | ✅ |
 | 3.G.1 | AnimasyonMotoruServisi.cs + scroll-animasyon.js + aos-init.js | ✅ |
 | — | GSAP 3.12.2 + ScrollTrigger + AOS (IntersectionObserver) | ✅ |
@@ -253,7 +253,7 @@
 - [ ] **3.5** — HeroSlider'a Ken Burns efekti + likit perde geçişi ekle
 - [ ] **3.6** — Lenis smooth scroll + GSAP ScrollTrigger entegre et
 - [ ] **3.7** — Referans şeridini sonsuz kayan (marquee) yap
-- [ ] **3.8** — SayılarlaDesadoor counter animasyonu ekle
+- [ ] **3.8** — SayılarlaVIZITLINK3D counter animasyonu ekle
 - [ ] **3.9** — KapiModelleri sayfasına filtre (kategori, renk, malzeme) ekle
 - [ ] **3.10** — KapakDetay sayfasına hotspot + ölçü slider + malzeme seçici ekle
 - [ ] **3.11** — Sayfa geçiş animasyonu (GSAP perde efekti)
@@ -364,7 +364,7 @@
 | — | DilKontrolcu (`/api/dil`) | ✅ |
 | — | DilVeCeviri.razor admin sayfası (code-behind'lı) | ✅ |
 | — | CeviriYonetimi.razor (code-behind YOK) | ✅ |
-| — | localStorage `desadoordil` anahtarı ile dil tercihi | ✅ |
+| — | localStorage `VIZITLINK3Ddil` anahtarı ile dil tercihi | ✅ |
 | — | Tüm `*Yerellestirme` tabloları DB'de mevcut | ✅ |
 
 ## ❌ Eksikler / Yapılacaklar
@@ -388,7 +388,7 @@
 
 | # | Madde | Durum |
 |---|-------|-------|
-| 7.A.1 | `Desadoor.Testler/` projesi var | ✅ |
+| 7.A.1 | `VIZITLINK3D.Testler/` projesi var | ✅ |
 | — | `ApiTemelTestler.cs` (1 test dosyası) | ✅ |
 
 
@@ -596,7 +596,7 @@ Bağımlılık zincirine göre önerilen sıralama:
 - [x] SignalR BildirimHub + BildirimServisi (canlı toast admin panelde)
 - [x] TohumVerisi → JSON'dan otomatik i18n seed (280+ anahtar DB'ye)
 - [x] Test projesi 42→52 test (ServisTestleri: LisansUretici, JwtServisi, Cevap, Rol)
-- [x] JWT anahtarı ortam değişkeninden okunacak şekilde güncellendi (DESADOOR_JWT_KEY)
+- [x] JWT anahtarı ortam değişkeninden okunacak şekilde güncellendi (VIZITLINK3D_JWT_KEY)
 - [x] appsettings.Production.json oluşturuldu (CORS, Log, Lisans üretim ayarları)
 - [x] appsettings.json'a LisansAyarlari bölümü eklendi
 - [x] nginx: CSP header, Brotli, 3D model cache eklendi
@@ -668,6 +668,6 @@ Bağımlılık zincirine göre önerilen sıralama:
 
 ---
 
-*DESEPLAN.md — DesaDoor Ana Takip Dosyası*
+*DESEPLAN.md — VIZITLINK3D Ana Takip Dosyası*
 *Oluşturulma: 2026-05-14*
 *Güncelleme: Her çalışma günü sonunda*

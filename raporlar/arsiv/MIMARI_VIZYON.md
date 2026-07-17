@@ -1,4 +1,4 @@
-# 🔥 DESADOOR — DUDAK UÇUKLATAN SİSTEM VİZYONU
+# 🔥 VIZITLINK3D — DUDAK UÇUKLATAN SİSTEM VİZYONU
 
 > **Hedef:** Sıradan kurumsal site değil — sektörde **referans gösterilen**, ziyaretçinin "vay be" dediği, adminin "her şeyi görüyorum" hissi yaşadığı endüstriyel platform.
 > **Tarih:** 2026-05-14
@@ -24,7 +24,7 @@
 ```
 Katman 1 (arka): Bulanık fabrika video loop (kontrast düşürülmüş)
 Katman 2 (orta): Bronz parçacık efekti (Three.js particles — yavaş süzülen)
-Katman 3 (ön):   Lottie animasyonlu DesaDoor logo
+Katman 3 (ön):   Lottie animasyonlu VIZITLINK3D logo
 Katman 4 (metin): GSAP SplitText — harf harf yazılan slogan
 Katman 5 (CTA):   Magnetic buton (cursor yaklaşınca çekilir)
 ```
@@ -48,7 +48,7 @@ Katman 5 (CTA):   Magnetic buton (cursor yaklaşınca çekilir)
 | Bölüm | Efekt |
 |-------|-------|
 | Kategori Vitrini | **Horizontal scroll** — kategori kartları yana kayar |
-| Sayılarla Desadoor | Counter animasyon + arka planda paralaks fabrika resmi |
+| Sayılarla VIZITLINK3D | Counter animasyon + arka planda paralaks fabrika resmi |
 | Hizmet Süreci | **Pin** — bölüm yapışır, scroll'la 4 adım sırayla aydınlanır |
 | Müşteri Yorumları | 3D döner küp veya kart deste karıştırma |
 | Referans Şeridi | **Sonsuz marquee** + hover'da renk değişimi |
@@ -400,7 +400,7 @@ anasayfa.hero.alt    | 1992'den...     | —   | —
 **Özellikler:**
 - DeepL benzeri kaliteli çeviri (API üzerinden)
 - Bağlam farkındalığı: anahtar adı (örn `urun.fiyat`) çeviriye ipucu verir
-- **Marka sözlüğü**: "DesaDoor", "Membran" gibi terimler aynen kalır
+- **Marka sözlüğü**: "VIZITLINK3D", "Membran" gibi terimler aynen kalır
 - Toplu çeviri: 200 anahtarı tek seferde
 - Çeviri belleği: aynı metin tekrar çevrilmez
 
@@ -566,7 +566,7 @@ Ikon, Renk, SiraNo, OlusturulmaTarihi
 │ https://youtube.com/watch?v=xxx     │
 │ [Ekle]                              │
 └──────────────────────────────────────┘
-✓ Başlık otomatik: "DesaDoor Fabrika Turu"
+✓ Başlık otomatik: "VIZITLINK3D Fabrika Turu"
 ✓ Süre: 3:42
 ✓ Kapak resmi otomatik (maxresdefault.jpg)
 ✓ Embed URL kaydedildi
@@ -693,9 +693,9 @@ ai.saglayici              = openai
 ai.aylikLimitUsd          = 100
 gorunum.tema              = bronz
 gorunum.font              = inter
-seo.varsayilanBaslik      = "DesaDoor — ..."
-iletisim.email            = info@desadoor.com.tr
-sosyal.instagram          = @desadoor
+seo.varsayilanBaslik      = "VIZITLINK3D — ..."
+iletisim.email            = info@VIZITLINK3D.com.tr
+sosyal.instagram          = @VIZITLINK3D
 yedek.otomatikGunde       = 1
 medya.depolama            = yerel   (yerel/minio/s3/r2)
 ```
@@ -714,7 +714,7 @@ medya.depolama            = yerel   (yerel/minio/s3/r2)
 
 ### FirmaId Altyapısı (İlerisi İçin Hazır — Şu An Kullanılmıyor)
 - Anayasa §4 gereği tüm tablolarda `FirmaId` (nullable) alanı var
-- Şu an tek firma (DesaDoor) — varsayılan değer ile çalışır
+- Şu an tek firma (VIZITLINK3D) — varsayılan değer ile çalışır
 - İleride ihtiyaç olursa multi-tenant açılır — şimdi SaaS gerekmiyor
 
 ---
@@ -748,7 +748,7 @@ Temsilci yoksa:
 
 **Açık hali:** Glassmorphism panel + bronz aksanlar.
 - Ziyaretçi mesajı: sağda, bronz balon
-- Temsilci mesajı: solda, koyu cam balon + temsilci avatarı + isim ("Ayşe — DesaDoor")
+- Temsilci mesajı: solda, koyu cam balon + temsilci avatarı + isim ("Ayşe — VIZITLINK3D")
 - Typing indicator (gerçek — temsilci yazarken canlı tetiklenir)
 - Okundu işareti (çift tik)
 
@@ -819,7 +819,7 @@ Temsilci yoksa:
 ## 4.1 — Vertical Slice (Modül Bazlı)
 
 ```
-Desadoor.Api/Moduller/
+VIZITLINK3D.Api/Moduller/
 ├── Kapilar/
 │   ├── Komutlar/      KapiOlusturKomutu.cs, KapiOlusturIsleyici.cs
 │   ├── Sorgular/      KapiListeleSorgusu.cs, KapiDetaySorgusu.cs

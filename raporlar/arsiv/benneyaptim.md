@@ -1,4 +1,4 @@
-# BEN NE YAPTIM — DesaDoor Oturum Takibi
+# BEN NE YAPTIM — VIZITLINK3D Oturum Takibi
 
 > Oturum: 2026-05-16
 > Kaynak: yenplan.md + eksilermd.md + yenipaneksil.md + canli test
@@ -9,8 +9,8 @@
 
 ### FAZ A — Build + DB Temeli
 - [x] `UrunParcaEslemesi.cs` saf POCO yapildi (EF/Audit using kaldirildi, [JsonIgnore] eklendi)
-- [x] `dotnet build Desadoor.slnx` → 0 hata
-- [x] DB yedek: `Yedekler/db/desadoor_20260516_urun_oncesi.db`
+- [x] `dotnet build VIZITLINK3D.slnx` → 0 hata
+- [x] DB yedek: `Yedekler/db/VIZITLINK3D_20260516_urun_oncesi.db`
 - [x] Migration `UrunOmurgasiEklendi` olusturuldu + uygulandi (20 tablo)
 - [x] §11 alan tuzaklari karara baglandi (ModelYolu otorite, parca soft-delete yok)
 
@@ -48,7 +48,7 @@
 - [x] @code .razor icinde: 0
 - [x] `<style>` .razor icinde: 0
 - [x] UrunDetay.razor → statik inline style'lar `urun.css`'e tasindi
-- [x] RenkSecici.razor → statik inline style'lar `desadoor.css`'e tasindi
+- [x] RenkSecici.razor → statik inline style'lar `VIZITLINK3D.css`'e tasindi
 - [x] `tokens.css`'e `@import urun.css` eklendi
 
 ### §8 — Dinamik Sahne Ayarlari
@@ -66,7 +66,7 @@
 - [x] `.wasm` MIME tipi static files'a eklendi
 - [x] UI Blazor WASM tek port (5015) ve cift port (5013+5015) calisir durumda
 - [x] Menu sistemi: PublicHeader/FooterHizli/FooterKategori/PublicMobil/AdminSol Konum'lari seed edildi
-- [x] MenuKontrolcu: `api/menu/desadoor` → PublicHeader, `api/menu/admin` → AdminSol
+- [x] MenuKontrolcu: `api/menu/VIZITLINK3D` → PublicHeader, `api/menu/admin` → AdminSol
 - [x] AdminDuzen.razor.cs → `api/menu/admin` olarak guncellendi
 
 ### Test
@@ -94,7 +94,7 @@
 - [x] Footer hizli linkler API'den (`api/menu/footer`) geliyor
 - [x] Footer kategori linkleri API'den (`api/menu/footer-kategori`) geliyor
 - [x] Sabit linkler kaldirildi
-- [x] Dosya: `DesaDoorDuzen.razor` + `.razor.cs`
+- [x] Dosya: `VIZITLINK3DDuzen.razor` + `.razor.cs`
 
 ### P0.4 — Admin Menu Seed Eksik Sayfalar
 - [x] SayfaYonetimi ve SEO Yonetimi Icerik grubuna eklendi

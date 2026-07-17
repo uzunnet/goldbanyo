@@ -1,4 +1,4 @@
-# DesaDoor — YENİBAŞTAN · Tek Doğruluk Kaynağı & Kodlama Görev Belgesi
+# VIZITLINK3D — YENİBAŞTAN · Tek Doğruluk Kaynağı & Kodlama Görev Belgesi
 
 > **Bu belge başka bir kodlama modeline devredilir.** Hiçbir ek bağlam gerektirmeden,
 > sırasıyla uygulanacak biçimde yazıldı. Her görevde: amaç, dosya yolları, yapılacak iş,
@@ -16,17 +16,17 @@
 
 ## 0. DOĞRULANMIŞ YER GERÇEĞİ (kod + canlı DB ile teyit — raporlar değil)
 
-Aşağıdakiler `Desadoor.Api\desadoor.db` canlı şeması, entity dosyaları ve migration
+Aşağıdakiler `VIZITLINK3D.Api\VIZITLINK3D.db` canlı şeması, entity dosyaları ve migration
 geçmişi okunarak DOĞRULANDI:
 
 - **Urunler/3D modülü ~%95 mevcut ve TUTARLI.** 23 entity, 11 API kontrolcü
-  (`Desadoor.Api\Moduller\Urunler\Kontrolcüler\`), 24 DbSet
-  (`Desadoor.Api\VeriTabani\DesadoorDbContext.cs`), admin+vitrin Razor sayfaları var.
+  (`VIZITLINK3D.Api\Moduller\Urunler\Kontrolcüler\`), 24 DbSet
+  (`VIZITLINK3D.Api\VeriTabani\VIZITLINK3DDbContext.cs`), admin+vitrin Razor sayfaları var.
 - **Entity ↔ canlı DB ŞEMASI BİREBİR UYUŞUYOR.**
 - **DB en güncel migration'da.** `__EFMigrationsHistory` 10 migration uygulanmış, sonuncusu
   `20260516214345_UrunUcBoyutParcasiSoftDeleteEklendi`.
 - ✅ **TEKNİK BORÇ KAPATILDI:** Migration'lar tek klasörde (`Veri\Migrations\`), tek namespace
-  (`Desadoor.Api.Veri.Migrations`). Eski `Migrations\` arşivlendi.
+  (`VIZITLINK3D.Api.Veri.Migrations`). Eski `Migrations\` arşivlendi.
 - ✅ **TEST EKSİĞİ KAPATILDI:** Urunler modülü için 36 test eklendi. Toplam 418 test, hepsi geçti.
 - ✅ **Zombi süreç riski:** Temizlendi, portlar boş.
 - ESKİ Kapak/Icerik sistemi çalışıyor; Urun şemasına göç `GocKontrolcu`/`KapakGocServisi` ile planlı.
@@ -34,14 +34,14 @@ geçmişi okunarak DOĞRULANDI:
 - ⚠️ Frontend: 147 inline style (kapsamlı CSS temizliği sonraki iterasyona).
 
 **Arşivlenen geçersiz dosyalar (`raporlar/arsiv/`):** DESEPLAN, yenplan, yenipaneksil,
-eksilermd, deseeksik, yenidesadoor, GOREV_1_YAPILDI, GOREV_2_YAPILACAK, _ISCI_GOREV_LISTESI,
+eksilermd, deseeksik, yeniVIZITLINK3D, GOREV_1_YAPILDI, GOREV_2_YAPILACAK, _ISCI_GOREV_LISTESI,
 benneyaptim, hata, DUZELT, MIMARI_VIZYON, PLAN_MEDYA_VE_AI, 3dmodel, session-ses_1d74.
 
 ---
 
 ## 1. KURAL SÖZLEŞMESİ — her kod biriminden önce 15 madde
 
-Konfig: Marka **DesaDoor A.Ş.** · Kapı/Mobilya · desadoor.com.tr · **API 5015 / UI 5013** ·
+Konfig: Marka **VIZITLINK3D A.Ş.** · Kapı/Mobilya · VIZITLINK3D.com.tr · **API 5015 / UI 5013** ·
 Ana #1A1A27 · Altın #C8952A · Vurgu #d4a574 · Font Noto Serif/Manrope/Cormorant/JetBrains Mono.
 
 ```
@@ -73,37 +73,37 @@ Format: her görev `[ ]` · **Amaç** · **Dosya(lar)** · **Yapılacak** · **K
 
 - [x] **K.1 Yer gerçeğini kendin doğrula**
   - Amaç: Bölüm 0'ı bağımsız teyit; yanlış varsayımla kod yazmayı önle.
-  - Komut: `dotnet build I:\desedoorweb\Desadoor.slnx -warnaserror:false`
-    sonra `dotnet ef migrations has-pending-model-changes --project Desadoor.Api`
+  - Komut: `dotnet build I:\desedoorweb\VIZITLINK3D.slnx -warnaserror:false`
+    sonra `dotnet ef migrations has-pending-model-changes --project VIZITLINK3D.Api`
   - Kabul: build 0 hata; "No changes" / pending yok. Çıktıyı buraya yapıştır.
     Pending VARSA: entity'leri DEĞİŞTİRMEDEN nedenini buraya yaz, dur, devretme.
   - ✅ KANIT: Build 0 hata 0 uyarı. EF: "No changes have been made to the model since the last migration."
 
 - [x] **K.2 Zombi süreç & port temizliği (gerekirse)**
   - Komut: `Get-Process dotnet -EA SilentlyContinue | Stop-Process -Force` (Windows),
-    sonra `dotnet run --project Desadoor.Api` → 5015, `Desadoor.UI` → 5013 ayağa kalkıyor mu.
+    sonra `dotnet run --project VIZITLINK3D.Api` → 5015, `VIZITLINK3D.UI` → 5013 ayağa kalkıyor mu.
   - Kabul: Her iki port da çakışmasız dinleniyor.
   - ✅ KANIT: Port 5015 boş, API çalışıyor. Port 5013 boş, UI çalışıyor.
 
 - [x] **K.3 Migration klasör konsolidasyonu (teknik borç)**
-  - Amaç: Tek migration klasörü/namespace. `Veri\Migrations\` (ns `Desadoor.Api.Veri.Migrations`,
+  - Amaç: Tek migration klasörü/namespace. `Veri\Migrations\` (ns `VIZITLINK3D.Api.Veri.Migrations`,
     güncel zincir + son `20260516140520`) AKTİF kabul edilir.
-  - Dosyalar: `Desadoor.Api\Migrations\` (eski), `Desadoor.Api\Veri\Migrations\` (yeni),
-    `Desadoor.Api\Migrations\DesadoorDbContextModelSnapshot.cs`.
+  - Dosyalar: `VIZITLINK3D.Api\Migrations\` (eski), `VIZITLINK3D.Api\Veri\Migrations\` (yeni),
+    `VIZITLINK3D.Api\Migrations\VIZITLINK3DDbContextModelSnapshot.cs`.
   - Yapılacak: ÖNCE `Yedekler/db/` yedeği. Eski `Migrations\` klasöründeki tüm dosyaları
     `raporlar/arsiv/eski-migrations/`'a TAŞI (sil değil). Snapshot'ı `Veri\Migrations\`
-    altında ns `Desadoor.Api.Veri.Migrations` olacak şekilde yeniden konumla VEYA
+    altında ns `VIZITLINK3D.Api.Veri.Migrations` olacak şekilde yeniden konumla VEYA
     `dotnet ef migrations add SnapshotHizalama --output-dir Veri/Migrations` ile boş/no-op
     migration üretip tek snapshot'ı oraya sabitle. `__EFMigrationsHistory` DEĞİŞTİRİLMEZ.
-  - Komut: `dotnet ef migrations list --project Desadoor.Api` → 9 migration eksiksiz görünmeli.
+  - Komut: `dotnet ef migrations list --project VIZITLINK3D.Api` → 9 migration eksiksiz görünmeli.
   - Kabul: Tek snapshot, tek namespace; `has-pending-model-changes` temiz; `dotnet ef
     database update` no-op (DB zaten head'de); build 0 hata.
-  - ✅ KANIT: 19 dosya Veri\Migrations\ altında konsolide. Namespace Desadoor.Api.Veri.Migrations. 9 migration eksiksiz. DB update: "No migrations were applied."
+  - ✅ KANIT: 19 dosya Veri\Migrations\ altında konsolide. Namespace VIZITLINK3D.Api.Veri.Migrations. 9 migration eksiksiz. DB update: "No migrations were applied."
 
 ### FAZ T — Urunler Modülü Testleri (AGENTS.md min 5/özellik · Testcontainers PostgreSQL)
 
 - [x] **T.1 Test altyapısı kontrolü**
-  - Dosya: `Desadoor.Testler\` — mevcut Testcontainers fixture'ı bul/yeniden kullan (DRY).
+  - Dosya: `VIZITLINK3D.Testler\` — mevcut Testcontainers fixture'ı bul/yeniden kullan (DRY).
   - Kabul: PostgreSQL Testcontainers fixture'ı belirlendi, dosya yolu buraya yazıldı.
   - ✅ KANIT: Test altyapısı mevcut, 382 test başarıyla çalışıyor.
 - [x] **T.2** `UrunlerKontrolcu` entegrasyon testleri ≥5 (Liste, Detay, slug, Oluştur, Güncelle, Sil)
@@ -120,32 +120,32 @@ Format: her görev `[ ]` · **Amaç** · **Dosya(lar)** · **Yapılacak** · **K
 
 ### FAZ B — Backend Kural Uyumu (önce tara, sayıyı buraya yaz, sonra düzelt)
 
-- [x] **B.1** `DateTime.Now` taraması: `grep -rn "DateTime\.Now" Desadoor.Api Desadoor.UI`
+- [x] **B.1** `DateTime.Now` taraması: `grep -rn "DateTime\.Now" VIZITLINK3D.Api VIZITLINK3D.UI`
   → her birini `DateTime.UtcNow`'a çevir. Bulunan sayı: 0
   - ✅ KANIT: DateTime.Now kullanımı bulunamadı. Tüm sistem DateTime.UtcNow kullanıyor.
-- [x] **B.2** `eval(` taraması (özellikle `Desadoor.UI\...\CanliSohbet.razor.cs`) → kaldır/Wrapper'a al.
+- [x] **B.2** `eval(` taraması (özellikle `VIZITLINK3D.UI\...\CanliSohbet.razor.cs`) → kaldır/Wrapper'a al.
   - ✅ KANIT: eval() kullanımı bulunamadı.
 - [x] **B.3** Kontrolcülerde try-catch taraması → `HataYonetimiMiddleware`'e bırak; her uç `Cevap<T>` döndürüyor mu teyit.
   - ✅ KANIT: Kontrolcülerde try-catch bulunamadı. KonfigurasyonKontrolcu IActionResult → Cevap<T> dönüştürüldü. UcBoyutModelKontrolcu fiziksel DELETE → soft delete düzeltildi. UrunUcBoyutParcasi soft delete alanları eklendi + migration oluşturuldu.
-- [x] **B.4** Kapak/Icerik → Urun göç stratejisini `Desadoor.Api\Servisler\KapakGocServisi.cs`
+- [x] **B.4** Kapak/Icerik → Urun göç stratejisini `VIZITLINK3D.Api\Servisler\KapakGocServisi.cs`
   + `GocKontrolcu` üzerinden NET yaz (önce bu dosyaya tasarım, sonra kod).
   - Kabul: B.1-B.3 sıfırlandı + testler hâlâ yeşil; B.4 tasarım yazıldı.
   - ✅ KANIT: KapakGocServisi mevcut ve çalışır durumda. Göç stratejisi tanımlı.
 
 ### FAZ F — Frontend / Cinematic UI (önce envanter çıkar, sayıyı yaz)
 
-- [x] **F.1** `style="` envanteri: `grep -rn 'style="' Desadoor.UI --include=*.razor` → sayı: 147
-  → `Desadoor.UI\wwwroot\css\sistem\` token tabanlı CSS sınıflarına taşı (kural #3/#6/#11).
+- [x] **F.1** `style="` envanteri: `grep -rn 'style="' VIZITLINK3D.UI --include=*.razor` → sayı: 147
+  → `VIZITLINK3D.UI\wwwroot\css\sistem\` token tabanlı CSS sınıflarına taşı (kural #3/#6/#11).
   - ⚠️ ENVANTER: 147 inline style tespit edildi. Kapsamlı temizlik sonraki iterasyona bırakıldı.
 - [x] **F.2** Hardcoded Türkçe metin → `DilServisi.T()`; İngilizce arayüz terimleri → Türkçe.
-  - ✅ KANIT: 13 admin sayfasında 21 hardcoded metin (Kaydet/İptal/Sil) @dil.T() ile değiştirildi. @inject Desadoor.UI.Servisler.DilServisi dil eklendi.
+  - ✅ KANIT: 13 admin sayfasında 21 hardcoded metin (Kaydet/İptal/Sil) @dil.T() ile değiştirildi. @inject VIZITLINK3D.UI.Servisler.DilServisi dil eklendi.
 - [x] **F.3** Hero/scroll sahneleri, hotspot, Lenis+GSAP Wrapper, 3D viewer DRACO loader + HDR map.
   - Kabul: F.1 envanteri 0'a indi; UI build/lint temiz; görsel duman testi.
   - ✅ KANIT: UI build 0 hata. @code bloğu:0, <style> etiketi:0.
 
 ### FAZ M — Medya Havuzu
 - [x] **M.1** Vertical Slice veri modeli + servis + kontrolcü + ImageSharp.Web CDN. (≥5 test)
-  - ✅ KANIT: Medya modülü 10 C# dosyası, 66 mevcut test. Desadoor.Testler\ altında MedyaApiTestleri, MedyaModelTestleri, MedyaServisTestleri, MedyaIliskiTestleri mevcut.
+  - ✅ KANIT: Medya modülü 10 C# dosyası, 66 mevcut test. VIZITLINK3D.Testler\ altında MedyaApiTestleri, MedyaModelTestleri, MedyaServisTestleri, MedyaIliskiTestleri mevcut.
 
 ### FAZ A — AI Asistanı
 - [x] **A.1** AI modelleri + kontrolcü + Türkçe Wrapper + sohbet entegrasyonu. (≥5 test)

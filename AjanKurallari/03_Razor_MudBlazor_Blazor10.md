@@ -228,7 +228,7 @@ Geliştirmede `.razor.cs` değişikliği anlık yansır — `dotnet watch` zorun
     </MudButton>
 </EditForm>
 ```
-FluentValidation: `Desadoor.Api/Moduller/Urunler/Dogrulayicilar/UrunDtoDogrulayici.cs`
+FluentValidation: `VIZITLINK3D.Api/Moduller/Urunler/Dogrulayicilar/UrunDtoDogrulayici.cs`
 
 ### 5.4 Dialog
 ```csharp

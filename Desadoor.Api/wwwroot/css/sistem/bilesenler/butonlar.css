@@ -1,5 +1,0 @@
-/* Butonlar — DesaDoor */
-.desa-btn-birincil{padding:12px 32px;background:var(--desa-accent, #C8952A);color:#fff;border:none;font-weight:600;cursor:pointer;transition:all .3s ease;letter-spacing:.05em}
-.desa-btn-birincil:hover{background:var(--desa-primary, #1A1A27);transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.15)}
-.desa-btn-ikincil{padding:12px 32px;border:1px solid var(--desa-primary, #1A1A27);background:transparent;color:var(--desa-primary, #1A1A27);font-weight:600;cursor:pointer;transition:all .3s ease}
-.desa-btn-ikincil:hover{background:var(--desa-primary, #1A1A27);color:#fff}

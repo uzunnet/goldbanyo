@@ -182,12 +182,23 @@ public partial class UrunSihirbazi : ComponentBase
         var r = await d.Result;
         if (r is { Canceled: false, Data: List<long> ids } && ids.Any())
         {
-            _secilenMedyaId = ids[0];
+            var oncekiMedyaId = _urunForm.AnaGorselMedyaId;
             if (_urunId.HasValue)
             {
                 _urunForm.AnaGorselMedyaId = ids[0];
-                await Api.PutAsync<Urun>($"api/urunler/{_urunId.Value}", _urunForm);
+                var cevap = await Api.PutAsync<Urun>($"api/urunler/{_urunId.Value}", _urunForm);
+                if (cevap?.BasariliMi != true)
+                {
+                    _urunForm.AnaGorselMedyaId = oncekiMedyaId;
+                    _secilenMedyaId = oncekiMedyaId;
+                    Snackbar.Add(
+                        cevap?.Mesaj ?? dil.T("ortak.islemBasarisiz", "İşlem tamamlanamadı."),
+                        Severity.Error);
+                    return;
+                }
             }
+
+            _secilenMedyaId = ids[0];
             Snackbar.Add(dil.T("admin.urun.anaGorselSecildi", "Ana görsel seçildi."), Severity.Success);
             await Tab2Yukle();
         }

@@ -1,4 +1,4 @@
-# DesaDoor Proje Analizi - Admin ve Frontend Eksikleri
+# VIZITLINK3D Proje Analizi - Admin ve Frontend Eksikleri
 
 > Tarih: 2026-05-15
 > Ikinci kontrol notu: Bu dosya yeniden kontrol edilerek guncellendi. Onceki analizde build geciyordu; yeni kontrolde build/test artik kiriliyor.
@@ -8,17 +8,17 @@
 Calistirilan komutlar:
 
 ```powershell
-dotnet build Desadoor.slnx
-dotnet test Desadoor.slnx
-rg -n "return Cevap<.*>\.Basarili\(\[\]|Basarili\(null\)|Basarili\(new |TODO|throw new NotImplementedException|SayfaSayisi = 0|Task.CompletedTask" Desadoor.Api Desadoor.UI -g *.cs -g !obj/**
-rg -n "api/urunAilesi|api/urun-ailesi|api/UrunAilesi|api/kategoriler|api/urun-kategorileri|api/teklifler|api/kaplamalar|api/konfigurasyon|api/uc-boyut|api/pdf-katalog" Desadoor.UI Desadoor.Api -g *.cs -g *.razor -g !obj/**
+dotnet build VIZITLINK3D.slnx
+dotnet test VIZITLINK3D.slnx
+rg -n "return Cevap<.*>\.Basarili\(\[\]|Basarili\(null\)|Basarili\(new |TODO|throw new NotImplementedException|SayfaSayisi = 0|Task.CompletedTask" VIZITLINK3D.Api VIZITLINK3D.UI -g *.cs -g !obj/**
+rg -n "api/urunAilesi|api/urun-ailesi|api/UrunAilesi|api/kategoriler|api/urun-kategorileri|api/teklifler|api/kaplamalar|api/konfigurasyon|api/uc-boyut|api/pdf-katalog" VIZITLINK3D.UI VIZITLINK3D.Api -g *.cs -g *.razor -g !obj/**
 ```
 
 Guncel sonuc:
 
-- `dotnet build Desadoor.slnx`: basarisiz.
-- `dotnet test Desadoor.slnx`: basarisiz, build hatasi yuzunden test kosamiyor.
-- Ana kirici dosya: `Desadoor.Ortak/Modeller/UrunParcaEslemesi.cs`.
+- `dotnet build VIZITLINK3D.slnx`: basarisiz.
+- `dotnet test VIZITLINK3D.slnx`: basarisiz, build hatasi yuzunden test kosamiyor.
+- Ana kirici dosya: `VIZITLINK3D.Ortak/Modeller/UrunParcaEslemesi.cs`.
 - Onceki analizde uyumsuz gorunen bazi route'lar duzeltilmis:
   - `api/urun-ailesi` artik API ve UI tarafinda uyumlu gorunuyor.
   - `api/urun-kategorileri` artik API ve UI tarafinda uyumlu gorunuyor.
@@ -33,12 +33,12 @@ Guncel sonuc:
 
 Dosya:
 
-- `Desadoor.Ortak/Modeller/UrunParcaEslemesi.cs`
+- `VIZITLINK3D.Ortak/Modeller/UrunParcaEslemesi.cs`
 
 Build hatalari:
 
 ```text
-CS0234: 'Audit' tur veya ad alani adi 'Desadoor.Ortak.Modeller' ad alaninda yok
+CS0234: 'Audit' tur veya ad alani adi 'VIZITLINK3D.Ortak.Modeller' ad alaninda yok
 CS0234: 'EntityFrameworkCore' tur veya ad alani adi 'Microsoft' ad alaninda yok
 CS0246: 'EntityBase' turu veya ad alani adi bulunamadi
 CS0246: 'UrunUcBoyutParcasi' turu veya ad alani adi bulunamadi
@@ -47,7 +47,7 @@ CS0246: 'UrunUcBoyutParcasi' turu veya ad alani adi bulunamadi
 Mevcut dosya sorunu:
 
 ```csharp
-using Desadoor.Ortak.Modeller.Audit;
+using VIZITLINK3D.Ortak.Modeller.Audit;
 using Microsoft.EntityFrameworkCore;
 
 public class UrunParcaEslemesi : EntityBase
@@ -58,9 +58,9 @@ public class UrunParcaEslemesi : EntityBase
 
 Sorunlar:
 
-- `Desadoor.Ortak.Modeller.Audit` namespace'i yok.
+- `VIZITLINK3D.Ortak.Modeller.Audit` namespace'i yok.
 - `EntityBase` yok.
-- `Desadoor.Ortak` projesi EF Core referansi tasimamali; `Microsoft.EntityFrameworkCore` using'i Ortak modelde gereksiz ve kurala aykiri.
+- `VIZITLINK3D.Ortak` projesi EF Core referansi tasimamali; `Microsoft.EntityFrameworkCore` using'i Ortak modelde gereksiz ve kurala aykiri.
 - `UrunUcBoyutParcasi` tipi dogru namespace'te bulunmuyor ya da dosya bu namespace'i gormuyor.
 
 Yapilacak:
@@ -74,8 +74,8 @@ Yapilacak:
 
 Kabul kriteri:
 
-- `dotnet build Desadoor.slnx` tekrar basarili olmali.
-- `dotnet test Desadoor.slnx` tekrar calismali.
+- `dotnet build VIZITLINK3D.slnx` tekrar basarili olmali.
+- `dotnet test VIZITLINK3D.slnx` tekrar calismali.
 
 ## 2. Ikinci Kontrolde Duzelmis Gecmis Bulgular
 
@@ -83,13 +83,13 @@ Kabul kriteri:
 
 API:
 
-- `Desadoor.Api/Moduller/Urunler/Kontrolculer/UrunAilesiKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/Urunler/Kontrolculer/UrunAilesiKontrolcu.cs`
 - Route: `api/urun-ailesi`
 
 UI:
 
-- `Desadoor.UI/Pages/Admin/UrunAilesiYonetimi.razor.cs`
-- `Desadoor.UI/Pages/Urunler.razor.cs`
+- `VIZITLINK3D.UI/Pages/Admin/UrunAilesiYonetimi.razor.cs`
+- `VIZITLINK3D.UI/Pages/Urunler.razor.cs`
 - Cagri: `api/urun-ailesi`
 
 Durum:
@@ -104,7 +104,7 @@ Kalan kontrol:
 
 API:
 
-- `Desadoor.Api/Moduller/Urunler/Kontrolculer/UrunKategoriKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/Urunler/Kontrolculer/UrunKategoriKontrolcu.cs`
 - Route: `api/urun-kategorileri`
 
 UI:
@@ -122,7 +122,7 @@ Durum:
 
 API:
 
-- `Desadoor.Api/Moduller/Urunler/Kontrolculer/TeklifKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/Urunler/Kontrolculer/TeklifKontrolcu.cs`
 - Route: `api/teklifler`
 
 UI:
@@ -144,7 +144,7 @@ Kritik not:
 
 API:
 
-- `Desadoor.Api/Moduller/Malzemeler/Kontrolculer/KaplamaKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/Malzemeler/Kontrolculer/KaplamaKontrolcu.cs`
 - Route: `api/kaplamalar`
 - Ek route: `/api/malzemeler/{malzemeId:int}/kaplamalar`
 
@@ -183,9 +183,9 @@ Kalan kontrol:
 
 Dosyalar:
 
-- `Desadoor.Api/Moduller/PdfKatalog/Servisler/PdfIcerikCozumleyici.cs`
-- `Desadoor.Api/Moduller/PdfKatalog/Servisler/PdfGorselCikarici.cs`
-- `Desadoor.Api/Moduller/PdfKatalog/Kontrolculer/PdfKatalogKontrolcu.cs`
+- `VIZITLINK3D.Api/Moduller/PdfKatalog/Servisler/PdfIcerikCozumleyici.cs`
+- `VIZITLINK3D.Api/Moduller/PdfKatalog/Servisler/PdfGorselCikarici.cs`
+- `VIZITLINK3D.Api/Moduller/PdfKatalog/Kontrolculer/PdfKatalogKontrolcu.cs`
 
 Tespit:
 
@@ -217,7 +217,7 @@ UI cagrilari:
 
 Dosya:
 
-- `Desadoor.UI/Bilesenler/Urunler/TeklifIstegiFormu.razor.cs`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/TeklifIstegiFormu.razor.cs`
 
 Sorun:
 
@@ -252,14 +252,14 @@ Yapilacak:
 
 Tekrar kontrol edilen ana dosyalar:
 
-- `Desadoor.UI/Pages/AnaSayfa.razor`
-- `Desadoor.UI/Layout/DesaDoorDuzen.razor`
-- `Desadoor.UI/Layout/AdminDuzen.razor`
-- `Desadoor.UI/Pages/Admin/*.razor`
-- `Desadoor.UI/Pages/Vitrin/PiedraKonfigurator.razor`
-- `Desadoor.UI/Bilesenler/Urunler/*.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/*.razor`
-- `Desadoor.UI/Bilesenler/AI/*.razor`
+- `VIZITLINK3D.UI/Pages/AnaSayfa.razor`
+- `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Pages/Admin/*.razor`
+- `VIZITLINK3D.UI/Pages/Vitrin/PiedraKonfigurator.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/*.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/*.razor`
+- `VIZITLINK3D.UI/Bilesenler/AI/*.razor`
 
 Sorun:
 
@@ -287,7 +287,7 @@ Yapilacak:
 
 Dosya:
 
-- `Desadoor.UI/Pages/Admin/CanliSohbet.razor.cs`
+- `VIZITLINK3D.UI/Pages/Admin/CanliSohbet.razor.cs`
 
 Sorun:
 
@@ -304,8 +304,8 @@ Yapilacak:
 
 Tespit edilen dosyalar:
 
-- `Desadoor.Api/Moduller/Medya/Kontrolcu/PdfTeklifKontrolcu.cs`
-- `Desadoor.UI/Layout/DesaDoorDuzen.razor`
+- `VIZITLINK3D.Api/Moduller/Medya/Kontrolcu/PdfTeklifKontrolcu.cs`
+- `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor`
 
 Yapilacak:
 
@@ -361,7 +361,7 @@ Kullanici tarafindan ek bildirilen ve tekrar incelenen kritik eksikler:
 
 Dosya:
 
-- `Desadoor.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
 
 Mevcut durum:
 
@@ -395,9 +395,9 @@ Kabul kriteri:
 
 Dosyalar:
 
-- `Desadoor.UI/Layout/AdminDuzen.razor`
-- `Desadoor.UI/Pages/Admin/MenuYonetimi.razor.cs`
-- `Desadoor.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Pages/Admin/MenuYonetimi.razor.cs`
+- `VIZITLINK3D.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs`
 
 Mevcut durum:
 
@@ -436,7 +436,7 @@ Kabul kriteri:
 
 Dosya:
 
-- `Desadoor.UI/Layout/DesaDoorDuzen.razor`
+- `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor`
 
 Mevcut durum:
 
@@ -461,7 +461,7 @@ Yapilacak:
   - `PublicMobil`
   - `AdminSol`
   - `AdminUst`
-- `DesaDoorDuzen` footer linklerini de API'den almali.
+- `VIZITLINK3DDuzen` footer linklerini de API'den almali.
 - URL slug'lari ASCII olmali: `kapi-modelleri`, `kapak-sistemleri`.
 - Admin menu yonetiminde konum filtresi ve onizleme olmali.
 
@@ -474,7 +474,7 @@ Kabul kriteri:
 
 Dosya:
 
-- `Desadoor.UI/Pages/Admin/KapakModelFormu.razor`
+- `VIZITLINK3D.UI/Pages/Admin/KapakModelFormu.razor`
 
 Mevcut durum:
 
@@ -604,12 +604,12 @@ Kabul kriteri:
 
 ### P0 - Build'i Geri Getir
 
-1. `Desadoor.Ortak/Modeller/UrunParcaEslemesi.cs` derleme hatalarini gider.
+1. `VIZITLINK3D.Ortak/Modeller/UrunParcaEslemesi.cs` derleme hatalarini gider.
 2. Ortak projeden EF Core using'ini kaldir.
 3. `EntityBase` veya audit namespace sorununu cozumle.
 4. `UrunUcBoyutParcasi` namespace/konum sorununu duzelt.
-5. `dotnet build Desadoor.slnx` calistir.
-6. `dotnet test Desadoor.slnx` calistir.
+5. `dotnet build VIZITLINK3D.slnx` calistir.
+6. `dotnet test VIZITLINK3D.slnx` calistir.
 
 ### P1 - PDF ve Konfigurasyon Akisini Gercek Hale Getir
 
@@ -637,8 +637,8 @@ Kabul kriteri:
 
 Bu dosyadaki eksikler tamamlandi sayilmaz, ta ki:
 
-- `dotnet build Desadoor.slnx` hatasiz calisana kadar.
-- `dotnet test Desadoor.slnx` tekrar basarili olana kadar.
+- `dotnet build VIZITLINK3D.slnx` hatasiz calisana kadar.
+- `dotnet test VIZITLINK3D.slnx` tekrar basarili olana kadar.
 - PDF katalog yukleme/cozumleme gercek sonuc uretene kadar.
 - `api/konfigurasyon` akisi teklif formuyla uyumlu calisana kadar.
 - 3D model upload, analiz ve parca esleme DB ile calisana kadar.

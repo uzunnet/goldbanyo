@@ -1,4 +1,4 @@
-# DesaDoor — Yapılacak Görevler
+# VIZITLINK3D — Yapılacak Görevler
 
 > **Anayasa:** KURALLAR.md (Vizitlink v11.0 adaptasyonu)
 > **Ana Plan:** DESEPLAN.md (güncel durum için)
@@ -28,7 +28,7 @@
 ## ▶ PAKET 0 — ANAYASA VE GÖREV SİSTEMİ ✅
 
 ### Tamamlananlar
-- [x] 0.1 — KURALLAR.md mevcut, DesaDoor adaptasyon notu ve K1-K8 kuralları eklendi
+- [x] 0.1 — KURALLAR.md mevcut, VIZITLINK3D adaptasyon notu ve K1-K8 kuralları eklendi
 - [x] 0.2 — GOREV_1_YAPILDI.md güncellendi
 - [x] 0.3 — GOREV_2_YAPILACAK.md (bu dosya) güncellendi
 - [x] 0.4 — .agent/ klasörü oluşturuldu
@@ -98,7 +98,7 @@
 - [x] 3.C.3 — HizmetSureciBolumu mevcut
 - [x] 3.C.4 — MusteriYorumlariCarousel mevcut
 - [x] 3.C.5 — ReferansSeridi mevcut
-- [x] 3.F.1 — DesaDoorDuzen (266 satır) + AdminDuzen (73 satır) mevcut
+- [x] 3.F.1 — VIZITLINK3DDuzen (266 satır) + AdminDuzen (73 satır) mevcut
 - [x] 3.G.1 — AnimasyonMotoruServisi + scroll-animasyon.js + aos-init.js mevcut
 - [x] Tüm 13 ziyaretçi sayfası .razor olarak mevcut
 - [x] 9 bileşen mevcut
@@ -111,7 +111,7 @@
 - [ ] 3.5 — HeroSlider zenginleştir (Ken Burns, likit perde geçişi)
 - [ ] 3.6 — KapiModelleri sayfasına filtre (kategori, renk, malzeme)
 - [ ] 3.7 — KapakDetay zenginleştir (hotspot, ölçü slider, malzeme seçici)
-- [ ] 3.8 — SayılarlaDesadoor counter animasyonu
+- [ ] 3.8 — SayılarlaVIZITLINK3D counter animasyonu
 - [ ] 3.9 — Lenis smooth scroll + GSAP ScrollTrigger
 - [ ] 3.10 — Sayfa geçiş animasyonu
 
@@ -179,7 +179,7 @@
 ## ▶ PAKET 7 — TEST & GÜVENLİK & DEPLOY 🔴 %10
 
 ### ✅ Tamamlananlar
-- [x] 7.A.1 — Desadoor.Testler projesi mevcut
+- [x] 7.A.1 — VIZITLINK3D.Testler projesi mevcut
 - [x] 7.C.3 — nginx.conf mevcut
 - [x] GuvenlikHeaderlariMiddleware mevcut
 

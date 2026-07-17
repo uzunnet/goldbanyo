@@ -152,7 +152,7 @@
 
 | Dosya | Boyut | Tarih | Durum |
 |-------|-------|-------|-------|
-| `Yedekler/db/desadoor_20260514.bak` | 850 KB | 2026-05-14 | ✅ |
+| `Yedekler/db/VIZITLINK3D_20260514.bak` | 850 KB | 2026-05-14 | ✅ |
 
 ---
 

@@ -10,6 +10,16 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 
 ---
 
+## 🔒 KESİN EMİRLER (Ustam'ın Talimatı — Onay Bile İstisna Değil)
+
+| # | Yasak | Sebep / İlgili Dosya |
+|---|---|---|
+| 0a | DB dosyasını silmek/yeniden oluşturmak | [AGENTS.md](../AGENTS.md) §KESİN EMİRLER |
+| 0b | Herhangi bir model/entity/tablo silmek | [AGENTS.md](../AGENTS.md) §KESİN EMİRLER |
+| 0c | Menü (`MenuOgeleri`) veya admin yapısını silmek | [AGENTS.md](../AGENTS.md) §KESİN EMİRLER |
+
+---
+
 ## 🔴 KIRMIZI ÇİZGİLER (TEK İHLAL = REDDEDİLİR)
 
 | # | Yasak | Sebep / İlgili Dosya |
@@ -41,7 +51,7 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 | 25 | Kod tekrarı (DRY ihlali) | [AGENTS.md](../AGENTS.md) ✅ Zorunluluklar |
 | 26 | İngilizce isimlendirme (framework hariç) | `02_CSharp...` §3, [AGENTS.md] §Yasaklar |
 | 27 | Sektör-spesifik örnek (kapı/emlak/restoran) | Tüm dosyalar — generic terim kullan |
-| 28 | Brand adı (DesaDoor/CanEmlak/vb.) | `[PROJE_ADI]` placeholder, `00_PROJE_BILGISI`'ten |
+| 28 | Brand adı (VIZITLINK3D/CanEmlak/vb.) | `[PROJE_ADI]` placeholder, `00_PROJE_BILGISI`'ten |
 | 29 | Dosya > 1500 satır | `02_CSharp...` §2.1 (partial class böl) |
 | 30 | In-memory DB test'te | `10_Test...` §3 (Testcontainers) |
 | 31 | Inline `style="..."` (dinamik olmadıkça) | `04_CSS...` §1 |
@@ -103,5 +113,19 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 
 ---
 
-*Versiyon: 1.1 — 36 yasak | Bağlı: tüm AjanKurallari/ dosyaları*
+*Versiyon: 1.2 — 39 yasak | Bağlı: tüm AjanKurallari/ dosyaları (özellikle 13_Tema_Sablon_Sistemi.md)*
 *Bu liste sürekli güncellenir — yeni yasak çıkarsa Ustam'ın onayıyla eklenir.*
+
+---
+
+## 🎨 TEMA + DİL ETKİLEŞİM YASAKLARI (13_Tema_Sablon_Sistemi.md §19.8)
+
+| # | Yasak | Referans |
+|---|---|---|
+| 37 | Tema adı/açıklaması hardcoded (Türkçe/İngilizce) | §13 §19.8 |
+| 38 | Tema CSS'inde `content: "metin"` (Türkçe/İngilizce) | §13 §19.8 |
+| 39 | Türkçe karakter desteklemeyen font (Bebas Neue, Anton) gövde metin için | §13 §19.8 |
+| 40 | Tema değişikliği sırasında `DilServisi` cache'ini temizleme | §13 §19.8 |
+| 41 | Tema manifest'inde `ad`/`aciklama` çeviri anahtarı olmadan yazma | §13 §19.8 |
+| 42 | Tema-bazlı sayfada `dil.T(...)` yerine hardcoded string | §05 §13 §19.8 |
+| 43 | `:root[data-tema-id="..."]` seçicisinde dil-bağımlı içerik | §13 §19.8 |

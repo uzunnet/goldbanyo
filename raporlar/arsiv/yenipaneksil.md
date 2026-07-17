@@ -30,7 +30,7 @@ diyor. Canli test ile **asil kok neden** tespit edildi ve ikisi de bunu net yazm
 
 | Bulgu | Kanit | Durum |
 |---|---|---|
-| **DbContext'te Urunler DbSet'leri yorum satiriydi** → tablo yok | `DesadoorDbContext.cs` 76-99 yorum | Bu oturumda ACILDI (asagi bak) |
+| **DbContext'te Urunler DbSet'leri yorum satiriydi** → tablo yok | `VIZITLINK3DDbContext.cs` 76-99 yorum | Bu oturumda ACILDI (asagi bak) |
 | `UrunParcaEslemesi.cs` build kiriyor | `eksilermd` §1.1, CS0234/CS0246 | DUZELTILECEK (ilk is) |
 | `/api/urunler`, `/api/renkler/ral`, `/api/malzemeler` JSON degil, **SPA fallback HTML** donuyor | Canli: `Content-Type: text/html` | Kontrolcu eksik/dogrulanmali |
 | `/api/uc-boyut/modeller` JSON donuyor ama veri bos `[]`, parca uclari yok | Canli + `UcBoyutModelKontrolcu.cs` | Parca endpoint eklenecek |
@@ -39,7 +39,7 @@ diyor. Canli test ile **asil kok neden** tespit edildi ve ikisi de bunu net yazm
 | Urun domaini = **kapak (mobilya/dolap kapagi)** + aile bazli kapi/dolap/dusakabin | GLB adlari: 402, kapak1-4 | Aile sablonu gerekli |
 
 **Bu oturumda yapilan degisiklik (devam noktasi):**
-- `DesadoorDbContext.cs`: Urunler/Renkler/Malzemeler DbSet'leri ACILDI
+- `VIZITLINK3DDbContext.cs`: Urunler/Renkler/Malzemeler DbSet'leri ACILDI
   (`UrunAilesileri, UrunKategorileri, Urunler, UrunYerellestirmeleri, UrunMedyalari,
   UrunUcBoyutParcalari, UrunParcaGruplari, UrunParcaEslemeleri, RalRenkleri,
   RenkKataloglari, Malzemeler, KaplamaSecenekleri, UrunParcaRenkSecenekleri,
@@ -92,22 +92,22 @@ Mock/sabit veri yok. Dosya yolu ana kaynak degil; medya/DB ana kaynak.
 ## 4. FAZ SIRASI (her faz bitince build + canli dogrula)
 
 ### FAZ A — Build'i yesile cek (P0, ONCE BU)
-1. `Desadoor.Ortak/Modeller/UrunParcaEslemesi.cs` saf POCO yap:
-   - `Microsoft.EntityFrameworkCore` ve `Desadoor.Ortak.Modeller.Audit` using KALDIR.
+1. `VIZITLINK3D.Ortak/Modeller/UrunParcaEslemesi.cs` saf POCO yap:
+   - `Microsoft.EntityFrameworkCore` ve `VIZITLINK3D.Ortak.Modeller.Audit` using KALDIR.
    - `EntityBase` kalitimini kaldir; alanlari acikca yaz (Id, FK'lar, audit alanlari).
    - Navigation `UrunUcBoyutParcasi`'ya `[JsonIgnore]`; ayni namespace (`...Urunler`).
-2. `dotnet build Desadoor.slnx` → yesil olana kadar baska ise gecme.
-3. DB yedek: `Yedekler/db/desadoor_YYYYMMDD_urun_oncesi.db`.
-4. Migration: `dotnet ef migrations add UrunOmurgasiEklendi --project Desadoor.Api`
-   sonra `dotnet ef database update --project Desadoor.Api`.
+2. `dotnet build VIZITLINK3D.slnx` → yesil olana kadar baska ise gecme.
+3. DB yedek: `Yedekler/db/VIZITLINK3D_YYYYMMDD_urun_oncesi.db`.
+4. Migration: `dotnet ef migrations add UrunOmurgasiEklendi --project VIZITLINK3D.Api`
+   sonra `dotnet ef database update --project VIZITLINK3D.Api`.
    (DbSet'ler bu oturumda acildi; snapshot ile uyum kontrol et.)
 
 Kabul: build yesil, `dotnet ef database update` hatasiz, yeni tablolar olusuyor.
 
 ### FAZ B — API kontrolculeri (eksilermd P1/P2 + canli eksik)
-Mevcut desen: `ControllerBase` + `DesadoorDbContext` + `Cevap<T>`
+Mevcut desen: `ControllerBase` + `VIZITLINK3DDbContext` + `Cevap<T>`
 (ornek: `UcBoyutModelKontrolcu.cs`). Eksik/dogrulanacak kontrolculer
-`Desadoor.Api/Moduller/Urunler/` ve `.../Malzemeler/`:
+`VIZITLINK3D.Api/Moduller/Urunler/` ve `.../Malzemeler/`:
 - `UrunlerKontrolcu`  → `GET api/urunler`, `GET api/urunler/{id}`,
   `GET api/urunler/slug/{slug}`, `GET api/urunler/{id}/uc-boyut-modelleri`,
   `POST/PUT/DELETE api/urunler` (soft delete).
@@ -132,9 +132,9 @@ Dogrulama: her uc `Content-Type: application/json` donmeli (HTML fallback DEGIL)
 
 ### FAZ C — Demo seed (hicbir yer bos gelmesin)
 `TohumVerisi.cs`'e idempotent (`if (!vt.X.Any())`) seed ekle:
-1. GLB kopya: `I:\KApaklar\*.glb` → `Desadoor.Api/wwwroot/medya/ucboyut/`
+1. GLB kopya: `I:\KApaklar\*.glb` → `VIZITLINK3D.Api/wwwroot/medya/ucboyut/`
    (dosya adlarini ASCII slug yap: `402duz.glb`, `kapak1.glb` ...).
-2. Gorsel kopya: `I:\websitesi\*` → `Desadoor.Api/wwwroot/medya/urunler/`
+2. Gorsel kopya: `I:\websitesi\*` → `VIZITLINK3D.Api/wwwroot/medya/urunler/`
    (ana gorsel + galeri; ad ASCII).
 3. `RenkKatalogu` + `RalRengi` (min ~24 yaygin RAL: 9016, 9010, 7016, 9005 ...).
 4. `Malzeme` (Membran, Lake, Laminant, Akrilik, Cam, Aluminyum, MDF) +
@@ -190,7 +190,7 @@ ana gorsel + galeri (havuz) → GLB yukle → model analiz → parcalari esle
 yayina al → frontend detayda ayni urun → 3D konfigurator izinli secimlerle calisir →
 PDF teklif konfig verisiyle uretilir
 ```
-Ek kabul (eksilermd): `dotnet build/test Desadoor.slnx` yesil; tum yeni API uclari
+Ek kabul (eksilermd): `dotnet build/test VIZITLINK3D.slnx` yesil; tum yeni API uclari
 JSON (HTML fallback degil) doner; hicbir admin/public ekran bos gelmez.
 
 ---
@@ -446,8 +446,8 @@ curl -i http://localhost:5015/api/urunler   → Content-Type application/json OL
 ## 16. NIHAI KONTROL LISTESI (kod yazan model her faz sonu isaretler)
 
 ```
-[ ] dotnet build Desadoor.slnx yesil
-[ ] dotnet test Desadoor.slnx yesil
+[ ] dotnet build VIZITLINK3D.slnx yesil
+[ ] dotnet test VIZITLINK3D.slnx yesil
 [ ] DB yedek alindi (her migration oncesi)
 [ ] Yeni uclar JSON donuyor (Content-Type dogrulandi, HTML degil)
 [ ] Hicbir admin/public ekran bos gelmiyor (seed dolu)
@@ -491,11 +491,11 @@ sabit cerceve:
 > sonunda build+canli dogrula, sonucu `yenplan.md` §14 sablonuna yaz.
 
 **FAZ A — Build + DB temeli**
-- [ ] A1. `Desadoor.Ortak/Modeller/UrunParcaEslemesi.cs` saf POCO (EF/Audit using kaldir, EntityBase kaldir, [JsonIgnore], dogru namespace)
-- [ ] A2. `dotnet build Desadoor.slnx` → YESIL (yesil olmadan A3'e gecme)
-- [ ] A3. DB yedek: `Yedekler/db/desadoor_YYYYMMDD_urun_oncesi.db`
-- [ ] A4. `dotnet ef migrations add UrunOmurgasiEklendi --project Desadoor.Api` (DbSet'ler acik — snapshot uyumla)
-- [ ] A5. `dotnet ef database update --project Desadoor.Api` → hatasiz, tablolar olusuyor
+- [ ] A1. `VIZITLINK3D.Ortak/Modeller/UrunParcaEslemesi.cs` saf POCO (EF/Audit using kaldir, EntityBase kaldir, [JsonIgnore], dogru namespace)
+- [ ] A2. `dotnet build VIZITLINK3D.slnx` → YESIL (yesil olmadan A3'e gecme)
+- [ ] A3. DB yedek: `Yedekler/db/VIZITLINK3D_YYYYMMDD_urun_oncesi.db`
+- [ ] A4. `dotnet ef migrations add UrunOmurgasiEklendi --project VIZITLINK3D.Api` (DbSet'ler acik — snapshot uyumla)
+- [ ] A5. `dotnet ef database update --project VIZITLINK3D.Api` → hatasiz, tablolar olusuyor
 - [ ] A6. §11 alan tuzaklari karari yaz (ModelYolu otorite, parca soft-delete yok, klasor adi, cift MedyaKontrolcu)
 
 **FAZ B — API kontrolculeri**
@@ -538,7 +538,7 @@ sabit cerceve:
 - [ ] F1. §15 test matrisi (≥5/ozellik)
 - [ ] F2. eval kaldir, DateTime.Now→UtcNow, inline style→css/sistem, hardcoded→DilServisi.T()
 - [ ] F3. PDF katalog gercek (§14), ImageSharp guncelle
-- [ ] F4. `dotnet build/test Desadoor.slnx` yesil + smoke
+- [ ] F4. `dotnet build/test VIZITLINK3D.slnx` yesil + smoke
 - [ ] F5. §16 nihai kontrol listesi tam isaretli
 
 

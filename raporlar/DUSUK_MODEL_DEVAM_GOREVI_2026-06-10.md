@@ -1,4 +1,4 @@
-# DesaDoor Devam Gorevi - Dusuk Model Icin
+# VIZITLINK3D Devam Gorevi - Dusuk Model Icin
 
 Tarih: 2026-06-10
 Hedef: Daha dusuk maliyetli bir modelin projeyi bozmadan devam ettirebilmesi icin net gorev listesi.
@@ -13,42 +13,42 @@ Hedef: Daha dusuk maliyetli bir modelin projeyi bozmadan devam ettirebilmesi ici
 ## Bu Turda Yapilan Duzeltmeler
 
 1. Urun detay route degisimi duzeltildi.
-   - Dosya: `Desadoor.UI/Pages/UrunDetay.razor.cs`
+   - Dosya: `VIZITLINK3D.UI/Pages/UrunDetay.razor.cs`
    - Sorun: `/urun/a` sayfasindan detay icindeki baska urune tiklayinca Blazor ayni component instance uzerinde kalabiliyor, `OnInitializedAsync` tekrar calismadigi icin eski urun/model ekranda kalabiliyordu.
    - Cozum: `OnParametersSetAsync` ile `Slug` degisimi izleniyor. Slug degisince urun verisi, listeler, secili parca, renk/malzeme durumu ve 3D sahne sifirlaniyor.
 
 2. 3D model okunurlugu iyilestirildi.
-   - Dosya: `Desadoor.UI/wwwroot/js/uc-boyut-motoru.js`
+   - Dosya: `VIZITLINK3D.UI/wwwroot/js/uc-boyut-motoru.js`
    - Sorun: Ozellikle RAL 9016 gibi beyaz/acik renklerde kapak motifleri, freze cizgileri ve parca ayrimlari silik gorunuyordu.
    - Cozum: GLB ve parametrik model meshlerine hafif teknik kenar cizgisi eklendi. Isik dengesi daha az ambient, daha belirgin ana/kenar isik olacak sekilde ayarlandi. RAL malzemede `envMapIntensity` ve roughness dengelendi.
 
 3. 3D JS cache kirildi.
-   - Dosya: `Desadoor.UI/wwwroot/index.html`
+   - Dosya: `VIZITLINK3D.UI/wwwroot/index.html`
    - Degisim: `js/uc-boyut-motoru.js?v=2` -> `v=3`
 
 4. Urun kartlarinda kirik placeholder gorseli duzeltildi.
    - Dosyalar:
-     - `Desadoor.UI/Bilesenler/Urunler/UrunListeKart.razor`
-     - `Desadoor.UI/Bilesenler/Urunler/UrunListeKart.razor.cs`
-     - `Desadoor.UI/wwwroot/css/sistem/bilesenler/kartlar.css`
+     - `VIZITLINK3D.UI/Bilesenler/Urunler/UrunListeKart.razor`
+     - `VIZITLINK3D.UI/Bilesenler/Urunler/UrunListeKart.razor.cs`
+     - `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/kartlar.css`
    - Sorun: `/medya/placeholder-urun.jpg` yoktu ve 404 donuyordu.
    - Cozum: Gorsel yoksa artik `<img>` basilmiyor; sistem ici placeholder yuzeyi gosteriliyor.
 
 5. Urunler sayfasindaki demo gorsel 404 duzeltildi.
-   - Dosya: `Desadoor.UI/Pages/Urunler.razor`
+   - Dosya: `VIZITLINK3D.UI/Pages/Urunler.razor`
    - Degisim: Olmayan `/medya/placeholder-urun.jpg` yerine mevcut `/medya/katalog/503/503-y.png` kullanildi.
 
 ## Test Sonuclari
 
-- `node --check Desadoor.UI/wwwroot/js/uc-boyut-motoru.js`: Basarili.
-- `dotnet build Desadoor.UI/Desadoor.UI.csproj --no-restore`: Basarili.
+- `node --check VIZITLINK3D.UI/wwwroot/js/uc-boyut-motoru.js`: Basarili.
+- `dotnet build VIZITLINK3D.UI/VIZITLINK3D.UI.csproj --no-restore`: Basarili.
   - Mevcut uyari: `OpenMcdf 3.1.3` NU1902.
   - Mevcut uyari: `SharpCompress 0.46.3` NU1902.
-- `dotnet build Desadoor.Api/Desadoor.Api.csproj --no-restore`: Basarili.
-- `dotnet test Desadoor.Testler/Desadoor.Testler.csproj --no-restore`: 428 test basarili, 0 hata.
+- `dotnet build VIZITLINK3D.Api/VIZITLINK3D.Api.csproj --no-restore`: Basarili.
+- `dotnet test VIZITLINK3D.Testler/VIZITLINK3D.Testler.csproj --no-restore`: 428 test basarili, 0 hata.
 - HTTP smoke:
   - `/`, `/urunler`, `/urun/nrd-004`, `/katalog`, `/sertifikalar`: 200.
-  - `api/urunler?dil=tr`, `api/desadoor/kataloglar`, `api/menu/konum/AnaMenu`: 200.
+  - `api/urunler?dil=tr`, `api/VIZITLINK3D/kataloglar`, `api/menu/konum/AnaMenu`: 200.
   - Model dosyalari kontrol edildi:
     - `/models/katalog/04/nrd-boy-kpk-04.glb`: 200.
     - `/models/katalog/01/nrd-boy-kpk-01.glb`: 200.
@@ -63,7 +63,7 @@ Hedef: Daha dusuk maliyetli bir modelin projeyi bozmadan devam ettirebilmesi ici
 
 2. Admin ve frontend CSS genel borcu var.
    - Statik taramada eski dosyalarda `!important`, hardcoded renk ve inline style kullanimi var.
-   - Ozellikle `Desadoor.Api/wwwroot/css/...` icinde eski publish/static kopyalar da gorunuyor.
+   - Ozellikle `VIZITLINK3D.Api/wwwroot/css/...` icinde eski publish/static kopyalar da gorunuyor.
    - Yeni eklenen CSS bu kurali bozmayacak sekilde yazildi, fakat tum proje temiz degil.
 
 3. Urun modelleri farkli GLB dosyalari donduruyor, fakat bazi katalog modelleri geometrik olarak cok benzer.
@@ -80,9 +80,9 @@ Hedef: Daha dusuk maliyetli bir modelin projeyi bozmadan devam ettirebilmesi ici
 ## Dusuk Model Icin Sirali Gorevler
 
 1. Once build ve test calistir.
-   - `dotnet build Desadoor.UI/Desadoor.UI.csproj --no-restore`
-   - `dotnet build Desadoor.Api/Desadoor.Api.csproj --no-restore`
-   - `dotnet test Desadoor.Testler/Desadoor.Testler.csproj --no-restore`
+   - `dotnet build VIZITLINK3D.UI/VIZITLINK3D.UI.csproj --no-restore`
+   - `dotnet build VIZITLINK3D.Api/VIZITLINK3D.Api.csproj --no-restore`
+   - `dotnet test VIZITLINK3D.Testler/VIZITLINK3D.Testler.csproj --no-restore`
 
 2. Urun detay route testini yap.
    - `http://localhost:5013/urun/nrd-004` ac.
@@ -110,19 +110,19 @@ Hedef: Daha dusuk maliyetli bir modelin projeyi bozmadan devam ettirebilmesi ici
    - Hardcoded yeni metin ekleme; Razor metinleri `dil.T(...)` ile olmalidir.
 
 7. CSS borcunu ayri is olarak temizle.
-   - `rg "!important|style=|#[0-9A-Fa-f]{3,6}" Desadoor.UI -n -g "*.razor" -g "*.css"`
+   - `rg "!important|style=|#[0-9A-Fa-f]{3,6}" VIZITLINK3D.UI -n -g "*.razor" -g "*.css"`
    - Tumunu tek seferde degil, modul modul temizle.
    - `tokens.css` degiskenleri kullan.
 
 ## Degistirilen Dosyalar
 
-- `Desadoor.UI/Pages/UrunDetay.razor.cs`
-- `Desadoor.UI/wwwroot/js/uc-boyut-motoru.js`
-- `Desadoor.UI/wwwroot/index.html`
-- `Desadoor.UI/Bilesenler/Urunler/UrunListeKart.razor`
-- `Desadoor.UI/Bilesenler/Urunler/UrunListeKart.razor.cs`
-- `Desadoor.UI/wwwroot/css/sistem/bilesenler/kartlar.css`
-- `Desadoor.UI/Pages/Urunler.razor`
+- `VIZITLINK3D.UI/Pages/UrunDetay.razor.cs`
+- `VIZITLINK3D.UI/wwwroot/js/uc-boyut-motoru.js`
+- `VIZITLINK3D.UI/wwwroot/index.html`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunListeKart.razor`
+- `VIZITLINK3D.UI/Bilesenler/Urunler/UrunListeKart.razor.cs`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/kartlar.css`
+- `VIZITLINK3D.UI/Pages/Urunler.razor`
 
 ## Devam Ederken Dikkat
 

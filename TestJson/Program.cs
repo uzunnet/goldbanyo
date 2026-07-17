@@ -1,8 +1,8 @@
 using System;
 using System.Text.Json;
 using System.IO;
-using Desadoor.Ortak.Modeller.Urunler;
-using Desadoor.Ortak.Modeller;
+using VIZITLINK3D.Ortak.Modeller.Urunler;
+using VIZITLINK3D.Ortak.Modeller;
 using System.Collections.Generic;
 
 var json = File.ReadAllText("../urunler_out.json");

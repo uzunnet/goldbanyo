@@ -7,6 +7,7 @@ using VizitLink3D.Ortak.Modeller.Medya;
 using VizitLink3D.Ortak.Modeller.Renkler;
 using VizitLink3D.Ortak.Modeller.Urunler;
 using VizitLink3D.Ortak.Modeller.Tema;
+using VizitLink3D.Ortak.Yardimcilar;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using VizitLink3D.Api.Servisler.Kimlik;
@@ -71,6 +72,7 @@ public static class TohumVerisi
         await Bolum(vt, "SlaytMedyalariniHavuzaBagla", async () => await SlaytMedyalariniHavuzaBaglaAsync(vt));
         await Bolum(vt, "HizmetAdimlari", async () => await TohumlaHizmetAdimlariniAsync(vt));
         await Bolum(vt, "SSS", async () => { if (!vt.SikSorulanSorular.Any()) await TohumlaSSSAsync(vt); });
+        await Bolum(vt, "GoldBanyoSSS", async () => await GoldBanyoSSSleriniGuncelleAsync(vt));
         await Bolum(vt, "Diller", async () => { await TohumlaDilleriAsync(vt); });
         await Bolum(vt, "Ceviriler", async () => await TohumlaCevirileriAsync(vt));
         await Bolum(vt, "SayfaIcerikleri", async () => await TohumlaSayfaIcerikleriAsync(vt));
@@ -573,13 +575,71 @@ public static class TohumVerisi
 
     private static async Task TohumlaSSSAsync(VizitLink3DDbContext vt)
     {
-        vt.SikSorulanSorular.AddRange(
-            new SikSorulanSoru { Soru = "Urunlerinizin garanti suresi ne kadardir?", Cevap = "Tum VizitLink3D urunleri 24 ay garantilidir.", KategoriAdi = "Genel", SiraNo = 1 },
-            new SikSorulanSoru { Soru = "Olculendirme islemi nasil yapilir?", Cevap = "Ucretisz olarak evinizde uzman ekip tarafindan yapilir.", KategoriAdi = "Genel", SiraNo = 2 },
-            new SikSorulanSoru { Soru = "Teslimat suresi ne kadardir?", Cevap = "Uretime gore 7-15 is gunu arasinda degisir.", KategoriAdi = "Urun", SiraNo = 3 },
-            new SikSorulanSoru { Soru = "Odeme secenekleri nelerdir?", Cevap = "Nakit, kredi karti ve taksitli odeme secenekleri mevcuttur.", KategoriAdi = "Genel", SiraNo = 4 },
-            new SikSorulanSoru { Soru = "Sehir disina kargo yapiliyor mu?", Cevap = "Evet, Turkiyenin her yerine kargo ve montaj yapilir.", KategoriAdi = "Hizmet", SiraNo = 5 }
-        );
+        vt.SikSorulanSorular.AddRange(GoldBanyoSssIcerigi.Kayitlar.Select((kayit, sira) => new SikSorulanSoru
+        {
+            Soru = kayit.Soru,
+            Cevap = kayit.Cevap,
+            KategoriAdi = kayit.KategoriAdi,
+            SiraNo = sira + 1
+        }));
+        await vt.SaveChangesAsync();
+    }
+
+    private static async Task GoldBanyoSSSleriniGuncelleAsync(VizitLink3DDbContext vt)
+    {
+        const string surumAnahtari = "GoldBanyoSSSVersiyonu";
+        const string guncelSurum = "2026-07-17";
+        var ayar = await vt.SistemAyarlari.FirstOrDefaultAsync(a => a.Anahtar == surumAnahtari);
+        if (ayar?.Deger == guncelSurum)
+        {
+            return;
+        }
+
+        var mevcutKayitlar = await vt.SikSorulanSorular
+            .Where(s => !s.SilindiMi)
+            .OrderBy(s => s.SiraNo)
+            .ThenBy(s => s.Id)
+            .ToListAsync();
+
+        foreach (var (hedefKayit, sira) in GoldBanyoSssIcerigi.Kayitlar.Select((kayit, indeks) => (kayit, indeks + 1)))
+        {
+            var mevcutKayit = mevcutKayitlar.ElementAtOrDefault(sira - 1);
+            if (mevcutKayit is null)
+            {
+                vt.SikSorulanSorular.Add(new SikSorulanSoru
+                {
+                    Soru = hedefKayit.Soru,
+                    Cevap = hedefKayit.Cevap,
+                    KategoriAdi = hedefKayit.KategoriAdi,
+                    SiraNo = sira,
+                    AktifMi = true
+                });
+                continue;
+            }
+
+            mevcutKayit.Soru = hedefKayit.Soru;
+            mevcutKayit.Cevap = hedefKayit.Cevap;
+            mevcutKayit.KategoriAdi = hedefKayit.KategoriAdi;
+            mevcutKayit.SiraNo = sira;
+            mevcutKayit.AktifMi = true;
+        }
+
+        if (ayar is null)
+        {
+            vt.SistemAyarlari.Add(new SistemAyari
+            {
+                Anahtar = surumAnahtari,
+                Deger = guncelSurum,
+                Tip = "string",
+                Aciklama = "Gold Banyo SSS içerik sürümü"
+            });
+        }
+        else
+        {
+            ayar.Deger = guncelSurum;
+            ayar.GuncellenmeTarihi = DateTime.UtcNow;
+        }
+
         await vt.SaveChangesAsync();
     }
 
@@ -1783,7 +1843,7 @@ public static class TohumVerisi
                         new() { FirmaId = firma.Id, Baslik = "Tüm Ürünler", Url = "banyo-dolaplari", Sira = 5, Konum = "PublicHeader" }
                     }},
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Katalog", Url = "katalog", Sira = 3, Konum = "PublicHeader", Ikon = "PictureAsPdf" },
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicHeader", Ikon = "Apartment" },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicHeader", Ikon = "Apartment", AktifMi = false },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Kurumsal", Url = "hakkimizda", Sira = 5, Konum = "PublicHeader", Ikon = "Info", AltMenuler = new List<MenuOgesi> {
                         new() { FirmaId = firma.Id, Baslik = "Hakkımızda", Url = "hakkimizda", Sira = 1, Konum = "PublicHeader" },
                         new() { FirmaId = firma.Id, Baslik = "Vizyon & Misyon", Url = "vizyon-misyon", Sira = 2, Konum = "PublicHeader" },
@@ -1792,7 +1852,7 @@ public static class TohumVerisi
                         new() { FirmaId = firma.Id, Baslik = "Bayiler", Url = "bayiler", Sira = 5, Konum = "PublicHeader" },
                         new() { FirmaId = firma.Id, Baslik = "Fabrikamız", Url = "fabrikamiz", Sira = 6, Konum = "PublicHeader" }
                     }},
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Referanslar", Url = "referanslar", Sira = 6, Konum = "PublicHeader", Ikon = "Star" },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Referanslar", Url = "referanslar", Sira = 6, Konum = "PublicHeader", Ikon = "Star", AktifMi = false },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Haber", Url = "haber", Sira = 7, Konum = "PublicHeader", Ikon = "Newspaper" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "SSS", Url = "sss", Sira = 8, Konum = "PublicHeader", Ikon = "Help" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "İletişim", Url = "iletisim", Sira = 9, Konum = "PublicHeader", Ikon = "Call" }
@@ -1803,14 +1863,14 @@ public static class TohumVerisi
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ana Sayfa", Url = "", Sira = 1, Konum = "PublicMobil", Ikon = "Home" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ürünler", Url = "banyo-dolaplari", Sira = 2, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Katalog", Url = "katalog", Sira = 3, Konum = "PublicMobil" },
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicMobil" },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicMobil", AktifMi = false },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Hakkımızda", Url = "hakkimizda", Sira = 5, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Vizyon & Misyon", Url = "vizyon-misyon", Sira = 6, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ekibimiz", Url = "ekibimiz", Sira = 7, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Sertifikalarımız", Url = "sertifikalar", Sira = 8, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Bayiler", Url = "bayiler", Sira = 9, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Fabrikamız", Url = "fabrikamiz", Sira = 10, Konum = "PublicMobil" },
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Referanslar", Url = "referanslar", Sira = 11, Konum = "PublicMobil" },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Referanslar", Url = "referanslar", Sira = 11, Konum = "PublicMobil", AktifMi = false },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Haber", Url = "haber", Sira = 12, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "SSS", Url = "sss", Sira = 13, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "İletişim", Url = "iletisim", Sira = 14, Konum = "PublicMobil" }
@@ -3537,7 +3597,7 @@ public static class TohumVerisi
         // bu kayitlardan beslenir (belge-onizleme PdfDosyaYolu ile render eder).
         var kataloglar = new List<Katalog>
         {
-            new() { Baslik = "Gold Banyo Katalog", Aciklama = "Gold Banyo koleksiyon ve urun katalogu", PdfDosyaYolu = "medya/gold-katalog/GOLD-2026-KATALOG.pdf", Yil = 2026, SiraNo = 1, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow },
+            new() { Baslik = "Gold Banyo Katalog", Aciklama = "Gold Banyo koleksiyon ve ürün kataloğu", KapakResim = "/medya/gold-katalog/anasayfa-slayt-1.png", PdfDosyaYolu = "medya/gold-katalog/GOLD-2026-KATALOG.pdf", Yil = 2026, SiraNo = 1, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow },
             new() { Baslik = "Gold Banyo Urun Dosyasi", Aciklama = "Gold Banyo urun seckisi ve teknik sunum dosyasi", PdfDosyaYolu = "medya/gold-katalog/GOLD-2026-KATALOG.pdf", Yil = 2026, SiraNo = 2, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow }
         };
 

@@ -5,7 +5,7 @@ var kok = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
 var temizlikYap = args.Any(a => string.Equals(a, "--temizle", StringComparison.OrdinalIgnoreCase));
 var sadelestir = args.Any(a => string.Equals(a, "--sadelestir", StringComparison.OrdinalIgnoreCase));
 var urunUcBoyutKapat = ArgumanDegeri(args, "--urun-3d-kapat");
-var vtYolu = Path.Combine(kok, "Desadoor.Api", "desadoor.db");
+var vtYolu = Path.Combine(kok, "VIZITLINK3D.Api", "VIZITLINK3D.db");
 
 if (!File.Exists(vtYolu))
 {

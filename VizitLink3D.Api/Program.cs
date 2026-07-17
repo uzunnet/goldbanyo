@@ -33,23 +33,32 @@ yapici.Services.AddDbContext<VizitLink3DDbContext>((sp, sec) =>
        .AddInterceptors(new AuditInterceptor(httpErisimi));
 });
 
-// JWT Kimlik Dogrulama — anahtar ortam degiskeninden, yoksa config'den
+// JWT Kimlik Dogrulama — anahtar yoksa public siteyi çökertmeden çalıştır
 var jwtAnahtar = Environment.GetEnvironmentVariable("VIZITLINK3D_JWT_KEY")
-    ?? yapici.Configuration["Jwt:Anahtar"]!;
-yapici.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(sec =>
-    {
-        sec.TokenValidationParameters = new TokenValidationParameters
+    ?? yapici.Configuration["Jwt:Anahtar"];
+
+if (!string.IsNullOrWhiteSpace(jwtAnahtar))
+{
+    yapici.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(sec =>
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAnahtar)),
-            ValidateIssuer = true,
-            ValidIssuer = yapici.Configuration["Jwt:Yayinci"],
-            ValidateAudience = true,
-            ValidAudience = yapici.Configuration["Jwt:Izleyici"],
-            ValidateLifetime = true
-        };
-    });
+            sec.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAnahtar)),
+                ValidateIssuer = true,
+                ValidIssuer = yapici.Configuration["Jwt:Yayinci"],
+                ValidateAudience = true,
+                ValidAudience = yapici.Configuration["Jwt:Izleyici"],
+                ValidateLifetime = true
+            };
+        });
+}
+else
+{
+    Log.Warning("JWT anahtari bos oldugu icin kimlik dogrulama gecici olarak pasif.");
+    yapici.Services.AddAuthentication();
+}
 
 yapici.Services.AddAuthorization();
 yapici.Services.AddSignalR();

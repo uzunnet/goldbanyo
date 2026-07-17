@@ -10,8 +10,9 @@
 ```
 1. AGENTS.md                              (← bu dosya — evrensel giriş)
 2. AjanKurallari/00_PROJE_BILGISI.md      (← bu projenin marka/sektör/port/renk bilgisi)
-3. Görevle ilgili uzman dosya             (AjanKurallari/02-10 arası)
-4. AjanKurallari/99_YASAKLAR_HIZLI_REFERANS.md (kod yazmadan önce göz at)
+3. AjanKurallari/12_Token_Optimizasyonu_Alt_Ajan_Kullanimi.md (← alt ajan seçim tablosu + token tasarrufu, M3 supervisor ve tüm alt ajanlar için ZORUNLU)
+4. Görevle ilgili uzman dosya             (AjanKurallari/02-10 arası)
+5. AjanKurallari/99_YASAKLAR_HIZLI_REFERANS.md (kod yazmadan önce göz at)
 ```
 
 **Bu sırayla okumadan tek satır kod YAZILAMAZ.**
@@ -46,6 +47,9 @@ Sen (AI ajan) bu dosyadaki YAML front matter'ı okur, değerlerini **bağlam** o
     ├── 08_Performans_Cache_Render.md      ← FusionCache, AsSplitQuery, PersistentState
     ├── 09_Coklu_Platform_Web_Mobil_Masa.md← Blazor WASM + MAUI + WPF + PWA
     ├── 10_Test_Derleme_Pipeline.md        ← xUnit, Testcontainers, CI/CD
+    ├── 11_SaaS_MultiTenant_Mimarisi.md    ← Tenant, domain, izolasyon
+    ├── 12_Token_Optimizasyonu_Alt_Ajan_Kullanimi.md ← alt ajan seçim tablosu + token tasarrufu (M3 + tüm alt ajanlar için ZORUNLU)
+    ├── 13_Tema_Sablon_Sistemi.md       ← 20+ temaya ölçeklenebilir şablon mimarisi, Stitch import, super admin (TÜM AI'lar için ZORUNLU)
     └── 99_YASAKLAR_HIZLI_REFERANS.md      ← 30+ yasak tek sayfa
 ```
 
@@ -64,9 +68,23 @@ Sen (AI ajan) bu dosyadaki YAML front matter'ı okur, değerlerini **bağlam** o
 | Yavaş kod, N+1, cache, lazy | `08_Performans_Cache_Render.md` |
 | MAUI, WPF, PWA, admin layout | `09_Coklu_Platform_Web_Mobil_Masa.md` |
 | Test, build, CI/CD | `10_Test_Derleme_Pipeline.md` |
+| SaaS, multi-tenant, domain izolasyon | `11_SaaS_MultiTenant_Mimarisi.md` |
+| **Alt ajan seçimi, token tasarrufu, paralel tool çağrıları** | **`12_Token_Optimizasyonu_Alt_Ajan_Kullanimi.md` (HER GÖREVDE OKUNUR)** |
+| **Yeni tema ekleme, tema değiştirme, Stitch import, super admin tema yönetimi, 20+ ölçeklenebilir mimari, TEMA = FARKLI SİTE felsefesi** | **`13_Tema_Sablon_Sistemi.md (TEMA İŞLERİNDE ZORUNLU)`** |
 | Hızlı yasak kontrolü | `99_YASAKLAR_HIZLI_REFERANS.md` |
 
 Birden fazla görev = birden fazla dosya birlikte yüklenir.
+
+---
+
+## 🔒 KESİN EMİRLER (Ustam'ın Doğrudan Talimatı — Tartışmasız, İhlal Edilemez)
+
+1. **Veritabanı dosyası ASLA silinmez / yeniden oluşturulmaz / drop edilmez.** (`vizitlink3d.db` ve her ortamdaki karşılığı.) Şema değişikliği gerekiyorsa EF Core migration ile **eklenir**, mevcut dosya yerinde kalır.
+2. **Hiçbir model/entity/tablo ASLA silinmez.** Kullanılmayan bir alan/tablo bulunsa bile kaldırılmaz — en fazla kullanılmadığı not edilir, kullanıcıya sorulur.
+3. **Menü yapısı (`MenuOgeleri`) ve admin yapısı (Admin sayfaları, kontrolcüleri, yetkilendirme akışı) ASLA silinmez.** Sadece **ekleme** veya (gerekirse) soft-delete (`SilindiMi=true`) yapılır; fiziksel `DELETE` çalıştırılmaz.
+4. Bu 3 madde için **kullanıcı onayı bile istisna oluşturmaz** — konu geçtiğinde ajan silme dışında bir yol (migration, ekleme, `WHERE`'li güncelleme, soft delete) önerir; gerekiyorsa Ustam'a doğrudan açıklar ama silme işlemini kendisi yapmaz.
+
+> Not: Daha önce (bu projede) tek seferlik, kullanıcı onaylı ve dar kapsamlı bir `MenuOgeleri` temizliği yapılmıştı (reseed tetiklemek için). Bu emirden sonra böyle bir işlem **bir daha yapılmaz** — reseed gerekiyorsa kod tarafında guard/versiyon mantığıyla çözülür, veri silinerek değil.
 
 ---
 
@@ -117,6 +135,7 @@ Tam liste: `AjanKurallari/99_YASAKLAR_HIZLI_REFERANS.md`.
 13. **DB yedek** her büyük değişiklik öncesi (`Yedekler/db/`).
 14. **Minimum 5 test** her özellik (Testcontainers — gerçek PostgreSQL).
 15. **`DateTime.UtcNow`** (lokal değil).
+16. **Tema değişimi = sadece renk değişimi DEĞİLDİR** — şekil, animasyon, tipografi, layout, ikonografi, boşluk ritmi HEPSİ değişir. Detay: `13_Tema_Sablon_Sistemi.md`.
 
 ---
 

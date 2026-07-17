@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="Desadoor.Ortak/Desadoor.Ortak.csproj" />
-  <Project Path="Desadoor.Api/Desadoor.Api.csproj" />
-  <Project Path="Desadoor.Testler/Desadoor.Testler.csproj" />
-  <Project Path="Desadoor.UI/Desadoor.UI.csproj" />
-</Solution>

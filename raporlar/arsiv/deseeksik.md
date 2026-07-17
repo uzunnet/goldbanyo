@@ -1,6 +1,6 @@
-# DesaDoor Eksik Tamamlama Plani
+# VIZITLINK3D Eksik Tamamlama Plani
 
-> Amaç: DesaDoor sistemini endustriyel seviyede, dinamik, canli efektli, animasyonlu ve yonetilebilir bir admin paneline tasimak.
+> Amaç: VIZITLINK3D sistemini endustriyel seviyede, dinamik, canli efektli, animasyonlu ve yonetilebilir bir admin paneline tasimak.
 > Bu dosya, projede calisacak modellerin hatasiz uygulama yapmasi icin net is emri ve kabul kriteridir.
 
 ## 0. Zorunlu Okuma Sirasi
@@ -16,7 +16,7 @@ Kod yazmadan once su dosyalar sirayla okunacak:
 
 Bu is kapsaminda aktif hedef:
 
-- Proje: DesaDoor
+- Proje: VIZITLINK3D
 - Tema: Industrial Luxury
 - Admin giris: `/admin/giris`
 - Admin ana alan: `/admin/dashboard`
@@ -30,7 +30,7 @@ Bu is kapsaminda aktif hedef:
 
 Sistemde su guclu altyapi zaten var:
 
-- `Desadoor.Api`, `Desadoor.UI`, `Desadoor.Ortak`, `Desadoor.Testler` ayrimi mevcut.
+- `VIZITLINK3D.Api`, `VIZITLINK3D.UI`, `VIZITLINK3D.Ortak`, `VIZITLINK3D.Testler` ayrimi mevcut.
 - Admin altinda cok sayida yonetim sayfasi mevcut.
 - `AdminDuzen.razor` ve `AdminDuzen.razor.cs` var.
 - `KomutPaleti`, `CanliSohbetArayuzu`, `BildirimServisi`, `AnimasyonMotoruServisi` mevcut.
@@ -44,7 +44,7 @@ Bu temel korunacak; ana is, bu yapinin endustriyel admin deneyimine donusturulme
 
 ### 2.1 Admin Duzeni Endustriyel Seviyede Degil
 
-Mevcut `Desadoor.UI/Layout/AdminDuzen.razor` tek sol menulu duzen kullaniyor. Hedef, `09_Coklu_Platform_Web_Mobil_Masa.md` dosyasindaki 3 sutunlu admin standardidir:
+Mevcut `VIZITLINK3D.UI/Layout/AdminDuzen.razor` tek sol menulu duzen kullaniyor. Hedef, `09_Coklu_Platform_Web_Mobil_Masa.md` dosyasindaki 3 sutunlu admin standardidir:
 
 - Sol: 260px tam menu, tablet 72px mini menu, mobil drawer.
 - Orta: sayfa icerigi, sabit toolbar ve akilli baslik alani.
@@ -63,20 +63,20 @@ Kabul kriteri:
 
 Tespit edilen ornekler:
 
-- `Desadoor.UI/Layout/AdminDuzen.razor`
-- `Desadoor.UI/Bilesenler/RenkSecici.razor`
-- `Desadoor.UI/Bilesenler/HeroSlider.razor`
-- `Desadoor.UI/Bilesenler/GaleriDialog.razor`
-- `Desadoor.UI/Pages/Yonetim/Vitrin.razor`
-- `Desadoor.UI/Pages/Vitrin/PiedraKonfigurator.razor`
-- `Desadoor.UI/Pages/Test/PiedraAnaliz.razor`
-- `Desadoor.UI/Bilesenler/Medya/MedyaSecici.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Bilesenler/RenkSecici.razor`
+- `VIZITLINK3D.UI/Bilesenler/HeroSlider.razor`
+- `VIZITLINK3D.UI/Bilesenler/GaleriDialog.razor`
+- `VIZITLINK3D.UI/Pages/Yonetim/Vitrin.razor`
+- `VIZITLINK3D.UI/Pages/Vitrin/PiedraKonfigurator.razor`
+- `VIZITLINK3D.UI/Pages/Test/PiedraAnaliz.razor`
+- `VIZITLINK3D.UI/Bilesenler/Medya/MedyaSecici.razor`
 
 Yapilacak:
 
 - Inline `style` kullanimlari CSS class yapisina tasinacak.
 - Hardcoded `#fff`, `#000`, `rgba(...)`, `px`, `rem` degerleri token veya merkezi class ile degistirilecek.
-- Admin icin tum stiller `Desadoor.UI/wwwroot/css/sistem/moduller/yonetim.css` ve gerekli bilesen CSS dosyalarinda toplanacak.
+- Admin icin tum stiller `VIZITLINK3D.UI/wwwroot/css/sistem/moduller/yonetim.css` ve gerekli bilesen CSS dosyalarinda toplanacak.
 - Dinamik renk zorunluysa yalniz gercek veri rengi icin kullanilacak. Ornek: RAL renk kutucugu `background-color: @renk.HexKod` kabul edilebilir, ama boyut, border, shadow inline olmayacak.
 
 Kabul kriteri:
@@ -89,12 +89,12 @@ Kabul kriteri:
 
 Asagidaki bilesenlerde `@code` blogu tespit edildi:
 
-- `Desadoor.UI/Bilesenler/GaleriDialog.razor`
-- `Desadoor.UI/Bilesenler/HeroSlider.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/SSSBolumu.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/MusteriYorumlariCarousel.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/ReferansSeridi.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/HizmetSureciBolumu.razor`
+- `VIZITLINK3D.UI/Bilesenler/GaleriDialog.razor`
+- `VIZITLINK3D.UI/Bilesenler/HeroSlider.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/SSSBolumu.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/MusteriYorumlariCarousel.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/ReferansSeridi.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/HizmetSureciBolumu.razor`
 
 Yapilacak:
 
@@ -104,7 +104,7 @@ Yapilacak:
 
 Kabul kriteri:
 
-- `rg -n "@code" Desadoor.UI -g *.razor -g !obj/**` sonuc vermeyecek.
+- `rg -n "@code" VIZITLINK3D.UI -g *.razor -g !obj/**` sonuc vermeyecek.
 
 ### 2.4 Canli Efekt ve Animasyon Altyapisi Eksik Kullaniliyor
 
@@ -185,12 +185,12 @@ Kabul kriteri:
 
 Yeni bilesenler olusturulacak:
 
-- `Desadoor.UI/Bilesenler/Admin/AktiviteAkisi.razor`
-- `Desadoor.UI/Bilesenler/Admin/AktiviteAkisi.razor.cs`
-- `Desadoor.UI/Bilesenler/Admin/BildirimZili.razor`
-- `Desadoor.UI/Bilesenler/Admin/BildirimZili.razor.cs`
-- `Desadoor.UI/Bilesenler/Admin/SistemDurumuKartlari.razor`
-- `Desadoor.UI/Bilesenler/Admin/SistemDurumuKartlari.razor.cs`
+- `VIZITLINK3D.UI/Bilesenler/Admin/AktiviteAkisi.razor`
+- `VIZITLINK3D.UI/Bilesenler/Admin/AktiviteAkisi.razor.cs`
+- `VIZITLINK3D.UI/Bilesenler/Admin/BildirimZili.razor`
+- `VIZITLINK3D.UI/Bilesenler/Admin/BildirimZili.razor.cs`
+- `VIZITLINK3D.UI/Bilesenler/Admin/SistemDurumuKartlari.razor`
+- `VIZITLINK3D.UI/Bilesenler/Admin/SistemDurumuKartlari.razor.cs`
 
 API/SignalR hedefleri:
 
@@ -224,7 +224,7 @@ Kabul kriteri:
 
 ### 2.9 Bootstrap Kalintilari Temizlenmeli
 
-`Desadoor.UI/wwwroot/lib/bootstrap/` altinda Bootstrap dosyalari mevcut.
+`VIZITLINK3D.UI/wwwroot/lib/bootstrap/` altinda Bootstrap dosyalari mevcut.
 
 Yapilacak:
 
@@ -337,24 +337,24 @@ Her `.razor` dosyasinin `.razor.cs` partial class dosyasi olacak.
 
 Ana dosyalar:
 
-- `Desadoor.UI/Layout/AdminDuzen.razor`
-- `Desadoor.UI/Layout/AdminDuzen.razor.cs`
-- `Desadoor.UI/wwwroot/css/sistem/moduller/yonetim.css`
-- `Desadoor.UI/wwwroot/css/sistem/bilesenler/animasyon.css`
-- `Desadoor.UI/wwwroot/css/sistem/bilesenler/efektler.css`
-- `Desadoor.UI/Servisler/AnimasyonMotoruServisi.cs`
-- `Desadoor.UI/Servisler/BildirimServisi.cs`
-- `Desadoor.UI/Bilesenler/KomutPaleti.razor`
-- `Desadoor.UI/Pages/Admin/Dashboard.razor`
-- `Desadoor.UI/Pages/Admin/Dashboard.razor.cs`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor.cs`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/moduller/yonetim.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/animasyon.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/efektler.css`
+- `VIZITLINK3D.UI/Servisler/AnimasyonMotoruServisi.cs`
+- `VIZITLINK3D.UI/Servisler/BildirimServisi.cs`
+- `VIZITLINK3D.UI/Bilesenler/KomutPaleti.razor`
+- `VIZITLINK3D.UI/Pages/Admin/Dashboard.razor`
+- `VIZITLINK3D.UI/Pages/Admin/Dashboard.razor.cs`
 
 Ilk temizlenecek bilesenler:
 
-- `Desadoor.UI/Bilesenler/GaleriDialog.razor`
-- `Desadoor.UI/Bilesenler/HeroSlider.razor`
-- `Desadoor.UI/Bilesenler/RenkSecici.razor`
-- `Desadoor.UI/Bilesenler/Medya/MedyaSecici.razor`
-- `Desadoor.UI/Bilesenler/Anasayfa/*.razor`
+- `VIZITLINK3D.UI/Bilesenler/GaleriDialog.razor`
+- `VIZITLINK3D.UI/Bilesenler/HeroSlider.razor`
+- `VIZITLINK3D.UI/Bilesenler/RenkSecici.razor`
+- `VIZITLINK3D.UI/Bilesenler/Medya/MedyaSecici.razor`
+- `VIZITLINK3D.UI/Bilesenler/Anasayfa/*.razor`
 
 ## 7. Model Uygulama Kurallari
 
@@ -375,24 +375,24 @@ Bu dosyayi uygulayacak model:
 Kural taramalari:
 
 ```powershell
-rg -n "@code" Desadoor.UI -g *.razor -g !obj/**
-rg -n "<style|Style=|style=|!important|#[0-9A-Fa-f]{3,8}|rgb\\(|rgba\\(" Desadoor.UI -g *.razor -g *.css -g !obj/**
-rg -n "Console\\.WriteLine|DEBUG|catch \\{ \\}" Desadoor.UI Desadoor.Api -g *.cs -g !obj/**
-rg -n "DateTime\\.Now|\\.Result|\\.Wait\\(" Desadoor.UI Desadoor.Api Desadoor.Ortak -g *.cs -g *.razor -g !obj/**
+rg -n "@code" VIZITLINK3D.UI -g *.razor -g !obj/**
+rg -n "<style|Style=|style=|!important|#[0-9A-Fa-f]{3,8}|rgb\\(|rgba\\(" VIZITLINK3D.UI -g *.razor -g *.css -g !obj/**
+rg -n "Console\\.WriteLine|DEBUG|catch \\{ \\}" VIZITLINK3D.UI VIZITLINK3D.Api -g *.cs -g !obj/**
+rg -n "DateTime\\.Now|\\.Result|\\.Wait\\(" VIZITLINK3D.UI VIZITLINK3D.Api VIZITLINK3D.Ortak -g *.cs -g *.razor -g !obj/**
 ```
 
 Derleme ve test:
 
 ```powershell
-dotnet build Desadoor.slnx
-dotnet test Desadoor.slnx
+dotnet build VIZITLINK3D.slnx
+dotnet test VIZITLINK3D.slnx
 ```
 
 Manuel UI kontrol:
 
 ```powershell
-dotnet run --project Desadoor.Api/Desadoor.Api.csproj
-dotnet run --project Desadoor.UI/Desadoor.UI.csproj
+dotnet run --project VIZITLINK3D.Api/VIZITLINK3D.Api.csproj
+dotnet run --project VIZITLINK3D.UI/VIZITLINK3D.UI.csproj
 ```
 
 Tarayici hedefleri:

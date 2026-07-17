@@ -1,6 +1,6 @@
-# DesaDoor Tam Dinamik Canli Efektli Admin Kontrollu Sistem Plani
+# VIZITLINK3D Tam Dinamik Canli Efektli Admin Kontrollu Sistem Plani
 
-> Bu raporun amaci: DesaDoor sitesinin her noktasini admin panelden yonetilebilir, canli guncellenebilir, efektli, animasyonlu ve cok dilli hale getirmek. Dusuk kod modeli bu dosyayi uygulama rehberi olarak kullanacak.
+> Bu raporun amaci: VIZITLINK3D sitesinin her noktasini admin panelden yonetilebilir, canli guncellenebilir, efektli, animasyonlu ve cok dilli hale getirmek. Dusuk kod modeli bu dosyayi uygulama rehberi olarak kullanacak.
 
 ## 1. Ana Hedef
 
@@ -22,7 +22,7 @@ Kural: Public UI veriyi admin/API kaynakli alacak. Statik/fallback sadece API yo
 ## 2. Mevcut Durumda Sorun
 
 1. Ana sayfada veri geliyor gibi gorunuyor ama gorsel yollari kirik:
-   - `https://desadoor.com.tr/upload/desadoor.png`
+   - `https://VIZITLINK3D.com.tr/upload/VIZITLINK3D.png`
    - `medya/slayt/slayt-2.webp`
 2. Dil degisimi hata uretiyor:
    - `MudMenu` duplicate key: `0_en`
@@ -338,12 +338,12 @@ Gerekli tokenlar:
 
 Dusuk kod modeli once bunlari yapmali:
 
-1. `DesaDoorDuzen.razor` duplicate `@key` hatasini duzelt.
+1. `VIZITLINK3DDuzen.razor` duplicate `@key` hatasini duzelt.
    - `@key="@($"{oge.Id}_{_aktifDil}")"` yerine benzersiz key helper kullan.
    - `Id == 0` olursa `Url + Baslik + Sira + index + dil` kullan.
 
 2. `tokens.css` tekrarini kaldir.
-   - `DesaDoorDuzen.razor` icindeki `<link href="css/sistem/tokens.css">` sil.
+   - `VIZITLINK3DDuzen.razor` icindeki `<link href="css/sistem/tokens.css">` sil.
    - `index.html` tek kaynak kalsin.
 
 3. Admin dil secimini dropdown yap.
@@ -351,7 +351,7 @@ Dusuk kod modeli once bunlari yapmali:
    - Tum aktif diller acilir menude gorunsun.
 
 4. Kirik medya yollarini duzelt.
-   - `upload/desadoor.png` yerine yerel `wwwroot/medya` altinda logo kullan.
+   - `upload/VIZITLINK3D.png` yerine yerel `wwwroot/medya` altinda logo kullan.
    - `medya/slayt/slayt-2.webp` dosyasi yoksa seed/API bu yolu vermesin.
 
 5. Hero ve bolum verilerini admin kontrollu yap.

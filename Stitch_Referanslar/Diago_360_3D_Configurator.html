@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diago Vanity Configurator - ONYX</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Space+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#333535",
+                      "secondary-fixed": "#e5e2e1",
+                      "tertiary": "#e9c349",
+                      "surface-container-lowest": "#0c0f0f",
+                      "primary-fixed-dim": "#c9c6c5",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-surface": "#e2e2e2",
+                      "tertiary-container": "#080500",
+                      "on-tertiary-container": "#917400",
+                      "on-error-container": "#ffdad6",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#e9c349",
+                      "tertiary-fixed": "#ffe088",
+                      "surface-bright": "#37393a",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c4c7c7",
+                      "surface-dim": "#121414",
+                      "on-secondary-container": "#bab8b7",
+                      "surface-container-low": "#1a1c1c",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-primary": "#313030",
+                      "on-primary-fixed-variant": "#474646",
+                      "surface-container-high": "#282a2b",
+                      "on-primary-container": "#797777",
+                      "on-secondary-fixed-variant": "#474646",
+                      "surface-container-highest": "#333535",
+                      "surface-container": "#1e2020",
+                      "background": "#121414",
+                      "primary-fixed": "#e5e2e1",
+                      "on-primary-fixed": "#1c1b1b",
+                      "error": "#ffb4ab",
+                      "secondary": "#c8c6c5",
+                      "on-secondary": "#313030",
+                      "inverse-surface": "#e2e2e2",
+                      "surface-tint": "#c9c6c5",
+                      "inverse-primary": "#5f5e5e",
+                      "on-tertiary-fixed": "#241a00",
+                      "outline": "#8e9192",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "primary": "#c9c6c5",
+                      "primary-container": "#050505",
+                      "on-tertiary": "#3c2f00",
+                      "surface": "#121414",
+                      "secondary-container": "#4a4949",
+                      "outline-variant": "#444748",
+                      "on-background": "#e2e2e2",
+                      "inverse-on-surface": "#2f3131"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "container-max": "1440px",
+                      "stack-lg": "64px",
+                      "stack-sm": "16px",
+                      "stack-md": "32px",
+                      "unit": "8px",
+                      "margin-desktop": "80px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Playfair Display"
+                      ],
+                      "headline-md": [
+                              "Playfair Display"
+                      ],
+                      "body-md": [
+                              "Space Grotesk"
+                      ],
+                      "display-lg-mobile": [
+                              "Playfair Display"
+                      ],
+                      "body-lg": [
+                              "Space Grotesk"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "label-caps": [
+                              "Space Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .glow-border-active {
+            border: 1px solid theme('colors.tertiary');
+            box-shadow: 0 0 15px rgba(233, 195, 73, 0.3);
+        }
+        .glow-border-hover:hover {
+            border-color: theme('colors.tertiary');
+            box-shadow: 0 0 15px rgba(233, 195, 73, 0.2);
+        }
+        .glass-panel {
+            background: rgba(18, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col relative overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-xl text-primary font-label-caps text-label-caps fixed top-0 w-full z-50 border-b border-white/10 shadow-sm transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-headline-md text-headline-md tracking-widest text-primary hover:opacity-80 transition-opacity">
+                ONYX
+            </div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:opacity-80" href="#">Collections</a>
+<a class="text-tertiary relative after:content-[''] after:absolute after:-bottom-2 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-tertiary after:rounded-full hover:opacity-80 transition-opacity" href="#">Vanities</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:opacity-80" href="#">Fixtures</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:opacity-80" href="#">Mirrors</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-unit">
+<button aria-label="shopping_bag" class="p-unit text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+</button>
+<button aria-label="person" class="p-unit text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow relative w-full h-screen pt-20 flex">
+<!-- Background Texture -->
+<div class="absolute inset-0 z-0 w-full h-full opacity-40 mix-blend-overlay pointer-events-none" data-alt="A dark, moody, high-resolution architectural surface texture resembling deep onyx marble or polished dark stone, softly illuminated by sparse, dramatic spot lighting. The texture should feel extremely premium, solid, and deep black, fitting a luxury e-commerce backdrop without distracting from a foreground product. Seamless pattern style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgiyp91l6aSeN9nPTBsRhCRVYlMFL0jP55H7B-nE9o9IhkWXW3cZI8_FRZbcfmHlYJHq-yFxWoqeiZSLHwL86mhzlq00FOYqndYvfUlKaMi3r5-fIcfkWp73QMhF1dCW1eEXMEXzqUCsdXS_MYvXgoNtgdx0gBXZVAa_4uglix-F0UPDzRTXC6Ht3cACXqL9pcwuRip1jFGmo8MWtk4FzjzCT0yGtPbi2PR44KJvI2JEWMRXeNQCHFMHmLUdzeQlfhIVvsd7IA_iyc')"></div>
+<!-- 3D Configurator Canvas Area (Center) -->
+<div class="absolute inset-0 z-10 w-full h-full cursor-grab active:cursor-grabbing flex items-center justify-center">
+<!-- Placeholder for actual 3D scene -->
+
+<!-- Interactive Hints -->
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-stack-md text-on-surface-variant opacity-60 pointer-events-none">
+<div class="flex items-center gap-unit">
+<span class="material-symbols-outlined text-sm">360</span>
+<span class="font-label-caps text-label-caps tracking-widest">Drag to Rotate</span>
+</div>
+<div class="w-px h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-unit">
+<span class="material-symbols-outlined text-sm">zoom_in</span>
+<span class="font-label-caps text-label-caps tracking-widest">Scroll to Zoom</span>
+</div>
+</div>
+</div>
+<!-- Layout Grid for Controls and Info -->
+<div class="relative z-20 w-full max-w-container-max mx-auto px-margin-desktop h-full flex justify-between items-center pointer-events-none">
+<!-- Left Panel: Material Controls -->
+<div class="w-80 glass-panel rounded-xl p-stack-md flex flex-col gap-stack-md pointer-events-auto">
+<div>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mb-unit">Configure</h2>
+<h1 class="font-headline-md text-headline-md text-primary">Diago</h1>
+</div>
+<!-- Material Toggles -->
+<div class="flex flex-col gap-unit mt-stack-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">Surface Material</div>
+<button class="group flex items-center gap-4 p-3 rounded-lg border border-outline-variant hover:border-tertiary transition-all duration-300 glow-border-active bg-surface-container/50">
+<div class="w-8 h-8 rounded-full shadow-inner border border-white/10" data-alt="A macro shot of luxurious Nero Marquina marble texture, deep black background with crisp white veining, polished high gloss finish." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCN7DqwygdAdLJApD2qvrKKvBQ4fw5io32yNhLndryjEKAKjSoenpGlfbKfPHVwjpESZBP9Kg-K8hwFRcUDSkxRajqvVVJ7HpjbQWwTDxIcZUjE60vUtS16YkV6SXucYdImcXo0SVvaitUspkAOYaBb8Hzo3jbOBWy9Pm40awrpK_y7s36BRas3hQAi1b2q4QlbWYzWt96d9A0AV5OEuRJWqN4u9bv1UtLspkch5dpOuMVHi3usvIqQW07uHFKaFAdGHwQchlORejjl')"></div>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-tertiary transition-colors">Nero Marquina</span>
+</button>
+<button class="group flex items-center gap-4 p-3 rounded-lg border border-outline-variant hover:border-tertiary transition-all duration-300 bg-surface-container/50">
+<div class="w-8 h-8 rounded-full shadow-inner border border-white/10" data-alt="A macro shot of premium Calacatta Gold marble texture, creamy white background with delicate grey and soft gold veining, smooth polished finish." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPCpCRAgBrBjLS8BgOuWAq4Og6i3q029ZPXLsF_fjb1CEdI-n5z4exWN9KSYwV7BVEFBu19btUYGYaXlir0eap9y-yoGQvlX8tyPJQHRdNESWqq_1xJ-HQAqCjTP267E5-vnPcHotC0CMd88r_U1cNYXOBKh0_Y0y26cl3x3sMZu70vPsSwEgvpFzWA3kvVCXFlKMG5m-2SXYWS1unwzRMJARWVxXOP06B6zhjF1WWOCXEdmA6nHmMZbTZkm3L40fnZkBCbgPHdaBs')"></div>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Calacatta Gold</span>
+</button>
+<div class="font-label-caps text-label-caps text-on-surface-variant mt-4 mb-2">Cabinetry Finish</div>
+<button class="group flex items-center gap-4 p-3 rounded-lg border border-outline-variant hover:border-tertiary transition-all duration-300 bg-surface-container/50">
+<div class="w-8 h-8 rounded-full shadow-inner border border-white/10" data-alt="A close up of rich, dark walnut wood grain texture, vertical lines, matte finish, luxurious and warm tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBikNQTSvvxDoNCITy4eX38AmZQlY5ibuoKvcc9U3OdVJ7Yl5MHiyI_NjiCDT3PY31A02lK4gvkpzwpyP9ecoArSatEhwONOqvm8IJB1ZXG1GacmHjnc1MVlqZw6GADb8bns4JtoBaH7BP6_RgAjiTEwi5TKQEQKbfvBe9S48-blp8skCpjL3-_e9RNFAkcVC1wKozrVDhT_2Bc7IzWGqtWdzhsPjxuoUA3QVyKBCFIbdEjYOLETxcugGrbnRqyOq7dgUrg_1LLkZF-')"></div>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Dark Walnut</span>
+</button>
+<div class="font-label-caps text-label-caps text-on-surface-variant mt-4 mb-2">Hardware Accent</div>
+<button class="group flex items-center gap-4 p-3 rounded-lg border border-outline-variant hover:border-tertiary transition-all duration-300 glow-border-active bg-surface-container/50">
+<div class="w-8 h-8 rounded-full shadow-inner border border-white/10" style="background: linear-gradient(135deg, #d4af37, #aa8222);"></div>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-tertiary transition-colors">Brushed Brass</span>
+</button>
+</div>
+</div>
+<!-- Right Panel: Information Card -->
+<div class="w-80 glass-panel rounded-xl p-stack-md flex flex-col gap-stack-md pointer-events-auto">
+<div class="flex justify-between items-start">
+<div>
+<div class="font-headline-sm text-headline-sm text-primary mb-1">$12,500</div>
+<div class="font-body-md text-body-md text-on-surface-variant">Base Price</div>
+</div>
+<button aria-label="Favorite" class="text-on-surface-variant hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="h-px w-full bg-outline-variant/50"></div>
+<!-- Specs List -->
+<div class="flex flex-col gap-3 font-body-md text-body-md">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-on-surface-variant">Width</span>
+<span class="text-on-surface">60" (1524mm)</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-on-surface-variant">Depth</span>
+<span class="text-on-surface">22" (558mm)</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-on-surface-variant">Height</span>
+<span class="text-on-surface">34" (863mm)</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-on-surface-variant">Mounting</span>
+<span class="text-on-surface">Wall-Hung (Floating)</span>
+</div>
+</div>
+<div class="mt-auto pt-stack-sm flex flex-col gap-unit">
+<button class="w-full py-4 bg-tertiary text-primary-container font-label-caps text-label-caps tracking-widest rounded transition-all duration-300 hover:bg-tertiary-fixed hover:shadow-[0_0_20px_rgba(233,195,73,0.4)]">
+                        ADD TO QUOTE
+                    </button>
+<button class="w-full py-4 border border-outline hover:border-primary text-primary font-label-caps text-label-caps tracking-widest rounded transition-all duration-300">
+                        DOWNLOAD SPEC SHEET
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

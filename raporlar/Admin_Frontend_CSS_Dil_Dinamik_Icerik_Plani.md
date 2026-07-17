@@ -1,4 +1,4 @@
-# DesaDoor Admin + Frontend CSS/Dil/Dinamik Icerik Onarim Plani
+# VIZITLINK3D Admin + Frontend CSS/Dil/Dinamik Icerik Onarim Plani
 
 > Bu rapor dusuk kod modeline uygulanabilir is paketi olarak verilecektir. Kod yazmadan once zorunlu okuma sirasi:
 > `AGENTS.md` -> `AjanKurallari/00_PROJE_BILGISI.md` -> `AjanKurallari/03_Razor_MudBlazor_Blazor10.md` -> `AjanKurallari/04_CSS_Tema_Stitch_Entegrasyonu.md` -> `AjanKurallari/06_API_Servisler_MediatR.md` -> `AjanKurallari/99_YASAKLAR_HIZLI_REFERANS.md`.
@@ -9,16 +9,16 @@ Admin paneldeki metin girisleri, form alanlari, butonlar, grid basliklari, sayfa
 
 ## 2. Mevcut Tespit
 
-1. `Desadoor.UI/Servisler/DilServisi.cs` icinde `DilDegisti` eventi var, ancak tum sayfalar bu olaya abone degil. Bu yuzden dil degisimi her yerde anlik yansimiyor.
-2. `Desadoor.UI/Layout/DesaDoorDuzen.razor` public ust menu icin API'den menu aliyor, fakat masaustu ve mobil anahtar kullanimi tutarsiz: bazen `nav_{Baslik}`, bazen direkt `Baslik`.
-3. `Desadoor.UI/Layout/AdminDuzen.razor` admin menusunu API'den aliyor, fakat dil secimi banner icine dagilmis; tum admin sayfalari dil degisimine standart abonelikle baglanmamis.
-4. `Desadoor.UI/Layout/DesaDoorDuzen.razor.cs` ve `Desadoor.UI/Layout/AdminDuzen.razor.cs` icinde MudTheme renk/font degerleri hardcoded. Bunlar `00_PROJE_BILGISI` + `tokens.css` disipliniyle uyumsuz.
-5. `Desadoor.UI/Pages/DinamikSayfaGosterici.razor` icinde inline style ve `MarkupString` var. Bu hem CSS disiplinini hem de XSS guvenligini riskli hale getiriyor.
-6. `Desadoor.UI/wwwroot/index.html` ayni sistem CSS dosyalarini hem tek tek hem de `tokens.css` uzerinden yukluyor. Bu tekrar ve stil cakismasi uretiyor.
-7. `Desadoor.UI/wwwroot/css/sistem` altinda cok sayida hardcoded renk, px, rgba ve `!important` kullanimi var. En buyuk risk dosyalar: `moduller/desadoor.css`, `moduller/yonetim.css`, `bilesenler/admin-tema.css`, `bilesenler/efektler.css`.
-8. `Desadoor.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs` menu endpointleri calisiyor, ancak controller dogrudan DB sorguluyor; uzun vadede Vertical Slice/MediatR standardina tasinmali.
-9. `Desadoor.Api/Kontrolcüler/Pazarlama/AdminIcerikKontrolcu.cs` bazi yerlerde `IActionResult` ve fiziksel `Remove` kullaniyor. AGENTS kurallarina gore `Cevap<T>` ve soft delete zorunlu.
-10. `Desadoor.Api/VeriTabani/TohumVerisi.cs` icinde menu, ceviri ve sayfa icerigi seedleri var; admin -> frontend dinamik akis icin bu seedlerin tam ve dil bazli olmasi gerekiyor.
+1. `VIZITLINK3D.UI/Servisler/DilServisi.cs` icinde `DilDegisti` eventi var, ancak tum sayfalar bu olaya abone degil. Bu yuzden dil degisimi her yerde anlik yansimiyor.
+2. `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor` public ust menu icin API'den menu aliyor, fakat masaustu ve mobil anahtar kullanimi tutarsiz: bazen `nav_{Baslik}`, bazen direkt `Baslik`.
+3. `VIZITLINK3D.UI/Layout/AdminDuzen.razor` admin menusunu API'den aliyor, fakat dil secimi banner icine dagilmis; tum admin sayfalari dil degisimine standart abonelikle baglanmamis.
+4. `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor.cs` ve `VIZITLINK3D.UI/Layout/AdminDuzen.razor.cs` icinde MudTheme renk/font degerleri hardcoded. Bunlar `00_PROJE_BILGISI` + `tokens.css` disipliniyle uyumsuz.
+5. `VIZITLINK3D.UI/Pages/DinamikSayfaGosterici.razor` icinde inline style ve `MarkupString` var. Bu hem CSS disiplinini hem de XSS guvenligini riskli hale getiriyor.
+6. `VIZITLINK3D.UI/wwwroot/index.html` ayni sistem CSS dosyalarini hem tek tek hem de `tokens.css` uzerinden yukluyor. Bu tekrar ve stil cakismasi uretiyor.
+7. `VIZITLINK3D.UI/wwwroot/css/sistem` altinda cok sayida hardcoded renk, px, rgba ve `!important` kullanimi var. En buyuk risk dosyalar: `moduller/VIZITLINK3D.css`, `moduller/yonetim.css`, `bilesenler/admin-tema.css`, `bilesenler/efektler.css`.
+8. `VIZITLINK3D.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs` menu endpointleri calisiyor, ancak controller dogrudan DB sorguluyor; uzun vadede Vertical Slice/MediatR standardina tasinmali.
+9. `VIZITLINK3D.Api/Kontrolcüler/Pazarlama/AdminIcerikKontrolcu.cs` bazi yerlerde `IActionResult` ve fiziksel `Remove` kullaniyor. AGENTS kurallarina gore `Cevap<T>` ve soft delete zorunlu.
+10. `VIZITLINK3D.Api/VeriTabani/TohumVerisi.cs` icinde menu, ceviri ve sayfa icerigi seedleri var; admin -> frontend dinamik akis icin bu seedlerin tam ve dil bazli olmasi gerekiyor.
 
 ## 3. Degistirilmeyecek Kurallar
 
@@ -55,13 +55,13 @@ Admin paneldeki metin girisleri, form alanlari, butonlar, grid basliklari, sayfa
 
 ### Kontrol Edilecek Dosyalar
 
-- `Desadoor.UI/Servisler/DilServisi.cs`
-- `Desadoor.UI/Layout/DesaDoorDuzen.razor`
-- `Desadoor.UI/Layout/DesaDoorDuzen.razor.cs`
-- `Desadoor.UI/Layout/AdminDuzen.razor`
-- `Desadoor.UI/Layout/AdminDuzen.razor.cs`
-- `Desadoor.UI/Bilesenler/Admin/AdminUstBanner.razor`
-- `Desadoor.Api/VeriTabani/TohumVerisi.cs`
+- `VIZITLINK3D.UI/Servisler/DilServisi.cs`
+- `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor`
+- `VIZITLINK3D.UI/Layout/VIZITLINK3DDuzen.razor.cs`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor.cs`
+- `VIZITLINK3D.UI/Bilesenler/Admin/AdminUstBanner.razor`
+- `VIZITLINK3D.Api/VeriTabani/TohumVerisi.cs`
 
 ### Kabul Kriteri
 
@@ -81,11 +81,11 @@ TR/EN secimi admin ve public tarafta sayfa yenilemeden tum gorunur metinleri deg
 
 ### Ilk Temizlenecek Sayfalar
 
-- `Desadoor.UI/Pages/Admin/UrunYonetimi.razor`
-- `Desadoor.UI/Pages/Admin/UrunSihirbazi.razor`
-- `Desadoor.UI/Pages/Admin/YorumYonetimi.razor`
-- `Desadoor.UI/Pages/Yonetim/*.razor`
-- `Desadoor.UI/Bilesenler/Admin/*.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/UrunSihirbazi.razor`
+- `VIZITLINK3D.UI/Pages/Admin/YorumYonetimi.razor`
+- `VIZITLINK3D.UI/Pages/Yonetim/*.razor`
+- `VIZITLINK3D.UI/Bilesenler/Admin/*.razor`
 
 ### Kabul Kriteri
 
@@ -97,7 +97,7 @@ Admin panelde ayni tip metin girisleri ayni gorunmeli; `Label="Urun Adi"` gibi h
 
 1. `index.html` CSS yukleme duzeni sadelelestirilecek:
    - `css/sistem/tokens.css` tek sistem girisi olacak.
-   - `reset.css`, `degiskenler.css`, `desadoor.css`, `yonetim.css` gibi dosyalar ayrica tekrar yuklenmeyecek.
+   - `reset.css`, `degiskenler.css`, `VIZITLINK3D.css`, `yonetim.css` gibi dosyalar ayrica tekrar yuklenmeyecek.
    - `css/app.css` sadece gercekten gerekli global app stilleri icin kalacak.
 
 2. `degiskenler.css` tokenlari tamamlanacak:
@@ -115,15 +115,15 @@ Admin panelde ayni tip metin girisleri ayni gorunmeli; `Label="Urun Adi"` gibi h
 
 ### Ilk Temizlenecek Dosyalar
 
-- `Desadoor.UI/wwwroot/index.html`
-- `Desadoor.UI/wwwroot/css/sistem/tokens.css`
-- `Desadoor.UI/wwwroot/css/sistem/temeller/degiskenler.css`
-- `Desadoor.UI/wwwroot/css/sistem/moduller/desadoor.css`
-- `Desadoor.UI/wwwroot/css/sistem/moduller/yonetim.css`
-- `Desadoor.UI/wwwroot/css/sistem/bilesenler/admin-tema.css`
-- `Desadoor.UI/wwwroot/css/sistem/bilesenler/efektler.css`
-- `Desadoor.UI/Pages/DinamikSayfaGosterici.razor`
-- `Desadoor.UI/Layout/AdminDuzen.razor`
+- `VIZITLINK3D.UI/wwwroot/index.html`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/tokens.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/temeller/degiskenler.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/moduller/VIZITLINK3D.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/moduller/yonetim.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/admin-tema.css`
+- `VIZITLINK3D.UI/wwwroot/css/sistem/bilesenler/efektler.css`
+- `VIZITLINK3D.UI/Pages/DinamikSayfaGosterici.razor`
+- `VIZITLINK3D.UI/Layout/AdminDuzen.razor`
 
 ### Kabul Kriteri
 
@@ -134,7 +134,7 @@ Admin panelde ayni tip metin girisleri ayni gorunmeli; `Label="Urun Adi"` gibi h
 ### Yapilacaklar
 
 1. Public ust menu:
-   - `api/menu/desadoor` yerine konum standardi netlestirilecek: `PublicHeader`.
+   - `api/menu/VIZITLINK3D` yerine konum standardi netlestirilecek: `PublicHeader`.
    - Alt menuler admin panelde ac/kapa, sira, ikon, URL, yeni sekme, dil anahtari ile yonetilecek.
    - Menu basligi direkt `Baslik` metniyle degil, varsa `DilAnahtari` ile cevrilecek.
 
@@ -144,7 +144,7 @@ Admin panelde ayni tip metin girisleri ayni gorunmeli; `Label="Urun Adi"` gibi h
 
 3. Dinamik sayfalar:
    - `DinamikSayfaGosterici` slug + aktif dil ile icerik cekecek.
-   - API endpoint `api/desadoor/sayfa-icerigi/{slug}?dil=tr` standardina cekilecek.
+   - API endpoint `api/VIZITLINK3D/sayfa-icerigi/{slug}?dil=tr` standardina cekilecek.
    - HTML icerik gerekiyorsa API tarafinda sanitize edilmis alan donmeli; UI tarafinda ham `MarkupString` sadece temizlenmis icerige uygulanmali.
 
 4. Admin icerik formlari:
@@ -154,14 +154,14 @@ Admin panelde ayni tip metin girisleri ayni gorunmeli; `Label="Urun Adi"` gibi h
 
 ### Backend Kontrol Dosyalari
 
-- `Desadoor.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs`
-- `Desadoor.Api/Kontrolcüler/Sistem/DilKontrolcu.cs`
-- `Desadoor.Api/Kontrolcüler/Pazarlama/AdminIcerikKontrolcu.cs`
-- `Desadoor.Api/Kontrolcüler/Pazarlama/IcerikKontrolcu.cs`
-- `Desadoor.Api/VeriTabani/TohumVerisi.cs`
-- `Desadoor.Ortak/Modeller/MenuOgesi.cs`
-- `Desadoor.Ortak/Modeller/SayfaIcerigi.cs`
-- `Desadoor.Ortak/Modeller/Ceviri.cs`
+- `VIZITLINK3D.Api/Kontrolcüler/Sistem/MenuKontrolcu.cs`
+- `VIZITLINK3D.Api/Kontrolcüler/Sistem/DilKontrolcu.cs`
+- `VIZITLINK3D.Api/Kontrolcüler/Pazarlama/AdminIcerikKontrolcu.cs`
+- `VIZITLINK3D.Api/Kontrolcüler/Pazarlama/IcerikKontrolcu.cs`
+- `VIZITLINK3D.Api/VeriTabani/TohumVerisi.cs`
+- `VIZITLINK3D.Ortak/Modeller/MenuOgesi.cs`
+- `VIZITLINK3D.Ortak/Modeller/SayfaIcerigi.cs`
+- `VIZITLINK3D.Ortak/Modeller/Ceviri.cs`
 
 ### Kabul Kriteri
 

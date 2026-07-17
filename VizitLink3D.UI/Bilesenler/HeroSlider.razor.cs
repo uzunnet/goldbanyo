@@ -1,5 +1,6 @@
 ﻿using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.UI.Servisler;
+using VizitLink3D.Ortak.Yardimcilar;
 using Microsoft.AspNetCore.Components;
 
 namespace VizitLink3D.UI.Bilesenler;
@@ -9,6 +10,24 @@ public partial class HeroSlider : ComponentBase, IDisposable
     [Parameter] public string SayfaKodu { get; set; } = "anasayfa";
 
     private List<Slayt> _slaytlar = [];
+    private readonly List<Slayt> _varsayilanSlaytlar =
+    [
+        new Slayt
+        {
+            SayfaKodu = "anasayfa",
+            Dil = "tr",
+            Baslik = "Gold Banyo",
+            AltBaslik = "Endüstriyel Lüks",
+            Aciklama = "Sistem şu anda yerel yedek hero ile çalışıyor. API bağlandığında gerçek slaytlar otomatik olarak devreye girer.",
+            ArkaplanResim = "/medya/gold-katalog/sayfa-006-hero.png",
+            ButonMetni1 = "Koleksiyonu Keşfet",
+            ButonLink1 = "/banyo-dolaplari",
+            ButonMetni2 = "İletişim",
+            ButonLink2 = "/iletisim",
+            SiraNo = 1,
+            AktifMi = true
+        }
+    ];
     private bool _yukleniyor = true;
     private int _aktifIndex;
     private Timer? _zamanlayici;
@@ -27,6 +46,7 @@ public partial class HeroSlider : ComponentBase, IDisposable
 
     private async Task SlaytlariYukleAsync()
     {
+        _slaytlar = [];
         try
         {
             var slaytListesi = await api.GetAsync<List<Slayt>>($"api/slaytlar?dil={dil.AktifDil}&sayfaKodu={SayfaKodu}");
@@ -35,9 +55,16 @@ public partial class HeroSlider : ComponentBase, IDisposable
                 _slaytlar = slaytListesi.Where(s => s.AktifMi).OrderBy(s => s.SiraNo).ToList();
             }
         }
-        catch { /* slayt yuklenemezse bos goster */ }
+        catch
+        {
+            // API gecici olarak yoksa lokal yedek hero kullan.
+            _slaytlar = [];
+        }
         finally
         {
+            if (_slaytlar.Count == 0)
+                _slaytlar = _varsayilanSlaytlar.ToList();
+
             _yukleniyor = false;
             if (_slaytlar.Count > 1)
             {
@@ -55,9 +82,10 @@ public partial class HeroSlider : ComponentBase, IDisposable
 
     private string ResimUrl(string? yol)
     {
-        if (string.IsNullOrWhiteSpace(yol)) return string.Empty;
-        if (yol.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return yol;
-        return $"{api.ApiBaseUrl}{(yol.StartsWith('/') ? yol : "/" + yol)}";
+        var guncelYol = AnaSayfaSlaytYolu.Guncelle(yol);
+        if (string.IsNullOrWhiteSpace(guncelYol)) return string.Empty;
+        if (guncelYol.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return guncelYol;
+        return $"{api.ApiBaseUrl}{(guncelYol.StartsWith('/') ? guncelYol : "/" + guncelYol)}";
     }
 
     private async Task SonrakiSlayt()

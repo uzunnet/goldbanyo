@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Desadoor.Ortak\Desadoor.Ortak.csproj" />
+    <ProjectReference Include="..\VIZITLINK3D.Ortak\VIZITLINK3D.Ortak.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
