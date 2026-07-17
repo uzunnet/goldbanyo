@@ -6,6 +6,27 @@
 **/node_modules
 **/AppData
 
+# Uygulamanin derlenmesinde kullanilmayan yerel ciktilar ve arsivler.
+# Bunlarin Docker baglamina girmesi Coolify derleme aktarimini yuzlerce MB buyutuyordu.
+/tmp
+/yayin
+/publish
+/publish-kontrol
+/VizitLink3D_Arsiv_20260629
+/Yedekler
+/ui-live
+/logs
+/_ui_serve
+/UcBoyutMotor
+/ornekdolap
+/3D_Modelleme_Brief
+/Arsiv
+/HashApp
+/TestJson
+/UpdateDb
+/goldbanyopdf_sayfalar
+**/venv
+
 # Medya dosyalari Docker image'e dahil (volume bos ise gorunmez)
 # VizitLink3D.Api/wwwroot/medya/
 
