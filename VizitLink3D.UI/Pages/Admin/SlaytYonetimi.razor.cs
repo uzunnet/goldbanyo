@@ -230,13 +230,7 @@ public partial class SlaytYonetimi : ComponentBase
 
     private string MedyaGorselYolu(Medya medya)
     {
-        var yol = !string.IsNullOrWhiteSpace(medya.MiniaturYolu)
-            ? medya.MiniaturYolu
-            : !string.IsNullOrWhiteSpace(medya.DosyaYolu)
-                ? (medya.DosyaYolu.StartsWith('/') ? medya.DosyaYolu : $"/{medya.DosyaYolu}")
-                : "/medya/placeholder.png";
-        if (yol.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return yol;
-        return $"{Api.ApiBaseUrl}{yol}";
+        return $"{Api.ApiBaseUrl}/api/medya/dosya/{medya.Id}";
     }
 
     async Task AICeviriDialogAc(Slayt s)

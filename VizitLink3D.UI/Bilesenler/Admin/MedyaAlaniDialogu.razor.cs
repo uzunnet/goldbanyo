@@ -68,7 +68,7 @@ public partial class MedyaAlaniDialogu : ComponentBase
     private void MedyaSecildi(Ortak.Modeller.Medya.Medya m)
     {
         _secilenMedya = m;
-        _secilenYol = m.DosyaYolu ?? m.MiniaturYolu;
+        _secilenYol = $"/api/medya/dosya/{m.Id}";
     }
 
     private async Task DosyaYuklendi(IReadOnlyList<IBrowserFile> dosyalar)
@@ -86,7 +86,7 @@ public partial class MedyaAlaniDialogu : ComponentBase
         if (cevap?.BasariliMi == true && cevap.Veri != null)
         {
             _secilenMedya = cevap.Veri;
-            _secilenYol = cevap.Veri.DosyaYolu ?? cevap.Veri.MiniaturYolu;
+            _secilenYol = $"/api/medya/dosya/{cevap.Veri.Id}";
             snackbar.Add("Dosya yüklendi.", Severity.Success);
             await MedyaYukleAsync();
             _aktifSekme = 0;

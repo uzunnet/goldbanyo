@@ -13,7 +13,7 @@
         }
         else if (MedyaOgesi.Tip == MedyaTipi.Video && MedyaOgesi.Kaynak != MedyaKaynagi.Youtube)
         {
-            <img src="@(MedyaOgesi.MiniaturYolu ?? MedyaOgesi.DosyaYolu)" alt="@MedyaOgesi.Ad" loading="lazy" />
+            <img src="@($"/api/medya/dosya/{MedyaOgesi.Id}")" alt="@MedyaOgesi.Ad" loading="lazy" />
             <div class="medya-kart-play">
                 <MudIcon Icon="@Icons.Material.Filled.PlayCircle" Size="Size.Large" />
             </div>
@@ -42,7 +42,7 @@
         }
         else
         {
-            <img src="@(MedyaOgesi.MiniaturYolu ?? MedyaOgesi.DosyaYolu)" alt="@MedyaOgesi.Ad" loading="lazy" />
+            <img src="@($"/api/medya/dosya/{MedyaOgesi.Id}")" alt="@MedyaOgesi.Ad" loading="lazy" />
             <span class="medya-kart-tip">IMG</span>
         }
     </div>

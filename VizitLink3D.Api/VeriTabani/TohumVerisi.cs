@@ -68,6 +68,7 @@ public static class TohumVerisi
 
         await Bolum(vt, "Slaytlar", async () => await TohumlaSlaytlariAsync(vt));
         await Bolum(vt, "SlaytResimYoluDuzelt", async () => await SlaytResimYollariniDuzeltAsync(vt));
+        await Bolum(vt, "SlaytMedyalariniHavuzaBagla", async () => await SlaytMedyalariniHavuzaBaglaAsync(vt));
         await Bolum(vt, "HizmetAdimlari", async () => await TohumlaHizmetAdimlariniAsync(vt));
         await Bolum(vt, "SSS", async () => { if (!vt.SikSorulanSorular.Any()) await TohumlaSSSAsync(vt); });
         await Bolum(vt, "Diller", async () => { await TohumlaDilleriAsync(vt); });
@@ -410,6 +411,73 @@ public static class TohumVerisi
             foreach (var s in mobilSlaytlar) { s.ArkaplanResimMobil = yeni; guncelleme = true; }
         }
         if (guncelleme) await vt.SaveChangesAsync();
+    }
+
+    private static async Task SlaytMedyalariniHavuzaBaglaAsync(VizitLink3DDbContext vt)
+    {
+        var slaytlar = await vt.Slaytlar
+            .Where(s => !s.SilindiMi &&
+                ((s.ArkaplanResim != null && s.ArkaplanResim.StartsWith("/medya/")) ||
+                 (s.ArkaplanResimMobil != null && s.ArkaplanResimMobil.StartsWith("/medya/"))))
+            .ToListAsync();
+
+        var yollar = slaytlar
+            .SelectMany(s => new[] { s.ArkaplanResim, s.ArkaplanResimMobil })
+            .Where(yol => !string.IsNullOrWhiteSpace(yol) && yol.StartsWith("/medya/"))
+            .Select(yol => yol!.TrimStart('/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var mevcutMedyalar = await vt.Medyalar
+            .Where(m => !m.SilindiMi && m.DosyaYolu != null)
+            .ToListAsync();
+        var medyaHaritasi = mevcutMedyalar
+            .GroupBy(m => m.DosyaYolu!.TrimStart('/'), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(grup => grup.Key, grup => grup.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var yol in yollar)
+        {
+            if (medyaHaritasi.ContainsKey(yol)) continue;
+
+            var dosyaAdi = Path.GetFileName(yol);
+            var medya = new Medya
+            {
+                Tip = MedyaTipi.Resim,
+                Kaynak = MedyaKaynagi.Yerel,
+                Ad = Path.GetFileNameWithoutExtension(dosyaAdi),
+                OrijinalAd = dosyaAdi,
+                DosyaYolu = yol,
+                MimeTipi = Path.GetExtension(dosyaAdi).ToLowerInvariant() switch
+                {
+                    ".webp" => "image/webp",
+                    ".png" => "image/png",
+                    ".gif" => "image/gif",
+                    _ => "image/jpeg"
+                },
+                KullanimSayisi = 1,
+                OlusturulmaTarihi = DateTime.UtcNow
+            };
+            vt.Medyalar.Add(medya);
+            medyaHaritasi[yol] = medya;
+        }
+
+        await vt.SaveChangesAsync();
+
+        foreach (var slayt in slaytlar)
+        {
+            slayt.ArkaplanResim = HavuzAdresineCevir(slayt.ArkaplanResim, medyaHaritasi);
+            slayt.ArkaplanResimMobil = HavuzAdresineCevir(slayt.ArkaplanResimMobil, medyaHaritasi);
+        }
+
+        await vt.SaveChangesAsync();
+    }
+
+    private static string? HavuzAdresineCevir(string? yol, IReadOnlyDictionary<string, Medya> medyaHaritasi)
+    {
+        if (string.IsNullOrWhiteSpace(yol) || !yol.StartsWith("/medya/")) return yol;
+        return medyaHaritasi.TryGetValue(yol.TrimStart('/'), out var medya)
+            ? $"/api/medya/dosya/{medya.Id}"
+            : yol;
     }
 
     private static async Task AciliKapakModelleriniSilAsync(VizitLink3DDbContext vt)
