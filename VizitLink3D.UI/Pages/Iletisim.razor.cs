@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using System.Globalization;
 using VizitLink3D.UI.Servisler;
 
@@ -13,6 +14,7 @@ public partial class Iletisim : ComponentBase, IDisposable
     private DilServisi DilServisi { get; set; } = default!;
 
     private string? _adres;
+    private string? _showroomAdres;
     private string? _email;
     private List<string> _telefonlar = [];
     private string? _whatsapp;
@@ -20,6 +22,7 @@ public partial class Iletisim : ComponentBase, IDisposable
     private string? _enlem;
     private string? _boylam;
     private string? _haritaUrl;
+    private string? _haritaBaglantiUrl;
     private string? _instagram;
     private string? _facebook;
 
@@ -45,6 +48,8 @@ public partial class Iletisim : ComponentBase, IDisposable
             {
                 if (icerigi.TryGetValue("Adres", out var adres))
                     _adres = adres;
+                if (icerigi.TryGetValue("ShowroomAdres", out var showroomAdres))
+                    _showroomAdres = showroomAdres;
 
                 if (icerigi.TryGetValue("Eposta", out var email))
                     _email = email;
@@ -70,6 +75,7 @@ public partial class Iletisim : ComponentBase, IDisposable
                     _facebook = facebook;
 
                 _haritaUrl = HaritaUrlOlustur();
+                _haritaBaglantiUrl = HaritaBaglantiUrlOlustur();
             }
         }
         catch
@@ -94,6 +100,67 @@ public partial class Iletisim : ComponentBase, IDisposable
         }
 
         return null;
+    }
+
+    private string? HaritaBaglantiUrlOlustur()
+    {
+        if (double.TryParse(_enlem, NumberStyles.Float, CultureInfo.InvariantCulture, out var enlem)
+            && double.TryParse(_boylam, NumberStyles.Float, CultureInfo.InvariantCulture, out var boylam))
+        {
+            return $"https://www.google.com/maps/search/?api=1&query={enlem.ToString(CultureInfo.InvariantCulture)},{boylam.ToString(CultureInfo.InvariantCulture)}";
+        }
+
+        return string.IsNullOrWhiteSpace(_adres)
+            ? null
+            : $"https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(_adres)}";
+    }
+
+    private MudForm? _form;
+    private IletisimFormu _formVerisi = new();
+    private bool _gonderiliyor;
+    private bool _formBasariliMi;
+    private string? _formDurumMesaji;
+
+    private async Task MesajGonderAsync()
+    {
+        if (_form is null)
+            return;
+
+        await _form.ValidateAsync();
+        if (!_form.IsValid)
+            return;
+
+        _gonderiliyor = true;
+        _formDurumMesaji = null;
+
+        var cevap = await ApiIstemcisi.PostAsync<object>("api/iletisim", new
+        {
+            _formVerisi.AdSoyad,
+            Email = _formVerisi.Eposta,
+            _formVerisi.Telefon,
+            _formVerisi.Konu,
+            _formVerisi.Mesaj
+        });
+
+        _formBasariliMi = cevap?.BasariliMi == true;
+        _formDurumMesaji = cevap?.Mesaj ?? DilServisi.T("iletisim.gonderimHata", "Mesaj gönderilemedi. Lütfen tekrar deneyin.");
+
+        if (_formBasariliMi)
+        {
+            _formVerisi = new IletisimFormu();
+            await _form.ResetAsync();
+        }
+
+        _gonderiliyor = false;
+    }
+
+    private sealed class IletisimFormu
+    {
+        public string AdSoyad { get; set; } = string.Empty;
+        public string Eposta { get; set; } = string.Empty;
+        public string Telefon { get; set; } = string.Empty;
+        public string Konu { get; set; } = string.Empty;
+        public string Mesaj { get; set; } = string.Empty;
     }
 
     public void Dispose()

@@ -26,12 +26,12 @@ port_signalr: 5115
 # === İLETİŞİM ===
 iletisim:
   eposta: "info@goldbanyom.com.tr"
-  telefon_1: "+90 224 482 24 00"
-  telefon_2: "+90 533 597 32 14"
-  whatsapp: "+90 533 597 32 14"
-  adres: "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA"
-  sehir: "Bursa"
-  ilce: "Nilüfer"
+  telefon_1: "+90 312 847 55 22"
+  telefon_2: "+90 312 847 55 99"
+  whatsapp: ""
+  adres: "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / Ankara"
+  sehir: "Ankara"
+  ilce: "Akyurt"
   posta_kodu: ""
   enlem: 40.225
   boylam: 28.854

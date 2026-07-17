@@ -172,6 +172,7 @@ using (var kapsam = uygulama.Services.CreateScope())
     // Bu düzeltme, üretimde tohumlama kapalı olsa bile statik katalog dosyası
     // PNG'den WebP'ye dönüştürülmüş ürünlerin medya yolunu güvenli biçimde güncel tutar.
     await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
+    await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
 
     // Tohum verisi sadece Development ortaminda calissin (best practice).
     // Production'da DB zaten dolu, tohum verisi gereksiz islem + potansiyel AuditLog dongusu riski tasir.

@@ -2285,6 +2285,58 @@ public static class TohumVerisi
     }
 
     /// <summary>
+    /// Önceki Bursa iletişim bilgilerini, resmi Gold Ban-yom iletişim sayfasındaki
+    /// Ankara fabrika ve showroom bilgileriyle yalnızca eski değerler mevcutsa günceller.
+    /// Yönetim panelinden sonradan değiştirilmiş bilgiler korunur.
+    /// </summary>
+    public static async Task GoldBanyoIletisimBilgileriniDuzeltAsync(VizitLink3DDbContext vt)
+    {
+        var ayarlar = await vt.SayfaIcerikleri
+            .Where(x => x.Bolum == "ayarlar" && x.Dil == "tr")
+            .ToListAsync();
+
+        var eskiVeYeniDegerler = new Dictionary<string, (string Eski, string Yeni)>
+        {
+            ["Adres"] = ("Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA", "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / Ankara"),
+            ["Telefon1"] = ("+90 224 482 24 00", "+90 312 847 55 22"),
+            ["Telefon2"] = ("+90 533 597 32 14", "+90 312 847 55 99"),
+            ["Whatsapp"] = ("+90 533 597 32 14", string.Empty),
+            ["Enlem"] = ("40.225", string.Empty),
+            ["Boylam"] = ("28.854", string.Empty)
+        };
+
+        var degisti = false;
+        foreach (var ayar in ayarlar)
+        {
+            if (!eskiVeYeniDegerler.TryGetValue(ayar.Anahtar, out var degisiklik)
+                || ayar.Deger != degisiklik.Eski)
+            {
+                continue;
+            }
+
+            ayar.Deger = degisiklik.Yeni;
+            degisti = true;
+        }
+
+        if (!ayarlar.Any(x => x.Anahtar == "ShowroomAdres"))
+        {
+            vt.SayfaIcerikleri.Add(new SayfaIcerigi
+            {
+                Bolum = "ayarlar",
+                Anahtar = "ShowroomAdres",
+                Deger = "Rüzgarlı Ege Sk. Rüzgarlı İş Merkezi No:15/23 Ankara",
+                Dil = "tr"
+            });
+            degisti = true;
+        }
+
+        if (degisti)
+        {
+            await vt.SaveChangesAsync();
+        }
+    }
+
+    /// <summary>
     /// Onceki seed calismalarindan DB'de kalmis, artik diskte bulunmayan ".png" uzantili
     /// gold-katalog medya kayitlarini ilgili gercek dosya ".webp" ise otomatik duzeltir.
     /// Bu adim GoldBanyoKatalogUrunleriniTohumlaAsync ve GercekUrunFotograflariniKaydetAsync'ten
@@ -2379,11 +2431,12 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "SiteBasligi", Deger = "Gold Banyo - Banyo Mobilyalari ve Koleksiyonlari", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Aciklama", Deger = "Gold Banyo; premium, trend ve exclusive koleksiyonlariyla banyo mobilyasi ve proje cozumleri sunar.", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "AnahtarKelimeler", Deger = "gold banyo, goldbanyo, banyo mobilyasi, banyo dolabi, banyo koleksiyonlari", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Adres", Deger = "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Telefon1", Deger = "+90 224 482 24 00", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Telefon2", Deger = "+90 533 597 32 14", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Adres", Deger = "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / Ankara", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "ShowroomAdres", Deger = "Rüzgarlı Ege Sk. Rüzgarlı İş Merkezi No:15/23 Ankara", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Telefon1", Deger = "+90 312 847 55 22", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Telefon2", Deger = "+90 312 847 55 99", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Eposta", Deger = "info@goldbanyom.com.tr", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Whatsapp", Deger = "+90 533 597 32 14", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Whatsapp", Deger = "", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Instagram", Deger = "https://www.instagram.com/gold.banyom/", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "InstagramUrl", Deger = "https://www.instagram.com/gold.banyom/", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Facebook", Deger = "https://www.facebook.com/gold.banyo", Dil = "tr" },

@@ -29,10 +29,10 @@ public partial class Ayarlar : ComponentBase
     private string _varsayilanDil = "tr";
     private string _temaModu = "koyu";
 
-    private string _telefon = "+90 224 482 24 00";
+    private string _telefon = "+90 312 847 55 22";
     private string _eposta = "info@goldbanyom.com.tr";
-    private string _adres = "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA";
-    private string _whatsapp = "+90 533 597 32 14";
+    private string _adres = "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / Ankara";
+    private string _whatsapp = "";
     private string _enlem = "";
     private string _boylam = "";
 
