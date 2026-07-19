@@ -54,11 +54,11 @@
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="manifest" href="/manifest.json?v=20260719-mobil-web-1" />
+    <!-- <link rel="manifest" href="/manifest.json?v=20260719-mobil-web-2" /> -->
     <meta name="theme-color" content="#C5A059" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-web-1" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-web-2" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -323,7 +323,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=14"></script>
+    <script src="js/tema.js?v=15"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -343,7 +343,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-web-1" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-web-2" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -353,7 +353,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-web-1';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-web-2';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
@@ -394,32 +394,57 @@
         baslatBlazor();
     </script>
 
-    <!-- Mobil bilgilendirme banneri: web modunda mobilde uygulama kisa yolu onerisi -->
+    <!-- PWA Eski Kabuk Uyarisi: standalone modda overlay goster, Chrome'da acmayi oner -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var mobilKontrol = window.matchMedia('(max-width: 760px)').matches;
-            var standaloneMod = window.matchMedia('(display-mode: standalone)').matches
-                || window.navigator.standalone;
+            var pwaDevam = localStorage.getItem('goldbanyo_pwa_devam') === 'true'
+                || window.location.search.indexOf('pwa-devam=1') !== -1;
+            var standalone = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true;
 
-            if (!mobilKontrol || standaloneMod) return;
-            if (localStorage.getItem('goldbanyo_mobil_web_bilgi_kapatildi')) return;
+            if (!standalone || pwaDevam) return;
 
-            var banner = document.createElement('div');
-            banner.id = 'gb-mobil-bilgi-banneri';
-            banner.innerHTML = '<span id="gb-mobil-bilgi-metni">Mobil web görünümündesiniz. İsterseniz menüden uygulama gibi kısayol ekleyebilirsiniz.</span>'
-                + '<button id="gb-mobil-bilgi-buton" style="background:var(--tema-vurgu,#FFD700);color:#000;border:none;padding:8px 20px;border-radius:var(--tema-kose-sm,4px);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Tamam</button>';
-            banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;'
-                + 'display:flex;align-items:center;justify-content:space-between;gap:12px;'
-                + 'padding:14px 16px;'
-                + 'background:var(--tema-yuzey,#111);color:var(--tema-metin,#fff);'
-                + 'border-top:1px solid var(--tema-cam-cizgi,rgba(255,255,255,0.10));'
-                + 'font-size:0.82rem;line-height:1.4;box-shadow:0 -4px 20px rgba(0,0,0,0.4);';
+            var overlay = document.createElement('div');
+            overlay.id = 'gb-pwa-cikis-overlay';
 
-            document.body.appendChild(banner);
+            var stil = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;'
+                + 'display:flex;flex-direction:column;align-items:center;justify-content:center;'
+                + 'background:rgba(10,10,10,0.96);'
+                + 'padding:32px 24px;text-align:center;font-family:Roboto,sans-serif;';
 
-            document.getElementById('gb-mobil-bilgi-buton').addEventListener('click', function() {
-                localStorage.setItem('goldbanyo_mobil_web_bilgi_kapatildi', 'true');
-                if (banner.parentNode) banner.parentNode.removeChild(banner);
+            overlay.style.cssText = stil;
+
+            overlay.innerHTML = '<div style="max-width:380px;width:100%">'
+                + '<div style="font-size:2.8rem;margin-bottom:12px;line-height:1">&#9888;&#65039;</div>'
+                + '<h2 style="color:#fff;font-size:1.15rem;font-weight:600;margin:0 0 10px 0;line-height:1.4">'
+                + 'Bu sayfa eski uygulama k\u0131sayolunda a\u00e7\u0131ld\u0131</h2>'
+                + '<p style="color:#bbb;font-size:0.88rem;margin:0 0 28px 0;line-height:1.55;padding:0 8px">'
+                + 'Normal mobil web g\u00f6r\u00fcn\u00fcm\u00fc i\u00e7in Chrome\'da a\u00e7\u0131n.</p>'
+                + '<button id="gb-pwa-chrome-ac" style="display:block;width:100%;padding:15px 24px;'
+                + 'background:#C8952A;color:#fff;border:none;border-radius:8px;'
+                + 'font-size:1.05rem;font-weight:600;cursor:pointer;margin-bottom:14px;'
+                + 'letter-spacing:0.03em">'
+                + 'Chrome\'da A\u00e7</button>'
+                + '<button id="gb-pwa-devam-et" style="display:block;width:100%;padding:12px 20px;'
+                + 'background:transparent;color:#888;border:1px solid #444;border-radius:8px;'
+                + 'font-size:0.85rem;cursor:pointer;transition:color 0.2s"'
+                + 'onmouseover="this.style.color=\'#fff\'" onmouseout="this.style.color=\'#888\'">'
+                + 'Burada devam et</button>'
+                + '</div>';
+
+            document.body.appendChild(overlay);
+
+            document.getElementById('gb-pwa-chrome-ac').addEventListener('click', function() {
+                var intentUrl = 'intent://goldbanyo.uzunreklam.com/?web=1#Intent;scheme=https;package=com.android.chrome;end';
+                window.location.href = intentUrl;
+                setTimeout(function() {
+                    window.open('https://goldbanyo.uzunreklam.com/?web=1', '_blank');
+                }, 700);
+            });
+
+            document.getElementById('gb-pwa-devam-et').addEventListener('click', function() {
+                localStorage.setItem('goldbanyo_pwa_devam', 'true');
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
             });
         });
     </script>
