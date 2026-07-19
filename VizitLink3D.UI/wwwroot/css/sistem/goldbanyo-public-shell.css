@@ -1018,10 +1018,11 @@ a { color: inherit; text-decoration: none; }
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    min-height: 64px;
-    height: auto;
+    gap: 6px;
+    padding: 6px 10px;
+    min-height: 52px;
+    height: 52px;
+    overflow: hidden;
     flex-wrap: nowrap;
   }
 
@@ -1034,27 +1035,28 @@ a { color: inherit; text-decoration: none; }
   }
 
   .gb-brand__mark {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    font-size: 0.72rem;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.62rem;
     border-radius: var(--tema-kose-md, 4px);
   }
 
   .gb-brand__text {
     min-width: 0;
-    max-width: 128px;
+    max-width: 105px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.92rem;
-    letter-spacing: 0.08em;
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
     line-height: 1;
   }
 
   .gb-brand img {
-    max-height: 44px !important;
-    max-width: 150px;
+    max-height: 32px !important;
+    max-width: 126px !important;
+    width: auto !important;
     object-fit: contain;
   }
 
@@ -1070,25 +1072,29 @@ a { color: inherit; text-decoration: none; }
   .gb-cta {
     grid-column: 2;
     grid-row: 1;
-    min-width: 78px;
-    max-width: 92px;
-    min-height: 34px;
-    padding: 6px 8px;
-    font-size: 0.52rem;
-    letter-spacing: 0.06em;
+    min-width: 66px;
+    max-width: 74px;
+    min-height: 30px;
+    height: 30px;
+    padding: 5px 6px;
+    font-size: 0.46rem;
+    letter-spacing: 0.045em;
     white-space: nowrap;
+    border-radius: var(--tema-kose-sm, 2px);
   }
 
   .gb-mobil-menu-dugme {
     grid-column: 3;
     grid-row: 1;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     margin-left: 0;
+    flex: none;
   }
 
   .gb-mobil-menu-dugme span {
-    width: 18px;
+    width: 16px;
+    height: 2px;
   }
 
   .gb-mobil-menu--acik {
@@ -1122,22 +1128,32 @@ a { color: inherit; text-decoration: none; }
     display: none;
   }
 
+  .gb-brand img {
+    max-height: 30px !important;
+    max-width: 112px !important;
+  }
+
   .gb-brand__text {
-    max-width: 118px;
-    font-size: 0.86rem;
-    letter-spacing: 0.07em;
+    max-width: 92px;
+    font-size: 0.72rem;
   }
 
   .gb-cta {
-    min-width: 74px;
-    max-width: 86px;
-    font-size: 0.50rem;
-    padding: 6px 7px;
+    min-width: 62px;
+    max-width: 68px;
+    min-height: 28px;
+    height: 28px;
+    font-size: 0.43rem;
+    padding: 4px 5px;
   }
 
   .gb-mobil-menu-dugme {
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .gb-mobil-menu-dugme span {
+    width: 15px;
   }
 }
 

@@ -58,7 +58,7 @@
     <meta name="theme-color" content="#C5A059" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-prod-7" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-prod-8" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -134,10 +134,11 @@
                 display: grid !important;
                 grid-template-columns: minmax(0, 1fr) auto auto !important;
                 align-items: center !important;
-                gap: 8px !important;
-                padding: 8px 12px !important;
-                min-height: 64px !important;
-                height: auto !important;
+                gap: 6px !important;
+                padding: 6px 10px !important;
+                min-height: 52px !important;
+                height: 52px !important;
+                overflow: hidden !important;
                 flex-wrap: nowrap !important;
             }
 
@@ -150,27 +151,27 @@
             }
 
             .gb-brand__mark {
-                width: 34px !important;
-                height: 34px !important;
-                min-width: 34px !important;
-                font-size: 0.72rem !important;
+                width: 28px !important;
+                height: 28px !important;
+                min-width: 28px !important;
+                font-size: 0.62rem !important;
                 border-radius: var(--tema-kose-md, 4px) !important;
             }
 
             .gb-brand__text {
                 min-width: 0 !important;
-                max-width: 128px !important;
+                max-width: 105px !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
                 white-space: nowrap !important;
-                font-size: 0.92rem !important;
-                letter-spacing: 0.08em !important;
+                font-size: 0.76rem !important;
+                letter-spacing: 0.06em !important;
                 line-height: 1 !important;
             }
 
             .gb-brand img {
-                max-height: 44px !important;
-                max-width: 150px !important;
+                max-height: 32px !important;
+                max-width: 126px !important;
                 width: auto !important;
                 object-fit: contain !important;
             }
@@ -187,26 +188,30 @@
             .gb-cta {
                 grid-column: 2 !important;
                 grid-row: 1 !important;
-                min-width: 78px !important;
-                max-width: 92px !important;
-                min-height: 34px !important;
-                padding: 6px 8px !important;
-                font-size: 0.52rem !important;
-                letter-spacing: 0.06em !important;
+                min-width: 66px !important;
+                max-width: 74px !important;
+                min-height: 30px !important;
+                height: 30px !important;
+                padding: 5px 6px !important;
+                font-size: 0.46rem !important;
+                letter-spacing: 0.045em !important;
                 white-space: nowrap !important;
+                border-radius: var(--tema-kose-sm, 2px) !important;
             }
 
             .gb-mobil-menu-dugme {
                 display: inline-flex !important;
                 grid-column: 3 !important;
                 grid-row: 1 !important;
-                width: 34px !important;
-                height: 34px !important;
+                width: 30px !important;
+                height: 30px !important;
                 margin-left: 0 !important;
+                flex: none !important;
             }
 
             .gb-mobil-menu-dugme span {
-                width: 18px !important;
+                width: 16px !important;
+                height: 2px !important;
             }
 
             .gb-mobil-menu--acik {
@@ -221,22 +226,32 @@
                 display: none !important;
             }
 
+            .gb-brand img {
+                max-height: 30px !important;
+                max-width: 112px !important;
+            }
+
             .gb-brand__text {
-                max-width: 118px !important;
-                font-size: 0.86rem !important;
-                letter-spacing: 0.07em !important;
+                max-width: 92px !important;
+                font-size: 0.72rem !important;
             }
 
             .gb-cta {
-                min-width: 74px !important;
-                max-width: 86px !important;
-                font-size: 0.50rem !important;
-                padding: 6px 7px !important;
+                min-width: 62px !important;
+                max-width: 68px !important;
+                min-height: 28px !important;
+                height: 28px !important;
+                font-size: 0.43rem !important;
+                padding: 4px 5px !important;
             }
 
             .gb-mobil-menu-dugme {
-                width: 34px !important;
-                height: 34px !important;
+                width: 28px !important;
+                height: 28px !important;
+            }
+
+            .gb-mobil-menu-dugme span {
+                width: 15px !important;
             }
         }
     </style>
@@ -280,7 +295,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=10"></script>
+    <script src="js/tema.js?v=11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -300,7 +315,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-7" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-8" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -310,7 +325,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v10';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v11';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
