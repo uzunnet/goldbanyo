@@ -230,8 +230,22 @@ public partial class VizitLink3DDuzen : IDisposable
             return url;
         }
 
-        if (url.Equals("/medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
-            || url.Equals("medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        // Eski/yasak yollardan yeni medya havuzu yollarina normalize et
+        var normalizeEdilecekYollar = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "/medya/brand/goldbanyo-logo.svg",
+            "medya/brand/goldbanyo-logo.svg",
+            "/img/goldbanyo-logo.png",
+            "img/goldbanyo-logo.png",
+            "/img/goldbanyo-logo.svg",
+            "img/goldbanyo-logo.svg",
+            "/goldbanyo-logo.png",
+            "goldbanyo-logo.png",
+            "/goldbanyo-logo.svg",
+            "goldbanyo-logo.svg"
+        };
+
+        if (normalizeEdilecekYollar.Contains(url))
         {
             return "/medya/brand/goldbanyo-logo.png";
         }
