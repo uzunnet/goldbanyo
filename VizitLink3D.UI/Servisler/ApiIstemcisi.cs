@@ -60,14 +60,14 @@ public class ApiIstemcisi(HttpClient http, IJSRuntime js)
             if (!response.IsSuccessStatusCode)
             {
                 var errBody = await response.Content.ReadAsStringAsync();
-                Console.Error.WriteLine($"[ApiIstemcisi GET] Url: {url}, Status: {response.StatusCode}, Body: {errBody?.Substring(0, Math.Min(200, errBody?.Length ?? 0))}");
+                Console.Error.WriteLine($"[ApiIstemcisi GET] Base: {ApiBaseUrl}, Url: {url}, Status: {response.StatusCode}, Body: {errBody?.Substring(0, Math.Min(200, errBody?.Length ?? 0))}");
                 return default;
             }
 
             var medyaTuru = response.Content.Headers.ContentType?.MediaType;
             if (medyaTuru is null || !medyaTuru.Contains("json", StringComparison.OrdinalIgnoreCase))
             {
-                Console.Error.WriteLine($"[ApiIstemcisi GET] Url: {url}, beklenen JSON yerine {medyaTuru ?? "bilinmeyen içerik"} döndü.");
+                Console.Error.WriteLine($"[ApiIstemcisi GET] Base: {ApiBaseUrl}, Url: {url}, beklenen JSON yerine {medyaTuru ?? "bilinmeyen içerik"} döndü.");
                 return default;
             }
 
@@ -77,7 +77,7 @@ public class ApiIstemcisi(HttpClient http, IJSRuntime js)
         }
         catch (Exception hata)
         {
-            Console.Error.WriteLine($"[ApiIstemcisi GET HATA] Url: {url}, Hata: {hata.Message}, Detay: {hata}");
+            Console.Error.WriteLine($"[ApiIstemcisi GET HATA] Base: {ApiBaseUrl}, Url: {url}, Hata: {hata.Message}, Detay: {hata}");
             return default;
         }
     }

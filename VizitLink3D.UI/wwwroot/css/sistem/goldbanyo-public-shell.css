@@ -1015,38 +1015,63 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 600px) {
   .gb-header {
-    flex-wrap: wrap;
-    height: auto;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 10px;
+    column-gap: 10px;
+    align-items: center;
+    padding: 10px 16px;
+    min-height: auto;
   }
 
   .gb-header__actions {
-    order: 3;
+    grid-column: 1 / -1;
     width: 100%;
-    justify-content: flex-end;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .gb-brand {
-    order: 1;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .gb-brand img {
+    max-height: 52px !important;
+    max-width: 190px;
+    object-fit: contain;
   }
 
   .gb-mobil-menu-dugme {
-    order: 2;
+    width: 42px;
+    height: 42px;
     margin-left: auto;
   }
 
   .gb-dil-secici {
-    order: 1;
+    flex: 0 0 auto;
+    padding: 5px 9px;
+    font-size: 0.62rem;
   }
 
   .gb-mod-secici {
-    order: 2;
+    flex: 0 0 auto;
+  }
+
+  .gb-mod-btn {
+    min-height: 30px;
+    padding: 0 9px;
+    font-size: 0.62rem;
   }
 
   .gb-cta {
-    order: 3;
+    flex: 1 1 auto;
+    min-width: 112px;
+    max-width: 170px;
+    min-height: 42px;
+    padding: 8px 10px;
+    font-size: 0.68rem;
   }
 
   .gb-hero__baslik {
@@ -1065,6 +1090,28 @@ a { color: inherit; text-decoration: none; }
 
   .gb-urun-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── MOBIL HEADER — DAR EKRAN (390px alti) ── */
+@media (max-width: 390px) {
+  .gb-brand img {
+    max-height: 46px !important;
+    max-width: 165px;
+  }
+
+  .gb-header__actions {
+    gap: 6px;
+  }
+
+  .gb-cta {
+    max-width: 150px;
+    min-width: 104px;
+    font-size: 0.62rem;
+  }
+
+  .gb-dil-secici span {
+    display: none;
   }
 }
 
