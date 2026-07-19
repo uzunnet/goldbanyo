@@ -57,6 +57,9 @@
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#C5A059" />
 
+    <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-prod-4" rel="stylesheet" />
+
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
         .gb-ilk-yukleme {
@@ -247,7 +250,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=6"></script>
+    <script src="js/tema.js?v=7"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -267,7 +270,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-3" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-4" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -277,7 +280,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v6';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v7';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
