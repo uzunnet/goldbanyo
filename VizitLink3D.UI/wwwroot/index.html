@@ -54,11 +54,11 @@
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="manifest" href="/manifest.json?v=20260719-mobil-prod-10" />
+    <link rel="manifest" href="/manifest.json?v=20260719-mobil-web-1" />
     <meta name="theme-color" content="#C5A059" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-prod-10" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-web-1" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -323,7 +323,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=13"></script>
+    <script src="js/tema.js?v=14"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -343,7 +343,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-10" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-web-1" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -353,7 +353,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v13';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-web-1';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
@@ -392,6 +392,36 @@
             await Blazor.start();
         }
         baslatBlazor();
+    </script>
+
+    <!-- Mobil bilgilendirme banneri: web modunda mobilde uygulama kisa yolu onerisi -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobilKontrol = window.matchMedia('(max-width: 760px)').matches;
+            var standaloneMod = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone;
+
+            if (!mobilKontrol || standaloneMod) return;
+            if (localStorage.getItem('goldbanyo_mobil_web_bilgi_kapatildi')) return;
+
+            var banner = document.createElement('div');
+            banner.id = 'gb-mobil-bilgi-banneri';
+            banner.innerHTML = '<span id="gb-mobil-bilgi-metni">Mobil web görünümündesiniz. İsterseniz menüden uygulama gibi kısayol ekleyebilirsiniz.</span>'
+                + '<button id="gb-mobil-bilgi-buton" style="background:var(--tema-vurgu,#FFD700);color:#000;border:none;padding:8px 20px;border-radius:var(--tema-kose-sm,4px);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Tamam</button>';
+            banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;'
+                + 'display:flex;align-items:center;justify-content:space-between;gap:12px;'
+                + 'padding:14px 16px;'
+                + 'background:var(--tema-yuzey,#111);color:var(--tema-metin,#fff);'
+                + 'border-top:1px solid var(--tema-cam-cizgi,rgba(255,255,255,0.10));'
+                + 'font-size:0.82rem;line-height:1.4;box-shadow:0 -4px 20px rgba(0,0,0,0.4);';
+
+            document.body.appendChild(banner);
+
+            document.getElementById('gb-mobil-bilgi-buton').addEventListener('click', function() {
+                localStorage.setItem('goldbanyo_mobil_web_bilgi_kapatildi', 'true');
+                if (banner.parentNode) banner.parentNode.removeChild(banner);
+            });
+        });
     </script>
 </body>
 
