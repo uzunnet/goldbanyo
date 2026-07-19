@@ -1016,62 +1016,60 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 600px) {
   .gb-header {
     display: grid;
-    grid-template-columns: 1fr auto;
-    row-gap: 10px;
-    column-gap: 10px;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
-    padding: 10px 16px;
-    min-height: auto;
-  }
-
-  .gb-header__actions {
-    grid-column: 1 / -1;
-    width: 100%;
-    justify-content: space-between;
     gap: 8px;
+    padding: 8px 12px;
+    min-height: 64px;
+    height: auto;
     flex-wrap: nowrap;
   }
 
   .gb-brand {
-    display: inline-flex;
+    min-width: 0;
+    display: flex;
     align-items: center;
   }
 
   .gb-brand img {
-    max-height: 52px !important;
-    max-width: 190px;
+    max-height: 44px !important;
+    max-width: 150px;
     object-fit: contain;
   }
 
-  .gb-mobil-menu-dugme {
-    width: 42px;
-    height: 42px;
-    margin-left: auto;
+  .gb-header__actions {
+    display: contents;
   }
 
-  .gb-dil-secici {
-    flex: 0 0 auto;
-    padding: 5px 9px;
-    font-size: 0.62rem;
-  }
-
+  .gb-dil-secici,
   .gb-mod-secici {
-    flex: 0 0 auto;
-  }
-
-  .gb-mod-btn {
-    min-height: 30px;
-    padding: 0 9px;
-    font-size: 0.62rem;
+    display: none !important;
   }
 
   .gb-cta {
-    flex: 1 1 auto;
-    min-width: 112px;
-    max-width: 170px;
-    min-height: 42px;
-    padding: 8px 10px;
-    font-size: 0.68rem;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 92px;
+    max-width: 108px;
+    min-height: 38px;
+    padding: 7px 9px;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .gb-mobil-menu-dugme {
+    grid-column: 3;
+    grid-row: 1;
+    width: 38px;
+    height: 38px;
+    margin-left: 0;
+  }
+
+  .gb-mobil-menu--acik {
+    grid-column: 1 / -1;
+    width: 100%;
+    order: unset;
   }
 
   .gb-hero__baslik {
@@ -1096,22 +1094,20 @@ a { color: inherit; text-decoration: none; }
 /* ── MOBIL HEADER — DAR EKRAN (390px alti) ── */
 @media (max-width: 390px) {
   .gb-brand img {
-    max-height: 46px !important;
-    max-width: 165px;
-  }
-
-  .gb-header__actions {
-    gap: 6px;
+    max-height: 40px !important;
+    max-width: 132px;
   }
 
   .gb-cta {
-    max-width: 150px;
-    min-width: 104px;
-    font-size: 0.62rem;
+    min-width: 86px;
+    max-width: 98px;
+    font-size: 0.54rem;
+    padding: 6px 8px;
   }
 
-  .gb-dil-secici span {
-    display: none;
+  .gb-mobil-menu-dugme {
+    width: 36px;
+    height: 36px;
   }
 }
 
