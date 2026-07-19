@@ -54,11 +54,11 @@
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="manifest" href="/manifest.json?v=20260719-pwa-install-1" />
+    <link rel="manifest" href="/manifest.json?v=20260719-pwa-install-2" />
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-1" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-2" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -76,11 +76,19 @@
 
         .gb-ilk-yukleme-logo-sarmal {
             position: relative;
-            width: 56px;
-            height: 56px;
+            width: 96px;
+            height: 96px;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .gb-ilk-yukleme-logo {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            border-radius: 18px;
+            animation: gbIlkYuklemeNefes 2.2s ease-in-out infinite;
         }
 
         .gb-ilk-yukleme-logo-sarmal::before {
@@ -111,6 +119,11 @@
         @keyframes gbIlkYuklemeMetinNefes {
             0%, 100% { opacity: 0.85; }
             50% { opacity: 0.4; }
+        }
+
+        @keyframes gbIlkYuklemeNefes {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.92); opacity: 0.85; }
         }
 
         /* ========================================
@@ -293,7 +306,9 @@
 <body>
     <div id="app">
         <div class="gb-ilk-yukleme">
-            <div class="gb-ilk-yukleme-logo-sarmal"></div>
+            <div class="gb-ilk-yukleme-logo-sarmal">
+                <img class="gb-ilk-yukleme-logo" src="/medya/brand/goldbanyo-logo-kare.png" alt="Gold Banyo" />
+            </div>
             <p class="gb-ilk-yukleme-metin">Yükleniyor…</p>
         </div>
     </div>
@@ -326,7 +341,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=17"></script>
+    <script src="js/tema.js?v=18"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -346,7 +361,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-pwa-install-1" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-pwa-install-2" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -356,7 +371,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-pwa-1';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-pwa-2';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller

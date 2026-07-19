@@ -2,20 +2,20 @@
   "name": "Firma Vitrini",
   "short_name": "Firma",
   "description": "Firma vitrini, koleksiyonlar ve proje çözümleri",
-  "start_url": "/?kaynak=pwa-v1",
+  "start_url": "/?kaynak=pwa-v2",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
   "orientation": "any",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/medya/brand/goldbanyo-logo-kare.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "favicon.png",
+      "src": "/medya/brand/goldbanyo-logo-kare.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
