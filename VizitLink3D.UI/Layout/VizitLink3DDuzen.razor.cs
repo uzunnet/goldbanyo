@@ -21,12 +21,12 @@ public partial class VizitLink3DDuzen : IDisposable
     private string _aktifDil = "tr";
     private string _firmaAdi = "Gold Banyo";
     private string _firmaSlug = "goldbanyo";
-    private string? _logoUrl;
+    private string? _logoUrl = "/medya/brand/goldbanyo-logo.png";
     private List<DilServisi.DilBilgisi> _diller = [];
     private bool _ilkRenderTamamlandi;
     private bool _mobilMenuAcik;
 
-    private List<MenuBaglantisi> _menu = [];
+    private List<MenuBaglantisi> _menu = VarsayilanMenuOlustur();
     private bool KoyuTemaMi => _aktifTemaModu != "acik";
     private string MobilMenuClass => MobilMenuGorunumYardimcisi.MenuSinifi(_mobilMenuAcik);
     private string MobilMenuDugmeClass => MobilMenuGorunumYardimcisi.DugmeSinifi(_mobilMenuAcik);
@@ -128,6 +128,19 @@ public partial class VizitLink3DDuzen : IDisposable
 
     private sealed record MenuBaglantisi(string Baslik, string Url, List<MenuBaglantisi> AltMenuler);
 
+    private static List<MenuBaglantisi> VarsayilanMenuOlustur() =>
+    [
+        new("Ana Sayfa", "/", []),
+        new("Ürünler", "/banyo-dolaplari", []),
+        new("Katalog", "/katalog", []),
+        new("Projeler", "/projeler", []),
+        new("Kurumsal", "/hakkimizda", []),
+        new("Referanslar", "/referanslar", []),
+        new("Haber", "/haber", []),
+        new("SSS", "/sss", []),
+        new("İletişim", "/iletisim", [])
+    ];
+
     private string MenuBasligi(MenuBaglantisi oge) => oge.Baslik switch
     {
         "Ana Sayfa" => DilServisi.T("menu.anasayfa", oge.Baslik),
@@ -177,21 +190,7 @@ public partial class VizitLink3DDuzen : IDisposable
         var menuler = await Api.GetAsync<List<MenuOgesi>>("api/menu/ana");
         if (menuler == null || menuler.Count == 0)
         {
-            // API'den menu gelmezse (ag hatasi, soguk baslangic vb.) guncel
-            // Gold Banyo menu yapisini yansitan yedek - eski/kaldirilmis menu
-            // ("Banyo Dolaplari" tek basligi, kisa 5 ogeli yapi) ASLA gosterilmemeli.
-            _menu =
-            [
-                new("Ana Sayfa", "/", []),
-                new("Ürünler", "/banyo-dolaplari", []),
-                new("Katalog", "/katalog", []),
-                new("Projeler", "/projeler", []),
-                new("Kurumsal", "/hakkimizda", []),
-                new("Referanslar", "/referanslar", []),
-                new("Haber", "/haber", []),
-                new("SSS", "/sss", []),
-                new("İletişim", "/iletisim", [])
-            ];
+            _menu = VarsayilanMenuOlustur();
             return;
         }
 
