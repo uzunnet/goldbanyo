@@ -14,27 +14,36 @@ yapici.RootComponents.Add<HeadOutlet>("head::after");
 
 var temelAdres = yapici.HostEnvironment.BaseAddress;
 var yapilandirmaAdresi = yapici.Configuration["ApiTemelUrl"];
-string apiUrl;
+var temelUri = new Uri(temelAdres);
+var host = temelUri.Host.ToLowerInvariant();
 
-if (temelAdres.Contains("localhost") || temelAdres.Contains("127.0.0.1"))
+static bool YerelAgAdresiMi(string hst)
+{
+    if (hst.StartsWith("192.168.") || hst.StartsWith("10."))
+        return true;
+    if (hst.StartsWith("172."))
+    {
+        var parcalar = hst.Split('.');
+        if (parcalar.Length > 1 && int.TryParse(parcalar[1], out var ikinciKisim))
+            return ikinciKisim >= 16 && ikinciKisim <= 31;
+    }
+    return false;
+}
+
+string apiUrl;
+if (host == "localhost" || host == "127.0.0.1")
 {
     apiUrl = !string.IsNullOrEmpty(yapilandirmaAdresi) ? yapilandirmaAdresi : "http://localhost:5115";
 }
+else if (YerelAgAdresiMi(host))
+{
+    // Private IP (mobil/ag) — ayni host + 5115
+    apiUrl = $"http://{host}:5115";
+}
 else
 {
-    // IP ile erişimde (mobil/ağ) — config'deki localhost URL'yi gerçek host ile değiştir
-    var temelUri = new Uri(temelAdres);
-    const int apiPort = 5115;
-    if (!string.IsNullOrEmpty(yapilandirmaAdresi)
-        && !yapilandirmaAdresi.Contains("localhost")
-        && !yapilandirmaAdresi.Contains("127.0.0.1"))
-    {
-        apiUrl = yapilandirmaAdresi;
-    }
-    else
-    {
-        apiUrl = $"http://{temelUri.Host}:{apiPort}";
-    }
+    // Production domain — same-origin (nginx /api proxy)
+    apiUrl = temelAdres.TrimEnd('/') + "/";
 }
 
 yapici.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(yapici.HostEnvironment.BaseAddress) });
