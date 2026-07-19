@@ -2,10 +2,10 @@
   "name": "Firma Vitrini",
   "short_name": "Firma",
   "description": "Firma vitrini, koleksiyonlar ve proje çözümleri",
-  "start_url": "/?kaynak=manifest-v5-web",
-  "display": "browser",
-  "background_color": "#FFFFFF",
-  "theme_color": "#C5A059",
+  "start_url": "/?kaynak=pwa-v1",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
   "orientation": "any",
   "icons": [
     {

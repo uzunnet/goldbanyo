@@ -54,11 +54,11 @@
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <!-- <link rel="manifest" href="/manifest.json?v=20260719-mobil-web-2" /> -->
-    <meta name="theme-color" content="#C5A059" />
+    <link rel="manifest" href="/manifest.json?v=20260719-pwa-install-1" />
+    <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-mobil-web-2" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-1" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -70,14 +70,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 28px;
+            gap: 16px;
             background: #0a0a0a;
         }
 
         .gb-ilk-yukleme-logo-sarmal {
             position: relative;
-            width: 132px;
-            height: 132px;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -93,13 +93,6 @@
             animation: gbIlkYuklemeDondur 1.1s linear infinite;
         }
 
-        .gb-ilk-yukleme-logo {
-            width: 84px;
-            height: 84px;
-            object-fit: contain;
-            animation: gbIlkYuklemeNefes 2.2s ease-in-out infinite;
-        }
-
         .gb-ilk-yukleme-metin {
             margin: 0;
             font-family: 'Roboto', Arial, sans-serif;
@@ -113,11 +106,6 @@
 
         @keyframes gbIlkYuklemeDondur {
             to { transform: rotate(360deg); }
-        }
-
-        @keyframes gbIlkYuklemeNefes {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(0.94); opacity: 0.75; }
         }
 
         @keyframes gbIlkYuklemeMetinNefes {
@@ -138,7 +126,7 @@
                 padding: 6px 10px !important;
                 min-height: 56px !important;
                 height: 56px !important;
-                overflow: hidden !important;
+                overflow: visible !important;
                 flex-wrap: nowrap !important;
             }
 
@@ -237,9 +225,20 @@
             }
 
             .gb-mobil-menu--acik {
-                grid-column: 1 / -1 !important;
-                width: 100% !important;
-                order: unset !important;
+                position: fixed !important;
+                left: 10px !important;
+                right: 10px !important;
+                top: calc(env(safe-area-inset-top, 0px) + 62px) !important;
+                z-index: 1000 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                max-height: min(70vh, 520px) !important;
+                overflow-y: auto !important;
+                padding: 10px 12px 14px !important;
+                border: 1px solid var(--tema-cam-cizgi, rgba(255,255,255,.12)) !important;
+                border-radius: var(--tema-kose-lg, 8px) !important;
+                background: var(--tema-yuzey, #111) !important;
+                box-shadow: var(--tema-golge-lg, 0 16px 50px rgba(0,0,0,.5)) !important;
             }
         }
 
@@ -281,6 +280,12 @@
             .gb-mobil-menu-dugme__ikon span {
                 width: 13px !important;
             }
+
+            .gb-mobil-menu--acik {
+                top: calc(env(safe-area-inset-top, 0px) + 58px) !important;
+                left: 8px !important;
+                right: 8px !important;
+            }
         }
     </style>
 </head>
@@ -288,9 +293,7 @@
 <body>
     <div id="app">
         <div class="gb-ilk-yukleme">
-            <div class="gb-ilk-yukleme-logo-sarmal">
-                <img class="gb-ilk-yukleme-logo" src="/medya/brand/goldbanyo-logo-kare.png" alt="Gold Banyo" />
-            </div>
+            <div class="gb-ilk-yukleme-logo-sarmal"></div>
             <p class="gb-ilk-yukleme-metin">Yükleniyor…</p>
         </div>
     </div>
@@ -323,7 +326,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=15"></script>
+    <script src="js/tema.js?v=17"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -343,7 +346,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-web-2" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-pwa-install-1" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -353,7 +356,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-web-2';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-pwa-1';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
@@ -394,60 +397,115 @@
         baslatBlazor();
     </script>
 
-    <!-- PWA Eski Kabuk Uyarisi: standalone modda overlay goster, Chrome'da acmayi oner -->
+    <!-- PWA Install Prompt -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var pwaDevam = localStorage.getItem('goldbanyo_pwa_devam') === 'true'
-                || window.location.search.indexOf('pwa-devam=1') !== -1;
-            var standalone = window.matchMedia('(display-mode: standalone)').matches
-                || window.navigator.standalone === true;
+        (function() {
+            // Sadece mobil genislik (<= 760px)
+            if (window.innerWidth > 760) return;
+            // Standalone (zaten yuklu PWA) ise gosterme
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) return;
+            // Kullanici daha once kapattiysa gosterme
+            try { if (localStorage.getItem('goldbanyo_pwa_install_kapatildi')) return; } catch(e) { return; }
 
-            if (!standalone || pwaDevam) return;
+            var deferredPrompt = null;
+            var bannerGosterilsin = false;
 
-            var overlay = document.createElement('div');
-            overlay.id = 'gb-pwa-cikis-overlay';
-
-            var stil = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;'
-                + 'display:flex;flex-direction:column;align-items:center;justify-content:center;'
-                + 'background:rgba(10,10,10,0.96);'
-                + 'padding:32px 24px;text-align:center;font-family:Roboto,sans-serif;';
-
-            overlay.style.cssText = stil;
-
-            overlay.innerHTML = '<div style="max-width:380px;width:100%">'
-                + '<div style="font-size:2.8rem;margin-bottom:12px;line-height:1">&#9888;&#65039;</div>'
-                + '<h2 style="color:#fff;font-size:1.15rem;font-weight:600;margin:0 0 10px 0;line-height:1.4">'
-                + 'Bu sayfa eski uygulama k\u0131sayolunda a\u00e7\u0131ld\u0131</h2>'
-                + '<p style="color:#bbb;font-size:0.88rem;margin:0 0 28px 0;line-height:1.55;padding:0 8px">'
-                + 'Normal mobil web g\u00f6r\u00fcn\u00fcm\u00fc i\u00e7in Chrome\'da a\u00e7\u0131n.</p>'
-                + '<button id="gb-pwa-chrome-ac" style="display:block;width:100%;padding:15px 24px;'
-                + 'background:#C8952A;color:#fff;border:none;border-radius:8px;'
-                + 'font-size:1.05rem;font-weight:600;cursor:pointer;margin-bottom:14px;'
-                + 'letter-spacing:0.03em">'
-                + 'Chrome\'da A\u00e7</button>'
-                + '<button id="gb-pwa-devam-et" style="display:block;width:100%;padding:12px 20px;'
-                + 'background:transparent;color:#888;border:1px solid #444;border-radius:8px;'
-                + 'font-size:0.85rem;cursor:pointer;transition:color 0.2s"'
-                + 'onmouseover="this.style.color=\'#fff\'" onmouseout="this.style.color=\'#888\'">'
-                + 'Burada devam et</button>'
-                + '</div>';
-
-            document.body.appendChild(overlay);
-
-            document.getElementById('gb-pwa-chrome-ac').addEventListener('click', function() {
-                var intentUrl = 'intent://goldbanyo.uzunreklam.com/?web=1#Intent;scheme=https;package=com.android.chrome;end';
-                window.location.href = intentUrl;
-                setTimeout(function() {
-                    window.open('https://goldbanyo.uzunreklam.com/?web=1', '_blank');
-                }, 700);
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                bannerGosterilsin = true;
+                bannerOlustur();
             });
 
-            document.getElementById('gb-pwa-devam-et').addEventListener('click', function() {
-                localStorage.setItem('goldbanyo_pwa_devam', 'true');
-                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-            });
-        });
+            function bannerOlustur() {
+                if (!bannerGosterilsin) return;
+                var fn = function() {
+                    if (document.getElementById('gb-pwa-banner')) return;
+                    var b = document.createElement('div');
+                    b.id = 'gb-pwa-banner';
+                    b.style.cssText = [
+                        'position:fixed',
+                        'bottom:0',
+                        'left:0',
+                        'right:0',
+                        'z-index:9998',
+                        'padding:12px 16px',
+                        'padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))',
+                        'background:var(--tema-yuzey,#111)',
+                        'border-top:1px solid rgba(255,255,255,0.08)',
+                        'display:flex',
+                        'flex-wrap:wrap',
+                        'align-items:center',
+                        'justify-content:space-between',
+                        'gap:8px',
+                        'font-family:"Roboto",Arial,sans-serif',
+                        'backdrop-filter:blur(12px)',
+                        '-webkit-backdrop-filter:blur(12px)'
+                    ].join(';') + ';';
+
+                    // Metin
+                    var m = document.createElement('span');
+                    m.textContent = "Gold Banyo'yu telefonunuza ekleyin, tek dokunu\u015fla a\u00e7\u0131n.";
+                    m.style.cssText = 'flex:1;min-width:160px;font-size:0.82rem;line-height:1.4;color:var(--tema-metin,#fff);opacity:0.92;';
+                    b.appendChild(m);
+
+                    // Telefona Ekle butonu
+                    var btnEkle = document.createElement('button');
+                    btnEkle.textContent = "Telefona Ekle";
+                    btnEkle.style.cssText = [
+                        'padding:8px 18px',
+                        'border:none',
+                        'border-radius:var(--tema-kose-sm,4px)',
+                        'background:var(--tema-vurgu,#FFD700)',
+                        'color:#0a0a0a',
+                        'font-size:0.78rem',
+                        'font-weight:600',
+                        'cursor:pointer',
+                        'white-space:nowrap',
+                        'letter-spacing:0.02em'
+                    ].join(';') + ';';
+                    btnEkle.addEventListener('click', async function() {
+                        if (!deferredPrompt) return;
+                        try {
+                            deferredPrompt.prompt();
+                            await deferredPrompt.userChoice;
+                        } catch(_) {}
+                        try { localStorage.setItem('goldbanyo_pwa_install_kapatildi', 'tamam'); } catch(_) {}
+                        if (b.parentNode) b.parentNode.removeChild(b);
+                    });
+                    b.appendChild(btnEkle);
+
+                    // Daha sonra butonu
+                    var btnSonra = document.createElement('button');
+                    btnSonra.textContent = "Daha sonra";
+                    btnSonra.style.cssText = [
+                        'padding:8px 12px',
+                        'border:none',
+                        'border-radius:var(--tema-kose-sm,4px)',
+                        'background:transparent',
+                        'color:var(--tema-metin,#fff)',
+                        'font-size:0.74rem',
+                        'opacity:0.6',
+                        'cursor:pointer',
+                        'white-space:nowrap'
+                    ].join(';') + ';';
+                    btnSonra.addEventListener('click', function() {
+                        try { localStorage.setItem('goldbanyo_pwa_install_kapatildi', 'tamam'); } catch(_) {}
+                        if (b.parentNode) b.parentNode.removeChild(b);
+                    });
+                    b.appendChild(btnSonra);
+
+                    document.body.appendChild(b);
+                };
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', fn);
+                } else {
+                    fn();
+                }
+            }
+        })();
     </script>
+
 </body>
 
 </html>
