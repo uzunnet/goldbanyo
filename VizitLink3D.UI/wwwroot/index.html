@@ -121,6 +121,91 @@
             0%, 100% { opacity: 0.85; }
             50% { opacity: 0.4; }
         }
+
+        /* ========================================
+           KRITIK MOBIL HEADER — ilk render guvencesi
+           Blazor/JS yuklenmeden hemen once calisir.
+           ======================================== */
+        @media (max-width: 760px) {
+            .gb-header {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) auto auto !important;
+                align-items: center !important;
+                gap: 8px !important;
+                padding: 8px 12px !important;
+                min-height: 64px !important;
+                height: auto !important;
+                flex-wrap: nowrap !important;
+            }
+
+            .gb-brand {
+                min-width: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            .gb-brand img {
+                max-height: 44px !important;
+                max-width: 150px !important;
+                width: auto !important;
+                object-fit: contain !important;
+            }
+
+            .gb-header__actions {
+                display: contents !important;
+            }
+
+            .gb-dil-secici,
+            .gb-mod-secici {
+                display: none !important;
+            }
+
+            .gb-cta {
+                grid-column: 2 !important;
+                grid-row: 1 !important;
+                min-width: 92px !important;
+                max-width: 108px !important;
+                min-height: 38px !important;
+                padding: 7px 9px !important;
+                font-size: 0.58rem !important;
+                letter-spacing: 0.08em !important;
+                white-space: nowrap !important;
+            }
+
+            .gb-mobil-menu-dugme {
+                display: inline-flex !important;
+                grid-column: 3 !important;
+                grid-row: 1 !important;
+                width: 38px !important;
+                height: 38px !important;
+                margin-left: 0 !important;
+            }
+
+            .gb-mobil-menu--acik {
+                grid-column: 1 / -1 !important;
+                width: 100% !important;
+                order: unset !important;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .gb-brand img {
+                max-height: 40px !important;
+                max-width: 132px !important;
+            }
+
+            .gb-cta {
+                min-width: 86px !important;
+                max-width: 98px !important;
+                font-size: 0.54rem !important;
+                padding: 6px 8px !important;
+            }
+
+            .gb-mobil-menu-dugme {
+                width: 36px !important;
+                height: 36px !important;
+            }
+        }
     </style>
 </head>
 
@@ -182,7 +267,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-2" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-mobil-prod-3" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -192,7 +277,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v5';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-v6';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
