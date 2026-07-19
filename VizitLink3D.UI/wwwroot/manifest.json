@@ -2,7 +2,7 @@
   "name": "Firma Vitrini",
   "short_name": "Firma",
   "description": "Firma vitrini, koleksiyonlar ve proje çözümleri",
-  "start_url": "/?kaynak=pwa-v2",
+  "start_url": "/?kaynak=pwa-v3",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",

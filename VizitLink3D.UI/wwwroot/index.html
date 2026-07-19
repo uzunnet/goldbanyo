@@ -54,11 +54,11 @@
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="manifest" href="/manifest.json?v=20260719-pwa-install-2" />
+    <link rel="manifest" href="/manifest.json?v=20260719-pwa-install-3" />
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
-    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-2" rel="stylesheet" />
+    <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-3" rel="stylesheet" />
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -341,7 +341,7 @@
             return window.location.origin;
         })();
     </script>
-    <script src="js/tema.js?v=18"></script>
+    <script src="js/tema.js?v=19"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.vizitlink3dTema && window.vizitlink3dTema.siteBaslat) {
@@ -361,7 +361,7 @@
         }
     </script>
     <!-- Blazor WASM Loader -->
-    <script src="_framework/blazor.webassembly.js?v=20260719-pwa-install-2" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js?v=20260719-pwa-install-3" autostart="false"></script>
     <script>
         window.vizitlink3dWasmDestekleniyor = typeof window !== 'undefined'
             && typeof window.WebAssembly !== 'undefined'
@@ -371,7 +371,7 @@
             // PWA kapali (00_PROJE_BILGI.md: PWA_Offline: false) - Service Worker kayit edilmez.
             // Eski deploy'lardan kalan SW ve cache'ler ilk boot'tan once temizlenir.
             try {
-                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-pwa-2';
+                const tekrarYukleAnahtari = 'vizitlink3d-sw-temizleme-pwa-3';
                 const eskiWorkerEtkin = typeof navigator !== 'undefined'
                     && 'serviceWorker' in navigator
                     && navigator.serviceWorker.controller
@@ -412,7 +412,7 @@
         baslatBlazor();
     </script>
 
-    <!-- PWA Install Prompt -->
+    <!-- PWA Install Prompt — mobilde her durumda gosterilir -->
     <script>
         (function() {
             // Sadece mobil genislik (<= 760px)
@@ -423,74 +423,93 @@
             try { if (localStorage.getItem('goldbanyo_pwa_install_kapatildi')) return; } catch(e) { return; }
 
             var deferredPrompt = null;
-            var bannerGosterilsin = false;
 
+            // 1) beforeinstallprompt gelirse native PWA akisi
             window.addEventListener('beforeinstallprompt', function(e) {
                 e.preventDefault();
                 deferredPrompt = e;
-                bannerGosterilsin = true;
-                bannerOlustur();
+                bannerOlustur(true);
             });
 
-            function bannerOlustur() {
-                if (!bannerGosterilsin) return;
-                var fn = function() {
+            // 2) beforeinstallprompt gelmese de 1200ms sonra banner goster
+            function mobilBannerGecikmeli() {
+                setTimeout(function() {
                     if (document.getElementById('gb-pwa-banner')) return;
-                    var b = document.createElement('div');
-                    b.id = 'gb-pwa-banner';
-                    b.style.cssText = [
-                        'position:fixed',
-                        'bottom:0',
-                        'left:0',
-                        'right:0',
-                        'z-index:9998',
-                        'padding:12px 16px',
-                        'padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))',
-                        'background:var(--tema-yuzey,#111)',
-                        'border-top:1px solid rgba(255,255,255,0.08)',
-                        'display:flex',
-                        'flex-wrap:wrap',
-                        'align-items:center',
-                        'justify-content:space-between',
-                        'gap:8px',
-                        'font-family:"Roboto",Arial,sans-serif',
-                        'backdrop-filter:blur(12px)',
-                        '-webkit-backdrop-filter:blur(12px)'
-                    ].join(';') + ';';
+                    bannerOlustur(false);
+                }, 1200);
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', mobilBannerGecikmeli);
+            } else {
+                mobilBannerGecikmeli();
+            }
 
-                    // Metin
-                    var m = document.createElement('span');
+            function bannerOlustur(promptVarMi) {
+                if (document.getElementById('gb-pwa-banner')) return;
+
+                var b = document.createElement('div');
+                b.id = 'gb-pwa-banner';
+                b.style.cssText = [
+                    'position:fixed',
+                    'bottom:0',
+                    'left:0',
+                    'right:0',
+                    'z-index:9998',
+                    'padding:12px 16px',
+                    'padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))',
+                    'background:var(--tema-yuzey,#111)',
+                    'border-top:1px solid rgba(255,255,255,0.08)',
+                    'display:flex',
+                    'flex-wrap:wrap',
+                    'align-items:center',
+                    'justify-content:space-between',
+                    'gap:8px',
+                    'font-family:"Roboto",Arial,sans-serif',
+                    'backdrop-filter:blur(12px)',
+                    '-webkit-backdrop-filter:blur(12px)'
+                ].join(';') + ';';
+
+                // Metin
+                var m = document.createElement('span');
+                if (promptVarMi) {
                     m.textContent = "Gold Banyo'yu telefonunuza ekleyin, tek dokunu\u015fla a\u00e7\u0131n.";
-                    m.style.cssText = 'flex:1;min-width:160px;font-size:0.82rem;line-height:1.4;color:var(--tema-metin,#fff);opacity:0.92;';
-                    b.appendChild(m);
+                } else {
+                    m.textContent = "Kurulum i\u00e7in Chrome men\u00fcs\u00fcnden \u22ee &gt; Ana ekrana ekle se\u00e7ene\u011fini kullan\u0131n.";
+                }
+                m.style.cssText = 'flex:1;min-width:160px;font-size:0.82rem;line-height:1.4;color:var(--tema-metin,#fff);opacity:0.92;';
+                b.appendChild(m);
 
-                    // Telefona Ekle butonu
-                    var btnEkle = document.createElement('button');
-                    btnEkle.textContent = "Telefona Ekle";
-                    btnEkle.style.cssText = [
-                        'padding:8px 18px',
-                        'border:none',
-                        'border-radius:var(--tema-kose-sm,4px)',
-                        'background:var(--tema-vurgu,#FFD700)',
-                        'color:#0a0a0a',
-                        'font-size:0.78rem',
-                        'font-weight:600',
-                        'cursor:pointer',
-                        'white-space:nowrap',
-                        'letter-spacing:0.02em'
-                    ].join(';') + ';';
-                    btnEkle.addEventListener('click', async function() {
-                        if (!deferredPrompt) return;
+                // Ana buton
+                var btnEkle = document.createElement('button');
+                btnEkle.textContent = promptVarMi ? "Telefona Ekle" : "Anlad\u0131m";
+                btnEkle.style.cssText = [
+                    'padding:8px 18px',
+                    'border:none',
+                    'border-radius:var(--tema-kose-sm,4px)',
+                    'background:var(--tema-vurgu,#FFD700)',
+                    'color:#0a0a0a',
+                    'font-size:0.78rem',
+                    'font-weight:600',
+                    'cursor:pointer',
+                    'white-space:nowrap',
+                    'letter-spacing:0.02em'
+                ].join(';') + ';';
+
+                btnEkle.addEventListener('click', async function() {
+                    if (deferredPrompt) {
                         try {
-                            deferredPrompt.prompt();
+                            await deferredPrompt.prompt();
                             await deferredPrompt.userChoice;
-                        } catch(_) {}
-                        try { localStorage.setItem('goldbanyo_pwa_install_kapatildi', 'tamam'); } catch(_) {}
-                        if (b.parentNode) b.parentNode.removeChild(b);
-                    });
-                    b.appendChild(btnEkle);
+                            deferredPrompt = null;
+                        } catch(_) { /* prompt iptal */ }
+                    }
+                    try { localStorage.setItem('goldbanyo_pwa_install_kapatildi', 'tamam'); } catch(_) {}
+                    if (b.parentNode) b.parentNode.removeChild(b);
+                });
+                b.appendChild(btnEkle);
 
-                    // Daha sonra butonu
+                // Ikincil buton (sadece prompt var ise — yoksa yonerge yeterli)
+                if (promptVarMi) {
                     var btnSonra = document.createElement('button');
                     btnSonra.textContent = "Daha sonra";
                     btnSonra.style.cssText = [
@@ -509,14 +528,9 @@
                         if (b.parentNode) b.parentNode.removeChild(b);
                     });
                     b.appendChild(btnSonra);
-
-                    document.body.appendChild(b);
-                };
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', fn);
-                } else {
-                    fn();
                 }
+
+                document.body.appendChild(b);
             }
         })();
     </script>
