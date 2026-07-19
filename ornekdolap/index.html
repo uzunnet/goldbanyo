@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gold Banyo 3D Konfigüratör</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./stiller.css?v=20260719-01">
+</head>
+<body>
+  <header class="ust-menu">
+    <div class="marka">
+      <span class="marka-isaret">G</span>
+      <strong>GOLD BANYO</strong>
+    </div>
+    <nav class="menu-linkleri">
+      <a href="#">Ana Sayfa</a>
+      <a href="#">Ürünler</a>
+      <a href="#">Katalog</a>
+    </nav>
+    <button class="teklif-buton">Teklif Al</button>
+  </header>
+
+  <main class="urun-sayfa">
+    <section class="urun-detay">
+      <!-- SOL: 3D CANVAS -->
+      <div class="medya-bolumu">
+        <div class="ucboyut-alani">
+          <div id="yuklemeKatmani" class="yukleme-katmani">
+            <div class="yukleme-karti">
+              <div class="yukleme-halka"></div>
+              <strong>Model hazırlanıyor</strong>
+              <span>GLB dosyası okunuyor...</span>
+            </div>
+          </div>
+          <div class="sahne-etiketi">
+            <strong>Canlı 3D Konfigüratör</strong>
+            <span>Seçimleri canlı görün</span>
+          </div>
+          <canvas id="ucboyutKanvas"></canvas>
+          <div class="sahne-araclari">
+            <button class="ikon-buton" data-gorunum="on" title="Ön">⌖</button>
+            <button class="ikon-buton" data-gorunum="yansit" title="Dön">⟳</button>
+            <button class="ikon-buton" data-gorunum="ust" title="Üst">⛶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAĞ: KONTROL PANELİ -->
+      <aside class="urun-panel">
+        <h2>Gold Banyo - Konfigüratör</h2>
+
+        <!-- MODEL SEÇİCİ -->
+        <div class="kontrol-grubu model-secici-bolumu">
+          <h3>Model Seç</h3>
+          <div class="model-kart-kutusu" id="modelKartKutusu">
+            <!-- JS ile doldurulacak -->
+          </div>
+        </div>
+
+        <!-- GLB DOSYA YÜKLEME -->
+        <div class="kontrol-grubu">
+          <label>
+            <span>GLB Dosyası Yükle</span>
+            <input type="file" id="glbDosyaSec" accept=".glb,.gltf" />
+          </label>
+        </div>
+
+        <!-- GÖVDE -->
+        <div class="kontrol-grubu">
+          <h3>Gövde</h3>
+          <span class="parca-etiket">Gövde Rengi</span>
+          <div class="renk-secici" data-hedef="govdeRenk">
+            <button class="renk-ornek aktif" style="background:#E9E0CB" data-deger="RAL 9001|#E9E0CB" title="RAL 9001 Krem"></button>
+            <button class="renk-ornek" style="background:#F2ECE1" data-deger="RAL 9010|#F2ECE1" title="RAL 9010 Saf Beyaz"></button>
+            <button class="renk-ornek" style="background:#928E85" data-deger="RAL 7030|#928E85" title="RAL 7030 Taş Grisi"></button>
+            <button class="renk-ornek" style="background:#383E42" data-deger="RAL 7016|#383E42" title="RAL 7016 Antrasit Grisi"></button>
+            <button class="renk-ornek" style="background:#0E0E10" data-deger="RAL 9005|#0E0E10" title="RAL 9005 Derin Siyah"></button>
+          </div>
+          <input type="hidden" id="govdeRenk" value="RAL 9001|#E9E0CB">
+
+          <span class="parca-etiket">Gövde Malzeme</span>
+          <div class="malzeme-secici" data-hedef="govdeMalzeme">
+            <button class="malzeme-ornek aktif" data-deger="mdf">MDF (Mat)</button>
+            <button class="malzeme-ornek" data-deger="lakeboyaMat">Lake Boya (Mat)</button>
+            <button class="malzeme-ornek" data-deger="lakeboya">Lake Boya (Parlak)</button>
+          </div>
+          <input type="hidden" id="govdeMalzeme" value="mdf">
+        </div>
+
+        <!-- KAPAK -->
+        <div class="kontrol-grubu">
+          <h3>Kapak</h3>
+          <span class="parca-etiket">Kapak Rengi</span>
+          <div class="renk-secici" data-hedef="kapakRenk">
+            <button class="renk-ornek aktif" style="background:#442F29" data-deger="RAL 8017|#442F29" title="RAL 8017 Çikolata Kahverengisi"></button>
+            <button class="renk-ornek" style="background:#0E0E10" data-deger="RAL 9005|#0E0E10" title="RAL 9005 Derin Siyah"></button>
+            <button class="renk-ornek" style="background:#F2ECE1" data-deger="RAL 9010|#F2ECE1" title="RAL 9010 Saf Beyaz"></button>
+            <button class="renk-ornek" style="background:#E9E0CB" data-deger="RAL 9001|#E9E0CB" title="RAL 9001 Krem"></button>
+            <button class="renk-ornek" style="background:#383E42" data-deger="RAL 7016|#383E42" title="RAL 7016 Antrasit Grisi"></button>
+            <button class="renk-ornek" style="background:#928E85" data-deger="RAL 7030|#928E85" title="RAL 7030 Taş Grisi"></button>
+            <button class="renk-ornek" style="background:#5A3A28" data-deger="AHSAP|#5A3A28" title="Amerikan Ceviz (Ahşap)"></button>
+          </div>
+          <input type="hidden" id="kapakRenk" value="RAL 8017|#442F29">
+
+          <span class="parca-etiket">Kapak Malzeme</span>
+          <div class="malzeme-secici" data-hedef="kapakMalzeme">
+            <button class="malzeme-ornek aktif" data-deger="mdf">MDF (Mat)</button>
+            <button class="malzeme-ornek" data-deger="lakeboya">Lake Boya (Parlak)</button>
+          </div>
+          <input type="hidden" id="kapakMalzeme" value="mdf">
+        </div>
+
+        <!-- KULP -->
+        <div class="kontrol-grubu">
+          <h3>Kulp</h3>
+          <span class="parca-etiket">Kulp Kaplama</span>
+          <div class="renk-secici" data-hedef="kulpKaplama">
+            <button class="renk-ornek aktif" style="background:#e8e8e8" data-deger="krom|#e8e8e8" title="Krom (Gümüş, Parlak)"></button>
+            <button class="renk-ornek" style="background:#d4af37" data-deger="krom|#d4af37" title="Altın (Parlak)"></button>
+            <button class="renk-ornek" style="background:#1a1a1a" data-deger="metal|#1a1a1a" title="Siyah Mat"></button>
+            <button class="renk-ornek" style="background:#f5f5f5" data-deger="lakeboya|#f5f5f5" title="Beyaz (Parlak)"></button>
+          </div>
+          <input type="hidden" id="kulpKaplama" value="krom|#e8e8e8">
+        </div>
+
+        <!-- LED -->
+        <div class="kontrol-grubu">
+          <h3>LED Işık</h3>
+          <label class="checkbox">
+            <input type="checkbox" id="ledIsik" checked>
+            <span>LED Işığı Aç (Parlıyor)</span>
+          </label>
+        </div>
+
+        <!-- MUSLUK -->
+        <div class="kontrol-grubu">
+          <h3>Musluk</h3>
+          <span class="parca-etiket">Musluk Kaplama</span>
+          <div class="renk-secici" data-hedef="muslukKaplama">
+            <button class="renk-ornek aktif" style="background:#e8e8e8" data-deger="krom|#e8e8e8" title="Krom (Gümüş, Parlak)"></button>
+            <button class="renk-ornek" style="background:#d4af37" data-deger="krom|#d4af37" title="Altın (Parlak)"></button>
+            <button class="renk-ornek" style="background:#1a1a1a" data-deger="metal|#1a1a1a" title="Siyah Mat"></button>
+            <button class="renk-ornek" style="background:#f5f5f5" data-deger="lakeboya|#f5f5f5" title="Beyaz (Parlak)"></button>
+          </div>
+          <input type="hidden" id="muslukKaplama" value="krom|#e8e8e8">
+        </div>
+
+        <!-- LAVABO -->
+        <div class="kontrol-grubu">
+          <h3>Lavabo</h3>
+          <div class="renk-secici" data-hedef="lavaboRenk">
+            <button class="renk-ornek aktif" style="background:#F2ECE1" data-deger="RAL 9010|#F2ECE1" title="RAL 9010 Saf Beyaz"></button>
+            <button class="renk-ornek" style="background:#E9E0CB" data-deger="RAL 9001|#E9E0CB" title="RAL 9001 Krem"></button>
+            <button class="renk-ornek" style="background:#9DA1A2" data-deger="RAL 7040|#9DA1A2" title="RAL 7040 Pencere Grisi"></button>
+            <button class="renk-ornek" style="background:#0E0E10" data-deger="RAL 9005|#0E0E10" title="RAL 9005 Derin Siyah"></button>
+          </div>
+          <input type="hidden" id="lavaboRenk" value="RAL 9010|#F2ECE1">
+        </div>
+
+        <!-- ÜST TABLA -->
+        <div class="kontrol-grubu">
+          <h3>Üst Tabla</h3>
+          <div class="renk-secici" data-hedef="ustTablaRenk">
+            <button class="renk-ornek aktif" style="background:#928E85" data-deger="RAL 7030|#928E85" title="RAL 7030 Taş Grisi"></button>
+            <button class="renk-ornek" style="background:#F2ECE1" data-deger="RAL 9010|#F2ECE1" title="RAL 9010 Saf Beyaz"></button>
+            <button class="renk-ornek" style="background:#E9E0CB" data-deger="RAL 9001|#E9E0CB" title="RAL 9001 Krem"></button>
+            <button class="renk-ornek" style="background:#0E0E10" data-deger="RAL 9005|#0E0E10" title="RAL 9005 Derin Siyah"></button>
+          </div>
+          <input type="hidden" id="ustTablaRenk" value="RAL 7030|#928E85">
+        </div>
+
+        <!-- TEZGAH -->
+        <div class="kontrol-grubu">
+          <h3>Tezgah</h3>
+          <div class="malzeme-secici" data-hedef="tezgahMalzeme">
+            <button class="malzeme-ornek aktif" data-deger="mermer">Mermer (Doğal Taş)</button>
+            <button class="malzeme-ornek" data-deger="kompozit">Kompozit Kuvars</button>
+          </div>
+          <input type="hidden" id="tezgahMalzeme" value="mermer">
+        </div>
+
+        <!-- ÜRÜN GALERİSİ -->
+        <div class="urun-galeri">
+          <h3>Ürün Görselleri</h3>
+          <div class="galeri-container">
+            <button class="galeri-kart aktif" data-tema="gorsel1">
+              <span class="galeri-onizleme" style="background:#442F29"></span>
+              <span class="galeri-etiket">Çikolata Kahve</span>
+            </button>
+            <button class="galeri-kart" data-tema="gorsel2">
+              <span class="galeri-onizleme" style="background:#0E0E10"></span>
+              <span class="galeri-etiket">Derin Siyah</span>
+            </button>
+            <button class="galeri-kart" data-tema="gorsel3">
+              <span class="galeri-onizleme" style="background:#F2ECE1"></span>
+              <span class="galeri-etiket">Saf Beyaz</span>
+            </button>
+            <button class="galeri-kart" data-tema="gorsel4">
+              <span class="galeri-onizleme" style="background:#383E42"></span>
+              <span class="galeri-etiket">Antrasit Gri</span>
+            </button>
+            <button class="galeri-kart" data-tema="gorsel5">
+              <span class="galeri-onizleme" style="background:#5A3A28"></span>
+              <span class="galeri-etiket">Ahşap (Ceviz)</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="./js/lib/three/three.min.js"></script>
+  <script src="./js/lib/three/OrbitControls.js"></script>
+  <script src="./js/lib/three/GLTFLoader.js"></script>
+  <script src="./js/lib/three/RGBELoader.js"></script>
+  <script src="./model-katalog.js"></script>
+  <script src="./model-veri.js"></script>
+  <script src="./hdr-veri.js"></script>
+  <script src="./uygulama.js?v=20260719-01"></script>
+</body>
+</html>

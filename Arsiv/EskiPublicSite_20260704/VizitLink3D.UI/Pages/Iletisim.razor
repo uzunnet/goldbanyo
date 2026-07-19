@@ -1,0 +1,138 @@
+@page "/iletisim"
+@layout VizitLink3D.UI.Layout.VizitLink3DDuzen
+
+@*
+ * Iletisim — Gold Banyo iletişim sayfası.
+ * Stitch Aurelian Onyx Tasarımı ile uyumlu HTML5 yapısı.
+ *@
+
+<PageTitle>@_sayfaBasligi</PageTitle>
+
+<div class="vizit-bg-primary-container" style="padding-top: 5rem;">
+
+    <main class="vizit-section">
+        <div class="vizit-section-icerik">
+            
+            <div class="vizit-bolum-baslik-kutu">
+                <h1 class="vizit-bolum-baslik">@dil.T("iletisim_baslik", "Contact Us")</h1>
+                <p class="vizit-bolum-aciklama">@dil.T("iletisim_aciklama", "We're here to assist you with any inquiries regarding our premium bathroom collections. Reach out to us through any of the channels below.")</p>
+            </div>
+
+            <div class="vizit-iletisim-grid">
+                
+                @* Sol Taraf: İletişim Bilgileri *@
+                <div class="vizit-iletisim-bilgi-kutulari">
+                    
+                    @* Merkez / Fabrika *@
+                    <div class="vizit-iletisim-kutu anim-reveal-up">
+                        <h3 class="vizit-iletisim-kutu-baslik">
+                            <span class="material-symbols-outlined text-primary">factory</span>
+                            @dil.T("iletisim.merkez", "Factory / Head Office")
+                        </h3>
+                        <address>
+                            <p><strong>@dil.T("iletisim.adres", "Address"):</strong><br/>
+                                @((MarkupString)_adres.Replace("\n", "<br/>"))
+                            </p>
+                            <p style="margin-top: 1rem;"><span class="material-symbols-outlined text-primary" style="font-size:1rem; vertical-align:-3px;">call</span> @_telefon1</p>
+                        </address>
+                    </div>
+
+                    @* Dijital İletişim *@
+                    <div class="vizit-iletisim-kutu anim-reveal-up" style="animation-delay: 0.1s;">
+                        <h3 class="vizit-iletisim-kutu-baslik">
+                            <span class="material-symbols-outlined text-primary">mail</span>
+                            @dil.T("iletisim.dijital", "Digital")
+                        </h3>
+                        <div>
+                            <p><a href="mailto:@_email" style="color: inherit; text-decoration: none;"><span class="material-symbols-outlined text-primary" style="font-size:1rem; vertical-align:-3px;">email</span> @_email</a></p>
+                            <p style="margin-top: 0.5rem;">
+                                <span class="material-symbols-outlined text-primary" style="font-size:1rem; vertical-align:-3px;">schedule</span> @_calismaGunleri, @_calismaSaatleri
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                @* Sağ Taraf: Form *@
+                <div class="vizit-iletisim-form-kutu anim-reveal-up" style="animation-delay: 0.2s;">
+                    <h2 class="vizit-bento-baslik">@dil.T("iletisim.form.baslik", "Send us a Message")</h2>
+                    <p class="vizit-bolum-aciklama" style="margin-bottom: 2rem;">@dil.T("iletisim.form.yardim", "Fill out the form below and our team will get back to you promptly.")</p>
+
+                    @if (_formBasarili)
+                    {
+                        <MudAlert Severity="Severity.Success" Square="true" Class="mb-4">
+                            <MudText Typo="Typo.body1">
+                                @dil.T("iletisim.form.basariliMesaj", "Mesajınız başarıyla alındı. En kısa sürede size döneceğiz.")
+                            </MudText>
+                        </MudAlert>
+                        <MudButton Variant="Variant.Outlined" Class="btn-ghost"
+                                   OnClick="@(() => _formBasarili = false)">
+                            @dil.T("iletisim.form.yeniMesaj", "Yeni Mesaj Gönder")
+                        </MudButton>
+                    }
+                    else
+                    {
+                        <MudStack Spacing="4">
+                            @if (!string.IsNullOrEmpty(_formModelKodu))
+                            {
+                                <MudAlert Severity="Severity.Info" Square="true" Dense="true" Style="background-color: var(--tema-arkaplan-zemin); color: var(--tema-metin);">
+                                    <strong style="color: var(--tema-vurgu);">@_formModelKodu</strong> @dil.T("iletisim.form.modelIcinTeklif", "modeli için teklif talebi")
+                                </MudAlert>
+                            }
+
+                            <MudGrid Spacing="3">
+                                <MudItem xs="12" sm="6">
+                                    <MudTextField @bind-Value="_formAd"
+                                                  Label="@($"{dil.T("iletisim.form.adSoyad", "Ad Soyad")} *")"
+                                                  Variant="Variant.Outlined"
+                                                  Required="true" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6">
+                                    <MudTextField @bind-Value="_formTelefon"
+                                                  Label="@dil.T("iletisim.form.telefon", "Telefon")"
+                                                  Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="_formEmail"
+                                                  Label="@($"{dil.T("iletisim.form.eposta", "E-posta Adresi")} *")"
+                                                  Variant="Variant.Outlined"
+                                                  Required="true"
+                                                  InputType="InputType.Email" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="_formKonu"
+                                                  Label="@dil.T("iletisim.form.konu", "Konu")"
+                                                  Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="_formMesaj"
+                                                  Label="@($"{dil.T("iletisim.form.mesaj", "Mesajınız")} *")"
+                                                  Variant="Variant.Outlined"
+                                                  Lines="5"
+                                                  Required="true" />
+                                </MudItem>
+                            </MudGrid>
+
+                            <button type="button" class="btn-birincil"
+                                    @onclick="FormuGonder"
+                                    disabled="@_formGonderiliyor"
+                                    style="margin-top: 1rem; width: 100%;">
+                                @if (_formGonderiliyor)
+                                {
+                                    <span>@dil.T("ortak.gonderiliyor", "Gönderiliyor...")</span>
+                                }
+                                else
+                                {
+                                    <span>@dil.T("iletisim.form.gonder", "MESAJ GÖNDER")</span>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                }
+                            </button>
+                        </MudStack>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>

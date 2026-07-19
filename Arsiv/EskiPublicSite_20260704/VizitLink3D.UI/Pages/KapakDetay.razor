@@ -1,0 +1,306 @@
+@page "/kapak/{ModelId:int}/{ModelKodu?}"
+@page "/kapi/{ModelId:int}/{ModelKodu?}"
+@using VizitLink3D.UI.Models
+@using VizitLink3D.UI.Bilesenler
+
+<!--
+    KAPAK/KAPI DETAY SAYFASI
+    Hasesoglu'nun aksine sol panel tamamen dolu — Three.js 3D viewer.
+    Renk seçildiğinde 3D model anında güncellenir (viewer yenilenmez).
+    Layout: Sol %60 (3D) + Sağ %40 (Bilgi + Renk + Ölçü + CTA)
+-->
+
+<PageTitle>@(_model?.ModelAdi ?? "Model") | VizitLink3D</PageTitle>
+<HeadContent>
+    <meta name="description" content="@(_model?.OnYazi ?? _model?.Aciklama ?? "VizitLink3D kalitesiyle tasarlanmış modern ürünler.")" />
+</HeadContent>
+
+<div class="gb-detay-sarici">
+
+    <!-- BREADCRUMB -->
+    <nav class="gb-breadcrumb" aria-label="Breadcrumb">
+        <NavLink href="" class="gb-breadcrumb-link">@dil.T("menu.anasayfa", "Ana Sayfa")</NavLink>
+        <span class="gb-breadcrumb-ayrac">›</span>
+        <NavLink href="@_listeUrl" class="gb-breadcrumb-link">@_listeBaslik</NavLink>
+        @if (_model != null)
+        {
+            <span class="gb-breadcrumb-ayrac">›</span>
+            <span class="gb-breadcrumb-aktif">@_model.ModelKodu</span>
+        }
+    </nav>
+
+    @if (_yukleniyor)
+    {
+        <!-- Yüklenme İskeleti -->
+        <div class="gb-detay-icerik">
+            <div class="gb-detay-sol">
+                <div class="gb-iskelet gb-viewer-iskelet"></div>
+            </div>
+            <div class="gb-detay-sag">
+                <div class="gb-iskelet" style="height:32px; width:60%; margin-bottom:16px;"></div>
+                <div class="gb-iskelet" style="height:20px; width:40%; margin-bottom:32px;"></div>
+                <div class="gb-iskelet" style="height:120px; margin-bottom:24px;"></div>
+                <div class="gb-iskelet" style="height:80px;"></div>
+            </div>
+        </div>
+    }
+    else if (_model == null)
+    {
+        <div class="gb-hata-kutu">
+            <p>@dil.T("kapi.bulunamadi", "Model bulunamadı.")</p>
+            <NavLink href="kapak-sistemleri" class="vizit-btn-birincil vizit-text-glow-gold vizit-border-glow">@dil.T("kapi.katalogaDon", "Kataloğa Dön")</NavLink>
+        </div>
+    }
+    else
+    {
+        <div class="gb-detay-icerik">
+
+            <!-- SOL PANEL: GALERİ + 3D -->
+            <div class="gb-detay-sol">
+
+                @if (_goster3D && !string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                {
+                    <!-- 3D Görüntüleyici -->
+                    <UcBoyutGoruntuleyici
+                        ModelYolu="@_model.ModelDosyaYolu"
+                        GorselYolu="@_model.GorselYolu"
+                        BaslangicRenk="@_baslangicRenkHex"
+                        SecilenRenk="@_secilenRenkHex" />
+
+                    @if (_secilenRenk != null)
+                    {
+                        <div class="gb-viewer-renk-bilgi gb-anim-fade-up">
+                            <div class="gb-renk-onizleme-buyuk" style="background-color: @_secilenRenk.HexKod;"></div>
+                            <div>
+                                <div class="gb-renk-adi-buyuk">@_secilenRenk.Ad</div>
+                                @if (!string.IsNullOrEmpty(_secilenRenk.Kod))
+                                {
+                                    <div class="gb-renk-uretici-kodu">@dil.T("kapi.kod", "Kod:") @_secilenRenk.Kod</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else if (_galeriGorseller.Any())
+                {
+                    <!-- Ana Görsel -->
+                    <div class="gb-galeri-ana">
+                        <img src="@_galeriGorseller[_aktifGorselIndex]"
+                             alt="@_model.ModelAdi"
+                             class="gb-galeri-ana-gorsel"
+                             onerror="this.onerror=null;this.src='/medya/vizitlink3d_default.png';" />
+                    </div>
+
+                    <!-- Küçük Resimler (Thumbnails) -->
+                    <div class="gb-galeri-thumbnails">
+                        @for (int i = 0; i < _galeriGorseller.Count; i++)
+                        {
+                            var idx = i;
+                            <button class="gb-galeri-thumb @(_aktifGorselIndex == idx && !_goster3D ? "aktif" : "")"
+                                    @onclick="@(() => GorselSec(idx))">
+                                <img src="@_galeriGorseller[idx]"
+                                     alt="Görsel @(idx+1)"
+                                     onerror="this.onerror=null;this.src='/medya/vizitlink3d_default.png';" />
+                            </button>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                        {
+                            <button class="gb-galeri-thumb gb-galeri-thumb-3d @(_goster3D ? "aktif" : "")"
+                                    @onclick="UcBoyutGoster">
+                                <span class="desa-3d-ikon">3D</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(_model.ModelDosyaYolu))
+                {
+                    <!-- Sadece 3D model var -->
+                    <UcBoyutGoruntuleyici
+                        ModelYolu="@_model.ModelDosyaYolu"
+                        GorselYolu="@_model.GorselYolu"
+                        BaslangicRenk="@_baslangicRenkHex"
+                        SecilenRenk="@_secilenRenkHex" />
+                }
+                else
+                {
+                    <!-- Fallback: tek görsel -->
+                    <div class="gb-galeri-ana">
+                        <img src="@(_model.GorselYolu ?? "/medya/vizitlink3d_default.png")"
+                             alt="@_model.ModelAdi"
+                             class="gb-galeri-ana-gorsel"
+                             onerror="this.onerror=null;this.src='/medya/vizitlink3d_default.png';" />
+                    </div>
+                }
+            </div>
+
+            <!-- SAĞ PANEL: BİLGİ + RENK + ÖLÇÜ + CTA -->
+            <div class="gb-detay-sag">
+
+                <!-- Model Kodu + Rozet -->
+                <div class="gb-detay-ust">
+                    <div class="gb-detay-kodlar">
+                        <span class="gb-model-rozet">@_model.ModelKodu</span>
+                        @if (_model.YeniMi)
+                        {
+                            <span class="gb-yeni-rozet">@dil.T("kapi.yeni", "YENİ")</span>
+                        }
+                    </div>
+                    <h1 class="gb-detay-baslik">@_model.ModelAdi</h1>
+                    @if (!string.IsNullOrEmpty(_model.OnYazi))
+                    {
+                        <p class="gb-detay-on-yazi">@_model.OnYazi</p>
+                    }
+                </div>
+
+                <div class="gb-detay-ayrac"></div>
+
+                <!-- RENK SEÇİCİ -->
+                <RenkSecici
+                    Renkler="@_model.RenkSecenekleri"
+                    SeciliRenk="@_secilenRenk"
+                    SeciliRenkDegisti="@RenkDegisti" />
+
+                <div class="gb-detay-ayrac"></div>
+
+                <!-- ÖLÇÜ BİLGİSİ -->
+                @if (_model.MinYukseklik > 0 || _model.MinGenislik > 0)
+                {
+                    <div class="gb-olcu-kutu">
+                        <div class="vizit-vurgu-metin vizit-text-glow-gold" style="margin-bottom:12px;">@dil.T("kapi.modelOlculeri", "MODEL ÖLÇÜLERİ")</div>
+                        <div class="gb-olcu-grid">
+                            <div class="gb-olcu-kalem">
+                                <div class="gb-olcu-ikon">↕</div>
+                                <div>
+                                    <div class="gb-olcu-baslik">@dil.T("kapi.yukseklikH", "YÜKSEKLİK (H)")</div>
+                                    <div class="gb-olcu-deger">
+                                        @dil.T("kapi.min", "Min:") <strong>@_model.MinYukseklik mm</strong>
+                                    </div>
+                                    @if (_model.MaxYukseklik > 0)
+                                    {
+                                        <div class="gb-olcu-deger">
+                                            @dil.T("kapi.maks", "Maks:") <strong>@_model.MaxYukseklik mm</strong>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="gb-olcu-kalem">
+                                <div class="gb-olcu-ikon">↔</div>
+                                <div>
+                                    <div class="gb-olcu-baslik">@dil.T("kapi.genislikW", "GENİŞLİK (W)")</div>
+                                    <div class="gb-olcu-deger">
+                                        @dil.T("kapi.min", "Min:") <strong>@_model.MinGenislik mm</strong>
+                                    </div>
+                                    @if (_model.MaxGenislik > 0)
+                                    {
+                                        <div class="gb-olcu-deger">
+                                            @dil.T("kapi.maks", "Maks:") <strong>@_model.MaxGenislik mm</strong>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gb-detay-ayrac"></div>
+                }
+
+                <!-- NİTELİKLER -->
+                @if (_model.Nitelikler.Any())
+                {
+                    <div class="gb-nitelik-kutu">
+                        <div class="vizit-vurgu-metin vizit-text-glow-gold" style="margin-bottom:12px;">@dil.T("kapi.nitelikler", "NİTELİKLER")</div>
+                        <div class="gb-nitelik-etiketler">
+                            @foreach (var nitelik in _model.Nitelikler)
+                            {
+                                <span class="gb-kategori-cip">@nitelik</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="gb-detay-ayrac"></div>
+                }
+
+                <!-- AÇIKLAMA -->
+                @if (!string.IsNullOrEmpty(_model.Aciklama))
+                {
+                    <div class="gb-aciklama-kutu">
+                        <p>@_model.Aciklama</p>
+                    </div>
+                    <div class="gb-detay-ayrac"></div>
+                }
+
+                <!-- CTA BUTONLARI -->
+                <div class="gb-cta-grup">
+                    <NavLink href="@($"iletisim?model={_model.ModelKodu}&renk={Uri.EscapeDataString(_secilenRenk?.Ad ?? "")}")"
+                       class="vizit-btn-birincil vizit-text-glow-gold vizit-border-glow gb-cta-ana">
+                        @dil.T("kapi.teklifIste", "Teklif İste")
+                    </NavLink>
+                    <button class="vizit-btn-ikincil vizit-text-glow-gold vizit-border-glow gb-cta-ikincil" @onclick="KatalogaDon">
+                        @dil.T("kapi.listeyeDon", "← Listeye Dön")
+                    </button>
+                </div>
+
+                <!-- Renk uyarısı -->
+                <div class="gb-renk-uyari">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span>@dil.T("kapi.renkUyarisi", "Web sayfası renk seçeneklerimizi dijital ortama bağlı olarak farklılık gösterebilir. Gerçek renk kartlamıza başvurmanızı öneririz.")</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BENZER MODELLER -->
+        @if (_benzerModeller.Any())
+        {
+            <div class="gb-benzer-bolum">
+                <div class="vizit-vurgu-metin vizit-text-glow-gold gb-benzer-baslik">@dil.T("kapi.benzerModeller", "BENZER MODELLER")</div>
+                <div class="gb-benzer-grid">
+                    @foreach (var benzer in _benzerModeller)
+                    {
+                        <NavLink href="@DetayUrl(benzer)" class="gb-benzer-kart">
+                            <div class="gb-benzer-gorsel-sarici">
+                                <img src="@(benzer.GorselYolu ?? "/medya/vizitlink3d_default.png")"
+                                     alt="@benzer.ModelAdi"
+                                     class="gb-benzer-gorsel"
+                                     loading="lazy" />
+                            </div>
+                            <div class="gb-benzer-bilgi">
+                                <span class="gb-model-rozet">@benzer.ModelKodu</span>
+                                <p class="gb-benzer-ad">@benzer.ModelAdi</p>
+                            </div>
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (_cokIzlenenModeller.Any())
+        {
+            <div class="gb-benzer-bolum">
+                <div class="vizit-vurgu-metin vizit-text-glow-gold gb-benzer-baslik">@dil.T("kapi.cokIzlenenler", "ÇOK İZLENENLER")</div>
+                <div class="gb-benzer-grid">
+                    @foreach (var model in _cokIzlenenModeller)
+                    {
+                        <NavLink href="@DetayUrl(model)" class="gb-benzer-kart">
+                            <div class="gb-benzer-gorsel-sarici">
+                                <img src="@(model.GorselYolu ?? "/medya/vizitlink3d_default.png")"
+                                     alt="@model.ModelAdi"
+                                     class="gb-benzer-gorsel"
+                                     loading="lazy" />
+                            </div>
+                            <div class="gb-benzer-bilgi">
+                                <span class="gb-model-rozet">@model.ModelKodu</span>
+                                <p class="gb-benzer-ad">@model.ModelAdi</p>
+                            </div>
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+

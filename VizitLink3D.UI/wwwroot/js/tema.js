@@ -113,11 +113,12 @@ window.vizitlink3dTema = {
 
     adminTemaIzoleEt: function () {
         var root = document.documentElement;
-        var mevcutMod = localStorage.getItem('temaMod') || 'koyu';
+        // Admin paneli her zaman koyu modda calisir — site temasindan bagimsiz
         root.removeAttribute('data-tema-id');
         root.removeAttribute('data-site-tema');
-        root.setAttribute('data-tema-mod', mevcutMod);
-        root.style.colorScheme = mevcutMod === 'acik' ? 'light' : 'dark';
+        root.setAttribute('data-tema-mod', 'koyu');
+        root.style.colorScheme = 'dark';
+        localStorage.setItem('temaMod', 'koyu');
 
         var temaLinkleri = document.querySelectorAll('link[data-tema-parca]');
         temaLinkleri.forEach(function (link) {
@@ -136,21 +137,20 @@ window.vizitlink3dTema = {
         root.style.colorScheme = mod === 'acik' ? 'light' : 'dark';
     },
 
-    adminModUygula: function (mod) {
-        var koyuTemaMi = mod !== 'acik';
-
+    adminModUygula: function (_mod) {
+        // Admin paneli her zaman koyu modda kalir
         this.uygula(
             '#C5A059',
             '#d4a574',
-            koyuTemaMi ? '#0a0a0a' : '#f5f1e7',
-            koyuTemaMi ? '#111111' : '#ffffff',
-            koyuTemaMi,
+            '#0a0a0a',
+            '#111111',
+            true,
             'goldbanyo-admin'
         );
 
-        document.documentElement.setAttribute('data-tema-mod', mod);
-        document.documentElement.style.colorScheme = koyuTemaMi ? 'dark' : 'light';
-        localStorage.setItem('temaMod', mod);
+        document.documentElement.setAttribute('data-tema-mod', 'koyu');
+        document.documentElement.style.colorScheme = 'dark';
+        localStorage.setItem('temaMod', 'koyu');
     },
 
     _hexToRgb: function (hex) {

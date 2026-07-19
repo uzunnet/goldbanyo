@@ -39,18 +39,23 @@ public class FirmaKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         return Ok(Cevap<Firma>.Basarili(firma));
     }
 
-    /// <summary>Geçerli firma (middleware tarafından set edilen FirmaId).</summary>
+    /// <summary>Geçerli firma (middleware tarafından set edilen FirmaId; yoksa ilk aktif firma).</summary>
     [HttpGet("geçerli")]
     public async Task<IActionResult> GetMevcut()
     {
-        if (!HttpContext.Items.TryGetValue("FirmaId", out var firmaId))
-            return BadRequest(Cevap<bool>.Hata("Firma bilgisi bulunamadı."));
+        if (HttpContext.Items.TryGetValue("FirmaId", out var firmaId) && firmaId is int id)
+        {
+            var firma = await vt.Firmalar.FirstOrDefaultAsync(f => f.Id == id && f.AktifMi);
+            if (firma != null)
+                return Ok(Cevap<Firma>.Basarili(firma));
+        }
 
-        var firma = await vt.Firmalar.FirstOrDefaultAsync(f => f.Id == (int)firmaId!);
-        if (firma == null)
+        // Middleware FirmaId set etmemisse ilk aktif firmayi don (tek-tenant varsayilani)
+        var varsayilan = await vt.Firmalar.FirstOrDefaultAsync(f => f.AktifMi);
+        if (varsayilan == null)
             return NotFound(Cevap<bool>.Hata("Firma bulunamadı."));
 
-        return Ok(Cevap<Firma>.Basarili(firma));
+        return Ok(Cevap<Firma>.Basarili(varsayilan));
     }
 
     /// <summary>Firma bilgisini güncelle (admin yönetim - logo, tema, renk vb.).</summary>

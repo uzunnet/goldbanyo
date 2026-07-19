@@ -1,0 +1,86 @@
+@page "/referanslar"
+@layout VizitLink3DDuzen
+
+<PageTitle>@dil.T("referanslar.baslik", "Referanslarımız") — Gold Banyo</PageTitle>
+
+<VizitLink3D.UI.Bilesenler.HeroSlider SayfaKodu="referanslar" />
+
+@if (_yukleniyor)
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16 d-flex justify-center align-center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+
+        @* ── MÜŞTERİ YORUMLARI ───────────────────────────────────────── *@
+        @if (_yorumlar.Any())
+        {
+            <MudStack AlignItems="AlignItems.Center" Class="mb-12 text-center">
+                <MudText Typo="Typo.overline" Class="vizit-vurgu-metin vizit-text-glow-gold d-block">@dil.T("referans.memnuniyet", "memnuniyetiniz bizim için çok önemli")</MudText>
+                <MudText Typo="Typo.h3" Class="vizit-bolum-baslik vizit-text-glow-gold">@dil.T("referans.musteriSoyluyor", "Müşterilerimiz Bizim İçin Ne Söylüyor")</MudText>
+            </MudStack>
+
+            <MudGrid Spacing="6" Class="mb-16">
+                @foreach (var yorum in _yorumlar)
+                {
+                    <MudItem Class="anim-scroll-yukari" xs="12" md="6">
+                        <MudCard Elevation="0" Class="pa-6" Style="background: var(--gb-bg-alt); border-left: 4px solid var(--gb-primary);">
+                            <MudCardContent>
+                                <MudIcon Icon="@Icons.Material.Filled.FormatQuote" Style="color: var(--gb-primary); font-size: 2rem; margin-bottom: 16px;" />
+                                <MudText Typo="Typo.body1" Style="color: var(--gb-secondary); line-height: 1.8; font-style: italic; margin-bottom: 24px;">@yorum.Yorum</MudText>
+                                <MudText Typo="Typo.subtitle1" Style="font-family: 'Noto Serif', serif; font-weight: 700; color: var(--gb-primary);">
+                                    @yorum.MusteriAdi
+                                    @if (!string.IsNullOrEmpty(yorum.MusteriSehir))
+                                    {
+                                        <span style="font-weight: 400; opacity: 0.8; font-size: 0.9rem;"> — @yorum.MusteriSehir</span>
+                                    }
+                                </MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+
+        @* ── REFERANS LOGO GRID ──────────────────────────────────────── *@
+        <MudStack AlignItems="AlignItems.Center" Class="mb-10 text-center">
+            <MudText Typo="Typo.overline" Class="vizit-vurgu-metin vizit-text-glow-gold d-block">@dil.T("referanslar.etiket", "25 YILDIR HİZMETİNİZDEYİZ")</MudText>
+            <MudText Typo="Typo.h3" Class="vizit-bolum-baslik vizit-text-glow-gold">@dil.T("referanslar.baslik", "Referanslarımız")</MudText>
+        </MudStack>
+
+        @if (_referanslar.Any())
+        {
+            <MudGrid Spacing="4" Justify="Justify.Center">
+                @foreach (var ref_ in _referanslar)
+                {
+                    <MudItem xs="6" sm="4" md="3" lg="2">
+                        <div class="vizit-glass-card vizit-border-glow">
+                            @if (!string.IsNullOrWhiteSpace(ref_.Logo))
+                            {
+                                <img src="@LogoUrl(ref_.Logo)"
+                                     alt="@ref_.Ad"
+                                     class="gb-referans-logo"
+                                     loading="lazy"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+                                <span class="gb-referans-ad-fallback" style="display:none;">@ref_.Ad</span>
+                            }
+                            else
+                            {
+                                <span class="gb-referans-ad">@ref_.Ad</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(ref_.Aciklama))
+                            {
+                                <span class="gb-referans-aciklama">@ref_.Aciklama</span>
+                            }
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+
+    </MudContainer>
+}
+

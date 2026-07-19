@@ -171,6 +171,181 @@ public partial class UrunMedyaBaglamaServisi(VizitLink3DDbContext vt, IWebHostEn
         await vt.SaveChangesAsync(iptal); // Id almak icin
         return (model, true);
     }
+
+    /// <summary>
+    /// Static overload — disaridan (TohumVerisi vb.) dogrudan cagrilabilir.
+    /// </summary>
+    internal static async Task<(UrunUcBoyutModeli Model, bool YeniMi)> UcBoyutGetirVeyaOlusturAsync(
+        VizitLink3DDbContext vt, int urunId, string tamYol, string bagilYol, bool varsayilan, CancellationToken iptal)
+    {
+        var mevcut = await vt.UrunUcBoyutModelleri.IgnoreQueryFilters()
+            .FirstOrDefaultAsync(m => m.UrunId == urunId && m.ModelDosyaYolu == bagilYol && !m.SilindiMi, iptal);
+        if (mevcut is not null) return (mevcut, false);
+
+        var model = new UrunUcBoyutModeli
+        {
+            UrunId = urunId,
+            ModelAdi = Path.GetFileNameWithoutExtension(bagilYol),
+            ModelDosyaYolu = bagilYol,
+            ModelYolu = bagilYol,
+            ModelTipi = "Glb",
+            DosyaBoyutuByte = new FileInfo(tamYol).Length,
+            VarsayilanMi = varsayilan,
+            Versiyon = 1,
+            AktifMi = true,
+            OlusturulmaTarihi = DateTime.UtcNow
+        };
+        vt.UrunUcBoyutModelleri.Add(model);
+        await vt.SaveChangesAsync(iptal);
+        return (model, true);
+    }
+
+    /// <summary>
+    /// 3D model dosya adini temizler: uzanti kaldir, kucuk harf, bosluk->tire, altcizgi->tire.
+    /// </summary>
+    private static string TemizleDosyaAdi(string dosyaAdi)
+    {
+        var ad = Path.GetFileNameWithoutExtension(dosyaAdi);
+        ad = ad.Replace(' ', '-').Replace('_', '-').ToLowerInvariant();
+        while (ad.Contains("--", StringComparison.Ordinal)) ad = ad.Replace("--", "-");
+        ad = ad.Trim('-');
+        return ad;
+    }
+
+    /// <summary>
+    /// wwwroot/medya/3d-modeller/ altindaki tum .glb dosyalarini katalog slug'lari ile
+    /// eslestirip UrunUcBoyutModeli kaydi olusturur.
+    /// Idempotent: mevcut kaydi tekrar eklemez.
+    /// Mevcut BaglaAsync() mantigini bozmaz — ayri bir metottur.
+    /// </summary>
+    public static async Task<Cevap<KatalogModelBaglamaSonucu>> KatalogModelleriniBaglaAsync(
+        VizitLink3DDbContext vt, string webRootPath, CancellationToken iptal = default)
+    {
+        var sonuc = new KatalogModelBaglamaSonucu();
+
+        var ucBoyutKlasor = Path.Combine(webRootPath, "medya", "3d-modeller");
+        if (!Directory.Exists(ucBoyutKlasor))
+            return Cevap<KatalogModelBaglamaSonucu>.Basarili(sonuc,
+                $"3D model klasoru bulunamadi: {ucBoyutKlasor}");
+
+        // Tum .glb dosyalarini bul (alt klasorler dahil)
+        var glbDosyalari = Directory.GetFiles(ucBoyutKlasor, "*.glb", SearchOption.AllDirectories);
+        if (glbDosyalari.Length == 0)
+            return Cevap<KatalogModelBaglamaSonucu>.Basarili(sonuc, "3D model dosyasi bulunamadi.");
+
+        // Tum aktif urunleri yukle
+        var urunler = await vt.Urunler
+            .IgnoreQueryFilters()
+            .Where(u => !u.SilindiMi)
+            .ToListAsync(iptal);
+
+        var slugUrunMap = urunler.ToDictionary(u => u.Slug, StringComparer.OrdinalIgnoreCase);
+        var slugSet = new HashSet<string>(slugUrunMap.Keys, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var glbDosyasi in glbDosyalari)
+        {
+            var dosyaAdi = Path.GetFileName(glbDosyasi);
+            var temizAd = TemizleDosyaAdi(dosyaAdi);
+
+            Urun? eslesenUrun = null;
+            bool varsayilanMi = false;
+
+            // --- Strateji 1: Tam eslesme (dosya_adi == slug) ---
+            if (slugSet.Contains(temizAd))
+            {
+                eslesenUrun = slugUrunMap[temizAd];
+                varsayilanMi = true;
+            }
+            // --- Strateji 2: Onek eslesmesi (slug, temizAd + "-" ile basliyor) ---
+            // Orn: piedra.glb -> "piedra", slug "piedra-55" ile eslesir
+            else
+            {
+                var onekEslesen = urunler.FirstOrDefault(u =>
+                    u.Slug.StartsWith(temizAd + "-", StringComparison.OrdinalIgnoreCase));
+                if (onekEslesen is not null)
+                {
+                    eslesenUrun = onekEslesen;
+                    varsayilanMi = true; // ilk eslesen varsayilan olsun
+                }
+                // --- Strateji 3: nrd-{N} regex (katalog alti dosyalar) ---
+                else
+                {
+                    var nrdMatch = Regex.Match(temizAd, @"^nrd-(\d+)$", RegexOptions.IgnoreCase);
+                    if (nrdMatch.Success)
+                    {
+                        var nrdSlug = $"nrd-{nrdMatch.Groups[1].Value}";
+                        if (slugSet.Contains(nrdSlug))
+                        {
+                            eslesenUrun = slugUrunMap[nrdSlug];
+                            varsayilanMi = true;
+                        }
+                    }
+                }
+            }
+
+            if (eslesenUrun is null)
+            {
+                sonuc.EslesmeyenDosyalar.Add(dosyaAdi);
+                continue;
+            }
+
+            // Bagil yolu hesapla (webRootPath'e gore)
+            var goreliYol = Path.GetRelativePath(webRootPath, glbDosyasi)
+                .Replace('\\', '/')
+                .TrimStart('/');
+            var bagilYol = "/" + goreliYol;
+
+            // Idempotent: mevcut kaydi tekrar ekleme
+            var (model, yeniMi) = await UcBoyutGetirVeyaOlusturAsync(
+                vt, eslesenUrun.Id, glbDosyasi, bagilYol, varsayilanMi, iptal);
+
+            if (yeniMi)
+            {
+                sonuc.BaglananModel++;
+                sonuc.BaglananUrunSluglari.Add(eslesenUrun.Slug);
+            }
+
+            // Varsayilan model ata (ilk/tek model icin)
+            if (varsayilanMi && eslesenUrun.VarsayilanUcBoyutModeliId != model.Id)
+            {
+                eslesenUrun.VarsayilanUcBoyutModeliId = model.Id;
+                eslesenUrun.GuncellenmeTarihi = DateTime.UtcNow;
+                sonuc.GuncellenenUrun++;
+            }
+        }
+
+        // Varsayilan model atanmamis urunleri de düzelt
+        var eksikUrunler = await vt.Urunler.IgnoreQueryFilters()
+            .Where(u => !u.SilindiMi && u.VarsayilanUcBoyutModeliId == null)
+            .ToListAsync(iptal);
+        foreach (var urun in eksikUrunler)
+        {
+            if (slugSet.Contains(urun.Slug))
+            {
+                var varsayilanModel = await vt.UrunUcBoyutModelleri.IgnoreQueryFilters()
+                    .Where(m => m.UrunId == urun.Id && !m.SilindiMi)
+                    .OrderByDescending(m => m.VarsayilanMi)
+                    .FirstOrDefaultAsync(iptal);
+                if (varsayilanModel is not null)
+                {
+                    urun.VarsayilanUcBoyutModeliId = varsayilanModel.Id;
+                    sonuc.GuncellenenUrun++;
+                }
+            }
+        }
+
+        // Dosya adi tekrarlarini raporla
+        sonuc.TekrarlananDosyalar = glbDosyalari
+            .GroupBy(f => TemizleDosyaAdi(Path.GetFileName(f)))
+            .Where(g => g.Count() > 1)
+            .Select(g => $"{g.Key} ({g.Count()} kez: {string.Join(", ", g.Select(Path.GetFileName))})")
+            .ToList();
+
+        await vt.SaveChangesAsync(iptal);
+        return Cevap<KatalogModelBaglamaSonucu>.Basarili(sonuc,
+            $"3D model baglama tamamlandi. {sonuc.BaglananModel} yeni model baglandi, " +
+            $"{sonuc.GuncellenenUrun} urun guncellendi, {sonuc.EslesmeyenDosyalar.Count} dosya eslesmedi.");
+    }
 }
 
 public class UrunMedyaBaglamaSonucu
@@ -178,4 +353,16 @@ public class UrunMedyaBaglamaSonucu
     public int GuncellenenUrun { get; set; }
     public int BaglananGorsel { get; set; }
     public int BaglananModel { get; set; }
+}
+
+/// <summary>
+/// KatalogModelleriniBaglaAsync sonucu — eslesmeyen dosyalari da icerir.
+/// </summary>
+public class KatalogModelBaglamaSonucu
+{
+    public int GuncellenenUrun { get; set; }
+    public int BaglananModel { get; set; }
+    public List<string> BaglananUrunSluglari { get; set; } = [];
+    public List<string> EslesmeyenDosyalar { get; set; } = [];
+    public List<string> TekrarlananDosyalar { get; set; } = [];
 }

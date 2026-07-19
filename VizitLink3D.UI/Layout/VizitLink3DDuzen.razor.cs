@@ -230,10 +230,10 @@ public partial class VizitLink3DDuzen : IDisposable
             return url;
         }
 
-        if (url.Equals("/img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
-            || url.Equals("img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        if (url.Equals("/medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
+            || url.Equals("medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
         {
-            return "/img/goldbanyo-logo.png";
+            return "/medya/brand/goldbanyo-logo.png";
         }
 
         return url.StartsWith('/') ? url : "/" + url.TrimStart('/');

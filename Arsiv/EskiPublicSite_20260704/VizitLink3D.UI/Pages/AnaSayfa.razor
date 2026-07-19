@@ -1,0 +1,108 @@
+@page "/"
+@layout VizitLink3DDuzen
+
+@* 
+ * Gold Banyo Ana Sayfası — Aurelian Onyx (Stitch AI)
+ * 12 bölümlü tam sayfa deneyimi.
+ * Header + Footer Layout'ta, içerik burada.
+ *@
+
+<PageTitle>Gold Banyo — @dil.T("ana_sayfa_title", "Özel Tasarım Banyo Mobilyaları Üreticisi")</PageTitle>
+
+<div class="vizit-bg-primary-container">
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 1. HERO — Fullscreen, çift CTA'lı
+     * ═══════════════════════════════════════════════════════════════ *@
+    <StitchHero UstBaslik="@_heroUstBaslik"
+                Baslik="@_heroBaslik"
+                Aciklama="@_heroAciklama"
+                GorselUrl="@_heroGorselUrl"
+                CtaMetin="@_heroCta1Metin"
+                CtaUrl="@_heroCta1Url"
+                Cta2Metin="@_heroCta2Metin"
+                Cta2Url="@_heroCta2Url" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 2. İSTATİSTİK SAYAÇLARI — 4'lü grid, count-up
+     * ═══════════════════════════════════════════════════════════════ *@
+    <IstatistikBolumu Istatistikler="@_istatistikler" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 3. KOLEKSİYONLAR BENTO GRID — 4 kart (1 büyük + 3 küçük)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <KoleksiyonlarBentoGrid Baslik="@_koleksiyonBaslik"
+                            Aciklama="@_koleksiyonAciklama"
+                            KesfetMetin="@_kesfetMetin"
+                            Kartlar="@_koleksiyonKartlari" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 4. ENDÜSTRİYEL ZANAAT — Glassmorphism ikili bölüm
+     * ═══════════════════════════════════════════════════════════════ *@
+    <EndustriyelZanaatBolumu Baslik="@_endustriyelBaslik"
+                              Aciklama="@_endustriyelAciklama"
+                              GorselUrl="@_endustriyelGorsel"
+                              Ozellikler="@_endustriyelOzellikler" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 5. BUTİK PROJE SÜRECİ — Mevcut HizmetSureciBolumu (4 adım)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <HizmetSureciBolumu />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 6. DİNAMİK & AKILLI YAŞAM — Glassmorphism + showcase
+     * ═══════════════════════════════════════════════════════════════ *@
+    <AkilliYasamBolumu Baslik="@_akilliBaslik"
+                        Aciklama="@_akilliAciklama"
+                        GorselUrl="@_akilliGorsel"
+                        UrunKodu="@_akilliUrunKodu"
+                        Ozellikler="@_akilliOzellikler" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 7. SEÇKİN PROJELER — 3 kartlı showcase (Plan §6 — projeler+referanslar)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <ProjelerBolumu Projeler="@_projeler" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 8. KATALOG CTA — Fullwidth banner (Plan §7)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <KatalogBanner Baslik="@_katalogBaslik"
+                    Aciklama="@_katalogAciklama"
+                    ButonMetin="@_katalogButonMetin"
+                    ButonUrl="@_katalogButonUrl"
+                    IndirmeUrl="@_katalogIndirmeUrl"
+                    GorselUrl="@_katalogGorsel" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 9. KÜRESEL GÜÇ / BAYİ — Global bayi ağı (Plan §8)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <KucreselGucBolumu Baslik="@_kucreselBaslik"
+                        Aciklama="@_kucreselAciklama"
+                        OneCikanAlinti="@_kucreselAlinti"
+                        AlintiSahibi="@_kucreselAlintiSahibi"
+                        Ogeler="@_kucreselOgeler" />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 10. MÜŞTERİ YORUMLARI — Carousel (Plan §9)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <MusteriYorumlariCarousel />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 11. REFERANS SERİDİ — Logo grid (Plan §6 — projeler+referanslar)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <ReferansSeridi />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 12. SSS — Accordion (Plan §10)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <SSSBolumu />
+
+    @* ═══════════════════════════════════════════════════════════════
+     * 13. TEKLİF / İLETİŞİM CTA — Gradient banner (Plan §11)
+     * ═══════════════════════════════════════════════════════════════ *@
+    <CtaBanner Baslik="@_ctaBaslik"
+               Aciklama="@_ctaAciklama"
+               ButonMetin="@_ctaButonMetin"
+               ButonUrl="@_ctaButonUrl" />
+
+</div>

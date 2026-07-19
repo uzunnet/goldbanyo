@@ -1,0 +1,184 @@
+@page "/urunler"
+@page "/banyo-dolaplari"
+
+<PageTitle>@dil.T("urunler.baslik", "Gold Banyo Banyo Dolabı Koleksiyonları") — Gold Banyo</PageTitle>
+<HeadContent>
+    <meta name="description" content="@dil.T("urunler.seo_aciklama", "Gold Banyo 2026 koleksiyonundaki banyo dolabı modellerini, ölçü alternatiflerini ve premium seri detaylarını inceleyin.")" />
+</HeadContent>
+
+<div class="vizit-bg-primary-container">
+    <VizitLink3D.UI.Bilesenler.HeroSlider SayfaKodu="urunler" />
+
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-8">
+        <section class="banyo-vitrin-hero mb-8">
+            <div class="banyo-vitrin-hero__icerik">
+                <MudText Typo="Typo.overline" Class="banyo-vitrin-hero__etiket">
+                    @dil.T("urunler.hero_etiket", "Gold Banyo 2026 Koleksiyonları")
+                </MudText>
+                <MudText Typo="Typo.h3" Class="mb-4">
+                    @dil.T("urunler.baslik", "Banyo Dolabı Koleksiyonları")
+                </MudText>
+                <MudText Typo="Typo.body1" Class="banyo-vitrin-hero__aciklama">
+                    @dil.T("urunler.aciklama", "Hermes'ten Lugano Plus'a kadar tüm Gold Banyo banyo dolabı serilerini koleksiyon mantığıyla keşfedin; ürün detayında ölçü, renk ve 3D inceleme alanlarına geçin.")
+                </MudText>
+            </div>
+
+            <div class="banyo-vitrin-hero__ozetler">
+                <article class="banyo-vitrin-ozet-kart">
+                    <span>@dil.T("urunler.ozet_koleksiyon", "Koleksiyon")</span>
+                    <strong>@ToplamKoleksiyonSayisi</strong>
+                </article>
+                <article class="banyo-vitrin-ozet-kart">
+                    <span>@dil.T("urunler.ozet_model", "Model")</span>
+                    <strong>@_urunler.Count</strong>
+                </article>
+                <article class="banyo-vitrin-ozet-kart">
+                    <span>@dil.T("urunler.ozet_one_cikan", "Öne Çıkan")</span>
+                    <strong>@ToplamOneCikanSayisi</strong>
+                </article>
+            </div>
+        </section>
+
+        <div class="mb-6">
+            <MudText Typo="Typo.body2" Class="banyo-vitrin-yardimci-metin">
+                @dil.T("urunler.filtre_yardim", "Koleksiyon, ürün ailesi ve arama ile size uygun banyo dolabı serisini hızla filtreleyin.")
+            </MudText>
+        </div>
+
+        <div class="mb-6 d-flex flex-wrap gap-2 align-center">
+            @foreach (var koleksiyon in KoleksiyonFiltreleri)
+            {
+                var secili = string.Equals(_seciliKoleksiyonGrubu, koleksiyon.Ad, StringComparison.OrdinalIgnoreCase);
+                <MudChip T="string"
+                         Variant="@(secili ? Variant.Filled : Variant.Outlined)"
+                         Color="@(secili ? Color.Primary : Color.Default)"
+                         Size="Size.Medium"
+                         OnClick="@(() => KoleksiyonDegistir(koleksiyon.Ad))">
+                    @koleksiyon.Ad (@koleksiyon.Adet)
+                </MudChip>
+            }
+        </div>
+
+        @if (ModelFiltreleri.Count > 0)
+        {
+            <div class="mb-6 d-flex flex-wrap gap-2 align-center">
+                @foreach (var model in ModelFiltreleri)
+                {
+                    var secili = string.Equals(_seciliModelSlug, model.Slug, StringComparison.OrdinalIgnoreCase);
+                    <MudChip T="string"
+                             Variant="@(secili ? Variant.Filled : Variant.Text)"
+                             Color="@(secili ? Color.Secondary : Color.Default)"
+                             Size="Size.Small"
+                             OnClick="@(() => ModelDegistir(model.Slug))">
+                        @model.Ad
+                    </MudChip>
+                }
+            </div>
+        }
+
+        <div class="mb-6 d-flex flex-wrap gap-4 align-center">
+            <div class="filter-select-wrapper">
+                <MudSelect T="int?" Label="@dil.T("urunler.urunAilesi", "Ürün Ailesi")"
+                           Clearable="true"
+                           Value="_seciliUrunAilesiId"
+                           ValueChanged="@UrunAilesiDegisti"
+                           Variant="Variant.Outlined"
+                           AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var aile in _urunAileleri)
+                    {
+                        <MudSelectItem Value="aile.Id">@aile.Ad</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div class="filter-select-wrapper">
+                <MudSelect T="int?" Label="@dil.T("urunler.kategori", "Kategori / Seri")"
+                           Clearable="true"
+                           Value="_seciliKategoriId"
+                           ValueChanged="@KategoriDegisti"
+                           Variant="Variant.Outlined"
+                           AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var kat in _kategoriler)
+                    {
+                        <MudSelectItem Value="kat.Id">@kat.Ad</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div class="filter-search-wrapper">
+                <MudTextField T="string" Label="@dil.T("urunler.arama", "Banyo dolabı ara...")"
+                              Value="_arama"
+                              ValueChanged="@AramaDegisti"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search"
+                              Variant="Variant.Outlined" />
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_hataMesaji))
+        {
+            <MudAlert Severity="Severity.Error" Class="my-4">
+                @dil.T("urunler.hata", "Ürünler yüklenirken bir hata oluştu.") @_hataMesaji
+            </MudAlert>
+        }
+
+        @if (_yukleniyor)
+        {
+            <MudProgressLinear Indeterminate="true" Class="my-8" />
+        }
+        else if (!_urunler.Any())
+        {
+            <MudAlert Severity="Severity.Info" Class="my-4">
+                @dil.T("urunler.urunYok", "Bu filtrelere uygun banyo dolabı bulunamadı.")
+            </MudAlert>
+
+            <MudCard Elevation="2" Class="mt-4 mb-6">
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" md="6" Class="d-flex flex-column justify-center">
+                            <MudText Typo="Typo.h5" Class="mb-3">
+                                @dil.T("urunler.demoBaslik", "PIEDRA Banyo Dolabı Konfigüratörü")
+                            </MudText>
+                            <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-4">
+                                @dil.T("urunler.demoAciklama", "3D banyo dolabı konfigüratörümüzü deneyin. Parça seçin, malzeme ve renk uygulayın, sonucu gerçek zamanlı görün.")
+                            </MudText>
+                            <div>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+                                           Href="/vitrin/piedra"
+                                           StartIcon="@Icons.Material.Filled.ViewInAr">
+                                    @dil.T("urunler.konfiguratorDene", "3D Konfigüratörü Dene")
+                                </MudButton>
+                            </div>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudImage Src="/medya/gold-katalog/sayfa-006-hero.png" Alt='@dil.T("urunler.demoGorselAlt", "PIEDRA Konfigüratör")' ObjectFit="ObjectFit.Cover" Class="rounded-lg" Elevation="2" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        }
+        else
+        {
+            @foreach (var grup in GruplanmisUrunler())
+            {
+                <section class="urun-koleksiyon-grubu" id="@grup.Baslik.ToLowerInvariant()">
+                    <div class="urun-koleksiyon-grubu__baslik">
+                        <MudText Typo="Typo.h4">@grup.Baslik</MudText>
+                        <MudText Typo="Typo.body2">@grup.Aciklama</MudText>
+                        <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">
+                            @string.Format(dil.T("urunler.grupAdet", "{0} model"), grup.Urunler.Count)
+                        </MudChip>
+                    </div>
+
+                    <MudGrid>
+                        @foreach (var urun in grup.Urunler)
+                        {
+                            <MudItem xs="12" sm="6" md="4" lg="3">
+                                <UrunListeKart Urun="urun" OnClick="@(() => PopupAc(urun))" />
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </section>
+            }
+        }
+    </MudContainer>
+</div>

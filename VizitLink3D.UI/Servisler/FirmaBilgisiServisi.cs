@@ -99,11 +99,17 @@ public class FirmaBilgisiServisi
 
     private static string MarkaVarligiNormalizeEt(string deger)
     {
-        if (deger.Equals("/img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
-            || deger.Equals("img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        if (deger.Equals("/medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
+            || deger.Equals("medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
         {
-            return "/img/goldbanyo-logo.png";
+            return "/medya/brand/goldbanyo-logo.png";
         }
+
+        // Eski /img/ yolu → yeni /medya/brand/
+        if (deger.StartsWith("/img/", StringComparison.OrdinalIgnoreCase))
+            return "/medya/brand/" + deger["/img/".Length..];
+        if (deger.StartsWith("img/", StringComparison.OrdinalIgnoreCase))
+            return "/medya/brand/" + deger["img/".Length..];
 
         return deger;
     }

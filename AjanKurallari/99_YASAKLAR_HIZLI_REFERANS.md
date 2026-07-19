@@ -60,6 +60,7 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 | 34 | SignalR Hub adı İngilizce | `06_API...` §13 |
 | 35 | `EnableDetailedErrors = true` (prod) | `07_Guvenlik...` §12 |
 | 36 | PDF dosyasını ham tarayıcı sekmesinde açmak | `03_Razor...` §5.7 (BlazorPdf/PdfGosterici) |
+| 37 | Medya havuzu dışında dosya barındırmak | `wwwroot/medya/` altında kategorili klasörler (`/medya/urunler/`, `/medya/anasayfa/`, `/medya/haberler/`, `/medya/kurumsal/`, `/medya/slaytlar/`, `/medya/iletisim/`, `/medya/3d-modeller/`). `img/`, `models/`, `goldbanyo/` yasak. Hariç: PWA manifest, `_framework/`, `css/sistem/`, `css/temalar/`, `js/`, `i18n/` |
 
 ---
 
@@ -113,7 +114,7 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 
 ---
 
-*Versiyon: 1.2 — 39 yasak | Bağlı: tüm AjanKurallari/ dosyaları (özellikle 13_Tema_Sablon_Sistemi.md)*
+*Versiyon: 1.3 — 44 yasak | Bağlı: tüm AjanKurallari/ dosyaları (özellikle 13_Tema_Sablon_Sistemi.md)*
 *Bu liste sürekli güncellenir — yeni yasak çıkarsa Ustam'ın onayıyla eklenir.*
 
 ---
@@ -122,10 +123,10 @@ status: TAMAM — tablo + referans (içerik doldurulmuş; sürekli güncellenir)
 
 | # | Yasak | Referans |
 |---|---|---|
-| 37 | Tema adı/açıklaması hardcoded (Türkçe/İngilizce) | §13 §19.8 |
-| 38 | Tema CSS'inde `content: "metin"` (Türkçe/İngilizce) | §13 §19.8 |
-| 39 | Türkçe karakter desteklemeyen font (Bebas Neue, Anton) gövde metin için | §13 §19.8 |
-| 40 | Tema değişikliği sırasında `DilServisi` cache'ini temizleme | §13 §19.8 |
-| 41 | Tema manifest'inde `ad`/`aciklama` çeviri anahtarı olmadan yazma | §13 §19.8 |
-| 42 | Tema-bazlı sayfada `dil.T(...)` yerine hardcoded string | §05 §13 §19.8 |
-| 43 | `:root[data-tema-id="..."]` seçicisinde dil-bağımlı içerik | §13 §19.8 |
+| 38 | Tema adı/açıklaması hardcoded (Türkçe/İngilizce) | §13 §19.8 |
+| 39 | Tema CSS'inde `content: "metin"` (Türkçe/İngilizce) | §13 §19.8 |
+| 40 | Türkçe karakter desteklemeyen font (Bebas Neue, Anton) gövde metin için | §13 §19.8 |
+| 41 | Tema değişikliği sırasında `DilServisi` cache'ini temizleme | §13 §19.8 |
+| 42 | Tema manifest'inde `ad`/`aciklama` çeviri anahtarı olmadan yazma | §13 §19.8 |
+| 43 | Tema-bazlı sayfada `dil.T(...)` yerine hardcoded string | §05 §13 §19.8 |
+| 44 | `:root[data-tema-id="..."]` seçicisinde dil-bağımlı içerik | §13 §19.8 |

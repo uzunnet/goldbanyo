@@ -6,6 +6,12 @@
         "-y",
         "chrome-devtools-mcp@latest"
       ]
+    },
+    "stitch": {
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "AQ.Ab8RN6LaGVrmBtoygIoCyRz7JXNhL5WcUOj_HobrpTbAV40Azw"
+      }
     }
   }
 }

@@ -1,0 +1,171 @@
+@page "/kapi-modelleri"
+@layout VizitLink3DDuzen
+
+@*
+ * KapiModelleri — VizitLink3D iç mekan kapı ürünleri kataloğu.
+ * API'den kapı kategorisindeki modelleri dinamik olarak yükler.
+ *@
+
+<PageTitle>@dil.T("kapi.baslikPage", "Kapı Modelleri | VizitLink3D — İç Mekan Kapı Koleksiyonu")</PageTitle>
+
+<VizitLink3D.UI.Bilesenler.HeroSlider SayfaKodu="kapi-modelleri" />
+
+@* ─── FİLTRE ÇUBUĞU ─────────────────────────────────────────────────────── *@
+<MudPaper Elevation="1" Square="true" Style="position:sticky; top:64px; z-index:100; border-bottom:1px solid #EEEEEE;">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6 py-4">
+        <MudStack Row="true" Spacing="4" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
+                @foreach (var kat in _altKategoriler)
+                {
+                    <MudChip T="string" Text="@kat"
+                             Variant="@(_secilenKategori == kat ? Variant.Filled : Variant.Outlined)"
+                             Color="@(_secilenKategori == kat ? Color.Dark : Color.Default)"
+                             Size="Size.Small" OnClick="@(() => KategoriSec(kat))"
+                             Style="font-family:'Manrope',sans-serif; font-weight:600; letter-spacing:0.05em; border-radius:0;" />
+                }
+            </MudStack>
+            <MudTextField Value="_aramaMetni"
+                          ValueChanged="@((string v) => AramaYap(v))"
+                          Placeholder="@dil.T("kapi.modelAra", "Model ara...")"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Outlined.Search"
+                          Variant="Variant.Outlined" Margin="Margin.Dense"
+                          Style="min-width:200px;" />
+        </MudStack>
+    </MudContainer>
+</MudPaper>
+
+@* ─── ÜRÜN IZGARASI ─────────────────────────────────────────────────────── *@
+<MudPaper Elevation="0" Square="true" Style="background:#F8F8F8; min-height:60vh; padding:64px 0;">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+
+        @if (_yukleniyor)
+        {
+            <MudGrid Spacing="4">
+                @for (int i = 0; i < 6; i++)
+                {
+                    <MudItem Class="anim-scroll-yukari" xs="12" sm="6" md="4">
+                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="360px" Class="mb-2" />
+                        <MudSkeleton SkeletonType="SkeletonType.Text" Width="70%" Height="16px" Class="mb-1" />
+                        <MudSkeleton SkeletonType="SkeletonType.Text" Width="40%" Height="14px" />
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+        else if (!_filtrelenmisModeller.Any())
+        {
+            <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height:300px;">
+                <MudIcon Icon="@Icons.Material.Outlined.DoorFront" Size="Size.Large" Style="color:#CCCCCC;" />
+                <MudText Typo="Typo.h6" Style="color:#999; font-family:'Manrope',sans-serif;">
+                    @dil.T("kapi.bulunamadi", "Kapı modeli bulunamadı.")
+                </MudText>
+                <MudText Typo="Typo.body2" Style="color:#BBB; font-family:'Manrope',sans-serif;" Class="mb-4">
+                    @dil.T("kapi.katalogGuncellenecek", "Kataloğumuz yakında güncellenecektir. Detaylı bilgi için iletişime geçin.")
+                </MudText>
+                <MudButton Href="/vizitlink3d/iletisim" Variant="Variant.Filled" Class="vizit-btn-birincil vizit-text-glow-gold vizit-border-glow">
+                    @dil.T("menu.iletisim", "İletişime Geç")
+                </MudButton>
+            </MudStack>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="mb-6"
+                     Style="font-family:'Manrope',sans-serif; color:#666; letter-spacing:0.05em; text-transform:uppercase;">
+                @_toplamUrun @dil.T("kapi.modelGosteriliyor", "model gösteriliyor")
+                — @dil.T("kapi.sayfa", "Sayfa") @_aktifSayfa / @_toplamSayfa
+            </MudText>
+
+            <MudGrid Spacing="5">
+                @foreach (var model in _filtrelenmisModeller)
+                {
+                    <MudItem xs="12" sm="6" md="@MudItemMd" lg="@MudItemLg" @key="model.Id" Class="anim-scroll-yukari gb-anim-fade-up">
+                        <a href="@DetayUrl(model)" class="vizit-glass-card vizit-border-glow" style="text-decoration:none; display:block;">
+                            <div style="position:relative; overflow:hidden;">
+                                <MudImage Src="@(string.IsNullOrEmpty(model.AnaGorselUrl) ? "/images/vizitlink3d/default-kapi.webp" : model.AnaGorselUrl)"
+                                          Alt="@model.ModelAdi" ObjectFit="ObjectFit.Cover"
+                                          Style="width:100%; aspect-ratio: 3/4; object-fit:cover; transition:transform 0.5s ease;" />
+                                @if (model.YeniMi)
+                                {
+                                    <span style="position:absolute; top:12px; left:12px; background:#000; color:#fff; font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.1em; padding:4px 10px;">@dil.T("kapi.yeni", "YENİ")</span>
+                                }
+                            </div>
+                            <div style="padding:20px 0 8px;">
+                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-1">
+                                    <MudText Typo="Typo.subtitle1" Style="font-family:'Noto Serif',serif; font-weight:700; color:#000;">
+                                        @model.ModelAdi
+                                    </MudText>
+                                    <MudText Typo="Typo.caption" Style="font-family:'Manrope',sans-serif; font-weight:600; background:#F0F0F0; padding:2px 8px; color:#333;">
+                                        @model.ModelKodu
+                                    </MudText>
+                                </MudStack>
+                                @if (!string.IsNullOrEmpty(model.OnYazi))
+                                {
+                                    <MudText Typo="Typo.body2" Style="color:#666; font-family:'Manrope',sans-serif;">
+                                        @model.OnYazi
+                                    </MudText>
+                                }
+                            </div>
+                        </a>
+                    </MudItem>
+                }
+            </MudGrid>
+
+            @if (_sayfalamaAktif && _toplamSayfa > 1)
+            {
+                <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Class="mt-10 mb-4" Spacing="2">
+                    <MudButton Variant="Variant.Outlined"
+                               Disabled="@(_aktifSayfa <= 1)"
+                               OnClick="@(() => SayfaDegistir(_aktifSayfa - 1))"
+                               StartIcon="@Icons.Material.Outlined.ChevronLeft">
+                        @dil.T("kapi.onceki", "Önceki")
+                    </MudButton>
+
+                    @for (int i = 1; i <= _toplamSayfa; i++)
+                    {
+                        var sayfaNo = i;
+                        <MudButton Variant="@(_aktifSayfa == sayfaNo ? Variant.Filled : Variant.Outlined)"
+                                   Color="@(_aktifSayfa == sayfaNo ? Color.Dark : Color.Default)"
+                                   OnClick="@(() => SayfaDegistir(sayfaNo))"
+                                   Class="vizit-btn-ikincil vizit-border-glow">
+                            @sayfaNo
+                        </MudButton>
+                    }
+
+                    <MudButton Variant="Variant.Outlined"
+                               Disabled="@(_aktifSayfa >= _toplamSayfa)"
+                               OnClick="@(() => SayfaDegistir(_aktifSayfa + 1))"
+                               EndIcon="@Icons.Material.Outlined.ChevronRight">
+                        @dil.T("kapi.sonraki", "Sonraki")
+                    </MudButton>
+                </MudStack>
+            }
+        }
+    </MudContainer>
+</MudPaper>
+
+@if (!_yukleniyor && _cokIzlenenler.Any())
+{
+    <MudPaper Elevation="0" Square="true" Class="gb-kapak-populer-bolum">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="px-6">
+            <MudText Typo="Typo.overline" Class="vizit-vurgu-metin vizit-text-glow-gold mb-3 d-block">
+                @dil.T("kapi.cokIzlenenler", "ÇOK İZLENENLER")
+            </MudText>
+            <MudText Typo="Typo.h3" Class="vizit-bolum-baslik vizit-text-glow-gold mb-6">
+                @dil.T("kapi.musteriDikkatiniCekenler", "Müşterilerin Dikkatini Çekenler")
+            </MudText>
+            <MudGrid Spacing="4">
+                @foreach (var model in _cokIzlenenler)
+                {
+                    <MudItem xs="12" sm="6" md="3" @key="model.Id">
+                        <NavLink href="@DetayUrl(model)" class="gb-kapak-populer-kart">
+                            <img src="@model.AnaGorselUrl" alt="@model.ModelAdi" loading="lazy" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; padding: 0; border-radius: 8px;" onerror="this.onerror=null;this.src='/medya/vizitlink3d_default.png';" />
+                            <span>@model.ModelKodu</span>
+                            <strong>@model.ModelAdi</strong>
+                        </NavLink>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudPaper>
+}
+

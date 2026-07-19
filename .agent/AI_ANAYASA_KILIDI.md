@@ -1,4 +1,4 @@
-# AI ANAYASA KİLİDİ — DesaDoor
+# AI ANAYASA KİLİDİ — VIZITLINK3D
 
 > **Kaynak:** KURALLAR.md (Vizitlink v11.0 adaptasyonu)
 > **Geçerlilik:** DEĞİŞTİRİLEMEZ. Her AI asistanı uymak zorundadır.
@@ -56,4 +56,4 @@ AI asistanı şu durumlarda **hemen durur ve Ustam'ı uyarır:**
 ---
 
 *Bu dosya silinemez, değiştirilemez. Sadece Ustam'ın onayı ile güncellenir.*
-*Oluşturma: 2026-05-14 | DesaDoor Projesi*
+*Oluşturma: 2026-05-14 | VIZITLINK3D Projesi*

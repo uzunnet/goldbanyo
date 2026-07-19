@@ -13,7 +13,6 @@ public partial class UrunYonetimi : ComponentBase
     [Inject] private ApiIstemcisi Api { get; set; } = default!;
     [Inject] private ISnackbar Snackbar { get; set; } = default!;
     [Inject] private IDialogService DialogServisi { get; set; } = default!;
-    [Inject] private AdminCeviriServisi AdminCeviriServisi { get; set; } = default!;
 
     private List<Urun> _liste = [];
     private List<Urun> _filtreliListe = [];
@@ -24,9 +23,6 @@ public partial class UrunYonetimi : ComponentBase
     private bool _formAcik;
     private bool _duzenlemeModu;
     private bool _kaydediliyor;
-    private bool _tumCeviriCalisiyor;
-    private int _ceviriIslenen;
-    private int _ceviriToplam;
     private Urun _form = new();
     private int? _duzenlenenId;
     private string _arama = string.Empty;
@@ -36,8 +32,6 @@ public partial class UrunYonetimi : ComponentBase
     private int _sayfaBasinaAdet = 12;
     private bool _sayfalamaAktif = true;
     private int _aktifSayfa = 1;
-    private AdminCeviriAnalizSonucu? _ceviriAnalizi;
-
     protected override async Task OnInitializedAsync() => await Yukle();
 
     private async Task Yukle()
@@ -45,7 +39,6 @@ public partial class UrunYonetimi : ComponentBase
         _yukleniyor = true;
         StateHasChanged();
         await Task.WhenAll(UrunleriYukleAsync(), ReferansVerileriYukleAsync());
-        _ceviriAnalizi = await AdminCeviriServisi.AnalizEtAsync("Urun", _liste.Select(UrunCeviriKaydiOlustur));
         _aktifSayfa = 1;
         _yukleniyor = false;
     }
@@ -246,105 +239,6 @@ public partial class UrunYonetimi : ComponentBase
     {
         return _aileler.FirstOrDefault(a => a.Id == aileId)?.Ad
                ?? string.Format(dil.T("admin.urun.aileId", "Aile #{0}"), aileId);
-    }
-
-    private async Task AICeviriDialogAc(Urun u)
-    {
-        var parameters = new DialogParameters
-        {
-            { "KayitId", u.Id },
-            { "TabloOnEki", "Urun" },
-            { "CevrilecekAlanlar", new Dictionary<string, string>
-                {
-                    { "Ad", u.Ad ?? "" },
-                    { "KisaAciklama", u.KisaAciklama ?? "" },
-                    { "Aciklama", u.Aciklama ?? "" },
-                    { "SeoBaslik", u.SeoBaslik ?? "" },
-                    { "SeoAciklama", u.SeoAciklama ?? "" }
-                }
-            }
-        };
-
-        var dialog = await DialogServisi.ShowAsync<VizitLink3D.UI.Bilesenler.Admin.AICeviriDialog>(dil.T("admin.ai.ceviri", "Yapay Zeka Çevirisi"), parameters);
-        await dialog.Result;
-        await Yukle();
-    }
-
-    private async Task TumuCevir()
-    {
-        if (_tumCeviriCalisiyor || _liste.Count == 0)
-            return;
-
-        _tumCeviriCalisiyor = true;
-        _ceviriIslenen = 0;
-        _ceviriToplam = _liste.Count;
-        StateHasChanged();
-
-        try
-        {
-            var sonuc = await AdminCeviriServisi.TumunuCevirAsync(
-                "Urun",
-                _liste.Select(UrunCeviriKaydiOlustur),
-                async (islenen, toplam) =>
-                {
-                    _ceviriIslenen = islenen;
-                    _ceviriToplam = toplam;
-                    StateHasChanged();
-                    await Task.CompletedTask;
-                });
-
-            await Yukle();
-            Snackbar.Add(
-                string.Format(
-                    dil.T("admin.ceviri.topluTamamlandi", "Toplu çeviri tamamlandı. {0} kayıtta toplam {1} alan çevrildi."),
-                    sonuc.CevrilenKayitSayisi,
-                    sonuc.CevrilenAlanSayisi),
-                Severity.Success);
-        }
-        finally
-        {
-            _tumCeviriCalisiyor = false;
-            _ceviriIslenen = 0;
-            _ceviriToplam = 0;
-            StateHasChanged();
-        }
-    }
-
-    private async Task UrunuTumDillerdeCevir(Urun urun)
-    {
-        if (_tumCeviriCalisiyor)
-            return;
-
-        _tumCeviriCalisiyor = true;
-        StateHasChanged();
-
-        try
-        {
-            var sonuc = await AdminCeviriServisi.KaydiCevirAsync("Urun", UrunCeviriKaydiOlustur(urun));
-            await Yukle();
-            Snackbar.Add(
-                sonuc.CevrilenAlanSayisi == 0
-                    ? dil.T("admin.ceviri.kayitGuncel", "Bu kayıt için tüm diller zaten güncel.")
-                    : string.Format(dil.T("admin.ceviri.kayitTamamlandi", "Kayıt çevirisi tamamlandı. {0} alan güncellendi."), sonuc.CevrilenAlanSayisi),
-                sonuc.CevrilenAlanSayisi == 0 ? Severity.Info : Severity.Success);
-        }
-        finally
-        {
-            _tumCeviriCalisiyor = false;
-            StateHasChanged();
-        }
-    }
-
-    private static AdminCeviriKaydi UrunCeviriKaydiOlustur(Urun urun)
-    {
-        return new AdminCeviriKaydi(urun.Id,
-        [
-            new("Ad", urun.Ad ?? string.Empty),
-            new("KisaAciklama", urun.KisaAciklama ?? string.Empty),
-            new("Aciklama", urun.Aciklama ?? string.Empty),
-            new("SeoBaslik", urun.SeoBaslik ?? string.Empty),
-            new("SeoAciklama", urun.SeoAciklama ?? string.Empty)
-        ]);
     }
 
     private IEnumerable<Urun> GosterilecekUrunler()

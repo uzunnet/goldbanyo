@@ -31,6 +31,12 @@ public class AuditInterceptor : SaveChangesInterceptor
         if (baglam is not VizitLink3DDbContext vt)
             return;
 
+        // Uygulama açılışındaki tohumlama ve bakım işlemleri bir kullanıcı isteği değildir.
+        // Bunları denetlemek hem anlamsız kayıt üretir hem de SQLite üzerinde açılışı kilitleyebilir.
+        var httpBaglami = _httpErisimi?.HttpContext;
+        if (httpBaglami is null)
+            return;
+
         var degisiklikler = baglam.ChangeTracker.Entries()
             .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
             // AuditLog entity'sinin kendisi icin AuditLog yazma (sonsuz dongu / recursion onleyici).
@@ -41,9 +47,9 @@ public class AuditInterceptor : SaveChangesInterceptor
         if (!degisiklikler.Any())
             return;
 
-        var ip = _httpErisimi?.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-        var tarayici = _httpErisimi?.HttpContext?.Request?.Headers?.UserAgent.ToString();
-        var correlationId = _httpErisimi?.HttpContext?.TraceIdentifier;
+        var ip = httpBaglami.Connection.RemoteIpAddress?.ToString();
+        var tarayici = httpBaglami.Request.Headers.UserAgent.ToString();
+        var correlationId = httpBaglami.TraceIdentifier;
 
         foreach (var giris in degisiklikler)
         {

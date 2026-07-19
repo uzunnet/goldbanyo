@@ -11,6 +11,8 @@ using VizitLink3D.UI.Servisler;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace VizitLink3D.UI.Pages.Admin;
@@ -117,7 +119,102 @@ public partial class UrunSihirbazi : ComponentBase
 
     // ─── LISTE ──────────────────────────────────────────────────────────
     private List<Urun> _urunListesi = [];
+    private string _urunAramaMetni = string.Empty;
     private bool _listeYukleniyor = true;
+    private string _urunSiralaOlcutu = "ad";
+    private bool _urunSiralaArtan = true;
+    private int _sayfaBoyutu = 10;
+    private int _seciliSayfa = 1;
+    private int _secilenListeAileId;
+    private string _secilenListeAltKategori = "tum";
+
+    private List<Urun> FiltreliUrunler => _urunListesi
+        .Where(SeciliUrunGrubundaMi)
+        .Where(urun => _secilenListeAltKategori == "tum" || UrunListeAltKategoriAdi(urun) == _secilenListeAltKategori)
+        .Where(urun => string.IsNullOrWhiteSpace(_urunAramaMetni) ||
+            urun.Kod.Contains(_urunAramaMetni, StringComparison.OrdinalIgnoreCase) ||
+            urun.Ad.Contains(_urunAramaMetni, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    private IEnumerable<string> FiltrelenebilirAltKategoriler => _urunListesi
+        .Where(SeciliUrunGrubundaMi)
+        .Select(UrunListeAltKategoriAdi)
+        .Where(ad => !string.IsNullOrWhiteSpace(ad))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .OrderBy(ad => ad);
+
+    private bool SeciliUrunGrubundaMi(Urun urun)
+    {
+        return _secilenListeAileId == 0 || urun.UrunAilesiId == _secilenListeAileId;
+    }
+
+    private IEnumerable<Urun> SiralanmisUrunler => _urunSiralaOlcutu switch
+    {
+        "tarih" => _urunSiralaArtan
+            ? FiltreliUrunler.OrderBy(urun => urun.OlusturulmaTarihi)
+            : FiltreliUrunler.OrderByDescending(urun => urun.OlusturulmaTarihi),
+        "kategori" => _urunSiralaArtan
+            ? FiltreliUrunler.OrderBy(UrunKategoriAdi).ThenBy(urun => urun.Ad)
+            : FiltreliUrunler.OrderByDescending(UrunKategoriAdi).ThenByDescending(urun => urun.Ad),
+        _ => _urunSiralaArtan
+            ? FiltreliUrunler.OrderBy(urun => urun.Ad)
+            : FiltreliUrunler.OrderByDescending(urun => urun.Ad)
+    };
+
+    private int ToplamSayfa => Math.Max(1, (int)Math.Ceiling(FiltreliUrunler.Count / (double)_sayfaBoyutu));
+
+    private IEnumerable<Urun> SayfadakiUrunler => SiralanmisUrunler
+        .Skip((_seciliSayfa - 1) * _sayfaBoyutu)
+        .Take(_sayfaBoyutu);
+
+    private string UrunKategoriAdi(Urun urun) => urun.UrunKategoriId is int kategoriId
+        ? _kategoriler.FirstOrDefault(kategori => kategori.Id == kategoriId)?.Ad ?? "-"
+        : _aileler.FirstOrDefault(aile => aile.Id == urun.UrunAilesiId)?.Ad ?? "-";
+
+    private string UrunAltKategoriAdi(Urun urun)
+    {
+        if (urun.UrunKategoriId is int kategoriId)
+        {
+            var kategoriAdi = _kategoriler.FirstOrDefault(kategori => kategori.Id == kategoriId)?.Ad;
+            if (!string.IsNullOrWhiteSpace(kategoriAdi)) return kategoriAdi;
+        }
+
+        var ad = urun.Ad ?? string.Empty;
+        var kod = urun.Kod ?? string.Empty;
+        if (ad.Contains("Lake", StringComparison.OrdinalIgnoreCase) || kod.StartsWith("DSL", StringComparison.OrdinalIgnoreCase)) return "Lake";
+        if (ad.Contains("Membran", StringComparison.OrdinalIgnoreCase) || kod.StartsWith("DSM", StringComparison.OrdinalIgnoreCase)) return "Membran";
+        if (ad.Contains("Özel Seri", StringComparison.OrdinalIgnoreCase)) return "Özel Seri";
+        if (kod.StartsWith("NRD", StringComparison.OrdinalIgnoreCase)) return "NRD";
+        if (kod.StartsWith("LND", StringComparison.OrdinalIgnoreCase)) return "LND";
+        if (kod.StartsWith("KNR", StringComparison.OrdinalIgnoreCase)) return "KNR";
+        return string.Empty;
+    }
+
+    private string UrunListeAltKategoriAdi(Urun urun)
+    {
+        var kapakAilesiId = _aileler.FirstOrDefault(aile => aile.Slug.Equals("kapak", StringComparison.OrdinalIgnoreCase))?.Id;
+        if (_secilenListeAileId != kapakAilesiId) return UrunAltKategoriAdi(urun);
+
+        if (urun.UrunKategoriId is int kategoriId)
+        {
+            var kategori = _kategoriler.FirstOrDefault(k => k.Id == kategoriId);
+            var ustKategori = kategori?.UstKategoriId is int ustId ? _kategoriler.FirstOrDefault(k => k.Id == ustId) : null;
+            var kokKategori = ustKategori ?? kategori;
+
+            if (kokKategori?.Slug is "lake") return "Lake";
+            if (kokKategori?.Slug is "membran") return "Membran";
+            if (kokKategori?.Slug is "ozel-kapaklar" or "kapak-ozel") return "Özel Kapaklar";
+        }
+
+        var altKategori = UrunAltKategoriAdi(urun);
+        if (altKategori.Contains("Lake", StringComparison.OrdinalIgnoreCase)) return "Lake";
+        if (altKategori.Contains("Membran", StringComparison.OrdinalIgnoreCase)) return "Membran";
+        return "Özel Kapaklar";
+    }
+
+    private string ListeAileMetni(int aileId) => aileId == 0
+        ? dil.T("ortak.tumu", "Tümü")
+        : _aileler.FirstOrDefault(aile => aile.Id == aileId)?.Ad ?? string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -234,10 +331,11 @@ public partial class UrunSihirbazi : ComponentBase
         await Tab2Yukle();
     }
 
-    private async Task GaleriEkle()
+    private Task GaleriEkle()
     {
         // Havuz dışı URL ekleme kapatildi.
         Snackbar.Add(dil.T("admin.urun.sadeceHavuz", "Yalnızca medya havuzundan seçim yapabilirsiniz."), Severity.Info);
+        return Task.CompletedTask;
     }
 
     private async Task TeknikCizimMedyaSec()
@@ -627,15 +725,6 @@ public partial class UrunSihirbazi : ComponentBase
         Navigation.NavigateTo("/admin/urun-yonetimi");
     }
 
-    private async Task SekmeDegisti(int index)
-    {
-        _aktifSekme = index;
-        if (index == 1) await Tab2Yukle();
-        else if (index == 2) await Tab3Yukle();
-        else if (index == 3) await Tab4Yukle();
-        else if (index == 4) await Tab5Yukle();
-    }
-
     // ─── TAB 5 ──────────────────────────────────────────────────────────
     private async Task Tab5Yukle()
     {
@@ -785,5 +874,67 @@ public partial class UrunSihirbazi : ComponentBase
     {
         _kaydedildi = true; _aktifSekme = 1;
         _urunId = id; var u = await Api.GetAsync<Urun>($"api/urunler/{id}"); if (u != null) _urunForm = u;
+    }
+
+    private void UrunAramaYap(KeyboardEventArgs _)
+    {
+        _seciliSayfa = 1;
+        StateHasChanged();
+    }
+
+    private Task SiralamayiDegistir(string olcut)
+    {
+        _urunSiralaOlcutu = olcut;
+        _seciliSayfa = 1;
+        return Task.CompletedTask;
+    }
+
+    private Task AltKategoriFiltresiniDegistir(string kategori)
+    {
+        _secilenListeAltKategori = kategori;
+        _seciliSayfa = 1;
+        return Task.CompletedTask;
+    }
+
+    private Task AileFiltresiniDegistir(int aileId)
+    {
+        _secilenListeAileId = aileId;
+        _secilenListeAltKategori = "tum";
+        _seciliSayfa = 1;
+        return Task.CompletedTask;
+    }
+
+    private void SiralamaYonunuDegistir()
+    {
+        _urunSiralaArtan = !_urunSiralaArtan;
+        _seciliSayfa = 1;
+    }
+
+    private Task SayfaBoyutunuDegistir(int sayfaBoyutu)
+    {
+        _sayfaBoyutu = sayfaBoyutu;
+        _seciliSayfa = 1;
+        return Task.CompletedTask;
+    }
+
+    private Task SayfaDegistir(int sayfa)
+    {
+        _seciliSayfa = sayfa;
+        return Task.CompletedTask;
+    }
+
+    private string UrunGorselUrl(Urun urun)
+    {
+        if (urun.AnaGorselMedyaId is long medyaId && medyaId > 0)
+            return $"{Api.ApiBaseUrl}/api/medya/dosya/{medyaId}";
+        return "/medya/vizitlink3d_default.png";
+    }
+
+    private async Task DuzenleVeGorselleriAc(int id)
+    {
+        await Duzenle(id);
+        await Sekme2();
+        await InvokeAsync(StateHasChanged);
+        await js.InvokeVoidAsync("window.scrollTo", new { top = 0, behavior = "smooth" });
     }
 }

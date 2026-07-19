@@ -446,7 +446,7 @@ else if (_aktifSekme == 6)
                         <MudText Typo="Typo.subtitle1">@dil.T("admin.urun.temelBilgiler", "Temel bilgiler")</MudText>
                         <MudText><MudIcon Icon="@Icons.Material.Filled.Label" Size="Size.Small" /> @_urunForm.Ad</MudText>
                         <MudText><MudIcon Icon="@Icons.Material.Filled.QrCode" Size="Size.Small" /> @_urunForm.Kod</MudText>
-                        <MudText><MudIcon Icon="@Icons.Material.Filled.AttachMoney" Size="Size.Small" /> @_urunForm.Fiyat.ToString()</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.AttachMoney" Size="Size.Small" /> @(_urunForm.Fiyat?.ToString("N2") ?? "—")</MudText>
                     </MudCard>
                 </MudItem>
                 <MudItem xs="12" md="4">
@@ -520,59 +520,104 @@ else if (_aktifSekme == 7)
             </MudText>
         </CardHeaderContent>
         <CardHeaderActions>
-            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Warning">@_urunListesi.Count @dil.T("ortak.kayit", "kayıt")</MudChip>
+            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Warning">@FiltreliUrunler.Count @dil.T("ortak.kayit", "kayıt")</MudChip>
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
+        <MudGrid Class="mb-3">
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="_urunAramaMetni" Immediate="true" OnKeyUp="UrunAramaYap"
+                              Label="@dil.T("admin.urun.hizliAra", "Ürün kodu veya adıyla hızlı ara")"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+            </MudItem>
+            <MudItem xs="12" md="2">
+                <MudSelect T="string" Value="_urunSiralaOlcutu" ValueChanged="SiralamayiDegistir"
+                           Label="@dil.T("admin.urun.siralama", "Sıralama")" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("ad")">@dil.T("admin.urun.adaGore", "Ada göre")</MudSelectItem>
+                    <MudSelectItem Value="@("tarih")">@dil.T("admin.urun.tariheGore", "Tarihe göre")</MudSelectItem>
+                    <MudSelectItem Value="@("kategori")">@dil.T("admin.urun.kategoriyeGore", "Kategoriye göre")</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="2">
+                <MudSelect T="int" Value="_secilenListeAileId" ValueChanged="AileFiltresiniDegistir"
+                           ToStringFunc="ListeAileMetni"
+                           Label="@dil.T("admin.urun.urunGrubuFiltresi", "Ürün grubu")" Variant="Variant.Outlined">
+                    <MudSelectItem T="int" Value="0">@dil.T("ortak.tumu", "Tümü")</MudSelectItem>
+                    @foreach (var aile in _aileler.OrderBy(aile => aile.Ad))
+                    {
+                        <MudSelectItem T="int" Value="@aile.Id">@aile.Ad</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="2">
+                <MudSelect T="string" Value="_secilenListeAltKategori" ValueChanged="AltKategoriFiltresiniDegistir"
+                           Label="@dil.T("admin.urun.altKategoriFiltresi", "Alt kategori")" Variant="Variant.Outlined">
+                    <MudSelectItem T="string" Value="@("tum")">@dil.T("ortak.tumu", "Tümü")</MudSelectItem>
+                    @foreach (var kategori in FiltrelenebilirAltKategoriler)
+                    {
+                        <MudSelectItem T="string" Value="@kategori">@kategori</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="8" md="2">
+                <MudSelect T="int" Value="_sayfaBoyutu" ValueChanged="SayfaBoyutunuDegistir"
+                           Label="@dil.T("admin.urun.sayfaBoyutu", "Sayfa başına")" Variant="Variant.Outlined">
+                    <MudSelectItem Value="10">10</MudSelectItem>
+                    <MudSelectItem Value="25">25</MudSelectItem>
+                    <MudSelectItem Value="50">50</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="4" md="1" Class="d-flex align-center justify-center">
+                <MudTooltip Text="@dil.T("admin.urun.siralamaYonu", "Sıralama yönünü değiştir")">
+                    <MudIconButton Icon="@(_urunSiralaArtan ? Icons.Material.Filled.ArrowUpward : Icons.Material.Filled.ArrowDownward)"
+                                   Color="Color.Primary" OnClick="SiralamaYonunuDegistir" />
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
         @if (_listeYukleniyor)
         {
             <MudProgressLinear Indeterminate="true" />
         }
         else
         {
-            <MudTable T="Urun" Items="_urunListesi" Dense="true" Hover="true" Bordered="false" Class="admin-urun-tablosu">
-                <HeaderContent>
-                    <MudTh>@dil.T("admin.urun.gorsel", "Görsel")</MudTh>
-                    <MudTh>@dil.T("admin.urun.kod", "Kod")</MudTh>
-                    <MudTh>@dil.T("admin.urun.urun", "Ürün")</MudTh>
-                    <MudTh>@dil.T("admin.urun.kategori", "Kategori")</MudTh>
-                    <MudTh>@dil.T("admin.urun.durum", "Durum")</MudTh>
-                    <MudTh>@dil.T("ortak.islemler", "İşlemler")</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    @{
-                        var uGorsel = context.AnaGorselMedyaId is long uid and > 0
-                            ? $"/api/medya/dosya/{uid}"
-                            : "/medya/gold-katalog/sayfa-006-hero.png";
-                    }
-                    <MudTd DataLabel="@dil.T("admin.urun.gorsel", "Görsel")">
-                        <img src="@uGorsel" width="72" height="54"
-                             style="object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.08);"
-                             onerror="this.onerror=null;this.src='/medya/vizitlink3d_default.png';" />
-                    </MudTd>
-                    <MudTd DataLabel="@dil.T("admin.urun.kod", "Kod")">@context.Kod</MudTd>
-                    <MudTd DataLabel="@dil.T("admin.urun.urun", "Ürün")">
-                        <MudText Typo="Typo.subtitle2" Class="mb-1">@context.Ad</MudText>
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">@context.KisaAciklama</MudText>
-                    </MudTd>
-                    <MudTd DataLabel="@dil.T("admin.urun.kategori", "Kategori")">
-                        <MudChip T="string" Size="Size.Small" Color="@(context.UrunAilesiId == 2 ? Color.Secondary : Color.Primary)" Variant="Variant.Filled">
-                            @(context.UrunAilesiId == 2 ? dil.T("admin.urun.aileKapi", "Kapı") : dil.T("admin.urun.aileKapak", "Kapak"))
-                        </MudChip>
-                    </MudTd>
-                    <MudTd DataLabel="@dil.T("admin.urun.durum", "Durum")">
-                        <MudChip T="string" Size="Size.Small" Color="@(context.AktifMi ? Color.Success : Color.Default)" Variant="Variant.Outlined">
-                            @(context.AktifMi ? dil.T("ortak.yayinda", "Yayında") : dil.T("ortak.pasif", "Pasif"))
-                        </MudChip>
-                    </MudTd>
-                    <MudTd DataLabel="@dil.T("ortak.islemler", "İşlemler")">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(() => Duzenle(context.Id))" />
-                    </MudTd>
-                </RowTemplate>
-                <NoRecordsContent>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">@dil.T("admin.urun.kayitBulunamadi", "Kayıt bulunamadı.")</MudText>
-                </NoRecordsContent>
-            </MudTable>
+            <MudDataGrid Items="@SayfadakiUrunler" Dense="true" Hover="true" Striped="true" Class="admin-urun-tablosu">
+                <Columns>
+                    <TemplateColumn Title="@dil.T("admin.urun.gorsel", "Görsel")" Sortable="false">
+                        <CellTemplate>
+                            <MudTooltip Placement="Placement.Right">
+                                <ChildContent>
+                                    <MudImage Src="@UrunGorselUrl(context.Item)" Alt="@context.Item.Ad" ObjectFit="ObjectFit.Cover" Width="72" Height="54" Class="rounded-lg border-solid border mud-border-lines" />
+                                </ChildContent>
+                                <TooltipContent>
+                                    <MudImage Src="@UrunGorselUrl(context.Item)" Alt="@context.Item.Ad" ObjectFit="ObjectFit.Contain" Style="max-width: 300px; max-height: 300px" />
+                                </TooltipContent>
+                            </MudTooltip>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Kod" Title="@dil.T("admin.urun.kod", "Kod")" />
+                    <PropertyColumn Property="x => x.Ad" Title="@dil.T("admin.urun.ad", "Ürün")" />
+                    <TemplateColumn Title="@dil.T("admin.urun.kategori", "Kategori")" Sortable="false">
+                        <CellTemplate>@UrunKategoriAdi(context.Item)</CellTemplate>
+                    </TemplateColumn>
+
+                    <TemplateColumn Title="@dil.T("ortak.islemler", "İşlemler")" Sortable="false">
+                        <CellTemplate>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => Duzenle(context.Item.Id)" Class="mr-2">
+                                @dil.T("ortak.duzenle", "Düzenle")
+                            </MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.PermMedia" OnClick="() => DuzenleVeGorselleriAc(context.Item.Id)">
+                                @dil.T("admin.urun.gorselleriAc", "Görseller")
+                            </MudButton>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+            @if (ToplamSayfa > 1)
+            {
+                <MudStack Row="true" Justify="Justify.Center" Class="mt-4">
+                    <MudPagination Count="@ToplamSayfa" Selected="@_seciliSayfa" SelectedChanged="SayfaDegistir" />
+                </MudStack>
+            }
         }
     </MudCardContent>
 </MudCard>

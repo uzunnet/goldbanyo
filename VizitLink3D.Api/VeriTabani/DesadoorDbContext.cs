@@ -207,6 +207,8 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
             .IsUnique();
 
         // === SOFT DELETE GLOBAL QUERY FILTER (anayasa §8) ===
+        modelOlusturucu.Entity<MenuOgesi>()
+            .HasQueryFilter(m => !m.SilindiMi);
         modelOlusturucu.Entity<KapakModeli>()
             .HasQueryFilter(k => !k.SilindiMi);
         modelOlusturucu.Entity<Kullanici>()

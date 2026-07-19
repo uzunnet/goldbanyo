@@ -84,6 +84,8 @@ Birden fazla görev = birden fazla dosya birlikte yüklenir.
 3. **Menü yapısı (`MenuOgeleri`) ve admin yapısı (Admin sayfaları, kontrolcüleri, yetkilendirme akışı) ASLA silinmez.** Sadece **ekleme** veya (gerekirse) soft-delete (`SilindiMi=true`) yapılır; fiziksel `DELETE` çalıştırılmaz.
 4. Bu 3 madde için **kullanıcı onayı bile istisna oluşturmaz** — konu geçtiğinde ajan silme dışında bir yol (migration, ekleme, `WHERE`'li güncelleme, soft delete) önerir; gerekiyorsa Ustam'a doğrudan açıklar ama silme işlemini kendisi yapmaz.
 
+5. **Tüm statik dosyalar (resim, PDF, 3D model, video) medya havuzunda kategorili olmak zorundadır.** `wwwroot/medya/` altında konu bazlı klasörler kullanılır (`/medya/urunler/`, `/medya/anasayfa/`, `/medya/haberler/`, `/medya/kurumsal/`, `/medya/slaytlar/`, `/medya/iletisim/`, `/medya/3d-modeller/` vb.). Medya havuzu dışında kalan hiyerarşik dosya (img/, models/, goldbanyo/ vb.) taşınır. Model kafasına göre CSS/JS dosyası eklenmez — CSS token sistemi (`tokens.css`) ve tema yapısı kullanılır.
+
 > Not: Daha önce (bu projede) tek seferlik, kullanıcı onaylı ve dar kapsamlı bir `MenuOgeleri` temizliği yapılmıştı (reseed tetiklemek için). Bu emirden sonra böyle bir işlem **bir daha yapılmaz** — reseed gerekiyorsa kod tarafında guard/versiyon mantığıyla çözülür, veri silinerek değil.
 
 ---
@@ -113,6 +115,7 @@ Birden fazla görev = birden fazla dosya birlikte yüklenir.
 18. **Magic number / string** — `const` veya `appsettings`.
 19. **Çeviri için `wwwroot/i18n/*.json`** — DB + FusionCache.
 20. **DB yedeği almadan migration / büyük değişiklik**.
+21. **Medya havuzu dışında dosya barındırmak** — tüm görseller, PDF'ler, 3D modeller `wwwroot/medya/` altında kategorili klasörlerde olmalı. `img/`, `models/`, `goldbanyo/` gibi dağınık klasörler yasaktır. Hariç: `favicon.png`, `icon-192.png` (PWA manifest), `index.html`, `manifest.json`, `service-worker.js`, `_framework/`, `css/sistem/`, `css/temalar/`, `js/`, `i18n/`.
 
 Tam liste: `AjanKurallari/99_YASAKLAR_HIZLI_REFERANS.md`.
 

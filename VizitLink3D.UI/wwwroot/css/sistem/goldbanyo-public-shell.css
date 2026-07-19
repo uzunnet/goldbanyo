@@ -248,11 +248,11 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 24px;
+  padding: 7px 18px;
   border-radius: var(--tema-kose-sm, 2px);
   background: var(--tema-vurgu, #d4af37);
   color: var(--tema-metin-ters, #121414);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -270,19 +270,19 @@ a { color: inherit; text-decoration: none; }
 .gb-header__actions {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .gb-dil-secici {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid var(--tema-cam-cizgi, rgba(255, 255, 255, 0.10));
   background: var(--tema-cam-bg, rgba(255, 255, 255, 0.04));
   color: var(--tema-metin-ikincil, #c4c7c7);
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -303,7 +303,7 @@ a { color: inherit; text-decoration: none; }
 .gb-mod-secici {
   display: inline-flex;
   align-items: center;
-  padding: 4px;
+  padding: 3px;
   border-radius: 999px;
   border: 1px solid var(--tema-cam-cizgi, rgba(255,255,255,0.1));
   background: var(--tema-cam-bg, rgba(255,255,255,0.04));
@@ -313,10 +313,10 @@ a { color: inherit; text-decoration: none; }
   border: 0;
   background: transparent;
   color: var(--tema-metin-soluk, #8e9192);
-  min-height: 34px;
-  padding: 0 14px;
+  min-height: 28px;
+  padding: 0 10px;
   border-radius: 999px;
-  font-size: 0.76rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

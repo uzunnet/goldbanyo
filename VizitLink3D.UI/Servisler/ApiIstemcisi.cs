@@ -3,6 +3,7 @@ using VizitLink3D.UI.Models;
 using VizitLink3D.Ortak.Modeller;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Net;
 using Microsoft.JSInterop;
 
 namespace VizitLink3D.UI.Servisler;
@@ -10,7 +11,6 @@ namespace VizitLink3D.UI.Servisler;
 public class ApiIstemcisi(HttpClient http, IJSRuntime js)
 {
     private const string VarsayilanFirmaSlug = "goldbanyo";
-
     public Uri? BaseAddress => http.BaseAddress;
     public string ApiBaseUrl => http.BaseAddress?.ToString().TrimEnd('/') ?? "http://localhost:5115";
 
@@ -52,12 +52,25 @@ public class ApiIstemcisi(HttpClient http, IJSRuntime js)
         {
             await BasliklariAyarlaAsync();
             var response = await http.GetAsync(url);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return default;
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 var errBody = await response.Content.ReadAsStringAsync();
                 Console.Error.WriteLine($"[ApiIstemcisi GET] Url: {url}, Status: {response.StatusCode}, Body: {errBody?.Substring(0, Math.Min(200, errBody?.Length ?? 0))}");
                 return default;
             }
+
+            var medyaTuru = response.Content.Headers.ContentType?.MediaType;
+            if (medyaTuru is null || !medyaTuru.Contains("json", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Error.WriteLine($"[ApiIstemcisi GET] Url: {url}, beklenen JSON yerine {medyaTuru ?? "bilinmeyen içerik"} döndü.");
+                return default;
+            }
+
             var json = await response.Content.ReadAsStringAsync();
             var yanit = JsonSerializer.Deserialize<Cevap<T>>(json, _jsonOpts);
             return yanit?.BasariliMi == true ? yanit.Veri : default;

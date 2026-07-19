@@ -1,0 +1,70 @@
+@page "/projeler"
+@layout VizitLink3D.UI.Layout.VizitLink3DDuzen
+
+<PageTitle>@dil.T("projeler.baslik", "Projelerimiz") — VizitLink3D</PageTitle>
+
+<VizitLink3D.UI.Bilesenler.HeroSlider SayfaKodu="projeler" />
+
+@if (_yukleniyor)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16 d-flex justify-center align-center gb-yukleniyor-alani">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
+}
+else if (!_projeler.Any())
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16 text-center gb-bos-liste-alani">
+        <MudIcon Icon="@Icons.Material.Filled.Construction" Size="Size.Large" Class="gb-bos-liste-ikon" />
+        <MudText Typo="Typo.h6" Class="mt-4">@dil.T("projeler.bos", "Henuz proje eklenmemis.")</MudText>
+    </MudContainer>
+}
+else
+{
+    <MudPaper Elevation="0" Class="vizit-bg-primary-container gb-liste-hero d-flex align-center justify-center pa-4">
+        <MudStack AlignItems="AlignItems.Center" Spacing="4" Class="text-center">
+            <MudText Typo="Typo.h2" Class="vizit-bolum-baslik vizit-text-glow-gold">@_heroBaslik</MudText>
+            <MudText Typo="Typo.subtitle1" Class="vizit-govde-metin gb-hero-aciklama">
+                @_heroAciklama
+            </MudText>
+        </MudStack>
+    </MudPaper>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16">
+        <MudGrid Spacing="4">
+            @foreach (var proje in _projeler)
+            {
+                <MudItem Class="anim-scroll-yukari" xs="12" sm="6" md="4" lg="3">
+                    <MudCard Elevation="0" Class="vizit-glass-card vizit-border-glow">
+                        <MudLink Href="@ProjeDetayBaglantisi(proje)" Underline="Underline.None" Class="vizit-glass-card vizit-border-glow-baglanti">
+                            <div class="gb-gorsel-kutu">
+                                <img src="@ProjeGorseli(proje)" alt="@proje.Baslik" />
+                                @if (!string.IsNullOrEmpty(proje.MusteriLogo))
+                                {
+                                    <div class="gb-proje-logo-kutu">
+                                        <img src="@ProjeLogo(proje)" alt="@proje.MusteriAdi" class="gb-proje-logo" />
+                                    </div>
+                                }
+                                <div class="gb-hover-overlay">
+                                    <MudText Typo="Typo.h6" Class="vizit-glass-card vizit-border-glow-baslik">@proje.Baslik</MudText>
+                                    @if (!string.IsNullOrEmpty(proje.KisaAciklama))
+                                    {
+                                        <MudText Typo="Typo.body2" Class="vizit-glass-card vizit-border-glow-ozet">@proje.KisaAciklama</MudText>
+                                    }
+                                    @if (!string.IsNullOrEmpty(proje.MusteriSehir))
+                                    {
+                                        <MudChip T="string" Size="Size.Small" Class="vizit-glass-card vizit-border-glow-konum">@proje.MusteriSehir</MudChip>
+                                    }
+                                    <span class="gb-kart-detay-btn">
+                                        @dil.T("projeler.detayiIncele", "Detayi incele")
+                                        <MudIcon Icon="@Icons.Material.Filled.ArrowRightAlt" Size="Size.Small" />
+                                    </span>
+                                </div>
+                            </div>
+                        </MudLink>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+}
+

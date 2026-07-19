@@ -11,6 +11,7 @@ public partial class CeviriYonetimi : ComponentBase
     [Inject] private ApiIstemcisi Api { get; set; } = default!;
     [Inject] private ISnackbar Snackbar { get; set; } = default!;
     [Inject] private DilServisi Dil { get; set; } = default!;
+    [Inject] private IDialogService Dialog { get; set; } = default!;
 
     private List<Ceviri> _liste = [];
     private List<Ceviri> _filtreliListe = [];
@@ -37,7 +38,9 @@ public partial class CeviriYonetimi : ComponentBase
         StateHasChanged();
         _liste = await Api.GetAsync<List<Ceviri>>("api/dil/admin/tum-ceviriler") ?? [];
         _diller = _liste.Select(x => x.Dil).Distinct().OrderBy(x => x).ToList();
-        _bolumler = _liste.Select(x => x.Bolum).Where(x => !string.IsNullOrEmpty(x)).Distinct().OrderBy(x => x).Cast<string>().ToList();
+        _bolumler = _liste.Select(x => x.Bolum)
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Distinct().OrderBy(x => x).OfType<string>().ToList();
         _tumDiller = await Api.GetAsync<List<Dil>>("api/dil/admin/diller") ?? [];
         FiltreUygula(null);
         _yukleniyor = false;
@@ -47,7 +50,18 @@ public partial class CeviriYonetimi : ComponentBase
     {
         d.AktifMi = yeniDurum;
         await Api.PutAsync<object>($"api/dil/admin/dil/{d.Id}", new { d.AktifMi, d.SiraNo });
-        Snackbar.Add($"{d.Ad} {(d.AktifMi ? "aktif" : "pasif")} edildi.", Severity.Success);
+        Snackbar.Add(
+            string.Format(Dil.T("admin.ceviri.dilGuncellendi", "{0} basariyla guncellendi."), d.Ad),
+            Severity.Success);
+    }
+
+    async Task DilSiraGuncelle(Dil d, int yeniSira)
+    {
+        d.SiraNo = yeniSira;
+        await Api.PutAsync<object>($"api/dil/admin/dil/{d.Id}", new { d.AktifMi, SiraNo = yeniSira });
+        Snackbar.Add(
+            string.Format(Dil.T("admin.ceviri.dilSiraGuncellendi", "{0} sirasi {1} olarak guncellendi."), d.Ad, yeniSira),
+            Severity.Success);
     }
 
     void AramaYap(KeyboardEventArgs e) => FiltreUygula(null);
@@ -84,6 +98,17 @@ public partial class CeviriYonetimi : ComponentBase
         _filtreliListe = sorgu.ToList();
     }
 
+    void YeniCeviri()
+    {
+        _form = new Ceviri
+        {
+            Dil = _filtreDil ?? "tr",
+            Bolum = _filtreBolum ?? ""
+        };
+        _duzenlenenId = null;
+        _formAcik = true;
+    }
+
     void Duzenle(Ceviri c)
     {
         _form = new Ceviri
@@ -103,9 +128,13 @@ public partial class CeviriYonetimi : ComponentBase
         _kaydediliyor = true;
         try
         {
-            await Api.PutAsync<Ceviri>("api/dil/admin/ceviri", _form);
+            if (_duzenlenenId.HasValue)
+                await Api.PutAsync<Ceviri>("api/dil/admin/ceviri", _form);
+            else
+                await Api.PostAsync<object>("api/dil/ceviri-ekle", new { _form.Anahtar, _form.Dil, _form.Deger, _form.Bolum });
+
             _formAcik = false;
-            Snackbar.Add("Çeviri güncellendi.", Severity.Success);
+            Snackbar.Add(Dil.T("admin.ceviri.kaydedildi", "Ceviri basariyla kaydedildi."), Severity.Success);
             await Yukle();
         }
         catch (Exception ex) { Snackbar.Add($"Hata: {ex.Message}", Severity.Error); }
@@ -114,9 +143,24 @@ public partial class CeviriYonetimi : ComponentBase
 
     void FormIptal() { _formAcik = false; }
 
+    async Task Sil(Ceviri c)
+    {
+        bool? onay = await Dialog.ShowMessageBoxAsync(
+            Dil.T("admin.ceviri.silOnayBaslik", "Ceviri Sil"),
+            string.Format(Dil.T("admin.ceviri.silOnayMesaj", "{0} anahtarli ceviriyi silmek istediginize emin misiniz?"), c.Anahtar),
+            yesText: Dil.T("admin.ceviri.evet", "Evet"),
+            cancelText: Dil.T("admin.ceviri.iptal", "Iptal"));
+
+        if (onay != true) return;
+
+        await Api.DeleteAsync($"api/dil/admin/ceviri/{c.Id}");
+        Snackbar.Add(Dil.T("admin.ceviri.silindi", "Ceviri basariyla silindi."), Severity.Success);
+        await Yukle();
+    }
+
     /// <summary>
-    /// Secili dil ve bolumdeki eksik cevirileri AI ile tamamlar.
-    /// TR anahtari varsa EN karsiligini AI uretip kaydeder.
+    /// Filtredeki kaynak dilden hedef dile eksik cevirileri AI ile tamamlar.
+    /// Filtre yoksa TR -> EN varsayilan mantigi kullanir.
     /// </summary>
     async Task AIileTopluCevir()
     {
@@ -124,15 +168,21 @@ public partial class CeviriYonetimi : ComponentBase
         _aiCeviriliyor = true;
         _aiCeviriSayac = 0;
 
-        // TR'de olup EN'de eksik olanlari bul
-        var trAnahtarlar = _liste.Where(c => c.Dil == "tr").Select(c => c.Anahtar).ToHashSet();
-        var enAnahtarlar = _liste.Where(c => c.Dil == "en").Select(c => c.Anahtar).ToHashSet();
-        var eksikler = _liste.Where(c => c.Dil == "tr" && !string.IsNullOrWhiteSpace(c.Deger) && !enAnahtarlar.Contains(c.Anahtar)).Take(20).ToList();
+        var kaynakDil = _filtreDil ?? "tr";
+        var hedefDil = "en";
+
+        var kaynakAnahtarlar = _liste.Where(c => c.Dil == kaynakDil).Select(c => c.Anahtar).ToHashSet();
+        var hedefAnahtarlar = _liste.Where(c => c.Dil == hedefDil).Select(c => c.Anahtar).ToHashSet();
+        var eksikler = _liste
+            .Where(c => c.Dil == kaynakDil && !string.IsNullOrWhiteSpace(c.Deger) && !hedefAnahtarlar.Contains(c.Anahtar))
+            .Take(20)
+            .ToList();
+
         _aiCeviriToplam = eksikler.Count;
 
         if (_aiCeviriToplam == 0)
         {
-            Snackbar.Add("Eksik ceviri bulunamadi.", Severity.Info);
+            Snackbar.Add(Dil.T("admin.ceviri.eksikBulunamadi", "Eksik ceviri bulunamadi."), Severity.Info);
             _aiCeviriliyor = false;
             return;
         }
@@ -142,17 +192,24 @@ public partial class CeviriYonetimi : ComponentBase
             _aiCeviriSayac++;
             StateHasChanged();
 
-            var ceviri = await Dil.AICeviriAlAsync(c.Anahtar, c.Deger, "en");
+            var ceviri = await Dil.AICeviriAlAsync(c.Anahtar, c.Deger, hedefDil);
             if (ceviri != null)
             {
-                // DB'ye kalici kaydet
-                await Api.PostAsync<object>("api/dil/ceviri-ekle", new { Anahtar = c.Anahtar, Dil = "en", Deger = ceviri });
+                await Api.PostAsync<object>("api/dil/ceviri-ekle", new
+                {
+                    Anahtar = c.Anahtar,
+                    Dil = hedefDil,
+                    Deger = ceviri,
+                    Bolum = c.Bolum
+                });
             }
-            await Task.Delay(200); // LLM'yi bogmamak icin
+            await Task.Delay(200);
         }
 
         await Yukle();
         _aiCeviriliyor = false;
-        Snackbar.Add($"{_aiCeviriToplam} ceviri AI ile tamamlandi.", Severity.Success);
+        Snackbar.Add(
+            string.Format(Dil.T("admin.ceviri.aiTamamlandi", "{0} ceviri AI ile tamamlandi."), _aiCeviriToplam),
+            Severity.Success);
     }
 }

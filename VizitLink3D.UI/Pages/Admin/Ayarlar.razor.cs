@@ -18,9 +18,9 @@ public partial class Ayarlar : ComponentBase
     private bool _yukleniyorSayfa = true;
 
     private string _firmaAdi = "VizitLink3D";
-    private string _logoUrl = "/img/goldbanyo-logo-kare.png";
+    private string _logoUrl = "/medya/brand/goldbanyo-logo-kare.png";
     private string _faviconUrl = "/favicon.png";
-    private string LogoOnizlemeYolu => MarkaVarligiNormalizeEt(_logoUrl, "/img/goldbanyo-logo-kare.png");
+    private string LogoOnizlemeYolu => MarkaVarligiNormalizeEt(_logoUrl, "/medya/brand/goldbanyo-logo-kare.png");
     private string FaviconOnizlemeYolu => MarkaVarligiNormalizeEt(_faviconUrl, "/favicon.png");
 
     private string _siteBasligi = "Firma vitrini";
@@ -52,7 +52,7 @@ public partial class Ayarlar : ComponentBase
         if (firma != null)
         {
             _firmaAdi = string.IsNullOrWhiteSpace(firma.Ad) ? _firmaAdi : firma.Ad;
-            _logoUrl = MarkaVarligiNormalizeEt(firma.Logo, "/img/goldbanyo-logo-kare.png");
+            _logoUrl = MarkaVarligiNormalizeEt(firma.Logo, "/medya/brand/goldbanyo-logo-kare.png");
             _faviconUrl = MarkaVarligiNormalizeEt(firma.Favicon, "/favicon.png");
             _siteBasligi = string.IsNullOrWhiteSpace(firma.Ad) ? _siteBasligi : $"{firma.Ad} - Kurumsal Site";
         }
@@ -68,7 +68,7 @@ public partial class Ayarlar : ComponentBase
             var sozluk = await Api.GetAsync<Dictionary<string, string>>("api/sayfa-icerigi/ayarlar");
             if (sozluk != null)
             {
-                _logoUrl = MarkaVarligiNormalizeEt(sozluk.GetValueOrDefault("LogoUrl", _logoUrl), "/img/goldbanyo-logo-kare.png");
+                _logoUrl = MarkaVarligiNormalizeEt(sozluk.GetValueOrDefault("LogoUrl", _logoUrl), "/medya/brand/goldbanyo-logo-kare.png");
                 _faviconUrl = MarkaVarligiNormalizeEt(sozluk.GetValueOrDefault("FaviconUrl", _faviconUrl), "/favicon.png");
                 _siteBasligi = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("SiteBasligi", _siteBasligi), _siteBasligi);
                 _aciklama = MarkaMetniNormalizeEt(sozluk.GetValueOrDefault("Aciklama", _aciklama), _aciklama);
@@ -324,10 +324,10 @@ public partial class Ayarlar : ComponentBase
             ? varsayilanDeger
             : deger;
 
-        if (normalizeDeger.Equals("/img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
-            || normalizeDeger.Equals("img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        if (normalizeDeger.Equals("/medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
+            || normalizeDeger.Equals("medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
         {
-            normalizeDeger = "/img/goldbanyo-logo-kare.png";
+            normalizeDeger = "/medya/brand/goldbanyo-logo-kare.png";
         }
 
         if (normalizeDeger.StartsWith("http://", StringComparison.OrdinalIgnoreCase)

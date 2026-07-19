@@ -27,7 +27,7 @@ public partial class PiedraAnaliz : ComponentBase, IAsyncDisposable
     {
         if (ilkRender)
         {
-            await UcBoyut.Baslat(KanvasId, "/models/piedra.glb", "#E8E4DF");
+            await UcBoyut.Baslat(KanvasId, "/medya/3d-modeller/piedra.glb", "#E8E4DF");
             _yuklendi = true;
             StateHasChanged();
         }

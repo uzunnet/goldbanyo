@@ -78,21 +78,43 @@ public partial class UrunDetay : ComponentBase, IDisposable
     /// <summary>
     /// Admin panelinden urune ozel yuklenen teknik cizim varsa onu kullan;
     /// yoksa (eski) statik katalog gorseline dus.
+    /// NOT: Medya havuzu yollari relative (<c>/api/medya/dosya/96</c>) gelir,
+    ///      Blazor WASM tarayicida API portuna gidebilmesi icin
+    ///      <c>Api.ApiBaseUrl</c> ile absolute URL'e cevrilir.
     /// </summary>
-    private string? TeknikCizimUrl =>
-        Medyalar.FirstOrDefault(m => m.MedyaTuru.Equals("TeknikCizim", StringComparison.OrdinalIgnoreCase))?.MedyaUrl
-            ?? _katalogVerisi?.TeknikGorselUrl;
+    private string? TeknikCizimUrl
+    {
+        get
+        {
+            var teknikCizim = Medyalar.FirstOrDefault(m =>
+                m.MedyaTuru.Equals("TeknikCizim", StringComparison.OrdinalIgnoreCase));
+
+            if (teknikCizim?.MedyaUrl is { } url && !string.IsNullOrWhiteSpace(url))
+            {
+                // Medya havuzu yoluysa (/api/medya/dosya/...) absolute URL'e cevir
+                if (MedyaHavuzuYolu.HavuzDosyaYoluMu(url))
+                    return MedyaHavuzuYolu.TamUrl(url, Api.ApiBaseUrl);
+
+                // Dogrudan dosya yoluysa (/medya/gold-katalog/...) direkt don
+                return url;
+            }
+
+            // Fallback: eski statik katalog gorseli (bos / null ise gosterme)
+            var fallback = _katalogVerisi?.TeknikGorselUrl;
+            return string.IsNullOrWhiteSpace(fallback) ? null : fallback;
+        }
+    }
 
     private static readonly Dictionary<string, string> OzellikIkonEslesmesi = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["Soft Kapak"] = "/img/ozellik-ikonlar/soft-kapak.svg",
-        ["MDF Ahşap"] = "/img/ozellik-ikonlar/mdf.svg",
-        ["Dokunmatik Ledli Ayna"] = "/img/ozellik-ikonlar/dokunmatik.svg",
-        ["Kolay Montaj"] = "/img/ozellik-ikonlar/kolay-montaj.svg",
-        ["Kolay Temizlenir"] = "/img/ozellik-ikonlar/kolay-temizlik.svg",
-        ["Renk Seçenekleri"] = "/img/ozellik-ikonlar/renk.svg",
-        ["Stone Lavabo"] = "/img/ozellik-ikonlar/stone-lavabo.svg",
-        ["Cam Lavabo"] = "/img/ozellik-ikonlar/stone-lavabo.svg",
+        ["Soft Kapak"] = "/medya/brand/ozellik-ikonlar/soft-kapak.svg",
+        ["MDF Ahşap"] = "/medya/brand/ozellik-ikonlar/mdf.svg",
+        ["Dokunmatik Ledli Ayna"] = "/medya/brand/ozellik-ikonlar/dokunmatik.svg",
+        ["Kolay Montaj"] = "/medya/brand/ozellik-ikonlar/kolay-montaj.svg",
+        ["Kolay Temizlenir"] = "/medya/brand/ozellik-ikonlar/kolay-temizlik.svg",
+        ["Renk Seçenekleri"] = "/medya/brand/ozellik-ikonlar/renk.svg",
+        ["Stone Lavabo"] = "/medya/brand/ozellik-ikonlar/stone-lavabo.svg",
+        ["Cam Lavabo"] = "/medya/brand/ozellik-ikonlar/stone-lavabo.svg",
     };
 
     private static string? OzellikIkonuBul(string ozellik) =>

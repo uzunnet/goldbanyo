@@ -9,6 +9,7 @@ namespace VizitLink3D.Api.Kontrolculer.Sistem;
 
 [ApiController]
 [Route("api/dashboard")]
+[Authorize]
 public class DashboardKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 {
     public record ZiyaretKaydetIstegi(string Sayfa, string? Referer);
@@ -17,6 +18,11 @@ public class DashboardKontrolcu(VizitLink3DDbContext vt) : ControllerBase
     public async Task<Cevap<DashboardOzeti>> OzetGetir()
     {
         var simdi = DateTime.UtcNow;
+        // AuditLog append-only bir tablodur. En yüksek Id, toplam kaydı verir ve
+        // birincil anahtar indeksinden okunduğu için dashboard'u bloklamaz.
+        var sonDenetimKaydiId = await vt.AuditLoglar
+            .AsNoTracking()
+            .MaxAsync(a => (long?)a.Id) ?? 0;
         var ozet = new DashboardOzeti
         {
             ToplamUrun = await vt.Urunler.CountAsync(u => !u.SilindiMi),
@@ -44,7 +50,7 @@ public class DashboardKontrolcu(VizitLink3DDbContext vt) : ControllerBase
             ToplamDil = await vt.Diller.CountAsync(d => d.AktifMi),
             ToplamKullanici = await vt.Kullanicilar.CountAsync(k => k.AktifMi),
             ToplamAI = await vt.AISaglayicilari.CountAsync(a => a.AktifMi),
-            ToplamLog = await vt.AuditLoglar.CountAsync(),
+            ToplamLog = sonDenetimKaydiId > int.MaxValue ? int.MaxValue : (int)sonDenetimKaydiId,
             BekleyenIs = await vt.IsTakipKayitlari.CountAsync(i => i.Durum != "Tamamlandi" && i.Durum != "Iptal"),
             KritikIs = await vt.IsTakipKayitlari.CountAsync(i => i.Oncelik == "Kritik" && i.Durum != "Tamamlandi"),
             ToplamIs = await vt.IsTakipKayitlari.CountAsync(),
@@ -183,7 +189,9 @@ public class DashboardKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 
         var denetimHam = await vt.AuditLoglar
             .AsNoTracking()
-            .OrderByDescending(a => a.ZamanDamgasi)
+            // AuditLog append-only olduğundan Id sırası, kayıt sırasıdır.
+            // Böylece SQLite birincil anahtar indeksini kullanır.
+            .OrderByDescending(a => a.Id)
             .Take(12)
             .Select(a => new { a.Eylem, a.KullaniciId, a.IPAdresi, a.Tarayici, a.ZamanDamgasi })
             .ToListAsync();

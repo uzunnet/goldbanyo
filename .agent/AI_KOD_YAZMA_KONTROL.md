@@ -1,4 +1,4 @@
-# AI KOD YAZMA KONTROL LİSTESİ — DesaDoor
+# AI KOD YAZMA KONTROL LİSTESİ — VIZITLINK3D
 
 > **Kullanım:** Her kod yazma işleminden ÖNCE bu liste kontrol edilir.
 > **Kaynak:** KURALLAR.md + .agent/AI_ANAYASA_KILIDI.md
@@ -71,4 +71,4 @@ Bir kural ihlali tespit edildiğinde şu formatta uyarı verilir:
 
 ---
 
-*Oluşturma: 2026-05-14 | DesaDoor Projesi*
+*Oluşturma: 2026-05-14 | VIZITLINK3D Projesi*

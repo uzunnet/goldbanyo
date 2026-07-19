@@ -34,9 +34,9 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
     private string _varsayilanDil = "tr";
     private bool KoyuTemaMi => _aktifTemaModu != "acik";
 
-    private string _logoUrl = "/img/goldbanyo-logo-kare.png";
+    private string _logoUrl = "/medya/brand/goldbanyo-logo-kare.png";
     private string _faviconUrl = "/favicon.png";
-    private string LogoTamYolu => MarkaVarligiNormalizeEt(_logoUrl, "/img/goldbanyo-logo-kare.png");
+    private string LogoTamYolu => MarkaVarligiNormalizeEt(_logoUrl, "/medya/brand/goldbanyo-logo-kare.png");
     private string FaviconTamYolu => MarkaVarligiNormalizeEt(_faviconUrl, "/favicon.png");
 
     // Endüstriyel karanlık tema — degiskenler.css --admin-* token'larından beslenir
@@ -47,6 +47,37 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
             Primary = "#C5A059",
             Secondary = "#1A1A27",
             Tertiary = "#d4a574",
+            AppbarBackground = "#111111",
+            AppbarText = "#ffffff",
+            DrawerBackground = "#0a0a0a",
+            DrawerText = "rgba(255,255,255,0.70)",
+            Background = "#0a0a0a",
+            Surface = "#111111",
+            TextPrimary = "#ffffff",
+            TextSecondary = "rgba(255,255,255,0.70)",
+            TextDisabled = "rgba(255,255,255,0.30)",
+            ActionDefault = "rgba(255,255,255,0.50)",
+            ActionDisabled = "rgba(255,255,255,0.15)",
+            DrawerIcon = "rgba(255,255,255,0.60)",
+            Divider = "rgba(255,255,255,0.06)",
+            DividerLight = "rgba(255,255,255,0.04)",
+            TableLines = "rgba(255,255,255,0.06)",
+            TableStriped = "rgba(255,255,255,0.02)",
+            TableHover = "rgba(255,255,255,0.04)",
+            LinesDefault = "rgba(255,255,255,0.06)",
+            LinesInputs = "rgba(255,255,255,0.10)",
+            OverlayDark = "rgba(0,0,0,0.50)",
+            OverlayLight = "rgba(255,255,255,0.02)",
+            Error = "#DC2626",
+            Success = "#22C55E",
+            Warning = "#F59E0B",
+            Info = "#3B82F6"
+        },
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#C5A059",
+            Secondary = "#d4a574",
+            Tertiary = "#a0784c",
             AppbarBackground = "#111111",
             AppbarText = "#ffffff",
             DrawerBackground = "#0a0a0a",
@@ -155,7 +186,7 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
             }
             if (!string.IsNullOrWhiteSpace(firma?.Logo))
             {
-                _logoUrl = MarkaVarligiNormalizeEt(firma.Logo, "/img/goldbanyo-logo-kare.png");
+                _logoUrl = MarkaVarligiNormalizeEt(firma.Logo, "/medya/brand/goldbanyo-logo-kare.png");
             }
             if (!string.IsNullOrWhiteSpace(firma?.Favicon))
             {
@@ -175,7 +206,7 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
                 }
                 if (sozluk.TryGetValue("LogoUrl", out var logo) && !string.IsNullOrEmpty(logo))
                 {
-                    _logoUrl = MarkaVarligiNormalizeEt(logo, "/img/goldbanyo-logo-kare.png");
+                    _logoUrl = MarkaVarligiNormalizeEt(logo, "/medya/brand/goldbanyo-logo-kare.png");
                 }
                 if (sozluk.TryGetValue("FaviconUrl", out var favicon) && !string.IsNullOrEmpty(favicon))
                 {
@@ -197,10 +228,10 @@ public partial class AdminDuzen : LayoutComponentBase, IDisposable
             ? varsayilanDeger
             : deger;
 
-        if (normalizeDeger.Equals("/img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
-            || normalizeDeger.Equals("img/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
+        if (normalizeDeger.Equals("/medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase)
+            || normalizeDeger.Equals("medya/brand/goldbanyo-logo.svg", StringComparison.OrdinalIgnoreCase))
         {
-            normalizeDeger = "/img/goldbanyo-logo-kare.png";
+            normalizeDeger = "/medya/brand/goldbanyo-logo-kare.png";
         }
 
         if (normalizeDeger.StartsWith("http://", StringComparison.OrdinalIgnoreCase)

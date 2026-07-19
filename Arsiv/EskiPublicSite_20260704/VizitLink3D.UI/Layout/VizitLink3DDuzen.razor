@@ -1,0 +1,239 @@
+@inherits LayoutComponentBase
+@inject FirmaBilgisiServisi firmaBilgisi
+
+@*
+ * VizitLink3DDuzen — vizitlink3d firmasına özel Blazor layout bileşenidir.
+ * Üst nav, alt footer ve sayfa geçiş animasyonlarını içerir.
+ * Vizitlink'in YonetimDuzeni veya KamusalDuzen'inden tamamen bağımsızdır.
+ * Tüm menü öğeleri API'den dinamik olarak çekilir; admin panelden yönetilir.
+ * SaaS: Firma logosu, adı, tema, rengi dinamik API'den çekilir.
+ *@
+
+@* Admin panelden seçilen favicon — index.html'deki varsayılanın üzerine yazar *@
+@if (!string.IsNullOrWhiteSpace(_faviconUrl))
+{
+    <HeadContent>
+        <link rel="icon" href="@FaviconTamYolu" />
+    </HeadContent>
+}
+
+<MudThemeProvider Theme="@_tema" IsDarkMode="@_isDarkMode" />
+<MudSnackbarProvider />
+<MudDialogProvider />
+<MudPopoverProvider />
+
+@* CSS: tokens.css -> index.html üzerinden tek kaynaktan yükleniyor (anayasa §46.1) *@
+
+@* ─── ÜSTTEN AŞAĞI KAYAN GLASSMORPHISM NAVİGASYON ──────────────────────── *@
+<nav class="vizit-navbar">
+    <div class="vizit-navbar-icerik">
+
+        @* Logo *@
+        <MudLink Href="/" Underline="Underline.None" Class="vizit-logo">
+            @if (!string.IsNullOrEmpty(_logoUrl))
+            {
+                <img src="@LogoTamYolu" alt="@dil.T("logo_alt", "Gold Banyo Logo")" class="vizit-logo-img" />
+            }
+            else
+            {
+                <span class="vizit-logo-metin">@dil.T("marka_adi", "Gold Banyo")</span>
+            }
+        </MudLink>
+
+        @* Masaüstü menü *@
+        <div class="vizit-navbar-masaustu">
+            @if (_menuYukleniyor)
+            {
+                <MudSkeleton SkeletonType="SkeletonType.Text" Width="320px" Height="32px" />
+            }
+            else
+            {
+                @foreach (var oge in _menuOgeleri)
+                {
+                    if (oge.AltMenuler != null && oge.AltMenuler.Any())
+                    {
+                        <MudMenu AnchorOrigin="Origin.BottomCenter"
+                                 TransformOrigin="Origin.TopCenter"
+                                 PopoverClass="vizit-dropdown-menu"
+                                 Dense="true">
+                            <ActivatorContent>
+                                <MudButton Variant="Variant.Text"
+                                           EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                           Class="vizit-nav-link">
+                                    @dil.T(oge.Baslik, oge.Baslik)
+                                </MudButton>
+                            </ActivatorContent>
+                            <ChildContent>
+                                @foreach (var alt in oge.AltMenuler)
+                                {
+                                    <MudMenuItem Href="@alt.Url">
+                                        @dil.T(alt.Baslik, alt.Baslik)
+                                    </MudMenuItem>
+                                }
+                            </ChildContent>
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudLink Href="@(string.IsNullOrWhiteSpace(oge.Url) ? "/" : oge.Url)"
+                                 Underline="Underline.None"
+                                 Class="vizit-nav-link">
+                            @dil.T(oge.Baslik, oge.Baslik)
+                        </MudLink>
+                    }
+                }
+            }
+        </div>
+
+        @* Navbar eylemleri *@
+        <div class="vizit-navbar-eylemler">
+            <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Outlined.LightMode : Icons.Material.Outlined.DarkMode)"
+                           OnClick="@TemaDegistir"
+                           Class="vizit-navbar-btn" />
+
+            <VizitLink3D.UI.Bilesenler.Tema.TemaSecici />
+
+            @foreach (var dilBilgi in dil.DesteklenenDiller)
+            {
+                <MudButton Variant="Variant.Text"
+                           Class="@(dilBilgi.Kod == _aktifDil ? "vizit-dil-aktif" : "vizit-dil")"
+                           OnClick="@(() => DilDegistir(dilBilgi.Kod))">
+                    @dilBilgi.Kod.ToUpperInvariant()
+                </MudButton>
+            }
+
+            <MudButton Href="iletisim"
+                       Variant="Variant.Filled"
+                       Class="vizit-teklif-btn">
+                @dil.T("teklif_al", "Teklif Al")
+            </MudButton>
+
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu"
+                           OnClick="@MobilMenuToggle"
+                           Class="vizit-navbar-mobil-btn" />
+        </div>
+    </div>
+</nav>
+
+@* ─── MOBİL MENÜ ───────────────────────────────────────────────────────── *@
+<MudDrawer @bind-Open="_mobilMenuAcik"
+           Anchor="Anchor.Right"
+           Elevation="4"
+           Variant="DrawerVariant.Temporary"
+           Class="vizit-mobil-drawer">
+    <MudDrawerHeader Class="d-flex justify-space-between align-center px-4">
+        <MudText Typo="Typo.h6" Class="vizit-logo-metin">@dil.T("marka_adi", "Gold Banyo")</MudText>
+        <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@MobilMenuToggle" />
+    </MudDrawerHeader>
+    <MudDivider />
+    <MudNavMenu>
+        @foreach (var oge in _menuOgeleri)
+        {
+            if (oge.AltMenuler != null && oge.AltMenuler.Any())
+            {
+                <MudNavGroup Title="@dil.T(oge.Baslik, oge.Baslik)" Expanded="false" Class="vizit-mobil-nav-group">
+                    @foreach (var alt in oge.AltMenuler)
+                    {
+                        <MudNavLink Href="@alt.Url" Match="NavLinkMatch.Prefix"
+                                    OnClick="@MobilMenuToggle" Class="vizit-mobil-nav-link-alt">
+                            @dil.T(alt.Baslik, alt.Baslik)
+                        </MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+            else
+            {
+                <MudNavLink Href="@(string.IsNullOrWhiteSpace(oge.Url) ? "/" : oge.Url)"
+                            Match="@(string.IsNullOrWhiteSpace(oge.Url) ? NavLinkMatch.All : NavLinkMatch.Prefix)"
+                            OnClick="@MobilMenuToggle"
+                            Class="vizit-mobil-nav-link">
+                    @dil.T(oge.Baslik, oge.Baslik)
+                </MudNavLink>
+            }
+        }
+    </MudNavMenu>
+    <MudSpacer />
+    <MudContainer Class="pa-4">
+        @* Mobil Dil Seçici *@
+        <MudText Typo="Typo.overline" Class="mb-2 vizit-mobil-dil-baslik">@dil.T("dil_sec", "Dil Seçiniz")</MudText>
+        <MudSelect T="string" Value="@_aktifDil" ValueChanged="@DilDegistir" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-4">
+            @foreach (var dilBilgi in dil.DesteklenenDiller)
+            {
+                <MudSelectItem Value="@dilBilgi.Kod"><span class="@($"{dilBilgi.Bayrak} mr-2")"></span> @dilBilgi.Ad</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton FullWidth="true" Href="iletisim"
+                   Variant="Variant.Filled" Class="vizit-teklif-btn">
+            @dil.T("teklif_al", "Teklif Al")
+        </MudButton>
+    </MudContainer>
+</MudDrawer>
+
+@* ─── SAYFA İÇERİĞİ — FADE-IN GEÇİŞ ANİMASYONU ─────────────────────────── *@
+<MudMainContent Class="@($"vizit-main-icerik {(_sayfaHazir ? "sayfa-gorunur" : "sayfa-gizli")}")">
+    @Body
+</MudMainContent>
+
+@* ─── FOOTER ────────────────────────────────────────────────────────────── *@
+<footer class="vizit-footer">
+    <div class="vizit-footer-icerik">
+        
+        @* Firma Logosu ve Açıklaması *@
+        <div class="vizit-footer-marka">
+            @if (!string.IsNullOrEmpty(_logoUrl))
+            {
+                <img src="@_logoUrl" alt="Gold Banyo Logo" class="vizit-logo-img" />
+            }
+            else
+            {
+                <span class="vizit-logo-metin">Gold Banyo</span>
+            }
+            <p class="vizit-footer-aciklama">@_footerAciklama</p>
+            <p class="vizit-footer-telif">
+                © @DateTime.UtcNow.Year Gold Banyo. @dil.T("tum_haklar", "Tüm Hakları Saklıdır.")
+            </p>
+        </div>
+
+        @* Koleksiyonlar *@
+        <div class="vizit-footer-kolon">
+            <h4 class="vizit-footer-baslik">@dil.T("kategoriler", "Kategoriler")</h4>
+            @if (_footerKategorileri.Count > 0)
+            {
+                @foreach (var kat in _footerKategorileri)
+                {
+                    <a href="@kat.Url" class="vizit-footer-link">@dil.T($"footer_{kat.Baslik}", kat.Baslik)</a>
+                }
+            }
+        </div>
+
+        @* Hızlı Bağlantılar *@
+        <div class="vizit-footer-kolon">
+            <h4 class="vizit-footer-baslik">@dil.T("hizli_baglantilar", "Hızlı Bağlantılar")</h4>
+            @if (_footerLinkleri.Count > 0)
+            {
+                @foreach (var link in _footerLinkleri)
+                {
+                    <a href="@link.Url" class="vizit-footer-link">@dil.T($"footer_{link.Baslik}", link.Baslik)</a>
+                }
+            }
+            <a href="hakkimizda" class="vizit-footer-link">@dil.T("hakkimizda", "Hakkımızda")</a>
+            <a href="hareketli-koleksiyon" class="vizit-footer-link">@dil.T("hareketli.koleksiyon", "Hareketli Koleksiyon")</a>
+            <a href="akilli-koleksiyon" class="vizit-footer-link">@dil.T("akilli.koleksiyon", "Akıllı Koleksiyon")</a>
+            <a href="iletisim" class="vizit-footer-link">@dil.T("iletisim", "İletişim")</a>
+        </div>
+
+    </div>
+</footer>
+
+@* ─── SAYFA ÜSTÜNE GERİ DÖN BUTONU ─────────────────────────────────────── *@
+@if (_usaSayfaGoster)
+{
+    <MudFab StartIcon="@Icons.Material.Outlined.KeyboardArrowUp"
+            Color="Color.Dark"
+            Size="Size.Medium"
+            Class="vizit-yukari-btn"
+            OnClick="@SayfaBasinaGit" />
+}
+
+@* ─── CANLI SOHBET WIDGET'I ───────────────────────────────────────────── *@
+<VizitLink3D.UI.Bilesenler.CanliSohbetArayuzu />

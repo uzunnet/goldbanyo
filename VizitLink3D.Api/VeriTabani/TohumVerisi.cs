@@ -1,4 +1,4 @@
-using VizitLink3D.Api.Modeller;
+﻿using VizitLink3D.Api.Modeller;
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.Ortak.Modeller.AI;
@@ -10,7 +10,12 @@ using VizitLink3D.Ortak.Modeller.Tema;
 using VizitLink3D.Ortak.Yardimcilar;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using VizitLink3D.Api.Servisler;
 using VizitLink3D.Api.Servisler.Kimlik;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace VizitLink3D.Api.VeriTabani;
 
@@ -130,6 +135,10 @@ public static class TohumVerisi
         await Bolum(vt, "GoldBanyoKatalogUrunleri", async () => await GoldBanyoKatalogUrunleriniTohumlaAsync(vt, DateTime.UtcNow));
         await Bolum(vt, "DusakabinKaldir", async () => await DusakabinIcerigiPasifleAsync(vt));
         await Bolum(vt, "GercekUrunFotograflari", async () => await GercekUrunFotograflariniKaydetAsync(vt));
+        await Bolum(vt, "FazlalikResimArsivleriTemizle", async () => await FazlalikResimArsivleriTemizleAsync(vt));
+        await Bolum(vt, "UrunMedyalariniYenidenYapilandir", async () => await UrunMedyalariniYenidenYapilandirAsync(vt));
+        await Bolum(vt, "KirikMedyalariTamir", async () => await KirikMedyalariTamirAsync(vt));
+        await Bolum(vt, "Katalog3DModelleriBagla", async () => await Katalog3DModelleriniBaglaAsync(vt));
 
         // === EKSIK SEED: Bulten, Eposta, Teklif, Sube, AI, Katalog ===
         await Bolum(vt, "BultenAboneleri", async () => { if (!vt.BultenAboneleri.Any()) await TohumlaBultenAboneleriniAsync(vt); });
@@ -149,7 +158,7 @@ public static class TohumVerisi
             var urunSihirbaziVarMi = await vt.MenuOgeleri.AnyAsync(m => m.Konum == "AdminSol" && m.Url == "admin/urun-sihirbazi");
             var kapakModelleriVarMi = await vt.MenuOgeleri.AnyAsync(m => m.Konum == "AdminSol" && m.Url == "admin/kapak-modeli-yonetimi");
             var pdfUygulamaVarMi = await vt.MenuOgeleri.AnyAsync(m => m.Konum == "AdminSol" && m.Url == "admin/pdf-uygulama-esleme");
-            if (kapakModelleriVarMi || !sistemVarMi || !urunSihirbaziVarMi || !pdfUygulamaVarMi)
+            if (!kapakModelleriVarMi || !sistemVarMi || !urunSihirbaziVarMi || !pdfUygulamaVarMi)
             {
                 vt.MenuOgeleri.RemoveRange(vt.MenuOgeleri.Where(m => m.Konum == "AdminSol"));
                 await vt.SaveChangesAsync();
@@ -1242,7 +1251,7 @@ public static class TohumVerisi
             AciklamaKisa = "Banyonuza sanat katan banyo mobilyası modelleri",
             Aciklama = "Türkiye'nin lider banyo mobilyası üreticisi. 35+ ülkede hizmet veren, 600+ satış noktasına sahip kurumsal marka.",
             Domain = "goldbanyom.com.tr", YedekDomain = "www.goldbanyom.com.tr",
-            Logo = "/img/goldbanyo-logo.png",
+            Logo = "/medya/brand/goldbanyo-logo-kare.png",
             Favicon = "/favicon.png",
             Eposta = "info@goldbanyom.com.tr",
             Telefon1 = "+90 312 847 55 22", Telefon2 = "+90 312 847 55 99",
@@ -2424,7 +2433,7 @@ public static class TohumVerisi
     private static async Task TohumlaAyarlariAsync(VizitLink3DDbContext vt)
     {
         vt.SayfaIcerikleri.AddRange(
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "LogoUrl", Deger = "/img/goldbanyo-logo.png", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "LogoUrl", Deger = "/medya/brand/goldbanyo-logo-kare.png", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FaviconUrl", Deger = "/favicon.png", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "VarsayilanDil", Deger = "tr", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "TemaModu", Deger = "koyu", Dil = "tr" },
@@ -3297,47 +3306,52 @@ public static class TohumVerisi
 
             await vt.SaveChangesAsync();
 
-            var medyaKuyrugu = new List<(string Url, bool Ana, int Sira)>
+            // GercekFotografliUrunler ürünleri GercekUrunFotograflariniKaydetAsync tarafindan
+            // kendi görselleriyle beslenir; burada katalog görseli eklemeyi atla.
+            if (!GercekFotografliUrunler.Any(g => g.Slug == katalogUrunu.Slug))
             {
-                (katalogUrunu.HeroGorselUrl, true, 1),
-                (katalogUrunu.KatalogGorselUrl, false, 2),
-                (katalogUrunu.TeknikGorselUrl, false, 3)
-            };
-
-            medyaKuyrugu.AddRange(
-                katalogUrunu.EkGaleriSayfalari.Select((sayfa, index) => (
-                    Url: $"/medya/gold-katalog/sayfa-{sayfa:000}-spread.{GoldKatalogUzanti($"sayfa-{sayfa:000}-spread")}",
-                    Ana: false,
-                    Sira: index + 4)));
-
-            foreach (var medya in medyaKuyrugu)
-            {
-                var mevcutMedya = await vt.UrunMedyalari
-                    .FirstOrDefaultAsync(m => m.UrunId == urun.Id && m.MedyaUrl == medya.Url);
-
-                if (mevcutMedya == null)
+                var medyaKuyrugu = new List<(string Url, bool Ana, int Sira)>
                 {
-                    vt.UrunMedyalari.Add(new UrunMedya
+                    (katalogUrunu.HeroGorselUrl, true, 1),
+                    (katalogUrunu.KatalogGorselUrl, false, 2),
+                    (katalogUrunu.TeknikGorselUrl, false, 3)
+                };
+
+                medyaKuyrugu.AddRange(
+                    katalogUrunu.EkGaleriSayfalari.Select((sayfa, index) => (
+                        Url: $"/medya/gold-katalog/sayfa-{sayfa:000}-spread.{GoldKatalogUzanti($"sayfa-{sayfa:000}-spread")}",
+                        Ana: false,
+                        Sira: index + 4)));
+
+                foreach (var medya in medyaKuyrugu)
+                {
+                    var mevcutMedya = await vt.UrunMedyalari
+                        .FirstOrDefaultAsync(m => m.UrunId == urun.Id && m.MedyaUrl == medya.Url);
+
+                    if (mevcutMedya == null)
                     {
-                        UrunId = urun.Id,
-                        MedyaUrl = medya.Url,
-                        MedyaTuru = "Resim",
-                        Aciklama = $"{katalogUrunu.Ad} katalog görseli",
-                        SiraNo = medya.Sira,
-                        AnaGosterim = medya.Ana
-                    });
+                        vt.UrunMedyalari.Add(new UrunMedya
+                        {
+                            UrunId = urun.Id,
+                            MedyaUrl = medya.Url,
+                            MedyaTuru = "Resim",
+                            Aciklama = $"{katalogUrunu.Ad} katalog görseli",
+                            SiraNo = medya.Sira,
+                            AnaGosterim = medya.Ana
+                        });
+                    }
+                    else
+                    {
+                        mevcutMedya.SiraNo = medya.Sira;
+                        mevcutMedya.AnaGosterim = medya.Ana;
+                        mevcutMedya.Aciklama = $"{katalogUrunu.Ad} katalog görseli";
+                    }
                 }
-                else
-                {
-                    mevcutMedya.SiraNo = medya.Sira;
-                    mevcutMedya.AnaGosterim = medya.Ana;
-                    mevcutMedya.Aciklama = $"{katalogUrunu.Ad} katalog görseli";
-                }
-            }
 
-            // AnaGorselMedyaId artik Medya havuzu uzerinden GercekUrunFotograflariniKaydetAsync tarafindan yonetiliyor;
-            // burada UrunMedya.Id'ye atanmiyor (yanlis tablo - Medyalar ile UrunMedyalari ayri sekvanslar kullanir).
-            await vt.SaveChangesAsync();
+                // AnaGorselMedyaId artik Medya havuzu uzerinden GercekUrunFotograflariniKaydetAsync tarafindan yonetiliyor;
+                // burada UrunMedya.Id'ye atanmiyor (yanlis tablo - Medyalar ile UrunMedyalari ayri sekvanslar kullanir).
+                await vt.SaveChangesAsync();
+            }
         }
     }
 
@@ -3532,7 +3546,7 @@ public static class TohumVerisi
         {
             var hedefDeger = kayit.Anahtar switch
             {
-                "LogoUrl" => "/img/goldbanyo-logo.png",
+                "LogoUrl" => "/medya/brand/goldbanyo-logo-kare.png",
                 "FaviconUrl" => "/favicon.png",
                 "VarsayilanDil" => "tr",
                 "TemaModu" => "koyu",
@@ -3586,9 +3600,9 @@ public static class TohumVerisi
                 degisti = true;
             }
 
-            if (goldFirma.Logo != "/img/goldbanyo-logo.png")
+            if (goldFirma.Logo != "/medya/brand/goldbanyo-logo-kare.png")
             {
-                goldFirma.Logo = "/img/goldbanyo-logo.png";
+                goldFirma.Logo = "/medya/brand/goldbanyo-logo-kare.png";
                 degisti = true;
             }
 
@@ -4220,4 +4234,425 @@ public static class TohumVerisi
         await vt.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// wwwroot/medya/3d-modeller/ altindaki .glb dosyalarini katalog slug'lari ile eslestirip
+    /// UrunUcBoyutModeli kaydi olusturur. Idempotent.
+    /// UI projesinin wwwroot'una bakar (API degil).
+    /// </summary>
+    private static async Task Katalog3DModelleriniBaglaAsync(VizitLink3DDbContext vt)
+    {
+        var calismaDizini = Directory.GetCurrentDirectory();
+
+        // UI projesinin wwwroot'unu bul (3D modeller UI'da)
+        var uiWebRootPath = Path.Combine(calismaDizini, "VizitLink3D.UI", "wwwroot");
+        if (!Directory.Exists(uiWebRootPath))
+        {
+            uiWebRootPath = Path.Combine(calismaDizini, "..", "VizitLink3D.UI", "wwwroot");
+            if (!Directory.Exists(uiWebRootPath))
+            {
+                Console.Error.WriteLine("[TOHUM UYARISI] Katalog3DModelleriniBagla: UI wwwroot bulunamadi, atlaniyor.");
+                return;
+            }
+        }
+
+        var sonuc = await UrunMedyaBaglamaServisi.KatalogModelleriniBaglaAsync(vt, uiWebRootPath);
+
+        if (sonuc.Veri is not null)
+        {
+            Console.WriteLine($"[Katalog3DModelleriBagla] {sonuc.Mesaj}");
+            if (sonuc.Veri.BaglananUrunSluglari.Count > 0)
+                Console.WriteLine($"  Baglanan: {string.Join(", ", sonuc.Veri.BaglananUrunSluglari)}");
+            if (sonuc.Veri.EslesmeyenDosyalar.Count > 0)
+                Console.WriteLine($"  Eslesmeyen dosyalar ({sonuc.Veri.EslesmeyenDosyalar.Count}): {string.Join(", ", sonuc.Veri.EslesmeyenDosyalar)}");
+            if (sonuc.Veri.TekrarlananDosyalar.Count > 0)
+                Console.WriteLine($"  Tekrarlanan dosyalar: {string.Join("; ", sonuc.Veri.TekrarlananDosyalar)}");
+        }
+    }
+
+    /// <summary>
+    /// Tum urun medyalarini medya havuzuna (Medyalar tablosu) baglar.
+    /// Dosyalari /medya/gold-katalog/ altindan /medya/urunler/{slug}/ altina kopyalar,
+    /// UrunMedya.MedyaUrl'yi /api/medya/dosya/{id} formatina cevirir,
+    /// ve Urun.AnaGorselMedyaId'yi dogru medya havuzu ID'sine ayarlar.
+    /// Idempotent: zaten /api/medya/dosya/ ile baslayan URL'leri atlar.
+    /// </summary>
+    private static async Task UrunMedyalariniYenidenYapilandirAsync(VizitLink3DDbContext vt)
+    {
+        // wwwroot yolunu hesapla
+        var calismaDizini = Directory.GetCurrentDirectory();
+        var webRootPath = Path.Combine(calismaDizini, "wwwroot");
+        if (!Directory.Exists(webRootPath))
+        {
+            // Alternatif: proje alt dizini (IDE/disaridan calistirma senaryosu)
+            webRootPath = Path.Combine(calismaDizini, "VizitLink3D.Api", "wwwroot");
+            if (!Directory.Exists(webRootPath))
+            {
+                Console.Error.WriteLine("[TOHUM UYARISI] UrunMedyalariniYenidenYapilandir: wwwroot bulunamadi, atlaniyor.");
+                return;
+            }
+        }
+
+        var simdi = DateTime.UtcNow;
+        var hedefKok = Path.Combine(webRootPath, "medya", "urunler");
+        Directory.CreateDirectory(hedefKok);
+
+        // Gold-katalog dosyalari UI projesinin wwwroot'unda; API'den de bak
+        var uiWebRootPath = Path.Combine(calismaDizini, "VizitLink3D.UI", "wwwroot");
+        if (!Directory.Exists(uiWebRootPath))
+            uiWebRootPath = webRootPath;
+
+        // Tum aktif UrunMedya kayitlarini cek (ResimArsiv haric)
+        var tumUrunMedyalari = await vt.UrunMedyalari
+            .Where(m => !m.SilindiMi && m.MedyaTuru != "ResimArsiv")
+            .OrderBy(m => m.UrunId)
+            .ThenBy(m => m.SiraNo)
+            .ToListAsync();
+
+        var urunGruplari = tumUrunMedyalari
+            .GroupBy(m => m.UrunId)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        foreach (var (urunId, medyalar) in urunGruplari)
+        {
+            var urun = await vt.Urunler.FirstOrDefaultAsync(u => u.Id == urunId && !u.SilindiMi);
+            if (urun is null) continue;
+
+            var slug = urun.Slug;
+            if (string.IsNullOrWhiteSpace(slug)) continue;
+
+            var urunKlasoru = Path.Combine(hedefKok, slug);
+            Directory.CreateDirectory(urunKlasoru);
+
+            var medyaSirasi = 1;
+            int? yeniAnaMedyaId = null;
+
+            // Once Resim/Gorsel, en son TeknikCizim
+            var siraliMedyalar = medyalar
+                .OrderBy(m => m.MedyaTuru == "TeknikCizim" ? 1 : 0)
+                .ThenBy(m => m.SiraNo)
+                .ToList();
+
+            foreach (var medya in siraliMedyalar)
+            {
+                if (string.IsNullOrWhiteSpace(medya.MedyaUrl)) continue;
+
+                // Zaten medya havuzuna referans veriyorsa atla (idempotent)
+                if (medya.MedyaUrl.StartsWith("/api/medya/dosya/"))
+                    continue;
+
+                var eskiDosyaAdi = Path.GetFileName(medya.MedyaUrl);
+                if (string.IsNullOrWhiteSpace(eskiDosyaAdi)) continue;
+
+                var eskiUzanti = Path.GetExtension(eskiDosyaAdi).ToLowerInvariant();
+                string yeniDosyaAdi;
+                string hedefUzanti;
+
+                if (medya.MedyaTuru == "TeknikCizim")
+                {
+                    // Teknik cizim uzantisi korunur (SVG vektor, PNG raster olabilir)
+                    yeniDosyaAdi = $"teknik{eskiUzanti}";
+                    hedefUzanti = eskiUzanti;
+                }
+                else
+                {
+                    // Gorseller: WebP'ye cevir (SVG haric)
+                    if (eskiUzanti is ".svg" or ".webp")
+                        hedefUzanti = eskiUzanti;
+                    else
+                        hedefUzanti = ".webp";
+
+                    yeniDosyaAdi = $"gorsel-{medyaSirasi}{hedefUzanti}";
+                }
+
+                var hedefYol = Path.Combine(urunKlasoru, yeniDosyaAdi);
+                var goreliYol = $"/medya/urunler/{slug}/{yeniDosyaAdi}";
+
+                // Dosyayi kopyala / resize et (kaynak varsa ve hedef yoksa)
+                var goreliKaynak = medya.MedyaUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                var kaynakYol = Path.Combine(webRootPath, goreliKaynak);
+                // Gold-katalog dosyalari UI wwwroot'ta olabilir
+                if (!File.Exists(kaynakYol) && medya.MedyaUrl.Contains("/gold-katalog/"))
+                    kaynakYol = Path.Combine(uiWebRootPath, goreliKaynak);
+                if (File.Exists(kaynakYol) && !File.Exists(hedefYol))
+                {
+                    // SVG dosyalari resize edilmez, dogrudan kopyalanir
+                    if (eskiUzanti == ".svg")
+                    {
+                        File.Copy(kaynakYol, hedefYol, overwrite: false);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            using var kaynak = File.OpenRead(kaynakYol);
+                            ResimKucultVeKaydet(kaynak, hedefYol, 2000, hedefUzanti, eskiUzanti);
+                        }
+                        catch (Exception ex)
+                        {
+                            // ImageSharp basarisiz olursa orijinal dosyayi kopyala
+                            Console.Error.WriteLine($"[TOHUM UYARISI] Resize basarisiz, orijinal kopyalaniyor: {kaynakYol} -> {hedefYol}. Hata: {ex.Message}");
+                            if (!File.Exists(hedefYol))
+                                File.Copy(kaynakYol, hedefYol, overwrite: false);
+                        }
+                    }
+                }
+
+                // Medyalar tablosunda kaydi kontrol et / olustur
+                var mevcutMedyaKaydi = await vt.Medyalar
+                    .FirstOrDefaultAsync(m => m.DosyaYolu == goreliYol && !m.SilindiMi);
+
+                if (mevcutMedyaKaydi is null)
+                {
+                    mevcutMedyaKaydi = new Medya
+                    {
+                        Tip = MedyaTipi.Resim,
+                        Kaynak = MedyaKaynagi.Yerel,
+                        Ad = medya.MedyaTuru == "TeknikCizim"
+                            ? $"{urun.Ad} - Teknik Cizim"
+                            : $"{urun.Ad} - Gorsel {medyaSirasi}",
+                        OrijinalAd = yeniDosyaAdi,
+                        DosyaYolu = goreliYol,
+                        KullanimSayisi = 1,
+                        OlusturulmaTarihi = simdi
+                    };
+                    vt.Medyalar.Add(mevcutMedyaKaydi);
+                    await vt.SaveChangesAsync();
+                }
+
+                // UrunMedya URL'sini medya havuzu referansina cevir
+                medya.MedyaUrl = $"/api/medya/dosya/{mevcutMedyaKaydi.Id}";
+                medya.SiraNo = medyaSirasi;
+
+                // Ilk Resim/Gorsel'i ana gorsel olarak ata
+                if (yeniAnaMedyaId is null && medya.MedyaTuru is "Resim" or "Gorsel")
+                    yeniAnaMedyaId = mevcutMedyaKaydi.Id;
+
+                if (medya.MedyaTuru != "TeknikCizim")
+                    medyaSirasi++;
+            }
+
+            // AnaGorselMedyaId'yi guncelle
+            if (yeniAnaMedyaId.HasValue && urun.AnaGorselMedyaId != yeniAnaMedyaId.Value)
+            {
+                urun.AnaGorselMedyaId = yeniAnaMedyaId.Value;
+            }
+        }
+
+        await vt.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// GercekFotografliUrunler urunlerinde GoldBanyoKatalog seeder'inin birakmis oldugu
+    /// katalog sayfasi (hero/spread/detay) ResimArsiv kayitlarini soft-delete ile temizler.
+    /// GercekUrunFotograflariniKaydetAsync zaten kendi gercek gorsellerini eklediginden
+    /// bu eski katalog sayfalari gereksizdir.
+    /// </summary>
+    private static async Task FazlalikResimArsivleriTemizleAsync(VizitLink3DDbContext vt)
+    {
+        var gercekSluglar = GercekFotografliUrunler.Select(g => g.Slug).ToHashSet();
+
+        var fazlalikKayitlar = await vt.UrunMedyalari
+            .Where(m => !m.SilindiMi
+                && m.MedyaTuru == "ResimArsiv"
+                && m.MedyaUrl.StartsWith("/medya/gold-katalog/sayfa-"))
+            .Join(vt.Urunler,
+                m => m.UrunId,
+                u => u.Id,
+                (m, u) => new { Medya = m, Urun = u })
+            .Where(x => gercekSluglar.Contains(x.Urun.Slug))
+            .Select(x => x.Medya)
+            .ToListAsync();
+
+        if (fazlalikKayitlar.Count > 0)
+        {
+            foreach (var kayit in fazlalikKayitlar)
+                kayit.SilindiMi = true;
+
+            await vt.SaveChangesAsync();
+        }
+    }
+
+    /// <summary>
+    /// Kaynak goruntu akisini maxBoyut'a orantili kucultur ve hedef dosyaya WebP/PNG formatinda kaydeder.
+    /// Girdi uzantisi SVG ise resize edilmez (cagiran tarafta SVG kontrolu yapilir).
+    /// </summary>
+    private static void ResimKucultVeKaydet(Stream kaynak, string hedefYolu, int maxBoyut, string hedefUzanti, string kaynakUzanti)
+    {
+        using var image = Image.Load(kaynak);
+
+        // Eger zaten kucukse resize yapma, sadece format donusumu yap
+        if (image.Width > maxBoyut || image.Height > maxBoyut)
+        {
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Size = new Size(maxBoyut, maxBoyut),
+                Mode = ResizeMode.Max
+            }));
+        }
+
+        using var fs = File.Create(hedefYolu);
+        if (hedefUzanti == ".webp")
+            image.SaveAsWebp(fs);
+        else
+            image.SaveAsPng(fs);
+    }
+
+    /// <summary>
+    /// Medyalar tablosunda kayitli ama fiziksel dosyasi olmayan (kirik/kayip) medyalari tamir eder.
+    /// 
+    /// Akis:
+    /// 1. Tum aktif UrunMedya kayitlarini tara (MedyaUrl /api/medya/dosya/ formatinda olanlari)
+    /// 2. Ilgili Medyalar tablosu kaydini bul
+    /// 3. DosyaYolu'nun gosterdigi fiziksel dosya var mi kontrol et
+    /// 4. Dosya YOKSA:
+    ///    a. Gold-katalog'da {slug}-teknik.{ext} kaynagi var mi bak
+    ///    b. Varsa → per-product klasore kopyala/resize, Medyalar.DosyaYolu'nu guncelle
+    ///    c. Kaynak da YOKSA → UrunMedya + Medyalar soft-delete (fallback devreye girsin)
+    /// </summary>
+    private static async Task KirikMedyalariTamirAsync(VizitLink3DDbContext vt)
+    {
+        var calismaDizini = Directory.GetCurrentDirectory();
+        var webRootPath = Path.Combine(calismaDizini, "wwwroot");
+        if (!Directory.Exists(webRootPath))
+            webRootPath = Path.Combine(calismaDizini, "VizitLink3D.Api", "wwwroot");
+        if (!Directory.Exists(webRootPath))
+        {
+            Console.Error.WriteLine("[TOHUM UYARISI] KirikMedyalariTamir: wwwroot bulunamadi.");
+            return;
+        }
+
+        var goldKatalogKlasoru = Path.Combine(webRootPath, "medya", "gold-katalog");
+        var urunlerKok = Path.Combine(webRootPath, "medya", "urunler");
+
+        // Gold-katalog dosyalari UI projesinin wwwroot'unda olabilir
+        var uiWebRootPath = Path.Combine(calismaDizini, "VizitLink3D.UI", "wwwroot");
+        if (!Directory.Exists(uiWebRootPath))
+            uiWebRootPath = webRootPath;
+        var uiGoldKatalogKlasoru = Path.Combine(uiWebRootPath, "medya", "gold-katalog");
+        var simdi = DateTime.UtcNow;
+
+        // 1. MedyaUrl'si /api/medya/dosya/ formatinda olan tum UrunMedya'lari bul
+        var tumUrunMedyalari = await vt.UrunMedyalari
+            .Where(m => !m.SilindiMi && m.MedyaUrl != null
+                && m.MedyaUrl.StartsWith("/api/medya/dosya/"))
+            .ToListAsync();
+
+        var tamirEdilen = 0;
+        var silinen = 0;
+
+        foreach (var urunMedya in tumUrunMedyalari)
+        {
+            // Medya ID'sini cikar
+            var idStr = urunMedya.MedyaUrl!.Split('/').Last();
+            if (!long.TryParse(idStr, out var medyaId)) continue;
+
+            // Medyalar tablosundan kaydi bul
+            var medyaKaydi = await vt.Medyalar
+                .FirstOrDefaultAsync(m => m.Id == medyaId && !m.SilindiMi);
+            if (medyaKaydi is null || string.IsNullOrEmpty(medyaKaydi.DosyaYolu)) continue;
+
+            // Fiziksel dosya var mi?
+            var fizikselYol = Path.Combine(webRootPath,
+                medyaKaydi.DosyaYolu.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(fizikselYol)) continue; // Dosya mevcut, sorun yok
+
+            // === DOSYA YOK — Tamir veya Sil ===
+            var urun = await vt.Urunler.FirstOrDefaultAsync(u => u.Id == urunMedya.UrunId && !u.SilindiMi);
+            var slug = urun?.Slug;
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                urunMedya.SilindiMi = true;
+                medyaKaydi.SilindiMi = true;
+                silinen++;
+                continue;
+            }
+
+            // TeknikCizim icin gold-katalog'da kaynak ar
+            if (urunMedya.MedyaTuru == "TeknikCizim")
+            {
+                var kaynakDosyalar = Directory.Exists(goldKatalogKlasoru)
+                    ? Directory.GetFiles(goldKatalogKlasoru, $"{slug}-teknik.*")
+                    : Array.Empty<string>();
+
+                // Gold-katalog UI wwwroot'ta olabilir
+                if (kaynakDosyalar.Length == 0 && Directory.Exists(uiGoldKatalogKlasoru))
+                    kaynakDosyalar = Directory.GetFiles(uiGoldKatalogKlasoru, $"{slug}-teknik.*");
+
+                var kaynakDosya = kaynakDosyalar.FirstOrDefault();
+                if (kaynakDosya is not null)
+                {
+                    // Kaynak var → kopyala
+                    var urunKlasoru = Path.Combine(urunlerKok, slug);
+                    Directory.CreateDirectory(urunKlasoru);
+                    var kaynakUzanti = Path.GetExtension(kaynakDosya).ToLowerInvariant();
+                    var hedefDosya = Path.Combine(urunKlasoru, $"teknik{ kaynakUzanti}");
+                    var goreliYol = $"/medya/urunler/{slug}/teknik{ kaynakUzanti}";
+
+                    if (!File.Exists(hedefDosya))
+                    {
+                        try
+                        {
+                            if (kaynakUzanti == ".svg")
+                            {
+                                File.Copy(kaynakDosya, hedefDosya);
+                            }
+                            else
+                            {
+                                using var kaynakStream = File.OpenRead(kaynakDosya);
+                                ResimKucultVeKaydet(kaynakStream, hedefDosya, 2000, kaynakUzanti, kaynakUzanti);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Error.WriteLine($"[TOHUM UYARISI] KirikTamir kopya hatasi: {slug} - {ex.Message}");
+                            if (!File.Exists(hedefDosya))
+                                File.Copy(kaynakDosya, hedefDosya);
+                        }
+                    }
+
+                    // Medyalar DosyaYolu'nu guncelle
+                    medyaKaydi.DosyaYolu = goreliYol;
+                    tamirEdilen++;
+                    Console.WriteLine($"[TOHUM] TeknikCizim tamir edildi: {slug} -> {goreliYol}");
+                    continue;
+                }
+            }
+
+            // Kaynak dosya da yok → soft-delete (fallback devreye girsin)
+            Console.WriteLine($"[TOHUM] Kayip medya silindi: {slug} | {urunMedya.MedyaTuru} | MedyaID={medyaId}");
+            urunMedya.SilindiMi = true;
+            medyaKaydi.SilindiMi = true;
+
+            // Eger silinen medya urunun AnaGorselMedyaId'sini gosteriyorsa, onu da sifirla
+            if (urun is not null && urun.AnaGorselMedyaId == medyaId)
+                urun.AnaGorselMedyaId = null;
+
+            silinen++;
+        }
+
+        // ─── Döngü-dışı: AnaGorselMedyaId bozuk referans temizligi ───
+        // Ilk calistirmada soft-delete edilen medyalar, ikinci calistirmada
+        // UrunMedyalari sorgusu tarafindan bulunamaz. Ama AnaGorselMedyaId
+        // hala o silinmis ID'yi gosterebilir. Bu durumlari burada temizliyoruz.
+        var tumAktifUrunler = await vt.Urunler
+            .Where(u => !u.SilindiMi && u.AnaGorselMedyaId != null && u.AnaGorselMedyaId > 0)
+            .ToListAsync();
+
+        foreach (var u in tumAktifUrunler)
+        {
+            var medyaVar = await vt.Medyalar
+                .AnyAsync(m => m.Id == u.AnaGorselMedyaId!.Value && !m.SilindiMi);
+            if (!medyaVar)
+            {
+                Console.WriteLine($"[TOHUM] AnaGorselMedyaId sifirlandi: {u.Slug} (eski ID={u.AnaGorselMedyaId})");
+                u.AnaGorselMedyaId = null;
+            }
+        }
+
+        if (tamirEdilen > 0 || silinen > 0)
+        {
+            await vt.SaveChangesAsync();
+            Console.WriteLine($"[TOHUM] KirikMedyalariTamir: Tamir={tamirEdilen}, Silinen={silinen}");
+        }
+    }
 }

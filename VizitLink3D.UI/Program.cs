@@ -22,13 +22,18 @@ if (temelAdres.Contains("localhost") || temelAdres.Contains("127.0.0.1"))
 }
 else
 {
-    if (string.IsNullOrEmpty(yapilandirmaAdresi) || yapilandirmaAdresi.Contains("localhost") || yapilandirmaAdresi.Contains("127.0.0.1"))
+    // IP ile erişimde (mobil/ağ) — config'deki localhost URL'yi gerçek host ile değiştir
+    var temelUri = new Uri(temelAdres);
+    const int apiPort = 5115;
+    if (!string.IsNullOrEmpty(yapilandirmaAdresi)
+        && !yapilandirmaAdresi.Contains("localhost")
+        && !yapilandirmaAdresi.Contains("127.0.0.1"))
     {
-        apiUrl = temelAdres.TrimEnd('/') + "/";
+        apiUrl = yapilandirmaAdresi;
     }
     else
     {
-        apiUrl = yapilandirmaAdresi;
+        apiUrl = $"http://{temelUri.Host}:{apiPort}";
     }
 }
 

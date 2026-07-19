@@ -117,3 +117,7 @@ wwwroot/img/
 # Publish artiklari (build artifact, kaynakta durmasin)
 ui-publish/
 Yedekler/
+
+# Python sanal ortam
+UcBoyutMotor/venv/
+

@@ -1,0 +1,88 @@
+@page "/haber/{Slug}"
+@layout VizitLink3D.UI.Layout.VizitLink3DDuzen
+
+<PageTitle>@_sayfaBasligi</PageTitle>
+
+@if (_yukleniyor)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-16 d-flex justify-center align-center gb-yukleniyor-alani">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
+}
+else if (_yazi is null)
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-16 text-center gb-bos-liste-alani">
+        <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Class="gb-bos-liste-ikon" />
+        <MudText Typo="Typo.h5">@dil.T("HaberDetay.bulunamadi", "Haber bulunamadý")</MudText>
+        <MudButton Href="/haber" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" Class="mt-4">
+            @dil.T("HaberDetay.HaberaDon", "Habere dön")
+        </MudButton>
+    </MudContainer>
+}
+else
+{
+    <section class="gb-detay-hero">
+        <img src="@HaberGorseli(_yazi)" alt="@_yazi.Baslik" class="gb-detay-hero-gorsel" />
+        <div class="gb-detay-hero-katman">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <MudStack Spacing="4" Class="gb-detay-hero-icerik">
+                    <MudButton Href="/haber" Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" Class="gb-detay-geri-btn">
+                        @dil.T("HaberDetay.geri", "Haber")
+                    </MudButton>
+                    <MudText Typo="Typo.overline" Class="gb-detay-ust-etiket">@IlkEtiket(_yazi)</MudText>
+                    <MudText Typo="Typo.h2" Class="gb-detay-baslik">@_yazi.Baslik</MudText>
+                    <MudText Typo="Typo.subtitle1" Class="gb-detay-ozet">@_yazi.Ozet</MudText>
+                    <div class="gb-detay-metrikler">
+                        <div>
+                            <span>@dil.T("HaberDetay.tarih", "Tarih")</span>
+                            <strong>@TarihYaz(_yazi)</strong>
+                        </div>
+                        <div>
+                            <span>@dil.T("HaberDetay.okunma", "Okunma")</span>
+                            <strong>@_yazi.OkunmaSayisi</strong>
+                        </div>
+                        <div>
+                            <span>@dil.T("HaberDetay.dosya", "Dosya")</span>
+                            <strong>@dil.T("HaberDetay.endustriyelRehber", "Endustriyel rehber")</strong>
+                        </div>
+                    </div>
+                </MudStack>
+            </MudContainer>
+        </div>
+    </section>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-12">
+        <MudGrid Spacing="6">
+            <MudItem xs="12" lg="8">
+                <MudPaper Elevation="0" Class="vizit-glass-card vizit-border-glow">
+                    <MudText Typo="Typo.overline" Class="vizit-glass-card vizit-border-glow-etiket">@dil.T("HaberDetay.makale", "Makale")</MudText>
+                    <article class="gb-Haber-detay-icerik">
+                        @((MarkupString)(_yazi.Icerik ?? string.Empty))
+                    </article>
+                    <div class="gb-detay-etiketler">
+                        @foreach (var etiket in Etiketler(_yazi))
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined">@etiket</MudChip>
+                        }
+                    </div>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" lg="4">
+                <MudPaper Elevation="0" Class="vizit-glass-card vizit-border-glow">
+                    <MudText Typo="Typo.h6">@dil.T("HaberDetay.enCokOkunan", "En cok okunanlar")</MudText>
+                    <MudStack Spacing="2" Class="mt-4">
+                        @foreach (var yazi in _enCokOkunanlar)
+                        {
+                            <MudLink Href="@HaberDetayBaglantisi(yazi)" Underline="Underline.None" Class="gb-yan-liste-ogesi">
+                                <img src="@HaberGorseli(yazi)" alt="@yazi.Baslik" />
+                                <span>@yazi.Baslik</span>
+                            </MudLink>
+                        }
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+}
+
