@@ -57,7 +57,7 @@ public class PdfTeklifKontrolcu : ControllerBase
 
                 sayfa.Footer()
                     .AlignCenter()
-                    .Text("VizitLink3D © 2024 — Bursa Çalı | www.3dvizitlink.com.tr").FontSize(8);
+                    .Text("VizitLink3D © 2024 — Ankara Akyurt | www.3dvizitlink.com.tr").FontSize(8);
             });
         });
 

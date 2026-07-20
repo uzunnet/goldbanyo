@@ -1287,8 +1287,8 @@ public static class TohumVerisi
             Ad = "VizitLink3D", Unvan = "VizitLink3D Mobilya Kapak ve Kapi Sistemleri", Slug = "vizitlink3d",
             AciklamaKisa = "25 yillik tecrubeyle mobilya kapak ve kapi sistemleri.", Domain = "3dvizitlink.com.tr",
             YedekDomain = "www.3dvizitlink.com.tr", Eposta = "info@3dvizitlink.com.tr",
-            Telefon1 = "+90 224 482 24 00", Telefon2 = "+90 533 597 32 14",
-            Adres = "Cali Mah. Omer Biltekin Bulv. No:3/1A Nilufer / BURSA", Sehir = "Bursa", Ilce = "Nilufer",
+            Telefon1 = "+90 312 847 55 22", Telefon2 = "+90 533 597 32 14",
+            Adres = "Cankiri Yolu 8. km Bugduz Mah. 24. Sok. No: 4 Akyurt / ANKARA", Sehir = "Ankara", Ilce = "Akyurt",
             Ulke = "Turkiye", KurulusYili = 1992, CalismaSaatleri = "09:00 - 18:00",
             Instagram = "https://instagram.com/3dvizitlink.com.tr", Facebook = "https://facebook.com/vizitlink3d",
             AdminTema = "endustri-karanlik", SiteTema = "endustri-karanlik",
@@ -1443,11 +1443,11 @@ public static class TohumVerisi
     private static async Task TohumlaMusteriYorumlariniAsync(VizitLink3DDbContext vt)
     {
         vt.MusteriYorumlari.AddRange(
-            new MusteriYorumu { MusteriAdi = "Osman A.", MusteriSehir = "Bursa", Yorum = "Kapılarımızı yenilemede profesyonel bir firma seçtik. Tüm süreçler dijital ortamda prova yapıldı, çok profesyonel.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 1 },
+            new MusteriYorumu { MusteriAdi = "Osman A.", MusteriSehir = "Ankara", Yorum = "Kapılarımızı yenilemede profesyonel bir firma seçtik. Tüm süreçler dijital ortamda prova yapıldı, çok profesyonel.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 1 },
             new MusteriYorumu { MusteriAdi = "Merih C.", MusteriSehir = "Istanbul", Yorum = "Mutfak dolaplarim icin tercih ettim, beklentimin cok ustunde is cikardilar.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 2 },
             new MusteriYorumu { MusteriAdi = "Ayse K.", MusteriSehir = "Ankara", Yorum = "Banyo dolaplarimiz 2 yildir sorunsuz kullaniyoruz. Suya dayanikliligi cok iyi.", Puan = 4, Onaylandi = true, SiraNo = 3 },
             new MusteriYorumu { MusteriAdi = "Mehmet D.", MusteriSehir = "Izmir", Yorum = "Ofis icin ozel olcu dolap yaptirdik. Teslimat ve montaj sureci profesyoneldi.", Puan = 5, Onaylandi = true, SiraNo = 4 },
-            new MusteriYorumu { MusteriAdi = "Zeynep T.", MusteriSehir = "Bursa", Yorum = "Villa kapilarimiz cok modern ve ses yalitimi mukemmel. Tavsiye ederim.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 5 }
+            new MusteriYorumu { MusteriAdi = "Zeynep T.", MusteriSehir = "Ankara", Yorum = "Villa kapilarimiz cok modern ve ses yalitimi mukemmel. Tavsiye ederim.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 5 }
         );
         await vt.SaveChangesAsync();
     }
@@ -1608,10 +1608,10 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HeroBaslik", Deger = "Golden touches for luxury bathrooms", Dil = "en" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HeroAciklama", Deger = "2005'ten bu yana üretim disiplinimizi estetik, dayanıklılık ve tasarım detaylarıyla birleştiriyoruz.", Dil = "tr" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HeroAciklama", Deger = "Since 2005, we have been combining production discipline with aesthetics, durability and design detail.", Dil = "en" },
-            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeBasligi", Deger = "Bursa'dan başlayan tasarım ve üretim yolculuğumuz", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeBasligi", Deger = "Our design and production journey that started in Bursa", Dil = "en" },
-            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeMetni", Deger = "Gold Banyo, Bursa Nilüfer'deki üretim altyapısını güçlü malzeme bilgisi ve çağdaş tasarım yaklaşımıyla bir araya getirerek banyo mobilyasında seçkin çözümler geliştirmek için kuruldu.\n\nPremium, Trend, Exclusive ve özel proje koleksiyonlarımızda akrilik, lake, membran, UV lak ve farklı yüzey alternatiflerini bir araya getiriyor; showroom, bayi ve proje kanallarına sürdürülebilir kalite standardı sunuyoruz.\n\nBugün üretim gücümüzü yalnızca ürün çıkarmak için değil, mimarların, uygulamacıların ve son kullanıcıların ihtiyacına göre ölçülü, estetik ve uzun ömürlü yaşam alanları kurmak için kullanıyoruz.", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeMetni", Deger = "Gold Banyo was founded to create distinctive bathroom furniture solutions by combining its production infrastructure in Bursa Nilufer with strong material expertise and a contemporary design approach.\n\nAcross our Premium, Trend, Exclusive and bespoke project collections, we bring together acrylic, lacquer, membrane, UV lacquer and other surface alternatives while delivering a sustainable quality standard for showrooms, dealers and projects.\n\nToday we use our production strength not only to manufacture products, but to build measured, aesthetic and long-lasting living spaces for architects, applicators and end users.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeBasligi", Deger = "Ankara'dan başlayan tasarım ve üretim yolculuğumuz", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeBasligi", Deger = "Our design and production journey that started in Ankara", Dil = "en" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeMetni", Deger = "Gold Banyo, Ankara Akyurt'taki üretim altyapısını güçlü malzeme bilgisi ve çağdaş tasarım yaklaşımıyla bir araya getirerek banyo mobilyasında seçkin çözümler geliştirmek için kuruldu.\n\nPremium, Trend, Exclusive ve özel proje koleksiyonlarımızda akrilik, lake, membran, UV lak ve farklı yüzey alternatiflerini bir araya getiriyor; showroom, bayi ve proje kanallarına sürdürülebilir kalite standardı sunuyoruz.\n\nBugün üretim gücümüzü yalnızca ürün çıkarmak için değil, mimarların, uygulamacıların ve son kullanıcıların ihtiyacına göre ölçülü, estetik ve uzun ömürlü yaşam alanları kurmak için kullanıyoruz.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "HikayeMetni", Deger = "Gold Banyo was founded to create distinctive bathroom furniture solutions by combining its production infrastructure in Ankara Akyurt with strong material expertise and a contemporary design approach.\n\nAcross our Premium, Trend, Exclusive and bespoke project collections, we bring together acrylic, lacquer, membrane, UV lacquer and other surface alternatives while delivering a sustainable quality standard for showrooms, dealers and projects.\n\nToday we use our production strength not only to manufacture products, but to build measured, aesthetic and long-lasting living spaces for architects, applicators and end users.", Dil = "en" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "Misyon", Deger = "Banyo mobilyasında tasarım kalitesini üretim disipliniyle birleştirerek müşterilerimize uzun ömürlü, şık ve güvenilir çözümler sunmak.", Dil = "tr" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "Misyon", Deger = "To combine design quality with production discipline in bathroom furniture and offer our customers durable, elegant and reliable solutions.", Dil = "en" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "Vizyon", Deger = "Türkiye'de ve ihracat pazarlarında Gold Banyo imzasını; özgün tasarım, güçlü servis ve sürdürülebilir kalite ile anılan bir referans marka haline getirmek.", Dil = "tr" },
@@ -2463,8 +2463,8 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "Youtube", Deger = "", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "YoutubeUrl", Deger = "", Dil = "tr" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "MesaiSaatleri", Deger = "09:00 - 18:00", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FooterAciklama", Deger = "Gold Banyo, Bursa Nilüfer'deki üretim merkeziyle premium, trend ve exclusive banyo mobilyası koleksiyonlarını bayi ve proje kanallarına sunar.", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FooterAciklama", Deger = "Gold Banyo delivers premium, trend and exclusive bathroom furniture collections from its production base in Bursa Nilufer to dealers and project partners.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FooterAciklama", Deger = "Gold Banyo, Ankara Akyurt'taki üretim merkeziyle premium, trend ve exclusive banyo mobilyası koleksiyonlarını bayi ve proje kanallarına sunar.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "FooterAciklama", Deger = "Gold Banyo delivers premium, trend and exclusive bathroom furniture collections from its production base in Ankara Akyurt to dealers and project partners.", Dil = "en" },
             new SayfaIcerigi { Bolum = "ayarlar", Anahtar = "MesaiSaatleri", Deger = "09:00 - 18:00", Dil = "en" }
         );
     }
@@ -2504,11 +2504,11 @@ public static class TohumVerisi
         int Kat(string slug) =>
             kategoriler.TryGetValue(slug, out var id) ? id : kategoriler.Values.First();
 
-        var u1 = new Proje { Slug = "modern-mutfak-tasarimi", Baslik = "Modern Mutfak Tasarimi", KisaAciklama = "Nilufer'deki villa mutfagi icin ozel lake kapak tasarimi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ahmet Yilmaz", MusteriSehir = "Bursa", OneCikanMi = true, SiraNo = 1, ProjeTarihi = new DateTime(2025, 3, 15) };
+        var u1 = new Proje { Slug = "modern-mutfak-tasarimi", Baslik = "Modern Mutfak Tasarimi", KisaAciklama = "Akyurt'taki villa mutfagi icin ozel lake kapak tasarimi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ahmet Yilmaz", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 1, ProjeTarihi = new DateTime(2025, 3, 15) };
         var u2 = new Proje { Slug = "banyo-dolap-sistemi", Baslik = "Banyo Dolap Sistemi", KisaAciklama = "Suya dayanikli membran kapli banyo dolabi projesi.", KategoriId = Kat("banyo"), MusteriAdi = "Zeynep Kaya", MusteriSehir = "Istanbul", SiraNo = 2, ProjeTarihi = new DateTime(2025, 1, 20) };
         var u3 = new Proje { Slug = "luks-yatak-odasi", Baslik = "Luks Yatak Odasi", KisaAciklama = "Klasik taplali kapaklarla tasarlanmis genis yatak odasi.", KategoriId = Kat("yatak-odasi"), MusteriAdi = "Mehmet Demir", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 3, ProjeTarihi = new DateTime(2024, 11, 5) };
         var u4 = new Proje { Slug = "ofis-mutak-dolabi", Baslik = "Ofis Mutfak Dolabi", KisaAciklama = "Kurumsal ofis icin kompakt ve modern mutfak dolabi.", KategoriId = Kat("ofis"), MusteriAdi = "Ece Ltd.", MusteriSehir = "Izmir", SiraNo = 4, ProjeTarihi = new DateTime(2024, 8, 10) };
-        var u5 = new Proje { Slug = "villa-mutfak-projesi", Baslik = "Villa Mutfak Projesi", KisaAciklama = "Membran ve lake karisik ozel tasarim villa mutfagi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ali Ozturk", MusteriSehir = "Bursa", OneCikanMi = true, SiraNo = 5, ProjeTarihi = new DateTime(2025, 4, 1) };
+        var u5 = new Proje { Slug = "villa-mutfak-projesi", Baslik = "Villa Mutfak Projesi", KisaAciklama = "Membran ve lake karisik ozel tasarim villa mutfagi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ali Ozturk", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 5, ProjeTarihi = new DateTime(2025, 4, 1) };
         var u6 = new Proje { Slug = "otel-banyo-yenileme", Baslik = "Otel Banyo Yenileme", KisaAciklama = "12 odali butik otel icin komple banyo dolap yenilemesi.", KategoriId = Kat("banyo"), MusteriAdi = "Otel A.S.", MusteriSehir = "Antalya", SiraNo = 6, ProjeTarihi = new DateTime(2024, 6, 20) };
 
         vt.Projeler.AddRange(u1, u2, u3, u4, u5, u6);
@@ -3131,10 +3131,10 @@ public static class TohumVerisi
             await vt.SaveChangesAsync();
         }
 
-        if (!await vt.Projeler.AnyAsync(p => p.Baslik == "Bursa Nilüfer Villa Mutfağı"))
+        if (!await vt.Projeler.AnyAsync(p => p.Baslik == "Ankara Akyurt Villa Mutfağı"))
         {
             vt.Projeler.AddRange(
-                new Proje { Baslik = "Bursa Nilüfer Villa Mutfağı", Aciklama = "Özel tasarım akrilik kapaklı mutfak. 25 mÂ² alanda tamamen kişiye özel üretim.", KisaAciklama = "Akrilik kapaklı lüks villa mutfağı", KategoriId = 1, MusteriSehir = "Bursa", ProjeTarihi = new DateTime(2025, 1, 15), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 4, AktifMi = true, Slug = "bursa-villa-mutfagi" },
+                new Proje { Baslik = "Ankara Akyurt Villa Mutfağı", Aciklama = "Özel tasarım akrilik kapaklı mutfak. 25 mÂ² alanda tamamen kişiye özel üretim.", KisaAciklama = "Akrilik kapaklı lüks villa mutfağı", KategoriId = 1, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 1, 15), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 4, AktifMi = true, Slug = "ankara-villa-mutfagi" },
                 new Proje { Baslik = "İstanbul Levent Ofis Projesi", Aciklama = "Kurumsal ofis için laminat kapaklı dolap sistemleri. 40 adet özel ölçü dolap.", KisaAciklama = "Laminat kapaklı kurumsal ofis dolapları", KategoriId = 4, MusteriSehir = "İstanbul", ProjeTarihi = new DateTime(2025, 2, 20), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 5, AktifMi = true, Slug = "istanbul-ofis" },
                 new Proje { Baslik = "Ankara Çankaya Lüks Banyo", Aciklama = "Suya dayanıklı özel kaplama banyo dolapları. LED aydınlatmalı ayna sistemleri.", KisaAciklama = "Lüks banyo dolap ve ayna sistemleri", KategoriId = 2, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 3, 10), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 6, AktifMi = true, Slug = "ankara-banyo" },
                 new Proje { Baslik = "İzmir Urla Yazlık Villa", Aciklama = "Ege mimarisine uygun klasik kapı ve mutfak tasarımı. Doğal ahşap görünümlü membran kapaklar.", KisaAciklama = "Klasik tarz yazlık villa renovasyon", KategoriId = 1, MusteriSehir = "İzmir", ProjeTarihi = new DateTime(2024, 8, 5), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 7, AktifMi = true, Slug = "izmir-villa" },
@@ -3147,7 +3147,7 @@ public static class TohumVerisi
         if (!await vt.MusteriYorumlari.AnyAsync(y => y.MusteriAdi == "Fatma E."))
         {
             vt.MusteriYorumlari.AddRange(
-                new MusteriYorumu { MusteriAdi = "Fatma E.", MusteriSehir = "Bursa", Yorum = "Villa kapımızı 3 yıl önce yaptırdık, hala ilk günkü gibi. Ses yalıtımı harika.", Puan = 5, Onaylandi = true, SiraNo = 6 },
+                new MusteriYorumu { MusteriAdi = "Fatma E.", MusteriSehir = "Ankara", Yorum = "Villa kapımızı 3 yıl önce yaptırdık, hala ilk günkü gibi. Ses yalıtımı harika.", Puan = 5, Onaylandi = true, SiraNo = 6 },
                 new MusteriYorumu { MusteriAdi = "Kemal S.", MusteriSehir = "İstanbul", Yorum = "Ofis dolaplarımızın kalitesi tüm çalışanlarımızdan tam not aldı.", Puan = 5, Onaylandi = true, SiraNo = 7 },
                 new MusteriYorumu { MusteriAdi = "Sevgi T.", MusteriSehir = "Antalya", Yorum = "Otel projemiz için 120 oda sipariş verdik. Zamanında teslim ve kusursuz işçilik.", Puan = 5, Onaylandi = true, SiraNo = 8 },
                 new MusteriYorumu { MusteriAdi = "Okan B.", MusteriSehir = "İzmir", Yorum = "Mutfak dolaplarım için renk seçiminde çok yardımcı oldular. Sonuç mükemmel.", Puan = 5, Onaylandi = true, SiraNo = 9 },
@@ -3181,7 +3181,7 @@ public static class TohumVerisi
                 new SikSorulanSoru { Soru = "Teslimat süresi ne kadar?", Cevap = "Standart ölçülerde 5-7 iş günü, özel ölçü siparişlerde 10-15 iş günü içerisinde teslimat yapılmaktadır.", SiraNo = 12, AktifMi = true },
                 new SikSorulanSoru { Soru = "Garanti süreniz nedir?", Cevap = "Tüm ürünlerimiz 2 yıl garanti kapsamındadır. Membran kapaklarda renk solması, lake kapaklarda çatlama garantisi veriyoruz.", SiraNo = 13, AktifMi = true },
                 new SikSorulanSoru { Soru = "Fiyatlarınız neye göre belirleniyor?", Cevap = "Fiyatlar malzeme türü (membran/lake/akrilik), ölçü, profil detayı ve aksesuar seçimine göre değişmektedir. Ücretsiz fiyat teklifi için iletişime geçebilirsiniz.", SiraNo = 14, AktifMi = true },
-                new SikSorulanSoru { Soru = "Montaj hizmetiniz var mı?", Cevap = "Evet, Bursa ve çevre illerde profesyonel montaj ekibimizle hizmet vermekteyiz. Diğer iller için anlaşmalı ekiplerimiz bulunmaktadır.", SiraNo = 15, AktifMi = true },
+                new SikSorulanSoru { Soru = "Montaj hizmetiniz var mı?", Cevap = "Evet, Ankara ve çevre illerde profesyonel montaj ekibimizle hizmet vermekteyiz. Diğer iller için anlaşmalı ekiplerimiz bulunmaktadır.", SiraNo = 15, AktifMi = true },
                 new SikSorulanSoru { Soru = "Yurt dışına gönderim yapıyor musunuz?", Cevap = "Evet, 20'den fazla ülkeye ihracat yapmaktayız. Avrupa, Orta Doğu ve Kuzey Afrika'ya düzenli sevkiyatımız bulunmaktadır.", SiraNo = 16, AktifMi = true },
                 new SikSorulanSoru { Soru = "Taksit imkanınız var mı?", Cevap = "Anlaşmalı bankalarımız aracılığıyla 12 aya varan taksit imkanı sunuyoruz.", SiraNo = 17, AktifMi = true },
                 new SikSorulanSoru { Soru = "Renk değişimi sonradan yapılabilir mi?", Cevap = "Kapaklar değiştirilebilir ancak dolap gövdesinden bağımsız olarak düşünülmelidir. Yeni kapak siparişi vererek mevcut dolaplarınızı yenileyebilirsiniz.", SiraNo = 18, AktifMi = true }
@@ -3378,8 +3378,8 @@ public static class TohumVerisi
     {
         var simdi = DateTime.UtcNow;
         vt.Subeler.AddRange(
-            new Sube { Ad = "Gold Banyo Bursa Merkez", Adres = "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer", Sehir = "Bursa", Ilce = "Nilüfer", Telefon = "+90 224 482 24 00", Eposta = "info@goldbanyom.com.tr", CalismaSaatleri = "09:00 - 18:00", Enlem = 40.225, Boylam = 28.854, SiraNo = 1, AktifMi = true, OlusturulmaTarihi = simdi, Aciklama = "Gold Banyo üretim ve satış merkezi." },
-            new Sube { Ad = "Gold Banyo Proje Hatti", Adres = "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer", Sehir = "Bursa", Ilce = "Nilüfer", Telefon = "+90 533 597 32 14", Eposta = "info@goldbanyom.com.tr", CalismaSaatleri = "09:00 - 18:00", Enlem = 40.225, Boylam = 28.854, SiraNo = 2, AktifMi = true, OlusturulmaTarihi = simdi, Aciklama = "Toplu proje ve kurumsal talepler için iletişim hattı." }
+            new Sube { Ad = "Gold Banyo Ankara Merkez", Adres = "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt", Sehir = "Ankara", Ilce = "Akyurt", Telefon = "+90 312 847 55 22", Eposta = "info@goldbanyom.com.tr", CalismaSaatleri = "09:00 - 18:00", Enlem = 40.225, Boylam = 28.854, SiraNo = 1, AktifMi = true, OlusturulmaTarihi = simdi, Aciklama = "Gold Banyo üretim ve satış merkezi." },
+            new Sube { Ad = "Gold Banyo Proje Hatti", Adres = "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt", Sehir = "Ankara", Ilce = "Akyurt", Telefon = "+90 533 597 32 14", Eposta = "info@goldbanyom.com.tr", CalismaSaatleri = "09:00 - 18:00", Enlem = 40.225, Boylam = 28.854, SiraNo = 2, AktifMi = true, OlusturulmaTarihi = simdi, Aciklama = "Toplu proje ve kurumsal talepler için iletişim hattı." }
         );
         await vt.SaveChangesAsync();
     }
@@ -3572,10 +3572,10 @@ public static class TohumVerisi
                 "SiteBasligi" => "Gold Banyo - Banyo Mobilyalari ve Koleksiyonlari",
                 "Aciklama" => "Gold Banyo; premium, trend ve exclusive koleksiyonlariyla banyo mobilyasi ve proje cozumleri sunar.",
                 "AnahtarKelimeler" => "gold banyo, goldbanyo, banyo mobilyasi, banyo dolabi, banyo koleksiyonlari",
-                "Telefon1" => "+90 224 482 24 00",
+                "Telefon1" => "+90 312 847 55 22",
                 "Telefon2" => "+90 533 597 32 14",
                 "Eposta" => "info@goldbanyom.com.tr",
-                "Adres" => "Çalı Mah. Ömer Biltekin Bulv. No:3/1A Nilüfer / BURSA",
+                "Adres" => "Çankırı Yolu 8. km Büğdüz Mah. 24. Sok. No: 4 Akyurt / ANKARA",
                 "Whatsapp" => "+90 533 597 32 14",
                 "Instagram" => "https://www.instagram.com/gold.banyom/",
                 "InstagramUrl" => "https://www.instagram.com/gold.banyom/",
@@ -3942,18 +3942,18 @@ public static class TohumVerisi
             {
                 Slug = "sertepe-195-daire-mutfak-dolabi",
                 Baslik = "Sertepe İnşaat — 195 Daire Mutfak Donanımı",
-                KisaAciklama = "Bursa Nilüfer'de 195 daireli rezidans projesi için lake kapak sistem tasarımı ve uygulaması.",
-                Aciklama = "<p>Bursa Nilüfer'de inşa edilen 195 daireli lüks konut projesinde VizitLink3D imzalı lake mutfak dolapları kullanıldı. Her daire için özel ölçüde üretilen mat lake kapaklar, modern ve sade çizgisiyle projenin genel tasarım anlayışını yansıtmaktadır.</p><p>Üretimden teslimata kadar tüm süreçler VizitLink3D kalite standartları çerçevesinde yürütülmüş; montaj ekibimiz tüm birimlerde titiz bir uygulama gerçekleştirmiştir.</p>",
+                KisaAciklama = "Ankara Akyurt'ta 195 daireli rezidans projesi için lake kapak sistem tasarımı ve uygulaması.",
+                Aciklama = "<p>Ankara Akyurt'ta inşa edilen 195 daireli lüks konut projesinde VizitLink3D imzalı lake mutfak dolapları kullanıldı. Her daire için özel ölçüde üretilen mat lake kapaklar, modern ve sade çizgisiyle projenin genel tasarım anlayışını yansıtmaktadır.</p><p>Üretimden teslimata kadar tüm süreçler VizitLink3D kalite standartları çerçevesinde yürütülmüş; montaj ekibimiz tüm birimlerde titiz bir uygulama gerçekleştirmiştir.</p>",
                 KategoriId = Kat("mutfak"),
                 MusteriAdi = "Sertepe İnşaat",
-                MusteriSehir = "Bursa",
+                MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/sertepe-insaat.png",
                 KapakResim = "/medya/mutfak/mutfak1a.jpg",
                 OneCikanMi = true,
                 SiraNo = 1,
                 AktifMi = true,
                 SeoBaslik = "Sertepe İnşaat 195 Daire Mutfak Projesi | VizitLink3D",
-                SeoAciklama = "Bursa Nilüfer'de 195 daireli konut projesinde lake mutfak dolabı uygulaması.",
+                SeoAciklama = "Ankara Akyurt'ta 195 daireli konut projesinde lake mutfak dolabı uygulaması.",
                 ProjeTarihi = new DateTime(2025, 9, 1, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
@@ -3980,18 +3980,18 @@ public static class TohumVerisi
             {
                 Slug = "ulu-cinar-16-villa-komple-kapi-kapak",
                 Baslik = "Ulu Çınar — 16 Villa Komple Kapı & Kapak",
-                KisaAciklama = "Bursa Mudanya'da 16 villanın tüm iç kapı ve mutfak kapak sistemi özel lake serisinden.",
-                Aciklama = "<p>Bursa Mudanya'daki prestijli villa projesinde 16 konutun tüm iç kapıları ve mutfak kapak sistemleri VizitLink3D özel lake serisiyle donatıldı. Her villa için birbirinden farklı renk ve doku kombinasyonları uygulanarak kişisel bir estetik anlayış yaratıldı.</p><p>Hem lake mutfak kapakları hem de iç mekan kapı modelleri aynı kaplama rengi ve dokusuyla birbiriyle uyumlu üretilerek bütünleşik bir iç mimari dil oluşturuldu.</p>",
+                KisaAciklama = "Ankara Mudanya'da 16 villanın tüm iç kapı ve mutfak kapak sistemi özel lake serisinden.",
+                Aciklama = "<p>Ankara Mudanya'daki prestijli villa projesinde 16 konutun tüm iç kapıları ve mutfak kapak sistemleri VizitLink3D özel lake serisiyle donatıldı. Her villa için birbirinden farklı renk ve doku kombinasyonları uygulanarak kişisel bir estetik anlayış yaratıldı.</p><p>Hem lake mutfak kapakları hem de iç mekan kapı modelleri aynı kaplama rengi ve dokusuyla birbiriyle uyumlu üretilerek bütünleşik bir iç mimari dil oluşturuldu.</p>",
                 KategoriId = Kat("mutfak"),
                 MusteriAdi = "Ulu Çınar",
-                MusteriSehir = "Bursa",
+                MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/ulu-cinar.png",
                 KapakResim = "/medya/mutfak/mutfak1c.jpg",
                 OneCikanMi = true,
                 SiraNo = 3,
                 AktifMi = true,
                 SeoBaslik = "Ulu Çınar 16 Villa Komple Kapı ve Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Bursa Mudanya'da 16 villa için lake kapak ve iç kapı sistemi uygulaması.",
+                SeoAciklama = "Ankara Mudanya'da 16 villa için lake kapak ve iç kapı sistemi uygulaması.",
                 ProjeTarihi = new DateTime(2025, 3, 20, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
@@ -3999,18 +3999,18 @@ public static class TohumVerisi
             {
                 Slug = "kumova-insaat-196-daire-membran-kapak",
                 Baslik = "Kumova İnşaat — 196 Daire Membran Kapak",
-                KisaAciklama = "Bursa Osmangazi'de 196 daireli projede ekonomik ve şık membran kapak çözümü.",
-                Aciklama = "<p>Bursa Osmangazi'deki 196 daireli konut projesinde VizitLink3D membran kapak sistemi tercih edildi. Bütçe dostu yapısına karşın yüksek estetik sunan membran kapaklar, geniş renk skalasıyla her dairenin ihtiyacına özel konfigüre edildi.</p><p>Kısa üretim süreleri ve hızlı montaj kapasitesiyle proje belirlenen takvim dahilinde tamamlanmıştır.</p>",
+                KisaAciklama = "Ankara Osmangazi'de 196 daireli projede ekonomik ve şık membran kapak çözümü.",
+                Aciklama = "<p>Ankara Osmangazi'deki 196 daireli konut projesinde VizitLink3D membran kapak sistemi tercih edildi. Bütçe dostu yapısına karşın yüksek estetik sunan membran kapaklar, geniş renk skalasıyla her dairenin ihtiyacına özel konfigüre edildi.</p><p>Kısa üretim süreleri ve hızlı montaj kapasitesiyle proje belirlenen takvim dahilinde tamamlanmıştır.</p>",
                 KategoriId = Kat("mutfak"),
                 MusteriAdi = "Kumova İnşaat",
-                MusteriSehir = "Bursa",
+                MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/kumova-insaat.png",
                 KapakResim = "/medya/mutfak/mutfak2a.jpg",
                 OneCikanMi = false,
                 SiraNo = 4,
                 AktifMi = true,
                 SeoBaslik = "Kumova İnşaat 196 Daire Membran Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Bursa Osmangazi'de 196 daireli konut projesi için membran kapak uygulaması.",
+                SeoAciklama = "Ankara Osmangazi'de 196 daireli konut projesi için membran kapak uygulaması.",
                 ProjeTarihi = new DateTime(2024, 11, 10, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
@@ -4056,18 +4056,18 @@ public static class TohumVerisi
             {
                 Slug = "yg-goktas-96-daire-lake-kapak-kapi",
                 Baslik = "YG Göktaş İnş. — 96 Daire Kapak & Kapı",
-                KisaAciklama = "Bursa Yıldırım'da 96 daireli projede lake mutfak kapağı ve ahşap görünümlü iç kapı kombinasyonu.",
-                Aciklama = "<p>Bursa Yıldırım'daki 96 daireli konut projesinde mutfak kapakları ve iç kapılar VizitLink3D imzasıyla hayata geçirildi. Lake mutfak kapakları açık gri rengi ile modern bir görünüm sunarken, iç kapılarda ahşap desenli kaplama tercih edilerek sıcak bir atmosfer yaratıldı.</p><p>Aynı proje bünyesindeki kapak ve kapı siparişleri koordineli üretimle eş zamanlı teslim edilmiş, montaj süreci kısaltılmıştır.</p>",
+                KisaAciklama = "Ankara Yıldırım'da 96 daireli projede lake mutfak kapağı ve ahşap görünümlü iç kapı kombinasyonu.",
+                Aciklama = "<p>Ankara Yıldırım'daki 96 daireli konut projesinde mutfak kapakları ve iç kapılar VizitLink3D imzasıyla hayata geçirildi. Lake mutfak kapakları açık gri rengi ile modern bir görünüm sunarken, iç kapılarda ahşap desenli kaplama tercih edilerek sıcak bir atmosfer yaratıldı.</p><p>Aynı proje bünyesindeki kapak ve kapı siparişleri koordineli üretimle eş zamanlı teslim edilmiş, montaj süreci kısaltılmıştır.</p>",
                 KategoriId = Kat("mutfak"),
                 MusteriAdi = "YG Göktaş İnşaat",
-                MusteriSehir = "Bursa",
+                MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/yg-goktas.png",
                 KapakResim = "/medya/mutfak/mutfak2c.jpg",
                 OneCikanMi = false,
                 SiraNo = 7,
                 AktifMi = true,
                 SeoBaslik = "YG Göktaş İnşaat 96 Daire Kapak ve Kapı Projesi | VizitLink3D",
-                SeoAciklama = "Bursa Yıldırım'da 96 daireli proje için lake kapak ve ahşap görünümlü kapı kombinasyonu.",
+                SeoAciklama = "Ankara Yıldırım'da 96 daireli proje için lake kapak ve ahşap görünümlü kapı kombinasyonu.",
                 ProjeTarihi = new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
@@ -4075,18 +4075,18 @@ public static class TohumVerisi
             {
                 Slug = "akar-insaat-60-daire-cam-kapakli-mutfak",
                 Baslik = "Akar İnşaat — 60 Daire Camlı Lake Mutfak",
-                KisaAciklama = "Bursa Nilüfer'de 60 daireli prestijli projede camlı lake kapak ve ahşap desen kombinasyonu.",
-                Aciklama = "<p>Bursa Nilüfer'deki 60 daireli üst segment konut projesinde VizitLink3D'un camlı lake kapak serisi tercih edildi. Temperli cam eklemeli üst dolap kapakları ile mat lake alt dolap kapakları bir arada kullanılarak çağdaş ve ferah bir mutfak görünümü elde edildi.</p><p>Her daire için renk ve cam kombinasyonu müşteri tercihine göre özelleştirilmiş; üretim süresi boyunca projede görevlendirilen VizitLink3D proje koordinatörü tüm süreci birebir takip etmiştir.</p>",
+                KisaAciklama = "Ankara Akyurt'ta 60 daireli prestijli projede camlı lake kapak ve ahşap desen kombinasyonu.",
+                Aciklama = "<p>Ankara Akyurt'taki 60 daireli üst segment konut projesinde VizitLink3D'un camlı lake kapak serisi tercih edildi. Temperli cam eklemeli üst dolap kapakları ile mat lake alt dolap kapakları bir arada kullanılarak çağdaş ve ferah bir mutfak görünümü elde edildi.</p><p>Her daire için renk ve cam kombinasyonu müşteri tercihine göre özelleştirilmiş; üretim süresi boyunca projede görevlendirilen VizitLink3D proje koordinatörü tüm süreci birebir takip etmiştir.</p>",
                 KategoriId = Kat("mutfak"),
                 MusteriAdi = "Akar İnşaat",
-                MusteriSehir = "Bursa",
+                MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/akar-insaat.png",
                 KapakResim = "/medya/gold-katalog/sayfa-010-hero.png",
                 OneCikanMi = true,
                 SiraNo = 8,
                 AktifMi = true,
                 SeoBaslik = "Akar İnşaat 60 Daire Camlı Lake Mutfak Projesi | VizitLink3D",
-                SeoAciklama = "Bursa Nilüfer'de 60 daireli proje için camlı lake kapak ve mat lake kombinasyonu.",
+                SeoAciklama = "Ankara Akyurt'ta 60 daireli proje için camlı lake kapak ve mat lake kombinasyonu.",
                 ProjeTarihi = new DateTime(2025, 4, 10, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             }
