@@ -2285,9 +2285,16 @@ public static class TohumVerisi
     private static string GoldKatalogUzanti(string dosyaAdiUzantisiz)
     {
         var kok = GoldKatalogMedyaKokunuBul();
-        if (kok != null && File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+        if (kok != null)
         {
-            return "webp";
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+                return "webp";
+
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".jpg")))
+                return "jpg";
+
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".jpeg")))
+                return "jpeg";
         }
 
         return "png";
@@ -3059,7 +3066,7 @@ public static class TohumVerisi
                 new UrunMedya
                 {
                     UrunId = capriceUrun.Id,
-                    MedyaUrl = "https://www.goldbanyom.com.tr/wp-content/uploads/2024/11/gold-banyom-40.jpg",
+                    MedyaUrl = "/medya/gold-katalog/caprice-110-beyaz-real-1.jpg",
                     MedyaTuru = "Resim",
                     Aciklama = "Caprice 110 Beyaz ön görünüm",
                     SiraNo = 1,
@@ -3068,7 +3075,7 @@ public static class TohumVerisi
                 new UrunMedya
                 {
                     UrunId = capriceUrun.Id,
-                    MedyaUrl = "https://www.goldbanyom.com.tr/wp-content/uploads/2024/11/gold-banyom-42.jpg",
+                    MedyaUrl = "/medya/gold-katalog/caprice-110-beyaz-real-2.jpg",
                     MedyaTuru = "Resim",
                     Aciklama = "Caprice 110 Beyaz detay görünümü",
                     SiraNo = 2,
@@ -3077,7 +3084,7 @@ public static class TohumVerisi
                 new UrunMedya
                 {
                     UrunId = capriceUrun.Id,
-                    MedyaUrl = "https://www.goldbanyom.com.tr/wp-content/uploads/2024/11/gold-banyom-39.jpg",
+                    MedyaUrl = "/medya/gold-katalog/caprice-110-beyaz-real-3.jpg",
                     MedyaTuru = "Resim",
                     Aciklama = "Caprice 110 Beyaz lavabo ünitesi",
                     SiraNo = 3,
@@ -3086,10 +3093,19 @@ public static class TohumVerisi
                 new UrunMedya
                 {
                     UrunId = capriceUrun.Id,
-                    MedyaUrl = "https://www.goldbanyom.com.tr/wp-content/uploads/2024/11/gold-banyom-43.jpg",
+                    MedyaUrl = "/medya/gold-katalog/caprice-110-beyaz-real-4.jpg",
                     MedyaTuru = "Resim",
                     Aciklama = "Caprice 110 Beyaz ayna ünitesi",
                     SiraNo = 4,
+                    AnaGosterim = false
+                },
+                new UrunMedya
+                {
+                    UrunId = capriceUrun.Id,
+                    MedyaUrl = "/medya/gold-katalog/caprice-110-beyaz-teknik.svg",
+                    MedyaTuru = "TeknikCizim",
+                    Aciklama = "Caprice 110 Beyaz teknik çizim",
+                    SiraNo = 5,
                     AnaGosterim = false
                 }
             );
