@@ -482,3 +482,24 @@ body {
   color: #888;
   line-height: 1.2;
 }
+
+/* Sahne / Render Ayar Paneli */
+.sahne-ayar-paneli {
+  background: #fbfaf7;
+  border: 1px solid #e7dcc8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.ayar-butonlari {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ayar-range {
+  width: 100%;
+  accent-color: #c5a059;
+  margin: 4px 0 12px;
+}

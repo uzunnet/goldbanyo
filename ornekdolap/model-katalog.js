@@ -1,241 +1,120 @@
 ﻿/**
  * Gold Banyo 3D Model Kataloğu — Demo
- * Her model objesi: { id, ad, kategori, dosya, aciklama, renk, varsayilan }
+ * Her model objesi: { id, ad, kategori, dosya, aciklama, renk, onizleme, varsayilan }
  * renk = kart önizleme rengi (modelin ana rengine göre)
+ * onizleme = thumbnail resim URL'si (simdilik bos)
  * model/ klasörüne GLB dosyaları bırakılarak kullanılır.
+ *
+ * Mevcut GLB: 9 adet (ADONIS, ARTE, ATREUS, CAPELLI 100/150, CAVALLI 90,
+ *                         DIAGO 100, DOLCE 100 PLUS, ELSA 60)
+ * Beklenen GLB: HERMES, GIORGIO, BOTTEGA, LUX, CLASSIC, MINIMAL, ROMA (21 adet)
  */
 const MODEL_KATALOGU = [
-  // ─── ARTE SERİSİ (mevcut — ARTE.glb) ──────────────────────
+  // ═══════════ ADONIS ═══════════
   {
-    id: "arte-120",
-    ad: "ARTE 120",
-    kategori: "Dolap",
+    id: "adonis",
+    ad: "ADONIS",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/ADONIS.glb",
+    aciklama: "Alt+Üst dolap, ayna, musluk, lavabo — 6 parça",
+    renk: "#8B8682",
+    onizleme: "",
+    varsayilan: false
+  },
+
+  // ═══════════ ARTE ═══════════
+  {
+    id: "arte",
+    ad: "ARTE",
+    kategori: "Banyo Dolabı",
     dosya: "./model/ARTE.glb",
-    aciklama: "120cm Arte banyo dolabı",
-    renk: "#808080",      // Gri gövde (Material__26)
+    aciklama: "Boy dolap + alt gövde, ayna, LED, kulp — 9 parça",
+    renk: "#808080",
+    onizleme: "",
     varsayilan: true
   },
 
-  // ─── HERMES SERİSİ ─────────────────────────────────────────
+  // ═══════════ ATREUS ═══════════
   {
-    id: "hermes-120",
-    ad: "HERMES 120",
-    kategori: "Dolap",
-    dosya: "./model/HERMES_120.glb",
-    aciklama: "120cm Hermes — Kahverengi lake gövde, altın aksesuar",
-    renk: "#442F29",      // Koyu kahve lake
-    varsayilan: false
-  },
-  {
-    id: "hermes-150",
-    ad: "HERMES 150",
-    kategori: "Dolap",
-    dosya: "./model/HERMES_150.glb",
-    aciklama: "150cm Hermes — Geniş çift kapılı",
-    renk: "#5A3A28",      // Ceviz kahve
-    varsayilan: false
-  },
-  {
-    id: "hermes-80",
-    ad: "HERMES 80",
-    kategori: "Dolap",
-    dosya: "./model/HERMES_80.glb",
-    aciklama: "80cm Hermes — Tek kapılı kompakt",
-    renk: "#6B4C3B",      // Açık kahve
+    id: "atreus",
+    ad: "ATREUS",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/ATREUS.glb",
+    aciklama: "Ayaklı tasarım, alt ünite, LED — 8 parça",
+    renk: "#6B5B4F",
+    onizleme: "",
     varsayilan: false
   },
 
-  // ─── GIORGIO SERİSİ ────────────────────────────────────────
+  // ═══════════ CAPELLI 100 ═══════════
   {
-    id: "giorgio-120",
-    ad: "GIORGIO 120",
-    kategori: "Dolap",
-    dosya: "./model/GIORGIO_120.glb",
-    aciklama: "120cm Giorgio — Antrasit gri, modern çizgi",
-    renk: "#383E42",      // Antrasit gri
-    varsayilan: false
-  },
-  {
-    id: "giorgio-150",
-    ad: "GIORGIO 150",
-    kategori: "Dolap",
-    dosya: "./model/GIORGIO_150.glb",
-    aciklama: "150cm Giorgio — Geniş çift kapılı",
-    renk: "#4A5055",      // Koyu gri
-    varsayilan: false
-  },
-  {
-    id: "giorgio-80",
-    ad: "GIORGIO 80",
-    kategori: "Dolap",
-    dosya: "./model/GIORGIO_80.glb",
-    aciklama: "80cm Giorgio — Tek kapılı kompakt",
-    renk: "#555B60",      // Orta gri
+    id: "capelli-100",
+    ad: "CAPELLI 100",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/capelli_100 cm.glb",
+    aciklama: "100cm — Cam kapak, alt gövde+kasa, LED — 7 parça",
+    renk: "#9E8B7E",
+    onizleme: "",
     varsayilan: false
   },
 
-  // ─── BOTTEGA SERİSİ ────────────────────────────────────────
+  // ═══════════ CAPELLI 150 ═══════════
   {
-    id: "bottega-100",
-    ad: "BOTTEGA 100",
-    kategori: "Dolap",
-    dosya: "./model/BOTTEGA_100.glb",
-    aciklama: "100cm Bottega — Doğal taş tonu",
-    renk: "#928E85",      // Taş grisi
-    varsayilan: false
-  },
-  {
-    id: "bottega-120",
-    ad: "BOTTEGA 120",
-    kategori: "Dolap",
-    dosya: "./model/BOTTEGA_120.glb",
-    aciklama: "120cm Bottega — Krem-gri geçiş",
-    renk: "#A09C93",      // Açık taş
-    varsayilan: false
-  },
-  {
-    id: "bottega-150",
-    ad: "BOTTEGA 150",
-    kategori: "Dolap",
-    dosya: "./model/BOTTEGA_150.glb",
-    aciklama: "150cm Bottega — Geniş çift kapılı",
-    renk: "#B0ACA3",      // Açık krem-gri
+    id: "capelli-150",
+    ad: "CAPELLI 150",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/CAPELLI 150.glb",
+    aciklama: "150cm — Geniş cam kapak, çift çekmeceli — 7 parça",
+    renk: "#B8A99A",
+    onizleme: "",
     varsayilan: false
   },
 
-  // ─── DİAGO SERİSİ ──────────────────────────────────────────
+  // ═══════════ CAVALLI 90 ═══════════
   {
-    id: "diago-80",
-    ad: "DİAGO 80",
-    kategori: "Dolap",
-    dosya: "./model/DIAGO_80.glb",
-    aciklama: "80cm Diago — Mat siyah, minimal tasarım",
-    renk: "#1A1A1C",      // Koyu siyah
+    id: "cavalli-90",
+    ad: "CAVALLI 90",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/CAVALLI 90.glb",
+    aciklama: "90cm — Kulp+ayaklı, çoklu kapak, LED — 9 parça",
+    renk: "#D4C5B2",
+    onizleme: "",
     varsayilan: false
   },
+
+  // ═══════════ DIAGO 100 ═══════════
   {
     id: "diago-100",
-    ad: "DİAGO 100",
-    kategori: "Dolap",
-    dosya: "./model/DIAGO_100.glb",
-    aciklama: "100cm Diago — Mat siyah, altın kulp",
-    renk: "#252527",      // Siyah
-    varsayilan: false
-  },
-  {
-    id: "diago-120",
-    ad: "DİAGO 120",
-    kategori: "Dolap",
-    dosya: "./model/DIAGO_120.glb",
-    aciklama: "120cm Diago — Çift kapılı siyah",
-    renk: "#2E2E30",      // Siyah-gri
+    ad: "DIAGO 100",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/DIAGO 100 CM.glb",
+    aciklama: "100cm — Krom çerçeve, mat siyah, tabla — 8 parça",
+    renk: "#1A1A1C",
+    onizleme: "",
     varsayilan: false
   },
 
-  // ─── LUX SERİSİ ────────────────────────────────────────────
+  // ═══════════ DOLCE 100 PLUS ═══════════
   {
-    id: "lux-120",
-    ad: "LUX 120",
-    kategori: "Dolap",
-    dosya: "./model/LUX_120.glb",
-    aciklama: "120cm Lux — Beyaz lake, altın detay",
-    renk: "#F2ECE1",      // Saf beyaz
-    varsayilan: false
-  },
-  {
-    id: "lux-150",
-    ad: "LUX 150",
-    kategori: "Dolap",
-    dosya: "./model/LUX_150.glb",
-    aciklama: "150cm Lux — Geniş beyaz lake",
-    renk: "#E9E0CB",      // Krem beyaz
+    id: "dolce-100-plus",
+    ad: "DOLCE 100 PLUS",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/DOLCE 100 PLUS.glb",
+    aciklama: "100cm+ — En kapsamlı: yan dolap, 4 kapak, metal — 12 parça",
+    renk: "#C8BFB0",
+    onizleme: "",
     varsayilan: false
   },
 
-  // ─── CLASSIC SERİSİ ────────────────────────────────────────
+  // ═══════════ ELSA 60 ═══════════
   {
-    id: "classic-80",
-    ad: "CLASSIC 80",
-    kategori: "Dolap",
-    dosya: "./model/CLASSIC_80.glb",
-    aciklama: "80cm Classic — Klasik beyaz, oymalı",
-    renk: "#F5F0E5",      // Klasik beyaz
-    varsayilan: false
-  },
-  {
-    id: "classic-100",
-    ad: "CLASSIC 100",
-    kategori: "Dolap",
-    dosya: "./model/CLASSIC_100.glb",
-    aciklama: "100cm Classic — Klasik krem",
-    renk: "#EDE5D8",      // Krem
-    varsayilan: false
-  },
-  {
-    id: "classic-120",
-    ad: "CLASSIC 120",
-    kategori: "Dolap",
-    dosya: "./model/CLASSIC_120.glb",
-    aciklama: "120cm Classic — Klasik krem, çift kapılı",
-    renk: "#E5DDD0",      // Koyu krem
-    varsayilan: false
-  },
-  {
-    id: "classic-150",
-    ad: "CLASSIC 150",
-    kategori: "Dolap",
-    dosya: "./model/CLASSIC_150.glb",
-    aciklama: "150cm Classic — Geniş klasik",
-    renk: "#D8D0C3",      // Taş krem
-    varsayilan: false
-  },
-
-  // ─── MINIMAL SERİSİ ────────────────────────────────────────
-  {
-    id: "minimal-60",
-    ad: "MINIMAL 60",
-    kategori: "Dolap",
-    dosya: "./model/MINIMAL_60.glb",
-    aciklama: "60cm Minimal — Süper kompakt, beyaz",
-    renk: "#FAFAFA",      // Saf beyaz
-    varsayilan: false
-  },
-  {
-    id: "minimal-80",
-    ad: "MINIMAL 80",
-    kategori: "Dolap",
-    dosya: "./model/MINIMAL_80.glb",
-    aciklama: "80cm Minimal — Temiz çizgi, beyaz",
-    renk: "#F5F5F5",      // Beyaz
-    varsayilan: false
-  },
-  {
-    id: "minimal-100",
-    ad: "MINIMAL 100",
-    kategori: "Dolap",
-    dosya: "./model/MINIMAL_100.glb",
-    aciklama: "100cm Minimal — Geniş minimal",
-    renk: "#EEEEEE",      // Açık gri-beyaz
-    varsayilan: false
-  },
-
-  // ─── ROMA SERİSİ ───────────────────────────────────────────
-  {
-    id: "roma-100",
-    ad: "ROMA 100",
-    kategori: "Dolap",
-    dosya: "./model/ROMA_100.glb",
-    aciklama: "100cm Roma — Mermer dokulu, sıcak ton",
-    renk: "#C9B99A",      // Sıcak taş
-    varsayilan: false
-  },
-  {
-    id: "roma-120",
-    ad: "ROMA 120",
-    kategori: "Dolap",
-    dosya: "./model/ROMA_120.glb",
-    aciklama: "120cm Roma — Mermer dokulu, geniş",
-    renk: "#B8A889",      // Koyu sıcak taş
+    id: "elsa-60",
+    ad: "ELSA 60",
+    kategori: "Banyo Dolabı",
+    dosya: "./model/ELSA 60.glb",
+    aciklama: "60cm — Kompakt alt+üst dolap, iç tabla — 6 parça",
+    renk: "#F5F0EB",
+    onizleme: "",
     varsayilan: false
   }
 ];

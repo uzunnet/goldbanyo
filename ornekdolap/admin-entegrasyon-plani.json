@@ -1,0 +1,71 @@
+﻿{
+  "adminEntegrasyonPlani": {
+    "aciklama": "ornekdolap JSON katalogundan admin DB entity'lerine aktarim plani",
+    "adimlar": [
+      {
+        "adim": 1,
+        "baslik": "Modelleri UrunUcBoyutModeli tablosuna aktar",
+        "detay": "Her model icin bir UrunUcBoyutModeli kaydi olustur. Dosya yolu, kategori, boyut bilgilerini tasi.",
+        "kaynakAlan": "modeller[].id, ad, dosya, kategori, boyut",
+        "hedefEntity": "UrunUcBoyutModeli"
+      },
+      {
+        "adim": 2,
+        "baslik": "Parcalari UrunUcBoyutParcasi tablosuna aktar",
+        "detay": "Her modelin parcalarini UrunUcBoyutParcasi olarak ekle. ParcaTipi, meshAdi, renklenebilirMi, malzemeDegisebilirMi, malzemeKisiti bilgilerini tasi.",
+        "kaynakAlan": "modeller[].parcalar[]",
+        "hedefEntity": "UrunUcBoyutParcasi",
+        "parcaTipiEsleme": {
+          "govde": "Govde",
+          "kapak": "Govde (altTip ile ayirt edilir)",
+          "ayna": "Ayna",
+          "lavabo": "Porselen",
+          "musluk": "Musluk",
+          "kulp": "Kulp",
+          "led": "Diger (ozel: LED)",
+          "ustTabla": "Diger (ozel: UstTabla)",
+          "icTabla": "Diger (ozel: IcTabla)",
+          "metalAksam": "Metal",
+          "ayak": "Zemin",
+          "yanDolap": "Govde",
+          "bilinmeyen": "Diger"
+        }
+      },
+      {
+        "adim": 3,
+        "baslik": "Malzeme katalogunu Malzeme tablosuna aktar",
+        "detay": "malzemeTipleri icindeki 11 malzemeyi Malzeme tablosuna ekle. PBR degerleri (metalness, roughness) opsiyonel metadata olarak saklanabilir.",
+        "kaynakAlan": "malzemeTipleri",
+        "hedefEntity": "Malzeme"
+      },
+      {
+        "adim": 4,
+        "baslik": "Renk katalogunu RalRengi tablosuna aktar",
+        "detay": "renkKatalogu icindeki 8 rengi RalRengi tablosuna ekle. Kod, Ad, HexKod alanlarini tasi.",
+        "kaynakAlan": "renkKatalogu",
+        "hedefEntity": "RalRengi"
+      },
+      {
+        "adim": 5,
+        "baslik": "Urun temalarini UrunParcaRenkSecenegi + UrunParcaMalzemeSecenegi olarak aktar",
+        "detay": "Her urun temasi, parca bazinda varsayilan renk ve malzeme secimi olarak UrunParcaRenkSecenegi ve UrunParcaMalzemeSecenegi tablolarina aktarilir.",
+        "kaynakAlan": "urunTemalari",
+        "hedefEntity": "UrunParcaRenkSecenegi, UrunParcaMalzemeSecenegi"
+      },
+      {
+        "adim": 6,
+        "baslik": "GLB dosyalarini medya havuzuna tasi",
+        "detay": "GLB dosyalari wwwroot/medya/3d-modeller/ altina kopyalanir. UrunUcBoyutModeli.DosyaYolu buna gore guncellenir.",
+        "kaynak": "ornekdolap/model/*.glb",
+        "hedef": "wwwroot/medya/3d-modeller/"
+      }
+    ],
+    "onemliNotlar": [
+      "ADONIS.glb'de 'üst dolap' ve CAVALLI 90.glb'de 'kapaklar' tek mesh olarak geliyor - bolunemez",
+      "Mesh adlarinda Türkçe karakter sorunu var - editor/export duzeltilmeli",
+      "Bilinmeyen mesh'ler (Cylinder062, Circle176, dolce80.006) admin panelinde manuel eslenmeli",
+      "Admin panelindeki UcBoyutParcaEsleme.razor zaten bu is akisi icin hazir",
+      "model-katalog.js icindeki 30 modelin 21 tanesinin GLB dosyasi eksik - temin edilmeli"
+    ]
+  }
+}
