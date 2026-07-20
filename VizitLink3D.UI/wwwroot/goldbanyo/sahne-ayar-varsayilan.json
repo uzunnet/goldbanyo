@@ -1,0 +1,71 @@
+﻿{
+  "schemaVersion": 1,
+  "ayarKodu": "goldbanyo-showroom-fabrika",
+  "ad": "Gold Banyo Showroom Fabrika Ayarı",
+  "aciklama": "3D banyo dolabı konfigüratörü için render, sahne, kamera, ışık, materyal ve LED fabrika ayarları.",
+  "tenantId": null,
+  "temaKodu": "gold-luxury-modern",
+  "aktifMi": true,
+  "olusturulmaTarihi": "2026-07-20T00:00:00Z",
+  "ayarlar": {
+    "render": {
+      "toneMapping": "ACESFilmicToneMapping",
+      "exposure": 0.56,
+      "pixelRatioLimit": 2,
+      "shadowMap": "PCFSoftShadowMap",
+      "backgroundColor": "#050505",
+      "fogColor": "#171717",
+      "fogNear": 16,
+      "fogFar": 34,
+      "environmentMode": "hdr-pmrem",
+      "environmentIntensity": 1.0
+    },
+    "camera": {
+      "fov": 32,
+      "near": 0.1,
+      "far": 120,
+      "initialPosition": { "x": 3.2, "y": 1.85, "z": 5.9 },
+      "fitDistanceMultiplier": 2.28,
+      "fitOffset": { "x": 0.28, "y": 0.10, "z": 0.0 },
+      "controls": {
+        "enableDamping": true,
+        "dampingFactor": 0.08,
+        "target": { "x": 0, "y": 1.2, "z": 0 },
+        "minDistance": 2.5,
+        "maxDistance": 10
+      }
+    },
+    "lighting": {
+      "hemisphere": { "enabled": true, "skyColor": "#f0eadf", "groundColor": "#151515", "intensity": 0.24 },
+      "key": { "enabled": true, "color": "#fff4e3", "intensity": 0.30, "position": { "x": 4.2, "y": 5.4, "z": 4.8 }, "shadowBias": -0.0008, "normalBias": 0.035, "shadowMapSize": 2048 },
+      "rim": { "enabled": true, "color": "#dfeaff", "intensity": 0.10, "position": { "x": -4.2, "y": 2.6, "z": 4.8 } },
+      "fill": { "enabled": true, "color": "#c9def8", "intensity": 0.06, "distance": 10, "position": { "x": -4.5, "y": 3.1, "z": -1.8 } },
+      "shadowPlane": { "enabled": true, "opacity": 0.16, "radius": 6.5 }
+    },
+    "materials": {
+      "globalEnvMapScale": 1.0,
+      "globalClearcoatScale": 1.0,
+      "globalRoughnessOffset": 0.0,
+      "camOpacity": 0.82,
+      "mirror": { "color": "#d8dbd8", "roughness": 0.045, "envMapIntensity": 1.25, "backReflection": false },
+      "fixedFrame": { "material": "metal", "color": "#b7b2a8" }
+    },
+    "led": {
+      "enabled": true,
+      "defaultLevel": "dusuk",
+      "defaultColor": "sicakSari",
+      "levels": {
+        "dusuk": { "lightIntensity": 0.14, "emissiveIntensity": 0.38 },
+        "orta": { "lightIntensity": 0.24, "emissiveIntensity": 0.58 },
+        "yuksek": { "lightIntensity": 0.36, "emissiveIntensity": 0.82 },
+        "maksimum": { "lightIntensity": 0.52, "emissiveIntensity": 1.08 }
+      },
+      "colors": {
+        "sicakSari": "#ffd36a",
+        "gunisigi": "#fff1c1",
+        "beyaz": "#ffffff",
+        "sogukBeyaz": "#dff3ff"
+      }
+    }
+  }
+}

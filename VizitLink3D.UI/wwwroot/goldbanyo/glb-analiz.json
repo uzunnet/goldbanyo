@@ -1,0 +1,218 @@
+﻿{
+    "DIAGO 100 CM.glb":  {
+                             "meshes":  [
+                                            "LAVABO",
+                                            "KROM CERCEVE",
+                                            "AYNA",
+                                            "LED",
+                                            "MUSLUK",
+                                            "TABLA",
+                                            "GÖVDE",
+                                            "KAPAK"
+                                        ],
+                             "meshCount":  8,
+                             "nodeCount":  8,
+                             "nodes":  [
+                                           "LAVABO",
+                                           "KROM CERCEVE",
+                                           "AYNA",
+                                           "LED",
+                                           "MUSLUK",
+                                           "TABLA",
+                                           "GÖVDE",
+                                           "KAPAK"
+                                       ]
+                         },
+    "capelli_100 cm.glb":  {
+                               "meshes":  [
+                                              "led",
+                                              "ayna",
+                                              "musluk",
+                                              "lavabo",
+                                              "alt gövde",
+                                              "kasa",
+                                              "kapak cam"
+                                          ],
+                               "meshCount":  7,
+                               "nodeCount":  7,
+                               "nodes":  [
+                                             "led",
+                                             "ayna",
+                                             "musluk",
+                                             "lavabo",
+                                             "alt gövde",
+                                             "kasa",
+                                             "kapak cam"
+                                         ]
+                           },
+    "ELSA 60.glb":  {
+                        "meshes":  [
+                                       "üst dolap",
+                                       "ayna",
+                                       "alt dolap",
+                                       "lavobo",
+                                       "ic",
+                                       "musluk"
+                                   ],
+                        "meshCount":  6,
+                        "nodeCount":  6,
+                        "nodes":  [
+                                      "üst dolap",
+                                      "ayna",
+                                      "alt dolap",
+                                      "lavobo",
+                                      "ic",
+                                      "musluk"
+                                  ]
+                    },
+    "DOLCE 100 PLUS.glb":  {
+                               "meshes":  [
+                                              "lavabo",
+                                              "dolce80.006",
+                                              "musluk",
+                                              "yan dolap",
+                                              "üst dolap",
+                                              "ayna",
+                                              "led",
+                                              "yan metal",
+                                              "yan dolap kapak",
+                                              "yan dolap kapak1",
+                                              "alt dolap kapak",
+                                              "alt dolap"
+                                          ],
+                               "meshCount":  12,
+                               "nodeCount":  12,
+                               "nodes":  [
+                                             "lavabo",
+                                             "dolce80.006",
+                                             "musluk",
+                                             "yan dolap",
+                                             "üst dolap",
+                                             "ayna",
+                                             "led",
+                                             "yan metal",
+                                             "yan dolap kapak",
+                                             "yan dolap kapak1",
+                                             "alt dolap kapak",
+                                             "alt dolap"
+                                         ]
+                           },
+    "ARTE.glb":  {
+                     "meshes":  [
+                                    "LED",
+                                    "Lavabo",
+                                    "ALT GÖVDE",
+                                    "BOY DOLAP GÖVDE",
+                                    "AYNA",
+                                    "BOY DOLAP KAPAK",
+                                    "MUSLUK",
+                                    "KAPAK",
+                                    "kulp"
+                                ],
+                     "meshCount":  9,
+                     "nodeCount":  9,
+                     "nodes":  [
+                                   "LED",
+                                   "Lavabo",
+                                   "ALT GÖVDE",
+                                   "BOY DOLAP GÖVDE",
+                                   "AYNA",
+                                   "BOY DOLAP KAPAK",
+                                   "MUSLUK",
+                                   "KAPAK",
+                                   "kulp"
+                               ]
+                 },
+    "ATREUS.glb":  {
+                       "meshes":  [
+                                      "GÖVDE",
+                                      "ALT ÜNİTE",
+                                      "AYAK",
+                                      "KAPAK",
+                                      "Cylinder062",
+                                      "LAVABO",
+                                      "LED",
+                                      "Circle176"
+                                  ],
+                       "meshCount":  8,
+                       "nodeCount":  8,
+                       "nodes":  [
+                                     "GÖVDE",
+                                     "ALT ÜNİTE",
+                                     "AYAK",
+                                     "KAPAK",
+                                     "Cylinder062",
+                                     "LAVABO",
+                                     "LED",
+                                     "Circle176"
+                                 ]
+                   },
+    "ADONIS.glb":  {
+                       "meshes":  [
+                                      "alt dolap",
+                                      "üst dolap",
+                                      "musluk",
+                                      "ayna",
+                                      "kapak",
+                                      "lavabo"
+                                  ],
+                       "meshCount":  6,
+                       "nodeCount":  6,
+                       "nodes":  [
+                                     "alt dolap",
+                                     "üst dolap",
+                                     "musluk",
+                                     "ayna",
+                                     "kapak",
+                                     "lavabo"
+                                 ]
+                   },
+    "CAPELLI 150.glb":  {
+                            "meshes":  [
+                                           "alt dolap",
+                                           "led",
+                                           "alt dolap kasa",
+                                           "alt kapak cam",
+                                           "lavabo",
+                                           "ayna",
+                                           "musluk"
+                                       ],
+                            "meshCount":  7,
+                            "nodeCount":  7,
+                            "nodes":  [
+                                          "alt dolap",
+                                          "led",
+                                          "alt dolap kasa",
+                                          "alt kapak cam",
+                                          "lavabo",
+                                          "ayna",
+                                          "musluk"
+                                      ]
+                        },
+    "CAVALLI 90.glb":  {
+                           "meshes":  [
+                                          "lavabo",
+                                          "üst dolap",
+                                          "ayna",
+                                          "kapaklar",
+                                          "kulp",
+                                          "ayak",
+                                          "musluk",
+                                          "led",
+                                          "alt dolap"
+                                      ],
+                           "meshCount":  9,
+                           "nodeCount":  9,
+                           "nodes":  [
+                                         "lavabo",
+                                         "üst dolap",
+                                         "ayna",
+                                         "kapaklar",
+                                         "kulp",
+                                         "ayak",
+                                         "musluk",
+                                         "led",
+                                         "alt dolap"
+                                     ]
+                       }
+}
