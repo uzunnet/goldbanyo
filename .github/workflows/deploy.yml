@@ -109,7 +109,7 @@ jobs:
             docker stop goldbanyo-ui || true
             docker rm goldbanyo-ui || true
             docker run -d --name goldbanyo-ui --restart unless-stopped \
-              -p 5113:8080 \
+              -p 5113:80 \
               ghcr.io/uzunnet/goldbanyo-ui:latest
 
             docker pull ghcr.io/uzunnet/goldbanyo-api:latest
