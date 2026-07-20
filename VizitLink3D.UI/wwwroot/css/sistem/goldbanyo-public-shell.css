@@ -1027,10 +1027,10 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 760px) {
   .gb-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto auto auto;
     align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
+    gap: 4px;
+    padding: 6px 8px;
     min-height: 56px;
     height: 56px;
     overflow: visible;
@@ -1075,9 +1075,42 @@ a { color: inherit; text-decoration: none; }
     display: contents;
   }
 
-  .gb-header__actions .gb-dil-secici,
+  /* Mobilde dil ve tema HEADER'da gorunur — kompakt */
+  .gb-header__actions .gb-dil-secici {
+    display: inline-flex !important;
+    grid-column: 2;
+    grid-row: 1;
+    padding: 3px 5px;
+    gap: 2px;
+    font-size: 0.5rem;
+    min-height: 26px;
+    border-radius: 6px;
+  }
+
+  .gb-header__actions .gb-dil-secici span {
+    display: none;
+  }
+
+  .gb-header__actions .gb-dil-secici select {
+    font-size: 0.5rem;
+    padding: 0;
+    max-width: 28px;
+    min-width: 22px;
+  }
+
   .gb-header__actions .gb-mod-secici {
-    display: none !important;
+    display: inline-flex !important;
+    grid-column: 3;
+    grid-row: 1;
+    padding: 2px;
+    gap: 2px;
+    min-height: 26px;
+  }
+
+  .gb-header__actions .gb-mod-secici .gb-mod-btn {
+    min-height: 20px;
+    padding: 0 5px;
+    font-size: 0.42rem;
   }
 
   .gb-mobil-menu__araclar {
@@ -1112,29 +1145,29 @@ a { color: inherit; text-decoration: none; }
   }
 
   .gb-cta {
-    grid-column: 2;
+    grid-column: 4;
     grid-row: 1;
-    min-width: 72px;
-    max-width: 82px;
-    min-height: 32px;
-    height: 32px;
-    padding: 5px 6px;
-    font-size: 0.46rem;
-    letter-spacing: 0.045em;
+    min-width: 60px;
+    max-width: 72px;
+    min-height: 28px;
+    height: 28px;
+    padding: 4px 5px;
+    font-size: 0.44rem;
+    letter-spacing: 0.04em;
     white-space: nowrap;
     border-radius: var(--tema-kose-sm, 2px);
   }
 
   .gb-mobil-menu-dugme {
     display: inline-flex !important;
-    grid-column: 3;
+    grid-column: 5;
     grid-row: 1;
     width: auto;
-    min-width: 58px;
-    height: 32px;
-    padding: 0 8px;
+    min-width: 50px;
+    height: 28px;
+    padding: 0 6px;
     flex-direction: row;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
@@ -1214,34 +1247,66 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.72rem;
   }
 
+  .gb-header {
+    gap: 3px !important;
+    padding: 5px 6px !important;
+    min-height: 50px !important;
+    height: 50px !important;
+  }
+
+  .gb-header__actions .gb-dil-secici {
+    padding: 2px 4px !important;
+    font-size: 0.45rem !important;
+    min-height: 24px !important;
+  }
+
+  .gb-header__actions .gb-dil-secici select {
+    font-size: 0.45rem !important;
+    max-width: 24px !important;
+    min-width: 20px !important;
+  }
+
+  .gb-header__actions .gb-mod-secici {
+    padding: 1px !important;
+    gap: 1px !important;
+    min-height: 24px !important;
+  }
+
+  .gb-header__actions .gb-mod-secici .gb-mod-btn {
+    min-height: 18px !important;
+    padding: 0 4px !important;
+    font-size: 0.38rem !important;
+  }
+
   .gb-cta {
-    min-width: 64px;
-    max-width: 70px;
-    min-height: 30px;
-    height: 30px;
-    font-size: 0.42rem;
-    padding: 4px 5px;
+    min-width: 52px;
+    max-width: 62px;
+    min-height: 26px;
+    height: 26px;
+    font-size: 0.4rem;
+    padding: 3px 4px;
   }
 
   .gb-mobil-menu-dugme {
-    min-width: 52px;
-    height: 30px;
-    padding: 0 6px;
-    gap: 5px;
+    min-width: 44px;
+    height: 26px;
+    padding: 0 5px;
+    gap: 4px;
   }
 
   .gb-mobil-menu-dugme__metin {
-    font-size: .43rem;
+    font-size: .4rem;
   }
 
   .gb-mobil-menu-dugme__ikon span {
-    width: 13px;
+    width: 12px;
+    height: 1.5px;
   }
 
   .gb-mobil-menu--acik {
     left: 8px;
     right: 8px;
-    top: calc(env(safe-area-inset-top, 0px) + 58px);
+    top: calc(env(safe-area-inset-top, 0px) + 56px);
   }
 
   .gb-mobil-menu__araclar {
@@ -1256,6 +1321,80 @@ a { color: inherit; text-decoration: none; }
   .gb-mod-secici--mobil .gb-mod-btn {
     padding: 0 7px;
     font-size: .52rem;
+  }
+}
+
+/* ── MOBIL HEADER — CIKMAZ DAR (360px alti) ── */
+@media (max-width: 360px) {
+  .gb-header {
+    gap: 2px !important;
+    padding: 4px 4px !important;
+    min-height: 46px !important;
+    height: 46px !important;
+  }
+
+  .gb-brand img {
+    max-height: 28px !important;
+    max-width: 88px !important;
+  }
+
+  .gb-brand__text {
+    max-width: 72px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .gb-brand__mark {
+    display: none !important;
+  }
+
+  .gb-header__actions .gb-dil-secici {
+    padding: 2px 3px !important;
+    font-size: 0.42rem !important;
+    min-height: 22px !important;
+  }
+
+  .gb-header__actions .gb-dil-secici select {
+    font-size: 0.42rem !important;
+    max-width: 22px !important;
+    min-width: 18px !important;
+  }
+
+  .gb-header__actions .gb-mod-secici {
+    padding: 1px !important;
+    gap: 1px !important;
+    min-height: 22px !important;
+  }
+
+  .gb-header__actions .gb-mod-secici .gb-mod-btn {
+    min-height: 16px !important;
+    padding: 0 3px !important;
+    font-size: 0.35rem !important;
+  }
+
+  .gb-cta {
+    display: none !important;
+  }
+
+  .gb-mobil-menu-dugme {
+    min-width: 40px !important;
+    height: 24px !important;
+    padding: 0 4px !important;
+    gap: 3px !important;
+  }
+
+  .gb-mobil-menu-dugme__metin {
+    font-size: .38rem !important;
+  }
+
+  .gb-mobil-menu-dugme__ikon span {
+    width: 11px !important;
+    height: 1.5px !important;
+  }
+
+  .gb-mobil-menu--acik {
+    left: 6px !important;
+    right: 6px !important;
+    top: calc(env(safe-area-inset-top, 0px) + 52px) !important;
   }
 }
 
