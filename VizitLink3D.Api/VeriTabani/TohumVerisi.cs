@@ -2295,6 +2295,9 @@ public static class TohumVerisi
 
             if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".jpeg")))
                 return "jpeg";
+
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".svg")))
+                return "svg";
         }
 
         return "png";

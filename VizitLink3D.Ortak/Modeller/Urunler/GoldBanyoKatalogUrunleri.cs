@@ -35,9 +35,13 @@ public sealed class GoldBanyoKatalogUrunu
     private static string GoldKatalogUzantiGetir(string dosyaAdiUzantisiz)
     {
         var kok = GoldKatalogMedyaKokunuBul();
-        if (kok != null && File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+        if (kok != null)
         {
-            return "webp";
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".webp")))
+                return "webp";
+
+            if (File.Exists(Path.Combine(kok, dosyaAdiUzantisiz + ".svg")))
+                return "svg";
         }
 
         return "png";
