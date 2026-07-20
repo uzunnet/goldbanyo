@@ -92,40 +92,31 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ╔════════════════════════════════════════════════════════════════╗
-  # ║  DEPLOY (Coolify / SSH)                                       ║
-  # ║  Aşağıdaki adım yorum satırıdır.                              ║
-  # ║  SSH_HOST, SSH_USER, SSH_KEY secret olarak tanımlı olmalı.     ║
-  # ║  Bu adımı aktif etmek için yorum satırlarını kaldırın.        ║
-  # ╚════════════════════════════════════════════════════════════════╝
+  deploy:
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+    environment: production
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: docker-build-push
-  #   environment: production
-  #
-  #   steps:
-  #     - name: Deploy via SSH
-  #       uses: appleboy/ssh-action@v1
-  #       with:
-  #         host: ${{ secrets.SSH_HOST }}
-  #         username: ${{ secrets.SSH_USER }}
-  #         key: ${{ secrets.SSH_KEY }}
-  #         script: |
-  #           # UI imajını çek ve yeniden başlat
-  #           docker pull ghcr.io/uzunnet/goldbanyo-ui:latest
-  #           docker stop goldbanyo-ui || true
-  #           docker rm goldbanyo-ui || true
-  #           docker run -d --name goldbanyo-ui --restart unless-stopped \
-  #             -p 5113:8080 \
-  #             ghcr.io/uzunnet/goldbanyo-ui:latest
-  #
-  #           # API imajını çek ve yeniden başlat
-  #           docker pull ghcr.io/uzunnet/goldbanyo-api:latest
-  #           docker stop goldbanyo-api || true
-  #           docker rm goldbanyo-api || true
-  #           docker run -d --name goldbanyo-api --restart unless-stopped \
-  #             -p 5115:8080 \
-  #             ghcr.io/uzunnet/goldbanyo-api:latest
-  #
-  #           echo "Deploy tamamlandı: $(date)"
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ghcr.io/uzunnet/goldbanyo-ui:latest
+            docker stop goldbanyo-ui || true
+            docker rm goldbanyo-ui || true
+            docker run -d --name goldbanyo-ui --restart unless-stopped \
+              -p 5113:8080 \
+              ghcr.io/uzunnet/goldbanyo-ui:latest
+
+            docker pull ghcr.io/uzunnet/goldbanyo-api:latest
+            docker stop goldbanyo-api || true
+            docker rm goldbanyo-api || true
+            docker run -d --name goldbanyo-api --restart unless-stopped \
+              -p 5115:8080 \
+              ghcr.io/uzunnet/goldbanyo-api:latest
+
+            echo "Deploy tamamlandi: $(date)"
