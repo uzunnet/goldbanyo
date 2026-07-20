@@ -62,6 +62,26 @@
         <nav id="gb-mobil-menu"
              class="@MobilMenuClass"
              aria-label="@DilServisi.T("menu.mobil", "Mobil menü")">
+            <div class="gb-mobil-menu__araclar">
+                <label class="gb-dil-secici gb-dil-secici--mobil">
+                    <span>@DilServisi.T("ortak.dil", "Dil")</span>
+                    <select value="@_aktifDil" @onchange="DilSecildi">
+                        @foreach (var dilBilgisi in _diller)
+                        {
+                            <option value="@dilBilgisi.Kod">@dilBilgisi.Kod.ToUpper()</option>
+                        }
+                    </select>
+                </label>
+
+                <div class="gb-mod-secici gb-mod-secici--mobil">
+                    <button type="button" class="@TemaModuClass("acik")" @onclick='() => TemaModuDegistir("acik")'>
+                        @DilServisi.T("ortak.acik", "Açık")
+                    </button>
+                    <button type="button" class="@TemaModuClass("koyu")" @onclick='() => TemaModuDegistir("koyu")'>
+                        @DilServisi.T("ortak.koyu", "Koyu")
+                    </button>
+                </div>
+            </div>
             @foreach (var oge in _menu)
             {
                 <a href="@oge.Url" class="gb-mobil-menu__link" @onclick="MobilMenuKapat">@MenuBasligi(oge)</a>
