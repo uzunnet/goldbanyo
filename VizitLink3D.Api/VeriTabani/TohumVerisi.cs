@@ -236,11 +236,7 @@ public static class TohumVerisi
             if (!await vt.SayfaDuzenAyarlari.AnyAsync(a => a.SayfaKodu == "anasayfa"))
                 vt.SayfaDuzenAyarlari.Add(new SayfaDuzenAyari { SayfaKodu = "anasayfa", SayfaAdi = "Ana Sayfa", SutunAdet = 4, SatirAdet = 1, SayfaBasinaAdet = 4, SayfalamaAktif = false, AktifMi = true });
 
-            if (!await vt.SayfaDuzenAyarlari.AnyAsync(a => a.SayfaKodu == "kapak-sistemleri"))
-                vt.SayfaDuzenAyarlari.Add(new SayfaDuzenAyari { SayfaKodu = "kapak-sistemleri", SayfaAdi = "Kapak Sistemleri", SutunAdet = 4, SatirAdet = 3, SayfaBasinaAdet = 12, SayfalamaAktif = true, AktifMi = true });
-
-            if (!await vt.SayfaDuzenAyarlari.AnyAsync(a => a.SayfaKodu == "kapi-modelleri"))
-                vt.SayfaDuzenAyarlari.Add(new SayfaDuzenAyari { SayfaKodu = "kapi-modelleri", SayfaAdi = "Kapı Modelleri", SutunAdet = 3, SatirAdet = 4, SayfaBasinaAdet = 12, SayfalamaAktif = true, AktifMi = true });
+            // "kapak-sistemleri" ve "kapi-modelleri" sayfa düzen ayarları kaldırıldı — site sadece banyo dolabı.
 
             if (!await vt.MenuOgeleri.AnyAsync(m => m.Url == "admin/sayfa-duzen-ayarlari" && m.Konum == "AdminSol"))
                 vt.MenuOgeleri.Add(new MenuOgesi { Baslik = "Sayfa Duzen Ayarlari", Url = "admin/sayfa-duzen-ayarlari", Sira = 8, Konum = "AdminSol", Ikon = "GridView" });
@@ -268,11 +264,11 @@ public static class TohumVerisi
                 Baslik = "Bulgaristan'da 5.000 m² Showroom: Plovdiv'de Yakında Açılıyoruz",
                 Slug = "plovdiv-showroom-acilis",
                 Ozet = "Plovdiv'de 5.000 m² kapalı alana sahip dev showroomumuz yakında kapılarını açıyor. Balkan pazarına açılımımızda yeni ve büyük bir adım atıyoruz.",
-                Icerik = "<p>VizitLink3D olarak uluslararası büyüme stratejimiz kapsamında <strong>Bulgaristan'ın Plovdiv şehrinde</strong> 5.000 m² alana yayılan entegre bir showroom merkezi kuruyoruz.</p><p>Bu merkez; kapı sistemlerimizi, mobilya kapak koleksiyonlarımızı ve özel üretim çözümlerimizi Balkan pazarında doğrudan tanıtmak amacıyla tasarlandı. Ziyaretçiler, canlı demo alanlarında ürünlerimizi yakından inceleme ve kişiye özel konfigürasyon danışmanlığı alma imkânı bulacak.</p><h3>Showroom Hakkında</h3><ul><li>5.000 m² kapalı sergi alanı</li><li>Tam ölçekli mutfak ve kapı demo bölümleri</li><li>Teknik danışmanlık ve 3D tasarım istasyonları</li><li>Bayi ve kurumsal müşterilere özel toplantı odaları</li></ul><p>Açılış tarihi ve davetli kayıtları için bültenimize abone olmayı unutmayın.</p>",
+                Icerik = "<p>Gold Banyo olarak uluslararası büyüme stratejimiz kapsamında <strong>Bulgaristan'ın Plovdiv şehrinde</strong> 5.000 m² alana yayılan entegre bir showroom merkezi kuruyoruz.</p><p>Bu merkez; banyo dolabı koleksiyonlarımızı ve özel üretim çözümlerimizi Balkan pazarında doğrudan tanıtmak amacıyla tasarlandı. Ziyaretçiler, canlı demo alanlarında ürünlerimizi yakından inceleme ve kişiye özel konfigürasyon danışmanlığı alma imkânı bulacak.</p><h3>Showroom Hakkında</h3><ul><li>5.000 m² kapalı sergi alanı</li><li>Tam ölçekli banyo dolabı demo bölümleri</li><li>Teknik danışmanlık ve 3D tasarım istasyonları</li><li>Bayi ve kurumsal müşterilere özel toplantı odaları</li></ul><p>Açılış tarihi ve davetli kayıtları için bültenimize abone olmayı unutmayın.</p>",
                 AnaResimUrl = "/medya/goldbanyo/uretim.jpg",
                 Etiketler = "showroom,bulgaristan,plovdiv,uluslararası,açılış",
-                SeoBaslik = "Plovdiv Showroom Açılışı — VizitLink3D Bulgaristan",
-                SeoAciklama = "VizitLink3D Plovdiv'de 5.000 m² showroom açıyor. Balkan pazarında yeni bir dönem başlıyor.",
+                SeoBaslik = "Plovdiv Showroom Açılışı — Gold Banyo Bulgaristan",
+                SeoAciklama = "Gold Banyo Plovdiv'de 5.000 m² showroom açıyor. Balkan pazarında yeni bir dönem başlıyor.",
                 YayinTarihi = simdi.AddDays(-2),
                 AktifMi = true
             },
@@ -281,11 +277,11 @@ public static class TohumVerisi
                 Baslik = "Yeni Web Sitemiz Hizmetinizde",
                 Slug = "yeni-web-sitemiz",
                 Ozet = "Tamamen yenilenen web sitemizle ürünlerimizi, tamamlanmış projelerimizi ve online 3D konfigüratörümüzü çok daha kolay keşfedebilirsiniz.",
-                Icerik = "<p>Kullanıcı deneyimini merkeze alan <strong>yeni VizitLink3D web sitesi</strong> bugün yayına girdi. Siteyi baştan sona yeniden tasarlayarak daha hızlı, daha modern ve daha işlevsel bir dijital deneyim sunmayı hedefledik.</p><h3>Yeni Özellikler</h3><ul><li><strong>3D Ürün Konfigüratörü:</strong> Kapak rengi, malzeme ve boyutunu gerçek zamanlı önizlemeyle seçin</li><li><strong>Gelişmiş Ürün Kataloğu:</strong> Kategori ve malzemeye göre filtrelenebilir geniş ürün yelpazesi</li><li><strong>Proje Galerisi:</strong> Tamamlanmış projelerimizden ilham alın</li><li><strong>Hızlı Teklif Formu:</strong> Birkaç adımda fiyat teklifi alın</li><li><strong>Mobil Uyumlu Tasarım:</strong> Telefon ve tabletlerde kusursuz deneyim</li></ul><p>Sitemizi gezerken karşılaştığınız öneri ve geri bildirimlerinizi iletişim formu üzerinden bizimle paylaşabilirsiniz.</p>",
+                Icerik = "<p>Kullanıcı deneyimini merkeze alan <strong>yeni Gold Banyo web sitesi</strong> bugün yayına girdi. Siteyi baştan sona yeniden tasarlayarak daha hızlı, daha modern ve daha işlevsel bir dijital deneyim sunmayı hedefledik.</p><h3>Yeni Özellikler</h3><ul><li><strong>3D Ürün Konfigüratörü:</strong> Banyo dolabı rengi, malzeme ve boyutunu gerçek zamanlı önizlemeyle seçin</li><li><strong>Gelişmiş Ürün Kataloğu:</strong> Kategori ve malzemeye göre filtrelenebilir geniş ürün yelpazesi</li><li><strong>Proje Galerisi:</strong> Tamamlanmış projelerimizden ilham alın</li><li><strong>Hızlı Teklif Formu:</strong> Birkaç adımda fiyat teklifi alın</li><li><strong>Mobil Uyumlu Tasarım:</strong> Telefon ve tabletlerde kusursuz deneyim</li></ul><p>Sitemizi gezerken karşılaştığınız öneri ve geri bildirimlerinizi iletişim formu üzerinden bizimle paylaşabilirsiniz.</p>",
                 AnaResimUrl = "/medya/goldbanyo/showroom.jpg",
                 Etiketler = "web,dijital,yenilik,konfigüratör",
-                SeoBaslik = "Yeni Web Sitemiz Yayında — VizitLink3D",
-                SeoAciklama = "VizitLink3D yeni web sitesi ile 3D konfigüratör, gelişmiş katalog ve daha fazlası.",
+                SeoBaslik = "Yeni Web Sitemiz Yayında — Gold Banyo",
+                SeoAciklama = "Gold Banyo yeni web sitesi ile 3D konfigüratör, gelişmiş katalog ve daha fazlası.",
                 YayinTarihi = simdi.AddDays(-7),
                 AktifMi = true
             },
@@ -294,37 +290,37 @@ public static class TohumVerisi
                 Baslik = "J Kulp Üretim Hattı Hizmete Girdi",
                 Slug = "j-kulp-uretim-hatti",
                 Ozet = "Fabrikamıza eklenen yeni J kulp üretim hattıyla birlikte artık tüm kulp ihtiyaçlarınızı yerli üretimle, kısa teslim sürelerinde karşılıyoruz.",
-                Icerik = "<p>VizitLink3D fabrikasına entegre ettiğimiz <strong>yeni J kulp üretim hattı</strong>, mobilya kapak sistemlerindeki yerli üretim kapasitemizi önemli ölçüde artırdı.</p><p>Bu yatırımla birlikte J profil kulpları artık tamamen kendi bünyemizde üretiyoruz. Böylece hem teslimat sürelerini kısalttık hem de müşterilerimize daha fazla renk ve boyut esnekliği sunabiliyoruz.</p><h3>Yeni Üretim Hattının Avantajları</h3><ul><li>Yerli üretimle dışa bağımlılığın sona ermesi</li><li>7 iş günü içinde teslimat kapasitesi</li><li>50+ renk seçeneği ile tam özelleştirme</li><li>Mat, parlak ve fırçalanmış metal yüzey alternatifleri</li><li>Küçük adetli siparişlere uygun üretim esnekliği</li></ul><p>J kulp siparişleriniz ve teknik sorularınız için satış ekibimizle iletişime geçebilirsiniz.</p>",
+                Icerik = "<p>Gold Banyo fabrikasına entegre ettiğimiz <strong>yeni J kulp üretim hattı</strong>, banyo dolabı sistemlerindeki yerli üretim kapasitemizi önemli ölçüde artırdı.</p><p>Bu yatırımla birlikte J profil kulpları artık tamamen kendi bünyemizde üretiyoruz. Böylece hem teslimat sürelerini kısalttık hem de müşterilerimize daha fazla renk ve boyut esnekliği sunabiliyoruz.</p><h3>Yeni Üretim Hattının Avantajları</h3><ul><li>Yerli üretimle dışa bağımlılığın sona ermesi</li><li>7 iş günü içinde teslimat kapasitesi</li><li>50+ renk seçeneği ile tam özelleştirme</li><li>Mat, parlak ve fırçalanmış metal yüzey alternatifleri</li><li>Küçük adetli siparişlere uygun üretim esnekliği</li></ul><p>J kulp siparişleriniz ve teknik sorularınız için satış ekibimizle iletişime geçebilirsiniz.</p>",
                 AnaResimUrl = "/medya/goldbanyo/uretim.jpg",
                 Etiketler = "üretim,kulp,fabrika,yatırım,yerli",
-                SeoBaslik = "J Kulp Üretim Hattı — VizitLink3D Fabrika",
-                SeoAciklama = "VizitLink3D J kulp üretim hattını devreye aldı. Yerli üretim, kısa teslimat süresi ve 50+ renk seçeneği.",
+                SeoBaslik = "J Kulp Üretim Hattı — Gold Banyo Fabrika",
+                SeoAciklama = "Gold Banyo J kulp üretim hattını devreye aldı. Yerli üretim, kısa teslimat süresi ve 50+ renk seçeneği.",
                 YayinTarihi = simdi.AddDays(-14),
                 AktifMi = true
             },
             new HaberYazisi
             {
-                Baslik = "Yeni Kapak ve Kapı Modellerimizi Beğeninize Sunduk",
-                Slug = "yeni-kapak-kapi-modelleri-2026",
-                Ozet = "2026 koleksiyonumuzdaki yeni kapak ve kapı modelleri; çağdaş estetik, üstün malzeme kalitesi ve yenilikçi yüzey işlemleriyle tasarlandı.",
-                Icerik = "<p>Her yıl olduğu gibi bu yıl da ürün yelpazemizi güncel tasarım trendleri ve müşteri geri bildirimlerimiz doğrultusunda genişlettik. <strong>2026 yeni koleksiyonumuz</strong> şimdi sipariş ve incelemeye açık.</p><h3>Yeni Kapak Modelleri</h3><ul><li><strong>Lake Kapak Serisinde</strong> 3 yeni model: sıfır çerçeveli minimal tasarım</li><li><strong>Membran Kapak Serisinde</strong> doğal taş ve beton doku alternatifleri</li><li><strong>Akrilik Kapak Serisinde</strong> iki yönlü mat-parlak kombinasyon yüzeyler</li></ul><h3>Yeni Kapı Modelleri</h3><ul><li>Gizli menteşeli pivot kapı çözümleri</li><li>Akustik yalıtımlı ofis kapıları</li><li>Çift kanatlı özel genişlik seçenekleri</li></ul><p>Tüm yeni modelleri 3D konfigüratörümüzde keşfedebilir, dilediğiniz renk ve boyut kombinasyonunu anında önizleyebilirsiniz.</p>",
+                Baslik = "Yeni Banyo Dolabı Modellerimizi Beğeninize Sunduk",
+                Slug = "yeni-banyo-dolabi-modelleri-2026",
+                Ozet = "2026 koleksiyonumuzdaki yeni banyo dolabı modelleri; çağdaş estetik, üstün malzeme kalitesi ve yenilikçi yüzey işlemleriyle tasarlandı.",
+                Icerik = "<p>Her yıl olduğu gibi bu yıl da ürün yelpazemizi güncel tasarım trendleri ve müşteri geri bildirimlerimiz doğrultusunda genişlettik. <strong>2026 yeni koleksiyonumuz</strong> şimdi sipariş ve incelemeye açık.</p><h3>Yeni Banyo Dolabı Serileri</h3><ul><li><strong>Gold Exclusive Serisinde</strong> 3 yeni model: mermer tezgahlı lüks tasarım</li><li><strong>Gold Premium Serisinde</strong> doğal taş ve beton doku alternatifleri</li><li><strong>Gold Trend Serisinde</strong> iki yönlü mat-parlak kombinasyon yüzeyler</li></ul><p>Tüm yeni modelleri 3D konfigüratörümüzde keşfedebilir, dilediğiniz renk ve boyut kombinasyonunu anında önizleyebilirsiniz.</p>",
                 AnaResimUrl = "/medya/gold-katalog/sayfa-006-hero.png",
-                Etiketler = "yeni model,kapak,kapı,koleksiyon,2026,lake,membran,akrilik",
-                SeoBaslik = "2026 Yeni Kapak ve Kapı Modelleri — VizitLink3D",
-                SeoAciklama = "VizitLink3D 2026 koleksiyonu: lake, membran ve akrilik serilerde yeni kapak ve kapı modelleri.",
+                Etiketler = "yeni model,banyo dolabı,koleksiyon,2026,gold exclusive,gold premium,gold trend",
+                SeoBaslik = "2026 Yeni Banyo Dolabı Modelleri — Gold Banyo",
+                SeoAciklama = "Gold Banyo 2026 koleksiyonu: Gold Exclusive, Gold Premium ve Gold Trend serilerinde yeni banyo dolabı modelleri.",
                 YayinTarihi = simdi.AddDays(-21),
                 AktifMi = true
             },
             new HaberYazisi
             {
-                Baslik = "2026 Moda Renk Trendleri Artık VizitLink3D'da",
+                Baslik = "2026 Moda Renk Trendleri Artık Gold Banyo'da",
                 Slug = "2026-moda-renk-trendleri",
                 Ozet = "Pantone ve uluslararası tasarım otoritelerinin 2026 için öngördüğü toprak tonları, yosun yeşilleri ve sıcak griler artık ürün yelpazemizde.",
-                Icerik = "<p>Tasarım dünyasının öncü kuruluşlarının 2026 renk tahminleri doğrultusunda <strong>VizitLink3D kapak ve kapı koleksiyonumuzu</strong> bu yılın en gözde tonlarıyla zenginleştirdik.</p><h3>2026'nın Öne Çıkan Renkleri</h3><ul><li><strong>Toprak Tonları:</strong> Kil, kum ve pişmiş toprak renkleri sıcak ve doğal atmosferler yaratıyor</li><li><strong>Yosun ve Adaçayı Yeşili:</strong> Doğa ile bağı güçlendiren huzurlu tonlar</li><li><strong>Sıcak Gri ve Taş:</strong> Minimalist ama davetkar mekanlar için ideal</li><li><strong>Derin Lacivert:</strong> Soylu ve zamansız bir seçenek olarak öne çıkıyor</li><li><strong>Kırık Beyaz ve Krem:</strong> Her dekor stiline kolayca uyum sağlayan nötr tonlar</li></ul><p>Bu renklerin tamamı lake, membran ve akrilik kapak serilerimizde mevcut. Siz de mutfağınızı, banyonuzu veya ofis alanınızı 2026'nın en gözde renkleriyle yenileyin.</p><p>Renk örneklerini fiziksel olarak incelemek için şubemizi ziyaret edebilir ya da online konfigüratörümüzde simüle edebilirsiniz.</p>",
+                Icerik = "<p>Tasarım dünyasının öncü kuruluşlarının 2026 renk tahminleri doğrultusunda <strong>Gold Banyo koleksiyonumuzu</strong> bu yılın en gözde tonlarıyla zenginleştirdik.</p><h3>2026'nın Öne Çıkan Renkleri</h3><ul><li><strong>Toprak Tonları:</strong> Kil, kum ve pişmiş toprak renkleri sıcak ve doğal atmosferler yaratıyor</li><li><strong>Yosun ve Adaçayı Yeşili:</strong> Doğa ile bağı güçlendiren huzurlu tonlar</li><li><strong>Sıcak Gri ve Taş:</strong> Minimalist ama davetkar mekanlar için ideal</li><li><strong>Derin Lacivert:</strong> Soylu ve zamansız bir seçenek olarak öne çıkıyor</li><li><strong>Kırık Beyaz ve Krem:</strong> Her dekor stiline kolayca uyum sağlayan nötr tonlar</li></ul><p>Bu renklerin tamamı banyo dolabı serilerimizde mevcut. Siz de banyonuzu 2026'nın en gözde renkleriyle yenileyin.</p><p>Renk örneklerini fiziksel olarak incelemek için şubemizi ziyaret edebilir ya da online konfigüratörümüzde simüle edebilirsiniz.</p>",
                 AnaResimUrl = "/medya/gold-katalog/sayfa-010-hero.png",
-                Etiketler = "renk,trend,2026,pantone,tasarım,lake,membran",
-                SeoBaslik = "2026 Renk Trendleri — VizitLink3D Kapak ve Kapı",
-                SeoAciklama = "Pantone 2026 renk trendleri VizitLink3D koleksiyonunda. Toprak tonları, yosun yeşili ve sıcak griler.",
+                Etiketler = "renk,trend,2026,pantone,tasarım,banyo dolabı",
+                SeoBaslik = "2026 Renk Trendleri — Gold Banyo",
+                SeoAciklama = "Pantone 2026 renk trendleri Gold Banyo koleksiyonunda. Toprak tonları, yosun yeşili ve sıcak griler.",
                 YayinTarihi = simdi.AddDays(-28),
                 AktifMi = true
             }
@@ -364,10 +360,10 @@ public static class TohumVerisi
             new Slayt { Dil = "tr", SayfaKodu = "haber", Baslik = "Haberler & Duyurular", AltBaslik = "Güncel Gelişmeler", Aciklama = "En son haberler ve duyurular.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "sss", Baslik = "Sıkça Sorulan Sorular", AltBaslik = "Bilgi Bankası", Aciklama = "Merak ettiğiniz tüm soruların cevapları.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", SiraNo = 1 },
 
-            new Slayt { Dil = "tr", SayfaKodu = "kapak-sistemleri", Baslik = "Kapak Sistemleri", AltBaslik = "Mutfak ve Banyo Çözümleri", Aciklama = "Membran, lake, laminat ve akrilik kapak modellerimiz.", ArkaplanResim = "/medya/gold-katalog/sayfa-006-hero.png", SiraNo = 1 },
-            new Slayt { Dil = "tr", SayfaKodu = "bayiler", Baslik = "Bayilerimiz", AltBaslik = "Yetkili Satış Noktaları", Aciklama = "Türkiye genelinde VizitLink3D yetkili satış noktaları.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
+
+            new Slayt { Dil = "tr", SayfaKodu = "bayiler", Baslik = "Bayilerimiz", AltBaslik = "Yetkili Satış Noktaları", Aciklama = "Türkiye genelinde Gold Banyo yetkili satış noktaları.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
             new Slayt { Dil = "tr", SayfaKodu = "sertifikalar", Baslik = "Sertifikalarımız", AltBaslik = "Kalite Belgelerimiz", Aciklama = "Uluslararası standartlarda kalite ve güvence.", ArkaplanResim = "/medya/goldbanyo/uretim.jpg", SiraNo = 1 },
-            new Slayt { Dil = "tr", SayfaKodu = "iletisim", Baslik = "İletişim", AltBaslik = "Bize Ulaşın", Aciklama = "Size en yakın VizitLink3D temsilcisiyle görüşün.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
+            new Slayt { Dil = "tr", SayfaKodu = "iletisim", Baslik = "İletişim", AltBaslik = "Bize Ulaşın", Aciklama = "Size en yakın Gold Banyo temsilcisiyle görüşün.", ArkaplanResim = "/medya/goldbanyo/showroom.jpg", SiraNo = 1 },
         };
 
         foreach (var tohum in tohumlar)
@@ -981,7 +977,7 @@ public static class TohumVerisi
         ("Organizasyon", "Organizasyon", "Organization"),
         ("Sistem", "Sistem", "System"),
         ("Urunler", "Ürünler", "Products"),
-        ("Kapak Modelleri", "Kapak Modelleri", "Panel Models"),
+        ("Banyo Dolapları", "Banyo Dolapları", "Bathroom Cabinets"),
         ("Urun Aileleri", "Ürün Aileleri", "Product Families"),
         ("Urun Kategorileri", "Ürün Kategorileri", "Categories"),
         ("RAL Renk Yonetimi", "RAL Renk Yönetimi", "RAL Colors"),
@@ -1036,18 +1032,11 @@ public static class TohumVerisi
         ("nav_Vizyon & Misyon", "Vizyon & Misyon", "Vision & Mission"),
         ("nav_Ekibimiz", "Ekibimiz", "Our Team"),
         ("nav_Sertifikalarimiz", "Sertifikalarımız", "Certificates"),
-        ("kapak_sistemleri", "Kapak Sistemleri", "Panel Systems"),
-        ("kapi_modelleri", "Kapı Modelleri", "Door Models"),
+        ("nav_Banyo Dolaplari", "Banyo Dolapları", "Bathroom Cabinets"),
+        ("nav_Katalog", "Katalog", "Catalog"),
         ("hakkimizda", "Hakkımızda", "About Us"),
         ("vizyon_misyon", "Vizyon & Misyon", "Vision & Mission"),
-        // Urun / Kapi alanlari
-        ("kapi.modelAdi", "Model Adı", "Model Name"),
-        ("kapi.modelKodu", "Model Kodu", "Model Code"),
-        ("kapi.kapakModeli", "Kapak Modeli", "Panel Model"),
-        ("kapi.kapiModeli", "Kapı Modeli", "Door Model"),
-        ("kapi.kategori", "Kategori", "Category"),
-        ("kapi.fiyatBirim", "Fiyat (TL/m2)", "Price (TL/m2)"),
-        ("kapi.onYazi", "On Yazi", "Summary"),
+        // Urun alanlari
         ("urun.adi", "Urun Adi", "Product Name"),
         ("urun.kodu", "Urun Kodu", "Product Code"),
         ("urun.slug", "Slug", "Slug"),
@@ -1070,7 +1059,6 @@ public static class TohumVerisi
         ("urun.durdur", "Durdur", "Stop"),
         ("urun.dondur", "Döndür", "Rotate"),
         ("admin.toplamUrun", "Ürün", "Products"),
-        ("admin.toplamKapak", "Kapak", "Panels"),
         ("admin.toplam3DModel", "3D Model", "3D Models"),
         ("admin.toplamParca", "Parça", "Parts"),
         ("admin.toplamBlog", "Blog", "Blog"),
@@ -1171,12 +1159,7 @@ public static class TohumVerisi
         ("footer_Blog", "Haber", "News"),
         ("footer_SSS", "SSS", "FAQ"),
         ("footer_Gizlilik Politikasi", "Gizlilik Politikası", "Privacy Policy"),
-        // Footer kategorileri
-        ("footer_Membran Kapak", "Membran Kapak", "Membrane Panel"),
-        ("footer_Lake Kapak", "Lake Kapak", "Lacquer Panel"),
-        ("footer_Akrilik Kapak", "Akrilik Kapak", "Acrylic Panel"),
-        ("footer_Kapi Modelleri", "Kapı Modelleri", "Door Models"),
-        ("footer_Dusakabin", "Duşakabin", "Shower Cabin"),
+        // Footer kategorileri — sadece banyo dolabı
         ("footer_Banyo Dolabi", "Banyo Dolabı", "Bathroom Cabinet"),
         // İletişim formu
         ("iletisim.hero.etiket", "BİZE ULAŞIN", "CONTACT US"),
@@ -1210,7 +1193,7 @@ public static class TohumVerisi
         ("one_cikan_kapaklar", "Mimari Seçimler", "Architectural Choices"),
         ("ana_sayfa_title", "Gold Banyo | Banyo Mobilyalari ve Koleksiyonlari", "Gold Banyo | Bathroom Furniture and Collections"),
         ("anasayfa.video.baslik", "Üretimdeki Hassasiyetimiz", "Precision in Manufacturing"),
-        ("anasayfa.surec.etiket", "vizitlink3d & Norden mobilya", "vizitlink3d & Norden furniture"),
+        ("anasayfa.surec.etiket", "Gold Banyo mobilya", "Gold Banyo furniture"),
         ("anasayfa.surec.baslik", "4 Adimda Ozel Proje Calismasi", "Custom Project Work in 4 Steps"),
         ("anasayfa.surec.aciklama", "Mutlakinizin duzeni bir duzenden digerine degisir. Mutlakin sekli dolaplar, tezgahlar ve aksesuarlar icin alani belirler.", "The layout of your kitchen varies from one to another. The shape of your kitchen determines the space for cabinets, countertops and accessories."),
         ("anasayfa.katalog.etiket", "DOKÜMANTASYON", "DOCUMENTATION"),
@@ -1344,11 +1327,9 @@ public static class TohumVerisi
 
     private static async Task TohumlaProjeKategorileriAsync(VizitLink3DDbContext vt)
     {
+        // Site sadece banyo dolabı — yalnızca Banyo kategorisi aktif.
         vt.ProjeKategorileri.AddRange(
-            new ProjeKategorisi { Ad = "Mutfak", Slug = "mutfak", SiraNo = 1 },
-            new ProjeKategorisi { Ad = "Banyo", Slug = "banyo", SiraNo = 2 },
-            new ProjeKategorisi { Ad = "Yatak Odasi", Slug = "yatak-odasi", SiraNo = 3 },
-            new ProjeKategorisi { Ad = "Ofis", Slug = "ofis", SiraNo = 4 }
+            new ProjeKategorisi { Ad = "Banyo", Slug = "banyo", SiraNo = 1 }
         );
         await vt.SaveChangesAsync();
     }
@@ -1443,11 +1424,11 @@ public static class TohumVerisi
     private static async Task TohumlaMusteriYorumlariniAsync(VizitLink3DDbContext vt)
     {
         vt.MusteriYorumlari.AddRange(
-            new MusteriYorumu { MusteriAdi = "Osman A.", MusteriSehir = "Ankara", Yorum = "Kapılarımızı yenilemede profesyonel bir firma seçtik. Tüm süreçler dijital ortamda prova yapıldı, çok profesyonel.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 1 },
-            new MusteriYorumu { MusteriAdi = "Merih C.", MusteriSehir = "Istanbul", Yorum = "Mutfak dolaplarim icin tercih ettim, beklentimin cok ustunde is cikardilar.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 2 },
+            new MusteriYorumu { MusteriAdi = "Osman A.", MusteriSehir = "Ankara", Yorum = "Banyo dolaplarımızı yenilemede profesyonel bir firma seçtik. Tüm süreçler dijital ortamda prova yapıldı, çok profesyonel.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 1 },
+            new MusteriYorumu { MusteriAdi = "Merih C.", MusteriSehir = "Istanbul", Yorum = "Banyo dolaplarım için tercih ettim, beklentimin çok üstünde iş çıkardılar.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 2 },
             new MusteriYorumu { MusteriAdi = "Ayse K.", MusteriSehir = "Ankara", Yorum = "Banyo dolaplarimiz 2 yildir sorunsuz kullaniyoruz. Suya dayanikliligi cok iyi.", Puan = 4, Onaylandi = true, SiraNo = 3 },
-            new MusteriYorumu { MusteriAdi = "Mehmet D.", MusteriSehir = "Izmir", Yorum = "Ofis icin ozel olcu dolap yaptirdik. Teslimat ve montaj sureci profesyoneldi.", Puan = 5, Onaylandi = true, SiraNo = 4 },
-            new MusteriYorumu { MusteriAdi = "Zeynep T.", MusteriSehir = "Ankara", Yorum = "Villa kapilarimiz cok modern ve ses yalitimi mukemmel. Tavsiye ederim.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 5 }
+            new MusteriYorumu { MusteriAdi = "Mehmet D.", MusteriSehir = "Izmir", Yorum = "Banyo için özel ölçü dolap yaptirdik. Teslimat ve montaj süreci profesyoneldi.", Puan = 5, Onaylandi = true, SiraNo = 4 },
+            new MusteriYorumu { MusteriAdi = "Zeynep T.", MusteriSehir = "Ankara", Yorum = "Banyo dolaplarımız çok modern ve su yalıtımı mükemmel. Tavsiye ederim.", Puan = 5, Onaylandi = true, OneCikan = true, SiraNo = 5 }
         );
         await vt.SaveChangesAsync();
     }
@@ -1538,16 +1519,16 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Ist4Deger", Deger = "%100", Dil = "en" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Ist4Etiket", Deger = "Müşteri Memnuniyeti", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Ist4Etiket", Deger = "Customer Satisfaction", Dil = "en" },
-            // ─── KATEGORİ 1 (Kapak Sistemleri) ─────────────────────────
+            // ─── KATEGORİ 1 (Premium Banyo) ──────────────────────────
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Gorsel", Deger = "/medya/kapak_kategori.png", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Gorsel", Deger = "/medya/kapak_kategori.png", Dil = "en" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Etiket", Deger = "PREMIUM SERİ", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Etiket", Deger = "PREMIUM SERIES", Dil = "en" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Baslik", Deger = "Estetik banyo mobilyaları", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Baslik", Deger = "Aesthetic bathroom furniture", Dil = "en" },
-            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Aciklama", Deger = "Modern çizgiler, güçlü malzeme kalitesi ve kusursuz işçilikle Gold Banyo Premium serisi banyolarınıza seçkin bir karakter kazandırır.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Aciklama", Deger = "Modern çizgiler, güçlü malzeme kalitesi ve kusursuz işçilikle Gold Banyo Premium serisi banyonuza seçkin bir karakter kazandırır.", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat1Aciklama", Deger = "Gold Banyo Premium adds a distinguished character to bathrooms with modern lines, strong material quality and precise workmanship.", Dil = "en" },
-            // ─── KATEGORİ 2 (Kapı) ──────────────────────────────────────
+            // ─── KATEGORİ 2 (Trend Banyo) ─────────────────────────────
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat2Gorsel", Deger = "/medya/kapi_kategori.png", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat2Gorsel", Deger = "/medya/kapi_kategori.png", Dil = "en" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "Kat2Etiket", Deger = "DAYANIKLI YAPI", Dil = "tr" },
@@ -1698,7 +1679,7 @@ public static class TohumVerisi
             // ─── VİZYON MİSYON ──────────────────────────────────
             new SayfaIcerigi { Bolum = "vizyon-misyon", Anahtar = "SayfaBasligi", Deger = "Vizyon ve Misyon | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "vizyon-misyon", Anahtar = "SayfaBasligi", Deger = "Vision & Mission | Gold Banyo", Dil = "en" },
-            new SayfaIcerigi { Bolum = "vizyon-misyon", Anahtar = "SayfaIcerigi", Deger = "<h2>Vizyon</h2><p>Türkiye'nin ve Avrupa'nın en yenilikçi mobilya kapak ve kapı sistemleri üreticisi olmak. Üretim süreçlerimizde Endüstri 4.0 teknolojilerini tam entegre ederek müşterilerimize en yüksek kaliteyi sunmak.</p><h2>Misyon</h2><p>Müşterilerimizin yaşam alanlarını güzelleştirecek, dayanıklı ve estetik ürünler üretmek. Sürdürülebilir üretim pratikleriyle çevre dostu çözümler sunmak. Çalışanlarımızın gelişimini destekleyerek sektörün en nitelikli kadrosunu oluşturmak.</p><h3>Değerlerimiz</h3><ul><li><strong>Kalite:</strong> Her üründe taviz vermeden en yüksek standartlar</li><li><strong>Yenilikçilik:</strong> Sürekli Ar-Ge ile yeni malzeme ve teknik araştırma</li><li><strong>Müşteri Odaklılık:</strong> Kişiye özel çözümler ve 7/24 destek</li><li><strong>Sürdürülebilirlik:</strong> Çevre dostu üretim ve FSC sertifikalı malzemeler</li><li><strong>Güven:</strong> 32 yıllık sektörel tecrübe ve referanslar</li></ul>", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "vizyon-misyon", Anahtar = "SayfaIcerigi", Deger = "<h2>Vizyon</h2><p>Türkiye'nin ve Avrupa'nın en yenilikçi banyo mobilyası üreticisi olmak. Üretim süreçlerimizde Endüstri 4.0 teknolojilerini tam entegre ederek müşterilerimize en yüksek kaliteyi sunmak.</p><h2>Misyon</h2><p>Müşterilerimizin yaşam alanlarını güzelleştirecek, dayanıklı ve estetik ürünler üretmek. Sürdürülebilir üretim pratikleriyle çevre dostu çözümler sunmak. Çalışanlarımızın gelişimini destekleyerek sektörün en nitelikli kadrosunu oluşturmak.</p><h3>Değerlerimiz</h3><ul><li><strong>Kalite:</strong> Her üründe taviz vermeden en yüksek standartlar</li><li><strong>Yenilikçilik:</strong> Sürekli Ar-Ge ile yeni malzeme ve teknik araştırma</li><li><strong>Müşteri Odaklılık:</strong> Kişiye özel çözümler ve 7/24 destek</li><li><strong>Sürdürülebilirlik:</strong> Çevre dostu üretim ve FSC sertifikalı malzemeler</li><li><strong>Güven:</strong> 20 yılı aşkın sektörel tecrübe ve referanslar</li></ul>", Dil = "tr" },
             new SayfaIcerigi { Bolum = "vizyon-misyon", Anahtar = "SayfaIcerigi", Deger = "<h2>Vision</h2><p>To be Turkey's and Europe's most innovative furniture door and panel systems manufacturer. To offer the highest quality to our customers by fully integrating Industry 4.0 technologies into our production processes.</p><h2>Mission</h2><p>To produce durable and aesthetic products that will beautify our customers' living spaces. To offer environmentally friendly solutions with sustainable production practices.</p>", Dil = "en" },
             // ─── EKİBİMİZ ──────────────────────────────────────
             new SayfaIcerigi { Bolum = "ekibimiz", Anahtar = "SayfaBasligi", Deger = "Ekibimiz | Gold Banyo", Dil = "tr" },
@@ -1735,26 +1716,26 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "gizlilik", Anahtar = "SayfaBasligi", Deger = "Privacy Policy | Gold Banyo", Dil = "en" },
             new SayfaIcerigi { Bolum = "gizlilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Gizlilik Politikası</h2><p>Gold Banyo olarak kişisel verilerinizin korunmasına önem veriyoruz. İletişim, teklif ve sipariş süreçlerinde paylaştığınız bilgiler yalnızca hizmet sunumu ve yasal yükümlülüklerin yerine getirilmesi amacıyla işlenir.</p><p>KVKK kapsamındaki talepleriniz için <a href=\"mailto:info@goldbanyom.com.tr\">info@goldbanyom.com.tr</a> adresinden bize ulaşabilirsiniz.</p>", Dil = "tr" },
             new SayfaIcerigi { Bolum = "gizlilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Privacy Policy</h2><p>At Gold Banyo, we care about protecting your personal data. Information shared during contact, quotation and order processes is processed only for service delivery and legal obligations.</p>", Dil = "en" },
-            // ─── AKRİLİK ──────────────────────────────────────
-            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaBasligi", Deger = "Akrilik Kapak Sistemleri | Gold Banyo", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaBasligi", Deger = "Acrylic Panel Systems | Gold Banyo", Dil = "en" },
-            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Akrilik Kapak Sistemleri</h2><p>Ultra parlak ayna efektli akrilik kapaklar, modern mutfaklar için ideal çözümdür. Çizilmeye karşı yüksek dayanım ve kolay temizlenebilirlik özelliğiyle öne çıkar.</p><h3>Özellikler</h3><ul><li>Ayna etkili parlak yüzey</li><li>Çizilmeye karşı dirençli</li><li>Leke tutmaz kaplama</li><li>UV korumalı - sararma yapmaz</li><li>12 farklı renk seçeneği</li></ul><h3>Kullanım Alanları</h3><p>Mutfak dolapları, banyo dolapları, vestiyer ve TV üniteleri için ideal. Özellikle modern ve minimalist tasarımlı mekanlarda tercih edilir.</p>", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Acrylic Panel Systems</h2><p>Ultra-gloss mirror-effect acrylic panels are the ideal solution for modern kitchens. They stand out with high scratch resistance and easy cleanability.</p>", Dil = "en" },
-            // ─── LAMİNAT ──────────────────────────────────────
-            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaBasligi", Deger = "Laminat Kapak Sistemleri | Gold Banyo", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaBasligi", Deger = "Laminate Panel Systems | Gold Banyo", Dil = "en" },
-            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaIcerigi", Deger = "<h2>Laminat Kapak Sistemleri</h2><p>Yüksek basınçlı laminat (HPL) kapaklar, dayanıklılığı ve geniş desen seçenekleriyle öne çıkar. Ahşap, taş ve beton görünümlü dekoratif laminatlar mevcuttur.</p><h3>Avantajlar</h3><ul><li>Yüksek darbe dayanımı</li><li>Isıya dirençli yüzey (280C'ye kadar)</li><li>Hijyenik ve anti-bakteriyel</li><li>200+ desen seçeneği</li><li>Ekonomik fiyat</li></ul>", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaIcerigi", Deger = "<h2>Laminate Panel Systems</h2><p>High Pressure Laminate (HPL) panels stand out with their durability and wide range of pattern options. Decorative laminates with wood, stone and concrete appearances are available.</p>", Dil = "en" },
-            // ─── MEMBRAN ──────────────────────────────────────
-            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaBasligi", Deger = "Membran Kapak Sistemleri | Gold Banyo", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaBasligi", Deger = "Membrane Panel Systems | Gold Banyo", Dil = "en" },
-            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaIcerigi", Deger = "<h2>Membran Kapak Sistemleri</h2><p>MDF üzerine ısıl presleme teknolojisiyle uygulanan membran kapaklar, geniş renk ve desen seçenekleriyle mutfak ve banyo mobilyalarında en çok tercih edilen kapak türüdür.</p><h3>Avantajlar</h3><ul><li>Sınırsız renk ve desen seçeneği</li><li>3D freze uygulanabilir yüzey</li><li>Neme dayanıklı özel kaplamaları mevcut</li><li>Kolay bakım ve temizlik</li><li>Ekonomik fiyat/performans</li></ul><h3>Model Çeşitleri</h3><p>Düz, çerçeveli, camlı, kasetli, country ve modern olmak üzere 50'den fazla model mevcuttur.</p>", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaIcerigi", Deger = "<h2>Membrane Panel Systems</h2><p>Membrane panels applied to MDF with heat press technology are the most preferred panel type in kitchen and bathroom furniture with their wide color and pattern options.</p>", Dil = "en" },
-            // ─── LAKE ──────────────────────────────────────
-            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaBasligi", Deger = "Lake Kapak Sistemleri | Gold Banyo", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaBasligi", Deger = "Lacquer Panel Systems | Gold Banyo", Dil = "en" },
-            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaIcerigi", Deger = "<h2>Lake Kapak Sistemleri</h2><p>Çok katmanlı poliüretan lake boyama teknolojisiyle üretilen lake kapaklar, mat ve parlak yüzey seçenekleriyle lüks mekanların vazgeçilmez tercihi olmuştur.</p><h3>Avantajlar</h3><ul><li>Çizilmeye karşı dirençli özel formül</li><li>Sararmaya karşı UV koruma</li><li>Mat, yarı mat ve parlak seçenekler</li><li>RAL, NCS, Pantone renk uyumu</li><li>Özel efekt: metalik, inci, antik doku</li></ul><h3>Uygulama Alanları</h3><p>Mutfak dolapları, yatak odası dolapları, TV üniteleri ve özel tasarım mobilyalar için idealdir.</p>", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaIcerigi", Deger = "<h2>Lacquer Panel Systems</h2><p>Lacquer panels produced with multi-layer polyurethane lacquer painting technology have become the indispensable choice of luxury spaces with matte and glossy surface options.</p>", Dil = "en" },
+            // ─── AKRİLİK (BANYO DOLABI YÜZEY) ─────────────────────────
+            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaBasligi", Deger = "Banyo Dolabı Yüzey Kaplamaları | Gold Banyo", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaBasligi", Deger = "Bathroom Cabinet Surface Coatings | Gold Banyo", Dil = "en" },
+            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Banyo Dolabı Yüzey Kaplamaları</h2><p>Gold Banyo; akrilik, lake, membran ve özel yüzey uygulamalarında banyo mobilyasına uygun ölçü, renk ve kullanım çözümleri sunar.</p><h3>Özellikler</h3><ul><li>Suya ve neme karşı yüksek dayanım</li><li>Çizilmeye karşı dirençli yüzeyler</li><li>Leke tutmaz kaplama</li><li>UV korumalı — sararma yapmaz</li><li>12 farklı renk seçeneği</li></ul><h3>Kullanım Alanları</h3><p>Banyo dolapları, lavabo altı dolaplar ve ayna üniteleri için idealdir. Özellikle modern ve minimalist tasarımlı banyolarda tercih edilir.</p>", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "akrilik", Anahtar = "SayfaIcerigi", Deger = "<h2>Bathroom Cabinet Surface Coatings</h2><p>Gold Banyo offers dimension, colour and usability solutions tailored to bathroom furniture across acrylic, lacquer, membrane and special surface applications.</p>", Dil = "en" },
+            // ─── LAMİNAT (BANYO DOLABI) ──────────────────────────
+            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaBasligi", Deger = "Laminat Yüzeyli Banyo Dolapları | Gold Banyo", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaBasligi", Deger = "Laminate Surface Bathroom Cabinets | Gold Banyo", Dil = "en" },
+            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaIcerigi", Deger = "<h2>Laminat Yüzeyli Banyo Dolapları</h2><p>Yüksek basınçlı laminat (HPL) yüzeyli banyo dolapları, dayanıklılığı ve geniş desen seçenekleriyle öne çıkar. Ahşap, taş ve beton görünümlü dekoratif laminatlar mevcuttur.</p><h3>Avantajlar</h3><ul><li>Yüksek darbe dayanımı</li><li>Neme karşı dirençli yüzey</li><li>Hijyenik ve anti-bakteriyel</li><li>200+ desen seçeneği</li><li>Ekonomik fiyat</li></ul>", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "laminat", Anahtar = "SayfaIcerigi", Deger = "<h2>Laminate Surface Bathroom Cabinets</h2><p>High Pressure Laminate (HPL) surface bathroom cabinets stand out with their durability and wide range of pattern options. Decorative laminates with wood, stone and concrete appearances are available.</p>", Dil = "en" },
+            // ─── MEMBRAN (BANYO DOLABI) ──────────────────────────
+            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaBasligi", Deger = "Membran Yüzeyli Banyo Dolapları | Gold Banyo", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaBasligi", Deger = "Membrane Surface Bathroom Cabinets | Gold Banyo", Dil = "en" },
+            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaIcerigi", Deger = "<h2>Membran Yüzeyli Banyo Dolapları</h2><p>MDF üzerine ısıl presleme teknolojisiyle uygulanan membran yüzeyli banyo dolapları, geniş renk ve desen seçenekleriyle en çok tercih edilen banyo mobilyası türüdür.</p><h3>Avantajlar</h3><ul><li>Sınırsız renk ve desen seçeneği</li><li>3D freze uygulanabilir yüzey</li><li>Neme dayanıklı özel kaplamaları mevcut</li><li>Kolay bakım ve temizlik</li><li>Ekonomik fiyat/performans</li></ul><h3>Model Çeşitleri</h3><p>Düz, çerçeveli, camlı, kasetli ve modern olmak üzere 50'den fazla model mevcuttur.</p>", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "membran", Anahtar = "SayfaIcerigi", Deger = "<h2>Membrane Surface Bathroom Cabinets</h2><p>Membrane surface bathroom cabinets applied to MDF with heat press technology are the most preferred bathroom furniture type with their wide color and pattern options.</p>", Dil = "en" },
+            // ─── LAKE (BANYO DOLABI) ──────────────────────────
+            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaBasligi", Deger = "Lake Yüzeyli Banyo Dolapları | Gold Banyo", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaBasligi", Deger = "Lacquer Surface Bathroom Cabinets | Gold Banyo", Dil = "en" },
+            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaIcerigi", Deger = "<h2>Lake Yüzeyli Banyo Dolapları</h2><p>Çok katmanlı poliüretan lake boyama teknolojisiyle üretilen banyo dolapları, mat ve parlak yüzey seçenekleriyle lüks banyoların vazgeçilmez tercihi olmuştur.</p><h3>Avantajlar</h3><ul><li>Çizilmeye karşı dirençli özel formül</li><li>Sararmaya karşı UV koruma</li><li>Mat, yarı mat ve parlak seçenekler</li><li>RAL, NCS, Pantone renk uyumu</li><li>Özel efekt: metalik, inci, antik doku</li></ul><h3>Uygulama Alanları</h3><p>Banyo dolapları, lavabo üniteleri ve özel tasarım banyo mobilyaları için idealdir.</p>", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "lake", Anahtar = "SayfaIcerigi", Deger = "<h2>Lacquer Surface Bathroom Cabinets</h2><p>Bathroom cabinets produced with multi-layer polyurethane lacquer painting technology have become the indispensable choice of luxury bathrooms with matte and glossy surface options.</p>", Dil = "en" },
             // ─── KAPAK SİSTEMLERİ ──────────────────────────────
             new SayfaIcerigi { Bolum = "kapak-sistemleri", Anahtar = "SayfaBasligi", Deger = "Kapak Sistemleri | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "kapak-sistemleri", Anahtar = "SayfaBasligi", Deger = "Panel Systems | Gold Banyo", Dil = "en" },
@@ -1762,9 +1743,9 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "kapak-sistemleri", Anahtar = "SayfaIcerigi", Deger = "<h2>Panel Systems</h2><p>Gold Banyo offers dimension, colour and usability solutions tailored to bathroom furniture across acrylic, lacquer, membrane and special surface applications.</p>", Dil = "en" },
             new SayfaIcerigi { Bolum = "kapak-sistemleri", Anahtar = "UrunAdet", Deger = "12", Dil = "tr" },
             new SayfaIcerigi { Bolum = "kapak-sistemleri", Anahtar = "UrunAdet", Deger = "12", Dil = "en" },
-            // ─── KAPI MODELLERI ─────────────────────────────────────
-            new SayfaIcerigi { Bolum = "kapi-modelleri", Anahtar = "UrunAdet", Deger = "12", Dil = "tr" },
-            new SayfaIcerigi { Bolum = "kapi-modelleri", Anahtar = "UrunAdet", Deger = "12", Dil = "en" },
+            // ─── BANYO DOLAPLARI ─────────────────────────────────────
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "UrunAdet", Deger = "12", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "UrunAdet", Deger = "12", Dil = "en" },
             // ─── PROJELER ──────────────────────────────────────
             new SayfaIcerigi { Bolum = "projeler", Anahtar = "SayfaBasligi", Deger = "Projelerimiz | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "projeler", Anahtar = "SayfaBasligi", Deger = "Our Projects | Gold Banyo", Dil = "en" },
@@ -1966,7 +1947,7 @@ public static class TohumVerisi
                 new MenuOgesi { FirmaId = firma.Id, Baslik = "Urun Yonetimi", Url = "", Sira = 3, Konum = "AdminSol", Ikon = "Inventory2", GerekliRol = "Admin", AltMenuler = new List<MenuOgesi> {
                     new() { FirmaId = firma.Id, Baslik = "🪄 Urun Sihirbazi", Url = "admin/urun-sihirbazi", Sira = 0, Konum = "AdminSol", Ikon = "AutoFixHigh" },
                     new() { FirmaId = firma.Id, Baslik = "Urunler", Url = "admin/urun-yonetimi", Sira = 1, Konum = "AdminSol", Ikon = "Inventory" },
-                    new() { FirmaId = firma.Id, Baslik = "Kapi/Kapak Modelleri", Url = "admin/kapak-modeli-yonetimi", Sira = 2, Konum = "AdminSol", Ikon = "DoorFront" },
+                    new() { FirmaId = firma.Id, Baslik = "Ürün Yönetimi", Url = "admin/urun-yonetimi", Sira = 2, Konum = "AdminSol", Ikon = "Inventory2" },
                     new() { FirmaId = firma.Id, Baslik = "Urun Aileleri", Url = "admin/urun-ailesi-yonetimi", Sira = 3, Konum = "AdminSol", Ikon = "Category" },
                     new() { FirmaId = firma.Id, Baslik = "Urun Kategorileri", Url = "admin/urun-kategori-yonetimi", Sira = 4, Konum = "AdminSol", Ikon = "Class" },
                     new() { FirmaId = firma.Id, Baslik = "RAL Renk Yonetimi", Url = "admin/ral-renk-yonetimi", Sira = 5, Konum = "AdminSol", Ikon = "Palette" },
@@ -2504,12 +2485,12 @@ public static class TohumVerisi
         int Kat(string slug) =>
             kategoriler.TryGetValue(slug, out var id) ? id : kategoriler.Values.First();
 
-        var u1 = new Proje { Slug = "modern-mutfak-tasarimi", Baslik = "Modern Mutfak Tasarimi", KisaAciklama = "Akyurt'taki villa mutfagi icin ozel lake kapak tasarimi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ahmet Yilmaz", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 1, ProjeTarihi = new DateTime(2025, 3, 15) };
+        var u1 = new Proje { Slug = "luks-banyo-tasarimi", Baslik = "Lüks Banyo Tasarımı", KisaAciklama = "Akyurt'taki villa banyosu için özel lake dolap tasarımı.", KategoriId = Kat("banyo"), MusteriAdi = "Ahmet Yilmaz", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 1, ProjeTarihi = new DateTime(2025, 3, 15) };
         var u2 = new Proje { Slug = "banyo-dolap-sistemi", Baslik = "Banyo Dolap Sistemi", KisaAciklama = "Suya dayanikli membran kapli banyo dolabi projesi.", KategoriId = Kat("banyo"), MusteriAdi = "Zeynep Kaya", MusteriSehir = "Istanbul", SiraNo = 2, ProjeTarihi = new DateTime(2025, 1, 20) };
-        var u3 = new Proje { Slug = "luks-yatak-odasi", Baslik = "Luks Yatak Odasi", KisaAciklama = "Klasik taplali kapaklarla tasarlanmis genis yatak odasi.", KategoriId = Kat("yatak-odasi"), MusteriAdi = "Mehmet Demir", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 3, ProjeTarihi = new DateTime(2024, 11, 5) };
-        var u4 = new Proje { Slug = "ofis-mutak-dolabi", Baslik = "Ofis Mutfak Dolabi", KisaAciklama = "Kurumsal ofis icin kompakt ve modern mutfak dolabi.", KategoriId = Kat("ofis"), MusteriAdi = "Ece Ltd.", MusteriSehir = "Izmir", SiraNo = 4, ProjeTarihi = new DateTime(2024, 8, 10) };
-        var u5 = new Proje { Slug = "villa-mutfak-projesi", Baslik = "Villa Mutfak Projesi", KisaAciklama = "Membran ve lake karisik ozel tasarim villa mutfagi.", KategoriId = Kat("mutfak"), MusteriAdi = "Ali Ozturk", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 5, ProjeTarihi = new DateTime(2025, 4, 1) };
-        var u6 = new Proje { Slug = "otel-banyo-yenileme", Baslik = "Otel Banyo Yenileme", KisaAciklama = "12 odali butik otel icin komple banyo dolap yenilemesi.", KategoriId = Kat("banyo"), MusteriAdi = "Otel A.S.", MusteriSehir = "Antalya", SiraNo = 6, ProjeTarihi = new DateTime(2024, 6, 20) };
+        var u3 = new Proje { Slug = "premium-banyo-takimi", Baslik = "Premium Banyo Takımı", KisaAciklama = "Geniş aile banyosu için klasik lake kapaklı dolap takımı.", KategoriId = Kat("banyo"), MusteriAdi = "Mehmet Demir", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 3, ProjeTarihi = new DateTime(2024, 11, 5) };
+        var u4 = new Proje { Slug = "ofis-banyo-dolabi", Baslik = "Ofis Banyo Dolabı", KisaAciklama = "Kurumsal ofis için kompakt ve modern banyo dolabı.", KategoriId = Kat("banyo"), MusteriAdi = "Ece Ltd.", MusteriSehir = "Izmir", SiraNo = 4, ProjeTarihi = new DateTime(2024, 8, 10) };
+        var u5 = new Proje { Slug = "villa-banyo-projesi", Baslik = "Villa Banyo Projesi", KisaAciklama = "Membran ve lake karışık özel tasarım villa banyosu.", KategoriId = Kat("banyo"), MusteriAdi = "Ali Ozturk", MusteriSehir = "Ankara", OneCikanMi = true, SiraNo = 5, ProjeTarihi = new DateTime(2025, 4, 1) };
+        var u6 = new Proje { Slug = "otel-banyo-yenileme", Baslik = "Otel Banyo Yenileme", KisaAciklama = "12 odali butik otel için komple banyo dolap yenilemesi.", KategoriId = Kat("banyo"), MusteriAdi = "Otel A.S.", MusteriSehir = "Antalya", SiraNo = 6, ProjeTarihi = new DateTime(2024, 6, 20) };
 
         vt.Projeler.AddRange(u1, u2, u3, u4, u5, u6);
         await vt.SaveChangesAsync();
@@ -2570,23 +2551,25 @@ public static class TohumVerisi
 
     private static async Task TohumlaUrunAilesileriniAsync(VizitLink3DDbContext vt)
     {
+        // Site sadece banyo dolabı — Kapak, Kapi, Dusakabin, Vestiyer aileleri pasif.
         vt.UrunAilesileri.AddRange(
-            new UrunAilesi { Ad = "Kapak", Slug = "kapak", Aciklama = "Mobilya/dolap kapak sistemleri", VarsayilanDetaySablonu = "KapakKonfigurator", SiraNo = 1, AktifMi = true, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-            new UrunAilesi { Ad = "Kapi", Slug = "kapi", Aciklama = "Ic ve dis kapi modelleri", VarsayilanDetaySablonu = "KapiKonfigurator", SiraNo = 2, AktifMi = true, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new UrunAilesi { Ad = "Kapak", Slug = "kapak", Aciklama = "Mobilya/dolap kapak sistemleri (pasif)", VarsayilanDetaySablonu = "KapakKonfigurator", SiraNo = 1, AktifMi = false, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new UrunAilesi { Ad = "Kapi", Slug = "kapi", Aciklama = "Ic ve dis kapi modelleri (pasif)", VarsayilanDetaySablonu = "KapiKonfigurator", SiraNo = 2, AktifMi = false, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
             new UrunAilesi { Ad = "Dolap / Banyo", Slug = "dolap-banyo", Aciklama = "Banyo dolabi, lavabo sistemleri", VarsayilanDetaySablonu = "BanyoKonfigurator", SiraNo = 3, AktifMi = true, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-            new UrunAilesi { Ad = "Dusakabin", Slug = "dusakabin", Aciklama = "Modern dusakabin sistemleri", VarsayilanDetaySablonu = "DusakabinKonfigurator", SiraNo = 4, AktifMi = true, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-            new UrunAilesi { Ad = "Vestiyer", Slug = "vestiyer", Aciklama = "Vestiyer sistemleri", VarsayilanDetaySablonu = "Endustriyel3D", SiraNo = 5, AktifMi = true, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+            new UrunAilesi { Ad = "Dusakabin", Slug = "dusakabin", Aciklama = "Modern dusakabin sistemleri (pasif)", VarsayilanDetaySablonu = "DusakabinKonfigurator", SiraNo = 4, AktifMi = false, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new UrunAilesi { Ad = "Vestiyer", Slug = "vestiyer", Aciklama = "Vestiyer sistemleri (pasif)", VarsayilanDetaySablonu = "Endustriyel3D", SiraNo = 5, AktifMi = false, OlusturulmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
         );
         await vt.SaveChangesAsync();
     }
 
     private static async Task TohumlaUrunKategorileriniAsync(VizitLink3DDbContext vt)
     {
+        // Site sadece banyo dolabı — Mutfak, Yatak Odasi, Oturma Odasi pasif.
         vt.UrunKategorileri.AddRange(
-            new UrunKategori { Ad = "Mutfak", Slug = "mutfak", SiraNo = 1, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow },
+            new UrunKategori { Ad = "Mutfak", Slug = "mutfak", SiraNo = 1, AktifMi = false, OlusturulmaTarihi = DateTime.UtcNow },
             new UrunKategori { Ad = "Banyo", Slug = "banyo", SiraNo = 2, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow },
-            new UrunKategori { Ad = "Yatak Odasi", Slug = "yatak-odasi", SiraNo = 3, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow },
-            new UrunKategori { Ad = "Oturma Odasi", Slug = "oturma-odasi", SiraNo = 4, AktifMi = true, OlusturulmaTarihi = DateTime.UtcNow }
+            new UrunKategori { Ad = "Yatak Odasi", Slug = "yatak-odasi", SiraNo = 3, AktifMi = false, OlusturulmaTarihi = DateTime.UtcNow },
+            new UrunKategori { Ad = "Oturma Odasi", Slug = "oturma-odasi", SiraNo = 4, AktifMi = false, OlusturulmaTarihi = DateTime.UtcNow }
         );
         await vt.SaveChangesAsync();
     }
@@ -3116,30 +3099,29 @@ public static class TohumVerisi
             await vt.SaveChangesAsync();
         }
 
-        if (!await vt.Haberler.AnyAsync(b => b.Baslik == "Mutfak Dolabı Seçerken Dikkat Edilmesi Gereken 5 Şey"))
+        if (!await vt.Haberler.AnyAsync(b => b.Baslik == "Banyo Dolabı Seçiminde Suya Dayanıklılık Neden Önemli?"))
         {
             vt.Haberler.AddRange(
-                new HaberYazisi { Baslik = "Mutfak Dolabı Seçerken Dikkat Edilmesi Gereken 5 Şey", Ozet = "Doğru malzeme ve tasarım seçimi ile yıllarca sorunsuz kullanabilirsiniz.", Icerik = "<p>Mutfak dolapları günlük hayatın yoğun temposuna dayanıklı olmalıdır. <strong>Membran kapak</strong> nem ve ısıya karşı üstün direnç gösterirken, <strong>akrilik kapak</strong> modern ve parlak görünümüyle öne çıkar.</p><h3>Seçim Kriterleri</h3><ul><li>Kullanım sıklığı ve aile büyüklüğü</li><li>Mutfak nem oranı ve havalandırma</li><li>Bütçe ve estetik tercihler</li></ul><p>VizitLink3D olarak 32 yıllık tecrübemizle size en uygun çözümü sunuyoruz.</p>", Slug = "mutfak-dolabi-secimi", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "mutfak,dolap,membran,lake", YayinTarihi = simdi.AddDays(-30), AktifMi = true },
-                new HaberYazisi { Baslik = "2025 Kapı Trendleri: Endüstriyel Tasarım Yükseliyor", Ozet = "Minimalizm ve endüstriyel estetik 2025'in öne çıkan kapı tasarım trendleri arasında.", Icerik = "<p>2025 yılı kapı tasarımında <strong>endüstriyel lüks</strong> akımı hakim. Siyah mat yüzeyler, bronz kulplar ve minimalist çizgiler bu yılın vazgeçilmezleri arasında.</p><h3>Öne Çıkan Trendler</h3><ul><li>Gizli menteşe ve sıfır kapı çerçevesi</li><li>Akıllı kilit sistemleri</li><li>Ses yalıtımlı özel kapılar</li><li>Doğal ahşap ve metal kombinasyonları</li></ul>", Slug = "2025-kapi-trendleri", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "kapı,trend,2025,endüstriyel", YayinTarihi = simdi.AddDays(-20), AktifMi = true },
-                new HaberYazisi { Baslik = "Lake Kapak mı Akrilik Kapak mı? Karşılaştırma Rehberi", Ozet = "İki popüler kapak türü arasındaki farkları detaylıca inceledik.", Icerik = "<p>Lake kapaklar mat ve şık bir görünüm sunarken, akrilik (high gloss) kapaklar ayna gibi parlak yüzeyleriyle dikkat çeker.</p><h3>Lake Kapak</h3><ul><li>Çizilmelere karşı dayanıklı</li><li>Mat ve elegant görünüm</li><li>Geniş renk seçeneği</li></ul><h3>Akrilik Kapak</h3><ul><li>Yüksek parlaklık ve derinlik</li><li>Leke tutmaz yüzey</li><li>Modern mutfaklar için ideal</li></ul>", Slug = "lake-vs-akrilik", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "lake,akrilik,kapak,mutfak", YayinTarihi = simdi.AddDays(-15), AktifMi = true },
-                new HaberYazisi { Baslik = "Banyo Dolabı Seçiminde Suya Dayanıklılık Neden Önemli?", Ozet = "Banyo ortamı yüksek nem içerir. Yanlış malzeme seçimi 1 yıl içinde deformasyona yol açabilir.", Icerik = "<p>Banyo dolaplarında <strong>suya dayanıklılık</strong> en kritik faktördür. VizitLink3D'un özel su itici kaplama teknolojisi sayesinde dolaplarınız yıllarca ilk günkü görünümünü korur.</p>", Slug = "banyo-dolabi-su", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,dolap,su,dayanıklılık", YayinTarihi = simdi.AddDays(-10), AktifMi = true },
-                new HaberYazisi { Baslik = "Villa Kapısı Seçimi: Güvenlik ve Estetik Bir Arada", Ozet = "Villa kapıları hem güvenlik hem de estetik açıdan özel bir yaklaşım gerektirir.", Icerik = "<p>Villa kapıları, evinizin <strong>ilk izlenimi</strong> ve <strong>güvenlik kalkanıdır</strong>. VizitLink3D'un özel tasarım villa kapıları, çelik takviyeli yapısıyla maksimum koruma sağlar.</p>", Slug = "villa-kapisi-secimi", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "villa,kapı,güvenlik,lüks", YayinTarihi = simdi.AddDays(-5), AktifMi = true },
-                new HaberYazisi { Baslik = "Endüstriyel Tasarım Nedir? Mutfak ve Kapıda Modern Dokunuş", Ozet = "Ham malzemeler, keskin hatlar ve işlevsellik. Endüstriyel tasarım akımı ev dekorasyonunda yükselişte.", Icerik = "<p><strong>Endüstriyel tasarım</strong>, fabrika estetiğini yaşam alanlarına taşır. Çelik, beton ve ahşap gibi ham malzemelerin uyumu, modern ve karakterli mekanlar yaratır.</p>", Slug = "endustriyel-tasarim", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "endüstriyel,tasarım,modern", YayinTarihi = simdi.AddDays(-3), AktifMi = true },
-                new HaberYazisi { Baslik = "Enerji Tasarruflu Kapı Sistemleri ile Isı Kaybını Azaltın", Ozet = "Doğru kapı seçimi ile kış aylarında ciddi enerji tasarrufu sağlayabilirsiniz.", Icerik = "<p>Yalıtımlı kapı sistemleri, özellikle müstakil evlerde ve villalarda <strong>enerji faturalarını %40'a kadar düşürebilir</strong>.</p>", Slug = "enerji-tasarruflu-kapi", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "enerji,tasarruf,kapı,ısı", YayinTarihi = simdi.AddDays(-1), AktifMi = true },
-                new HaberYazisi { Baslik = "Ofis Mobilyalarında Kapak Seçimi: Profesyonel Görünüm İçin İpuçları", Ozet = "Ofis dolapları ve kapakları, kurumsal kimliğinizin bir parçasıdır.", Icerik = "<p>Ofis mobilyalarında <strong>dayanıklılık ve şıklık</strong> ön plandadır. VizitLink3D'un ofis koleksiyonu, yoğun kullanıma uygun laminat kaplamaları ve sessiz kapanma sistemleriyle fark yaratır.</p>", Slug = "ofis-mobilya-kapak", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "ofis,mobilya,kapak", YayinTarihi = simdi.AddDays(-8), AktifMi = true }
+                new HaberYazisi { Baslik = "Banyo Dolabı Seçiminde Suya Dayanıklılık Neden Önemli?", Ozet = "Banyo ortamı yüksek nem içerir. Yanlış malzeme seçimi 1 yıl içinde deformasyona yol açabilir.", Icerik = "<p>Banyo dolaplarında <strong>suya dayanıklılık</strong> en kritik faktördür. Gold Banyo'nun özel su itici kaplama teknolojisi sayesinde dolaplarınız yıllarca ilk günkü görünümünü korur.</p>", Slug = "banyo-dolabi-su", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,dolap,su,dayanıklılık", YayinTarihi = simdi.AddDays(-10), AktifMi = true },
+                new HaberYazisi { Baslik = "Küçük Banyolarda Alan Kazandıran Dolap Çözümleri", Ozet = "Küçük banyolarda doğru dolap seçimiyle kullanım alanınızı iki katına çıkarabilirsiniz.", Icerik = "<p>Küçük banyolarda <strong>kompakt ölçülü dolaplar</strong> ve aynalı ünitelerle ferah bir görünüm elde edebilirsiniz.</p>", Slug = "kucuk-banyo-cozumleri", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,dolap,çözüm,küçük banyo", YayinTarihi = simdi.AddDays(-20), AktifMi = true },
+                new HaberYazisi { Baslik = "Banyo Dolabı Renk Seçimi: 2026 Trendleri", Ozet = "Doğru renk seçimi banyonuzun atmosferini tamamen değiştirebilir. 2026'nın trend renklerini keşfedin.", Icerik = "<p>2026 yılı banyo tasarımında <strong>doğal tonlar</strong> ve <strong>sıcak griler</strong> öne çıkıyor. Gold Banyo koleksiyonunda her zevke uygun renk seçenekleri mevcut.</p>", Slug = "banyo-renk-trendleri-2026", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,renk,trend,2026", YayinTarihi = simdi.AddDays(-15), AktifMi = true },
+                new HaberYazisi { Baslik = "LED Aydınlatmalı Ayna Ünitelerinin Avantajları", Ozet = "Modern banyo dolaplarının vazgeçilmezi LED aydınlatmalı aynalar hakkında bilmeniz gerekenler.", Icerik = "<p><strong>LED aydınlatmalı ayna üniteleri</strong>, banyonuza hem estetik hem de fonksiyonel değer katar. Dokunmatik aç-kapa özelliğiyle kullanım kolaylığı sağlar.</p>", Slug = "led-ayna-uniteleri", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,ayna,LED,aydınlatma", YayinTarihi = simdi.AddDays(-5), AktifMi = true },
+                new HaberYazisi { Baslik = "Banyo Mobilyasında Membran ve Lake Yüzey Farkı", Ozet = "Banyo dolabı seçerken yüzey malzemesi kritik önem taşır. Membran ve lake arasındaki farkları inceledik.", Icerik = "<p>Banyo ortamında <strong>membran yüzeyler</strong> neme karşı üstün direnç gösterirken, <strong>lake yüzeyler</strong> mat ve şık bir görünüm sunar.</p>", Slug = "membran-lake-banyo", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,membran,lake,yüzey", YayinTarihi = simdi.AddDays(-3), AktifMi = true },
+                new HaberYazisi { Baslik = "Banyo Tadilatında Dikkat Edilmesi Gerekenler", Ozet = "Banyo tadilatı planlıyorsanız, dolap seçiminden montaja kadar bilmeniz gereken her şey.", Icerik = "<p>Banyo tadilatında <strong>doğru ölçü alma</strong> ve <strong>su tesisatına uygun dolap seçimi</strong> en kritik adımlardır. Gold Banyo olarak ücretsiz keşif hizmeti sunuyoruz.</p>", Slug = "banyo-tadilati-rehberi", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,tadilat,rehber,montaj", YayinTarihi = simdi.AddDays(-1), AktifMi = true },
+                new HaberYazisi { Baslik = "Toplu Konut Projelerinde Banyo Dolabı Seçimi", Ozet = "Toplu konut projelerinde bütçe ve kalite dengesini sağlamanın püf noktalarını derledik.", Icerik = "<p>Toplu konut projelerinde <strong>dayanıklılık ve şıklık</strong> ön plandadır. Gold Banyo'nun proje koleksiyonu, yoğun kullanıma uygun kaplamaları ve sessiz kapanma sistemleriyle fark yaratır.</p>", Slug = "toplu-konut-banyo", AnaResimUrl = "/medya/vizitlink3d_default.png", Etiketler = "banyo,proje,toplu konut", YayinTarihi = simdi.AddDays(-8), AktifMi = true }
             );
             await vt.SaveChangesAsync();
         }
 
-        if (!await vt.Projeler.AnyAsync(p => p.Baslik == "Ankara Akyurt Villa Mutfağı"))
+        if (!await vt.Projeler.AnyAsync(p => p.Baslik == "Ankara Çankaya Lüks Banyo"))
         {
             vt.Projeler.AddRange(
-                new Proje { Baslik = "Ankara Akyurt Villa Mutfağı", Aciklama = "Özel tasarım akrilik kapaklı mutfak. 25 mÂ² alanda tamamen kişiye özel üretim.", KisaAciklama = "Akrilik kapaklı lüks villa mutfağı", KategoriId = 1, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 1, 15), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 4, AktifMi = true, Slug = "ankara-villa-mutfagi" },
-                new Proje { Baslik = "İstanbul Levent Ofis Projesi", Aciklama = "Kurumsal ofis için laminat kapaklı dolap sistemleri. 40 adet özel ölçü dolap.", KisaAciklama = "Laminat kapaklı kurumsal ofis dolapları", KategoriId = 4, MusteriSehir = "İstanbul", ProjeTarihi = new DateTime(2025, 2, 20), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 5, AktifMi = true, Slug = "istanbul-ofis" },
-                new Proje { Baslik = "Ankara Çankaya Lüks Banyo", Aciklama = "Suya dayanıklı özel kaplama banyo dolapları. LED aydınlatmalı ayna sistemleri.", KisaAciklama = "Lüks banyo dolap ve ayna sistemleri", KategoriId = 2, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 3, 10), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 6, AktifMi = true, Slug = "ankara-banyo" },
-                new Proje { Baslik = "İzmir Urla Yazlık Villa", Aciklama = "Ege mimarisine uygun klasik kapı ve mutfak tasarımı. Doğal ahşap görünümlü membran kapaklar.", KisaAciklama = "Klasik tarz yazlık villa renovasyon", KategoriId = 1, MusteriSehir = "İzmir", ProjeTarihi = new DateTime(2024, 8, 5), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 7, AktifMi = true, Slug = "izmir-villa" },
-                new Proje { Baslik = "Antalya Lara Otel Projesi", Aciklama = "120 odalı otel için lake kapı ve dolap sistemleri. Yangına dayanıklı özel malzeme.", KisaAciklama = "Otel odası kapı ve dolap sistemleri", KategoriId = 4, MusteriSehir = "Antalya", ProjeTarihi = new DateTime(2024, 6, 1), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 8, AktifMi = true, Slug = "antalya-otel" },
-                new Proje { Baslik = "Eskişehir Modern Ofis", Aciklama = "Genç girişim ofisi için renkli membran kapaklı depolama üniteleri.", KisaAciklama = "Modüler ofis depolama sistemleri", KategoriId = 4, MusteriSehir = "Eskişehir", ProjeTarihi = new DateTime(2025, 4, 1), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 9, AktifMi = true, Slug = "eskisehir-ofis" }
+                new Proje { Baslik = "Ankara Çankaya Lüks Banyo", Aciklama = "Suya dayanıklı özel kaplama banyo dolapları. LED aydınlatmalı ayna sistemleri.", KisaAciklama = "Lüks banyo dolap ve ayna sistemleri", KategoriId = 2, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 3, 10), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 1, AktifMi = true, Slug = "ankara-banyo" },
+                new Proje { Baslik = "İstanbul Levent Rezidans Banyo", Aciklama = "Kurumsal rezidans için lake yüzeyli banyo dolap sistemleri. 40 adet özel ölçü dolap.", KisaAciklama = "Lake yüzeyli rezidans banyo dolapları", KategoriId = 2, MusteriSehir = "İstanbul", ProjeTarihi = new DateTime(2025, 2, 20), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 2, AktifMi = true, Slug = "istanbul-rezidans-banyo" },
+                new Proje { Baslik = "Antalya Lara Otel Banyo Projesi", Aciklama = "120 odalı otel için lake ve membran banyo dolap sistemleri. Neme dayanıklı özel malzeme.", KisaAciklama = "Otel odası banyo dolap sistemleri", KategoriId = 2, MusteriSehir = "Antalya", ProjeTarihi = new DateTime(2024, 6, 1), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 3, AktifMi = true, Slug = "antalya-otel-banyo" },
+                new Proje { Baslik = "İzmir Urla Villa Banyo", Aciklama = "Ege mimarisine uygun klasik banyo dolabı tasarımı. Doğal ahşap görünümlü membran yüzeyler.", KisaAciklama = "Klasik tarz villa banyo renovasyon", KategoriId = 2, MusteriSehir = "İzmir", ProjeTarihi = new DateTime(2024, 8, 5), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = true, SiraNo = 4, AktifMi = true, Slug = "izmir-villa-banyo" },
+                new Proje { Baslik = "Eskişehir Ofis Banyo Projesi", Aciklama = "Kurumsal ofis için kompakt banyo dolap ve lavabo üniteleri.", KisaAciklama = "Modüler ofis banyo sistemleri", KategoriId = 2, MusteriSehir = "Eskişehir", ProjeTarihi = new DateTime(2025, 4, 1), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 5, AktifMi = true, Slug = "eskisehir-ofis-banyo" },
+                new Proje { Baslik = "Ankara Akyurt Toplu Konut Banyo", Aciklama = "Gold Banyo standart serisi ile donatılmış 80 daireli toplu konut projesi.", KisaAciklama = "Toplu konut banyo dolap sistemleri", KategoriId = 2, MusteriSehir = "Ankara", ProjeTarihi = new DateTime(2025, 1, 15), KapakResim = "/medya/vizitlink3d_default.png", OneCikanMi = false, SiraNo = 6, AktifMi = true, Slug = "ankara-toklu-konut-banyo" }
             );
             await vt.SaveChangesAsync();
         }
@@ -3147,14 +3129,14 @@ public static class TohumVerisi
         if (!await vt.MusteriYorumlari.AnyAsync(y => y.MusteriAdi == "Fatma E."))
         {
             vt.MusteriYorumlari.AddRange(
-                new MusteriYorumu { MusteriAdi = "Fatma E.", MusteriSehir = "Ankara", Yorum = "Villa kapımızı 3 yıl önce yaptırdık, hala ilk günkü gibi. Ses yalıtımı harika.", Puan = 5, Onaylandi = true, SiraNo = 6 },
-                new MusteriYorumu { MusteriAdi = "Kemal S.", MusteriSehir = "İstanbul", Yorum = "Ofis dolaplarımızın kalitesi tüm çalışanlarımızdan tam not aldı.", Puan = 5, Onaylandi = true, SiraNo = 7 },
-                new MusteriYorumu { MusteriAdi = "Sevgi T.", MusteriSehir = "Antalya", Yorum = "Otel projemiz için 120 oda sipariş verdik. Zamanında teslim ve kusursuz işçilik.", Puan = 5, Onaylandi = true, SiraNo = 8 },
-                new MusteriYorumu { MusteriAdi = "Okan B.", MusteriSehir = "İzmir", Yorum = "Mutfak dolaplarım için renk seçiminde çok yardımcı oldular. Sonuç mükemmel.", Puan = 5, Onaylandi = true, SiraNo = 9 },
+                new MusteriYorumu { MusteriAdi = "Fatma E.", MusteriSehir = "Ankara", Yorum = "Banyo dolabımızı 3 yıl önce yaptırdık, hala ilk günkü gibi. Su yalıtımı harika.", Puan = 5, Onaylandi = true, SiraNo = 6 },
+                new MusteriYorumu { MusteriAdi = "Kemal S.", MusteriSehir = "İstanbul", Yorum = "Banyo dolaplarımızın kalitesi tüm ailemizden tam not aldı.", Puan = 5, Onaylandi = true, SiraNo = 7 },
+                new MusteriYorumu { MusteriAdi = "Sevgi T.", MusteriSehir = "Antalya", Yorum = "Otel projemiz için 120 oda banyo dolabı sipariş verdik. Zamanında teslim ve kusursuz işçilik.", Puan = 5, Onaylandi = true, SiraNo = 8 },
+                new MusteriYorumu { MusteriAdi = "Okan B.", MusteriSehir = "İzmir", Yorum = "Banyo dolaplarım için renk seçiminde çok yardımcı oldular. Sonuç mükemmel.", Puan = 5, Onaylandi = true, SiraNo = 9 },
                 new MusteriYorumu { MusteriAdi = "Derya K.", MusteriSehir = "Ankara", Yorum = "Banyo dolabımızdaki su yalıtımı gerçekten etkileyici. 2 yıldır sorunsuz.", Puan = 4, Onaylandi = true, SiraNo = 10 },
                 new MusteriYorumu { MusteriAdi = "Burak M.", MusteriSehir = "Eskişehir", Yorum = "Fiyat/performans olarak piyasadaki en iyi seçenek. Montaj ekibi çok profesyoneldi.", Puan = 5, Onaylandi = true, SiraNo = 11 },
-                new MusteriYorumu { MusteriAdi = "Gülşen A.", MusteriSehir = "Kocaeli", Yorum = "3D konfigüratör sayesinde tam istediğim gibi bir mutfak tasarladık.", Puan = 5, Onaylandi = true, SiraNo = 12 },
-                new MusteriYorumu { MusteriAdi = "Volkan Ç.", MusteriSehir = "Balıkesir", Yorum = "Lake kapakların mat dokusu çok şık. Temizliği de çok kolay.", Puan = 4, Onaylandi = true, SiraNo = 13 }
+                new MusteriYorumu { MusteriAdi = "Gülşen A.", MusteriSehir = "Kocaeli", Yorum = "3D konfigüratör sayesinde tam istediğim gibi bir banyo dolabı tasarladık.", Puan = 5, Onaylandi = true, SiraNo = 12 },
+                new MusteriYorumu { MusteriAdi = "Volkan Ç.", MusteriSehir = "Balıkesir", Yorum = "Lake yüzeyli dolapların mat dokusu çok şık. Temizliği de çok kolay.", Puan = 4, Onaylandi = true, SiraNo = 13 }
             );
             await vt.SaveChangesAsync();
         }
@@ -3174,17 +3156,17 @@ public static class TohumVerisi
             await vt.SaveChangesAsync();
         }
 
-        if (!await vt.SikSorulanSorular.AnyAsync(s => s.Soru == "Kapak ölçülerini kendim mi vermeliyim?"))
+        if (!await vt.SikSorulanSorular.AnyAsync(s => s.Soru == "Banyo dolabı ölçülerini kendim mi vermeliyim?"))
         {
             vt.SikSorulanSorular.AddRange(
-                new SikSorulanSoru { Soru = "Kapak ölçülerini kendim mi vermeliyim?", Cevap = "Size en yakın showroom'umuzda ücretsiz keşif ve ölçü hizmeti sunuyoruz. Dilerseniz kendi ölçülerinizi de iletebilirsiniz.", SiraNo = 11, AktifMi = true },
+                new SikSorulanSoru { Soru = "Banyo dolabı ölçülerini kendim mi vermeliyim?", Cevap = "Size en yakın showroom'umuzda ücretsiz keşif ve ölçü hizmeti sunuyoruz. Dilerseniz kendi ölçülerinizi de iletebilirsiniz.", SiraNo = 11, AktifMi = true },
                 new SikSorulanSoru { Soru = "Teslimat süresi ne kadar?", Cevap = "Standart ölçülerde 5-7 iş günü, özel ölçü siparişlerde 10-15 iş günü içerisinde teslimat yapılmaktadır.", SiraNo = 12, AktifMi = true },
-                new SikSorulanSoru { Soru = "Garanti süreniz nedir?", Cevap = "Tüm ürünlerimiz 2 yıl garanti kapsamındadır. Membran kapaklarda renk solması, lake kapaklarda çatlama garantisi veriyoruz.", SiraNo = 13, AktifMi = true },
+                new SikSorulanSoru { Soru = "Garanti süreniz nedir?", Cevap = "Tüm ürünlerimiz 2 yıl garanti kapsamındadır. Membran yüzeylerde renk solması, lake yüzeylerde çatlama garantisi veriyoruz.", SiraNo = 13, AktifMi = true },
                 new SikSorulanSoru { Soru = "Fiyatlarınız neye göre belirleniyor?", Cevap = "Fiyatlar malzeme türü (membran/lake/akrilik), ölçü, profil detayı ve aksesuar seçimine göre değişmektedir. Ücretsiz fiyat teklifi için iletişime geçebilirsiniz.", SiraNo = 14, AktifMi = true },
                 new SikSorulanSoru { Soru = "Montaj hizmetiniz var mı?", Cevap = "Evet, Ankara ve çevre illerde profesyonel montaj ekibimizle hizmet vermekteyiz. Diğer iller için anlaşmalı ekiplerimiz bulunmaktadır.", SiraNo = 15, AktifMi = true },
                 new SikSorulanSoru { Soru = "Yurt dışına gönderim yapıyor musunuz?", Cevap = "Evet, 20'den fazla ülkeye ihracat yapmaktayız. Avrupa, Orta Doğu ve Kuzey Afrika'ya düzenli sevkiyatımız bulunmaktadır.", SiraNo = 16, AktifMi = true },
                 new SikSorulanSoru { Soru = "Taksit imkanınız var mı?", Cevap = "Anlaşmalı bankalarımız aracılığıyla 12 aya varan taksit imkanı sunuyoruz.", SiraNo = 17, AktifMi = true },
-                new SikSorulanSoru { Soru = "Renk değişimi sonradan yapılabilir mi?", Cevap = "Kapaklar değiştirilebilir ancak dolap gövdesinden bağımsız olarak düşünülmelidir. Yeni kapak siparişi vererek mevcut dolaplarınızı yenileyebilirsiniz.", SiraNo = 18, AktifMi = true }
+                new SikSorulanSoru { Soru = "Banyo dolabı rengi sonradan değiştirilebilir mi?", Cevap = "Dolap kapakları değiştirilebilir. Yeni kapak siparişi vererek mevcut dolaplarınızı yenileyebilirsiniz.", SiraNo = 18, AktifMi = true }
             );
             await vt.SaveChangesAsync();
         }
@@ -3202,7 +3184,7 @@ public static class TohumVerisi
 
         var yuklenecekSertifikalar = new[]
         {
-            new Sertifika { Ad = "Yangına Dayanıklı Kapı Sertifikası", Aciklama = "Yangına dayanıklı kapı uygunluk belgesi.", PdfDosya = "/medya/sertifikalar/yangina-dayanikli-kapi-sertifika.pdf", VerenKurum = "Belgelendirme Kurumu", SiraNo = 10, AktifMi = true },
+            new Sertifika { Ad = "Suya Dayanıklı Banyo Dolabı Sertifikası", Aciklama = "Neme dayanıklı banyo dolabı uygunluk belgesi.", PdfDosya = "/medya/sertifikalar/suya-dayanikli-banyo-sertifika.pdf", VerenKurum = "Belgelendirme Kurumu", SiraNo = 10, AktifMi = true },
             new Sertifika { Ad = "Sertifika IMG 20260430 0001", Aciklama = "VizitLink3D sertifika dokümanı.", PdfDosya = "/medya/sertifikalar/img-20260430-0001.pdf", VerenKurum = "Belgelendirme Kurumu", SiraNo = 11, AktifMi = true },
             new Sertifika { Ad = "Sertifika IMG 20260430 0002", Aciklama = "VizitLink3D sertifika dokümanı.", PdfDosya = "/medya/sertifikalar/img-20260430-0002.pdf", VerenKurum = "Belgelendirme Kurumu", SiraNo = 12, AktifMi = true },
             new Sertifika { Ad = "Sertifika IMG 20260430 0003", Aciklama = "VizitLink3D sertifika dokümanı.", PdfDosya = "/medya/sertifikalar/img-20260430-0003.pdf", VerenKurum = "Belgelendirme Kurumu", SiraNo = 13, AktifMi = true }
@@ -3221,11 +3203,11 @@ public static class TohumVerisi
         if (!await vt.IletisimMesajlari.AnyAsync(m => m.Eposta == "hakan@ornek.com"))
         {
             vt.IletisimMesajlari.AddRange(
-                new IletisimMesaji { AdSoyad = "Hakan Yıldız", Eposta = "hakan@ornek.com", Telefon = "05321112233", Konu = "Fiyat Teklifi", Mesaj = "Merhaba, yeni evimizin mutfağı için akrilik kapak fiyat teklifi almak istiyorum. 12 mÂ² mutfak için membran ve akrilik alternatifli fiyat rica ediyorum." },
+                new IletisimMesaji { AdSoyad = "Hakan Yıldız", Eposta = "hakan@ornek.com", Telefon = "05321112233", Konu = "Fiyat Teklifi", Mesaj = "Merhaba, yeni evimizin banyosu için lake yüzeyli dolap fiyat teklifi almak istiyorum. 110 cm banyo dolabı için membran ve lake alternatifli fiyat rica ediyorum." },
                 new IletisimMesaji { AdSoyad = "Sema Koç", Eposta = "sema@ornek.com", Telefon = "05553334455", Konu = "Ürün Bilgisi", Mesaj = "Banyo dolaplarınızın suya dayanıklılık özellikleri hakkında detaylı bilgi alabilir miyim?" },
-                new IletisimMesaji { AdSoyad = "Murat Tekin", Eposta = "murat@ornek.com", Telefon = "05445556677", Konu = "Bayilik Başvurusu", Mesaj = "VizitLink3D ürünlerini Antalya'da satmak istiyorum. Bayilik şartlarınız hakkında bilgi alabilir miyim?" },
+                new IletisimMesaji { AdSoyad = "Murat Tekin", Eposta = "murat@ornek.com", Telefon = "05445556677", Konu = "Bayilik Başvurusu", Mesaj = "Gold Banyo ürünlerini Antalya'da satmak istiyorum. Bayilik şartlarınız hakkında bilgi alabilir miyim?" },
                 new IletisimMesaji { AdSoyad = "Gamze Arslan", Eposta = "gamze@ornek.com", Konu = "Renk Numunesi", Mesaj = "RAL renk kataloğundan 7016 ve 9005 kodlu renklerin fiziksel numunelerini talep ediyorum." },
-                new IletisimMesaji { AdSoyad = "Ahmet Can", Eposta = "ahmet@ornek.com", Telefon = "05339876543", Konu = "Kurumsal Teklif", Mesaj = "Firmamız için 40 adet ofis dolabı ve 10 adet kapı sistemine ihtiyacımız var. Kurumsal fiyat teklifi rica ederim." }
+                new IletisimMesaji { AdSoyad = "Ahmet Can", Eposta = "ahmet@ornek.com", Telefon = "05339876543", Konu = "Kurumsal Teklif", Mesaj = "Firmamız için 40 adet banyo dolabı ve ayna ünitesine ihtiyacımız var. Kurumsal fiyat teklifi rica ederim." }
             );
             await vt.SaveChangesAsync();
         }
@@ -3287,7 +3269,7 @@ public static class TohumVerisi
         vt.TeklifIstekleri.AddRange(
             new TeklifIstegi { UrunId = 1, MusteriAdSoyad = "Kemal Yildiz", Eposta = "kemal@ornek.com", Telefon = "05321112233", Not = "Beyaz renk istiyorum.", Durum = "Bekliyor", OlusturulmaTarihi = simdi.AddDays(-7) },
             new TeklifIstegi { UrunId = 4, MusteriAdSoyad = "Selin Arslan", Eposta = "selin@ornek.com", Telefon = "05443332211", Not = "Acil kurulum gerekiyor.", Durum = "Inceleniyor", OlusturulmaTarihi = simdi.AddDays(-3) },
-            new TeklifIstegi { MusteriAdSoyad = "Caner Ozturk", Eposta = "caner@ornek.com", Not = "Villa için tüm kapılar.", Durum = "Bekliyor", OlusturulmaTarihi = simdi.AddDays(-1) }
+            new TeklifIstegi { MusteriAdSoyad = "Caner Ozturk", Eposta = "caner@ornek.com", Not = "Villa için banyo dolapları.", Durum = "Bekliyor", OlusturulmaTarihi = simdi.AddDays(-1) }
         );
         await vt.SaveChangesAsync();
     }
@@ -3937,14 +3919,15 @@ public static class TohumVerisi
 
         var simdi = DateTime.UtcNow;
 
+        // Site sadece banyo dolabı — tüm projeler banyo kategorisinde.
         vt.Projeler.AddRange(
             new Proje
             {
-                Slug = "sertepe-195-daire-mutfak-dolabi",
-                Baslik = "Sertepe İnşaat — 195 Daire Mutfak Donanımı",
-                KisaAciklama = "Ankara Akyurt'ta 195 daireli rezidans projesi için lake kapak sistem tasarımı ve uygulaması.",
-                Aciklama = "<p>Ankara Akyurt'ta inşa edilen 195 daireli lüks konut projesinde VizitLink3D imzalı lake mutfak dolapları kullanıldı. Her daire için özel ölçüde üretilen mat lake kapaklar, modern ve sade çizgisiyle projenin genel tasarım anlayışını yansıtmaktadır.</p><p>Üretimden teslimata kadar tüm süreçler VizitLink3D kalite standartları çerçevesinde yürütülmüş; montaj ekibimiz tüm birimlerde titiz bir uygulama gerçekleştirmiştir.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "sertepe-195-daire-banyo-dolabi",
+                Baslik = "Sertepe İnşaat — 195 Daire Banyo Donanımı",
+                KisaAciklama = "Ankara Akyurt'ta 195 daireli rezidans projesi için lake yüzeyli banyo dolabı tasarımı ve uygulaması.",
+                Aciklama = "<p>Ankara Akyurt'ta inşa edilen 195 daireli lüks konut projesinde Gold Banyo imzalı lake yüzeyli banyo dolapları kullanıldı. Her daire için özel ölçüde üretilen mat lake dolaplar, modern ve sade çizgisiyle projenin genel tasarım anlayışını yansıtmaktadır.</p><p>Üretimden teslimata kadar tüm süreçler Gold Banyo kalite standartları çerçevesinde yürütülmüş; montaj ekibimiz tüm birimlerde titiz bir uygulama gerçekleştirmiştir.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Sertepe İnşaat",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/sertepe-insaat.png",
@@ -3952,18 +3935,18 @@ public static class TohumVerisi
                 OneCikanMi = true,
                 SiraNo = 1,
                 AktifMi = true,
-                SeoBaslik = "Sertepe İnşaat 195 Daire Mutfak Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Akyurt'ta 195 daireli konut projesinde lake mutfak dolabı uygulaması.",
+                SeoBaslik = "Sertepe İnşaat 195 Daire Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Akyurt'ta 195 daireli konut projesinde lake yüzeyli banyo dolabı uygulaması.",
                 ProjeTarihi = new DateTime(2025, 9, 1, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "alpis-insaat-120-daire-lake-kapak",
-                Baslik = "Alpış İnşaat — 120 Daire Premium Lake Sistem",
-                KisaAciklama = "Istanbul Başakşehir projesinde 120 daire için yüksek parlak lake kapak ve kapı sistemi.",
-                Aciklama = "<p>Istanbul Başakşehir'deki konut projesinde 120 dairenin mutfak ve yatak odaları VizitLink3D premium lake kapak sistemi ile donatıldı. Yüksek parlak (high-gloss) lake kapaklar, modern iç mimarinin vazgeçilmez unsuru haline gelmiştir.</p><p>Üretimden yerinde montaja kadar tüm süreçlerde kalite yönetim sistemimiz devreye girmiş, proje zamanında ve eksiksiz teslim edilmiştir.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "alpis-insaat-120-daire-lake-banyo",
+                Baslik = "Alpış İnşaat — 120 Daire Premium Lake Banyo",
+                KisaAciklama = "Istanbul Başakşehir projesinde 120 daire için yüksek parlak lake yüzeyli banyo dolabı sistemi.",
+                Aciklama = "<p>Istanbul Başakşehir'deki konut projesinde 120 dairenin banyoları Gold Banyo premium lake yüzeyli dolap sistemi ile donatıldı. Yüksek parlak (high-gloss) lake yüzeyler, modern banyo tasarımının vazgeçilmez unsuru haline gelmiştir.</p><p>Üretimden yerinde montaja kadar tüm süreçlerde kalite yönetim sistemimiz devreye girmiş, proje zamanında ve eksiksiz teslim edilmiştir.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Alpış İnşaat",
                 MusteriSehir = "Istanbul",
                 MusteriLogo = "/medya/referanslar/alpis-insaat.png",
@@ -3971,18 +3954,18 @@ public static class TohumVerisi
                 OneCikanMi = true,
                 SiraNo = 2,
                 AktifMi = true,
-                SeoBaslik = "Alpış İnşaat 120 Daire Lake Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Istanbul Başakşehir'de 120 daireli konut projesi için lake kapak ve kapı sistemi.",
+                SeoBaslik = "Alpış İnşaat 120 Daire Lake Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Istanbul Başakşehir'de 120 daireli konut projesi için lake yüzeyli banyo dolabı sistemi.",
                 ProjeTarihi = new DateTime(2025, 6, 15, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "ulu-cinar-16-villa-komple-kapi-kapak",
-                Baslik = "Ulu Çınar — 16 Villa Komple Kapı & Kapak",
-                KisaAciklama = "Ankara Mudanya'da 16 villanın tüm iç kapı ve mutfak kapak sistemi özel lake serisinden.",
-                Aciklama = "<p>Ankara Mudanya'daki prestijli villa projesinde 16 konutun tüm iç kapıları ve mutfak kapak sistemleri VizitLink3D özel lake serisiyle donatıldı. Her villa için birbirinden farklı renk ve doku kombinasyonları uygulanarak kişisel bir estetik anlayış yaratıldı.</p><p>Hem lake mutfak kapakları hem de iç mekan kapı modelleri aynı kaplama rengi ve dokusuyla birbiriyle uyumlu üretilerek bütünleşik bir iç mimari dil oluşturuldu.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "ulu-cinar-16-villa-banyo-dolabi",
+                Baslik = "Ulu Çınar — 16 Villa Komple Banyo Dolabı",
+                KisaAciklama = "Ankara Mudanya'da 16 villanın tüm banyo dolap sistemi özel lake serisinden.",
+                Aciklama = "<p>Ankara Mudanya'daki prestijli villa projesinde 16 konutun tüm banyo dolap sistemleri Gold Banyo özel lake serisiyle donatıldı. Her villa için birbirinden farklı renk ve doku kombinasyonları uygulanarak kişisel bir estetik anlayış yaratıldı.</p><p>Lake banyo dolapları aynı kaplama rengi ve dokusuyla birbiriyle uyumlu üretilerek bütünleşik bir iç mimari dil oluşturuldu.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Ulu Çınar",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/ulu-cinar.png",
@@ -3990,18 +3973,18 @@ public static class TohumVerisi
                 OneCikanMi = true,
                 SiraNo = 3,
                 AktifMi = true,
-                SeoBaslik = "Ulu Çınar 16 Villa Komple Kapı ve Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Mudanya'da 16 villa için lake kapak ve iç kapı sistemi uygulaması.",
+                SeoBaslik = "Ulu Çınar 16 Villa Komple Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Mudanya'da 16 villa için lake banyo dolabı uygulaması.",
                 ProjeTarihi = new DateTime(2025, 3, 20, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "kumova-insaat-196-daire-membran-kapak",
-                Baslik = "Kumova İnşaat — 196 Daire Membran Kapak",
-                KisaAciklama = "Ankara Osmangazi'de 196 daireli projede ekonomik ve şık membran kapak çözümü.",
-                Aciklama = "<p>Ankara Osmangazi'deki 196 daireli konut projesinde VizitLink3D membran kapak sistemi tercih edildi. Bütçe dostu yapısına karşın yüksek estetik sunan membran kapaklar, geniş renk skalasıyla her dairenin ihtiyacına özel konfigüre edildi.</p><p>Kısa üretim süreleri ve hızlı montaj kapasitesiyle proje belirlenen takvim dahilinde tamamlanmıştır.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "kumova-insaat-196-daire-membran-banyo",
+                Baslik = "Kumova İnşaat — 196 Daire Membran Banyo Dolabı",
+                KisaAciklama = "Ankara Osmangazi'de 196 daireli projede ekonomik ve şık membran yüzeyli banyo dolabı çözümü.",
+                Aciklama = "<p>Ankara Osmangazi'deki 196 daireli konut projesinde Gold Banyo membran yüzeyli dolap sistemi tercih edildi. Bütçe dostu yapısına karşın yüksek estetik sunan membran yüzeyli dolaplar, geniş renk skalasıyla her dairenin ihtiyacına özel konfigüre edildi.</p><p>Kısa üretim süreleri ve hızlı montaj kapasitesiyle proje belirlenen takvim dahilinde tamamlanmıştır.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Kumova İnşaat",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/kumova-insaat.png",
@@ -4009,18 +3992,18 @@ public static class TohumVerisi
                 OneCikanMi = false,
                 SiraNo = 4,
                 AktifMi = true,
-                SeoBaslik = "Kumova İnşaat 196 Daire Membran Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Osmangazi'de 196 daireli konut projesi için membran kapak uygulaması.",
+                SeoBaslik = "Kumova İnşaat 196 Daire Membran Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Osmangazi'de 196 daireli konut projesi için membran yüzeyli banyo dolabı uygulaması.",
                 ProjeTarihi = new DateTime(2024, 11, 10, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "bezek-mimarlik-150-daire-lake-kapi",
-                Baslik = "Bezek Mimarlık — 150 Daire Lake Kapı Projesi",
-                KisaAciklama = "Ankara Çankaya'da mimarlık bürosu öncülüğünde 150 daire için özel tasarım lake kapı.",
-                Aciklama = "<p>Ankara Çankaya'da hayata geçirilen prestijli konut projesinde Bezek Mimarlık'ın özel tasarımlarına uygun lake kapı modelleri üretildi. Mimari projeyle bütünleşik kapı tasarımları, mekanların genel estetiğini tamamlayan özgün bir kimlik oluşturdu.</p><p>Her kapı modeli mimarın teknik çizimlerine göre özel ölçüde üretilmiş; yüzey işlemleri ve donanımlar birlikte belirlenmiştir.</p>",
-                KategoriId = Kat("ofis"),
+                Slug = "bezek-mimarlik-150-daire-lake-banyo",
+                Baslik = "Bezek Mimarlık — 150 Daire Lake Banyo Dolabı Projesi",
+                KisaAciklama = "Ankara Çankaya'da mimarlık bürosu öncülüğünde 150 daire için özel tasarım lake banyo dolabı.",
+                Aciklama = "<p>Ankara Çankaya'da hayata geçirilen prestijli konut projesinde Bezek Mimarlık'ın özel tasarımlarına uygun lake yüzeyli banyo dolabı modelleri üretildi. Mimari projeyle bütünleşik dolap tasarımları, mekanların genel estetiğini tamamlayan özgün bir kimlik oluşturdu.</p><p>Her dolap modeli mimarın teknik çizimlerine göre özel ölçüde üretilmiş; yüzey işlemleri ve donanımlar birlikte belirlenmiştir.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Bezek Mimarlık",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/bezek-mimarlik.png",
@@ -4028,18 +4011,18 @@ public static class TohumVerisi
                 OneCikanMi = true,
                 SiraNo = 5,
                 AktifMi = true,
-                SeoBaslik = "Bezek Mimarlık 150 Daire Lake Kapı Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Çankaya'da 150 daireli proje için özel tasarım lake kapı uygulaması.",
+                SeoBaslik = "Bezek Mimarlık 150 Daire Lake Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Çankaya'da 150 daireli proje için özel tasarım lake banyo dolabı uygulaması.",
                 ProjeTarihi = new DateTime(2025, 1, 5, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "sadriogullari-200-daire-mutfak-kapak",
-                Baslik = "Sadrioğulları İnşaat — 200 Daire Mutfak",
-                KisaAciklama = "Izmir Karşıyaka'da 200 daireli büyük ölçekli projede lake ve membran karma kapak sistemi.",
-                Aciklama = "<p>Izmir Karşıyaka'da teslim edilen 200 daireli konut projesinde daire tipine göre lake ve membran kapak karması tercih edildi. Geniş dairelerde premium lake, standart dairelerde ekonomik membran kapaklar kullanılarak bütçe optimizasyonu sağlandı.</p><p>VizitLink3D'un kurumsal proje birimi tüm koordinasyonu üstlenmiş; sözleşme, üretim, lojistik ve montaj süreçleri tek noktadan yönetilmiştir.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "sadriogullari-200-daire-banyo-dolabi",
+                Baslik = "Sadrioğulları İnşaat — 200 Daire Banyo Dolabı",
+                KisaAciklama = "Izmir Karşıyaka'da 200 daireli büyük ölçekli projede lake ve membran karma banyo dolabı sistemi.",
+                Aciklama = "<p>Izmir Karşıyaka'da teslim edilen 200 daireli konut projesinde daire tipine göre lake ve membran yüzeyli banyo dolabı karması tercih edildi. Geniş dairelerde premium lake, standart dairelerde ekonomik membran yüzeyli dolaplar kullanılarak bütçe optimizasyonu sağlandı.</p><p>Gold Banyo'nun kurumsal proje birimi tüm koordinasyonu üstlenmiş; sözleşme, üretim, lojistik ve montaj süreçleri tek noktadan yönetilmiştir.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Sadrioğulları İnşaat",
                 MusteriSehir = "Izmir",
                 MusteriLogo = "/medya/referanslar/sadriogullari-insaat.png",
@@ -4047,18 +4030,18 @@ public static class TohumVerisi
                 OneCikanMi = false,
                 SiraNo = 6,
                 AktifMi = true,
-                SeoBaslik = "Sadrioğulları İnşaat 200 Daire Mutfak Kapak Projesi | VizitLink3D",
-                SeoAciklama = "Izmir Karşıyaka'da 200 daireli proje için lake ve membran karma kapak sistemi.",
+                SeoBaslik = "Sadrioğulları İnşaat 200 Daire Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Izmir Karşıyaka'da 200 daireli proje için lake ve membran karma banyo dolabı sistemi.",
                 ProjeTarihi = new DateTime(2024, 8, 22, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "yg-goktas-96-daire-lake-kapak-kapi",
-                Baslik = "YG Göktaş İnş. — 96 Daire Kapak & Kapı",
-                KisaAciklama = "Ankara Yıldırım'da 96 daireli projede lake mutfak kapağı ve ahşap görünümlü iç kapı kombinasyonu.",
-                Aciklama = "<p>Ankara Yıldırım'daki 96 daireli konut projesinde mutfak kapakları ve iç kapılar VizitLink3D imzasıyla hayata geçirildi. Lake mutfak kapakları açık gri rengi ile modern bir görünüm sunarken, iç kapılarda ahşap desenli kaplama tercih edilerek sıcak bir atmosfer yaratıldı.</p><p>Aynı proje bünyesindeki kapak ve kapı siparişleri koordineli üretimle eş zamanlı teslim edilmiş, montaj süreci kısaltılmıştır.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "yg-goktas-96-daire-banyo-dolabi",
+                Baslik = "YG Göktaş İnş. — 96 Daire Banyo Dolabı",
+                KisaAciklama = "Ankara Yıldırım'da 96 daireli projede lake yüzeyli banyo dolabı ve ayna ünitesi kombinasyonu.",
+                Aciklama = "<p>Ankara Yıldırım'daki 96 daireli konut projesinde banyo dolapları ve ayna üniteleri Gold Banyo imzasıyla hayata geçirildi. Lake yüzeyli banyo dolapları açık gri rengi ile modern bir görünüm sunarken, LED aydınlatmalı ayna üniteleriyle sıcak bir atmosfer yaratıldı.</p><p>Aynı proje bünyesindeki dolap ve ayna siparişleri koordineli üretimle eş zamanlı teslim edilmiş, montaj süreci kısaltılmıştır.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "YG Göktaş İnşaat",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/yg-goktas.png",
@@ -4066,18 +4049,18 @@ public static class TohumVerisi
                 OneCikanMi = false,
                 SiraNo = 7,
                 AktifMi = true,
-                SeoBaslik = "YG Göktaş İnşaat 96 Daire Kapak ve Kapı Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Yıldırım'da 96 daireli proje için lake kapak ve ahşap görünümlü kapı kombinasyonu.",
+                SeoBaslik = "YG Göktaş İnşaat 96 Daire Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Yıldırım'da 96 daireli proje için lake yüzeyli banyo dolabı ve ayna ünitesi kombinasyonu.",
                 ProjeTarihi = new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             },
             new Proje
             {
-                Slug = "akar-insaat-60-daire-cam-kapakli-mutfak",
-                Baslik = "Akar İnşaat — 60 Daire Camlı Lake Mutfak",
-                KisaAciklama = "Ankara Akyurt'ta 60 daireli prestijli projede camlı lake kapak ve ahşap desen kombinasyonu.",
-                Aciklama = "<p>Ankara Akyurt'taki 60 daireli üst segment konut projesinde VizitLink3D'un camlı lake kapak serisi tercih edildi. Temperli cam eklemeli üst dolap kapakları ile mat lake alt dolap kapakları bir arada kullanılarak çağdaş ve ferah bir mutfak görünümü elde edildi.</p><p>Her daire için renk ve cam kombinasyonu müşteri tercihine göre özelleştirilmiş; üretim süresi boyunca projede görevlendirilen VizitLink3D proje koordinatörü tüm süreci birebir takip etmiştir.</p>",
-                KategoriId = Kat("mutfak"),
+                Slug = "akar-insaat-60-daire-lake-banyo",
+                Baslik = "Akar İnşaat — 60 Daire Lake Banyo Dolabı",
+                KisaAciklama = "Ankara Akyurt'ta 60 daireli prestijli projede lake yüzeyli banyo dolabı ve mermer tezgah kombinasyonu.",
+                Aciklama = "<p>Ankara Akyurt'taki 60 daireli üst segment konut projesinde Gold Banyo'nun lake yüzeyli banyo dolabı serisi tercih edildi. Mermer tezgah ve lake dolap kombinasyonu çağdaş ve ferah bir banyo görünümü elde edildi.</p><p>Her daire için renk ve aksesuar kombinasyonu müşteri tercihine göre özelleştirilmiş; üretim süresi boyunca projede görevlendirilen Gold Banyo proje koordinatörü tüm süreci birebir takip etmiştir.</p>",
+                KategoriId = Kat("banyo"),
                 MusteriAdi = "Akar İnşaat",
                 MusteriSehir = "Ankara",
                 MusteriLogo = "/medya/referanslar/akar-insaat.png",
@@ -4085,8 +4068,8 @@ public static class TohumVerisi
                 OneCikanMi = true,
                 SiraNo = 8,
                 AktifMi = true,
-                SeoBaslik = "Akar İnşaat 60 Daire Camlı Lake Mutfak Projesi | VizitLink3D",
-                SeoAciklama = "Ankara Akyurt'ta 60 daireli proje için camlı lake kapak ve mat lake kombinasyonu.",
+                SeoBaslik = "Akar İnşaat 60 Daire Lake Banyo Dolabı Projesi | Gold Banyo",
+                SeoAciklama = "Ankara Akyurt'ta 60 daireli proje için lake yüzeyli banyo dolabı ve mermer tezgah kombinasyonu.",
                 ProjeTarihi = new DateTime(2025, 4, 10, 0, 0, 0, DateTimeKind.Utc),
                 OlusturulmaTarihi = simdi
             }
