@@ -163,6 +163,18 @@ const pbrMalzemeler = {
   }
 };
 
+const dokuKatalogu = [
+  { id: "yok", ad: "Doku Yok", dosya: null, kategori: "genel" },
+  { id: "ahsap", ad: "Ahşap", dosya: "./doku/ahsap.png", kategori: "govde" },
+  { id: "ceviz", ad: "Amerikan Ceviz", dosya: "./doku/UD_CEViZ_PACO_MODELE.jpg", kategori: "govde" },
+  { id: "velure", ad: "Velur", dosya: "./doku/5804_velure.jpg", kategori: "kapak" },
+  { id: "velur-tiffany", ad: "Velur Tiffany", dosya: "./doku/GENTA_4236_VELUR_TIFFANY.jpg", kategori: "kapak" },
+  { id: "touch", ad: "Touch", dosya: "./doku/5743_touch.jpg", kategori: "kapak" },
+  { id: "luna", ad: "Luna", dosya: "./doku/LUNA.jpg", kategori: "kapak" },
+  { id: "florida", ad: "Florida", dosya: "./doku/florida.jpg", kategori: "tezgah" },
+  { id: "mat-z53", ad: "Mat Z53", dosya: "./doku/MAT_Z53.jpg", kategori: "genel" }
+];
+
 // Ürün galerisi varyasyon kombinasyonları — gerçek Gold Banyo kataloğu (Hermes/Giorgio/Bottega) renklerine göre
 const urunTemalari = {
   gorsel1: { // Kahve Kapak (Hermes tarzı — sıcak kahve + krem)
@@ -241,7 +253,14 @@ const sahneDurumu = {
     govde: "mdf",
     kapak: "plastik",
     metal: "krom"
-  }
+  },
+  dokular: {
+    govdeDoku: "yok",
+    kapakDoku: "yok",
+    tezgahDoku: "yok"
+  },
+  dokuYukleyici: new THREE.TextureLoader(),
+  dokuOnbellek: {},
 };
 
 window.__ornekDolap3D = sahneDurumu;
@@ -370,7 +389,7 @@ function fizikselMateryalOlustur(renk, metalness = 0.18, roughness = 0.58) {
   });
 }
 
-function pbrMateryalOlustur(malzemeTuru, renk = null) {
+function pbrMateryalOlustur(malzemeTuru, renk = null, dokuId = null) {
   const malzeme = pbrMalzemeler[malzemeTuru] || pbrMalzemeler.plastik;
   const malzemeAyarlari = sahneDurumu.sahneAyarlari?.ayarlar?.materials || {};
   const envScale = malzemeAyarlari.globalEnvMapScale ?? 1;
@@ -385,6 +404,13 @@ function pbrMateryalOlustur(malzemeTuru, renk = null) {
     clearcoat: Math.min(1, malzeme.clearcoat * clearcoatScale),
     clearcoatRoughness: malzeme.clearcoatRoughness
   };
+
+  if (dokuId && dokuId !== "yok") {
+    var doku = sahneDurumu.dokuOnbellek[dokuId];
+    if (doku) {
+      config.map = doku;
+    }
+  }
 
   // Cam seffaf kaplama
   if (malzemeTuru === 'cam') {
@@ -540,6 +566,32 @@ function banyoYansimaDokusuOlustur() {
     doku.colorSpace = THREE.SRGBColorSpace;
   }
   return doku;
+}
+
+function dokuYukle(dokuId) {
+  if (!dokuId || dokuId === "yok") return Promise.resolve(null);
+  if (sahneDurumu.dokuOnbellek[dokuId]) return Promise.resolve(sahneDurumu.dokuOnbellek[dokuId]);
+  var dokuKayit = dokuKatalogu.find(function(d) { return d.id === dokuId; });
+  if (!dokuKayit || !dokuKayit.dosya) return Promise.resolve(null);
+  return new Promise(function(resolve) {
+    sahneDurumu.dokuYukleyici.load(dokuKayit.dosya, function(texture) {
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(1, 1);
+      if (texture.colorSpace !== undefined) texture.colorSpace = THREE.SRGBColorSpace;
+      sahneDurumu.dokuOnbellek[dokuId] = texture;
+      resolve(texture);
+    }, undefined, function() { resolve(null); });
+  });
+}
+
+function dokuSec(hedef, dokuId) {
+  sahneDurumu.dokular[hedef] = dokuId;
+  if (dokuId && dokuId !== "yok") {
+    dokuYukle(dokuId).then(function() { renkleriUygula(); });
+  } else {
+    renkleriUygula();
+  }
 }
 
 function gercekHdrYukle(sahne) {
@@ -866,17 +918,21 @@ function renkleriUygula() {
   parcaMateryaliUygula(sahneDurumu.modelParcalari.ayna, () => camMateryalOlustur(aynaRenk));
 
   // GÖVDE
-  parcaMateryaliUygula(sahneDurumu.modelParcalari.govde, () => pbrMateryalOlustur(govdeMalzeme, govdeRenk));
+  parcaMateryaliUygula(sahneDurumu.modelParcalari.govde, () => pbrMateryalOlustur(govdeMalzeme, govdeRenk, sahneDurumu.dokular.govdeDoku));
 
   // METAL/KASA/ÇERÇEVE — camlı modellerde sabit saten metal, gövde/cam rengine karışmaz
   parcaMateryaliUygula(sahneDurumu.modelParcalari.metalAksam || [], () => pbrMateryalOlustur("metal", "#b7b2a8"));
 
   // KAPAK — Mesh adında "cam" geçiyorsa cam malzeme, değilse seçili kapak malzemesi
   function kapakMateryaliUret(mesh) {
+    var kapakDoku = sahneDurumu.dokular.kapakDoku;
     var meshAdi = (mesh.name || "").toLowerCase();
     var yolAdi = nesneAdYolunuAl(mesh).toLowerCase();
     if (meshAdi.includes("cam") || yolAdi.includes("cam") || meshAdi.includes("glass") || yolAdi.includes("glass") || meshAdi.includes("seffaf") || yolAdi.includes("seffaf")) {
       return pbrMateryalOlustur("cam", kapakRenk);
+    }
+    if (kapakDoku && kapakDoku !== "yok") {
+      return pbrMateryalOlustur(kapakMalzeme, kapakRenk, kapakDoku);
     }
     return pbrMateryalOlustur(kapakMalzeme, kapakRenk);
   }
@@ -924,7 +980,7 @@ function renkleriUygula() {
   parcaMateryaliUygula(sahneDurumu.modelParcalari.icUstTabla, () => pbrMateryalOlustur(govdeMalzeme, ustTablaRenk));
 
   // TEZGAH — kendi doğal taş rengini kullanır, gövde rengine zorla bağlı değil
-  parcaMateryaliUygula(sahneDurumu.modelParcalari.icAltTabla, () => pbrMateryalOlustur(tezgahMalzeme));
+  parcaMateryaliUygula(sahneDurumu.modelParcalari.icAltTabla, () => pbrMateryalOlustur(tezgahMalzeme, null, sahneDurumu.dokular.tezgahDoku));
 }
 
 function kapakAyarla() {
@@ -1282,6 +1338,18 @@ function modeliYukleArrayBufferden(arrayBuffer, kaynakEtiketi) {
     }
   );
 }
+
+// ═══ DOKU SEÇİCİ EVENT LİSTENERS ═══════════════════════════
+document.querySelectorAll('.doku-secici').forEach(function(grup) {
+  var hedef = grup.dataset.hedef;
+  grup.querySelectorAll('button').forEach(function(buton) {
+    buton.addEventListener('click', function() {
+      grup.querySelectorAll('button').forEach(function(b) { b.classList.remove('aktif'); });
+      buton.classList.add('aktif');
+      dokuSec(hedef, buton.dataset.deger);
+    });
+  });
+});
 
 // ═══ MODEL SEÇİCİ SİSTEMİ ═══════════════════════════════════
 let aktifModelId = null;

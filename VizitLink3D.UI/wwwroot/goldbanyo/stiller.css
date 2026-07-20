@@ -503,3 +503,69 @@ body {
   accent-color: #c5a059;
   margin: 4px 0 12px;
 }
+
+/* ═══ DOKU KAPLAMA SEÇİCİ ═══ */
+.doku-secici {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.doku-ornek {
+  width: 52px;
+  height: 52px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px;
+  background: #f0ede5;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.doku-ornek:hover {
+  border-color: #c5a059;
+  transform: scale(1.08);
+}
+
+.doku-ornek.aktif {
+  border-color: #c5a059;
+  box-shadow: 0 0 0 2px rgba(197,160,89,0.3);
+}
+
+.doku-onizleme {
+  width: 44px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.doku-yok-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 34px;
+  background: #e8e4dc;
+  color: #999;
+  font-size: 16px;
+  border-radius: 3px;
+}
+
+.doku-ad {
+  font-size: 8px;
+  color: #666;
+  margin-top: 1px;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 48px;
+}
