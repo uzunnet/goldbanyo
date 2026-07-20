@@ -9,8 +9,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
-      - VIZITLINK3D_JWT_KEY=${VIZITLINK3D_JWT_KEY:?VIZITLINK3D_JWT_KEY tanimlanmali}
-      - LisansAyarlari__GizliAnahtar=${VIZITLINK3D_LISANS_KEY:?VIZITLINK3D_LISANS_KEY tanimlanmali}
+      - VIZITLINK3D_JWT_KEY=${VIZITLINK3D_JWT_KEY:-}
+      - LisansAyarlari__GizliAnahtar=${VIZITLINK3D_LISANS_KEY:-}
       - VeriTabani__Yol=/app/Veri/vizitlink3d_v2.db
     volumes:
       - vizitlink3d_data_v2:/app/Veri
