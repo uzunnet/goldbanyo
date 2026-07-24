@@ -190,8 +190,10 @@ public class ModellerYonetimServisi
     /// <summary>
     /// GLB dosyasi yukler. BFF gizli anahtari header'a eklenir.
     /// Anahtar tanimli degilse islem yapilmaz, hata doner.
+    /// Geriye Cevap&lt;ModelYukleSonucuDto&gt; dondurur;
+    /// BasariliMi=false ise Mesaj alani UI'da guvenle gosterilebilir.
     /// </summary>
-    public virtual async Task<ModelYukleSonucuDto?> YukleAsync(
+    public virtual async Task<Cevap<ModelYukleSonucuDto>> YukleAsync(
         string ad,
         string? aciklama,
         Stream dosyaAkisi,
@@ -202,11 +204,16 @@ public class ModellerYonetimServisi
         if (!BffAnahtarTanimliMi)
         {
             _logger.LogError("BFF guvenlik anahtari tanimli degil, yukleme yapilamaz");
-            return null;
+            return Cevap<ModelYukleSonucuDto>.Hata("Yapılandırma hatası. Lütfen sistem yöneticinize başvurun.");
         }
 
         try
         {
+            // P03-C: GLB ContentType tarayicida bos gelebilir — fallback
+            var guvenliIcerikTuru = !string.IsNullOrWhiteSpace(icerikTuru) && icerikTuru.Contains('/')
+                ? icerikTuru
+                : "model/gltf-binary";
+
             using var form = new MultipartFormDataContent();
             form.Add(new StringContent(ad), "ad");
 
@@ -214,7 +221,7 @@ public class ModellerYonetimServisi
                 form.Add(new StringContent(aciklama), "aciklama");
 
             var dosyaIcerigi = new StreamContent(dosyaAkisi);
-            dosyaIcerigi.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(icerikTuru);
+            dosyaIcerigi.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(guvenliIcerikTuru);
             form.Add(dosyaIcerigi, "dosya", dosyaAdi);
 
             var istek = new HttpRequestMessage(HttpMethod.Post, "api/yonetim/modeller")
@@ -228,23 +235,30 @@ public class ModellerYonetimServisi
             if (!yanit.IsSuccessStatusCode)
             {
                 _logger.LogWarning("Model yukleme API hatasi: {StatusCode}", (int)yanit.StatusCode);
-                return null;
+                return Cevap<ModelYukleSonucuDto>.Hata("Sunucu geçici olarak kullanılamıyor. Lütfen tekrar deneyin.");
             }
 
             var cevap = await yanit.Content.ReadFromJsonAsync<Cevap<ModelYukleSonucuDto>>(_jsonSecenekleri, iptal);
 
-            if (cevap is null || !cevap.BasariliMi)
+            if (cevap is null)
             {
-                _logger.LogWarning("Model yukleme API yaniti basarisiz: {Mesaj}", cevap?.Mesaj);
-                return null;
+                _logger.LogWarning("Model yukleme API yaniti okunamadi");
+                return Cevap<ModelYukleSonucuDto>.Hata("Sunucudan geçersiz yanıt alındı. Lütfen tekrar deneyin.");
             }
 
-            return cevap.Veri;
+            if (!cevap.BasariliMi)
+            {
+                _logger.LogWarning("Model yukleme API yaniti basarisiz: {Mesaj}", cevap.Mesaj);
+                // API mesajını UI'a guvenle ilet (kullanici dostu hata mesajlari icerir)
+                return Cevap<ModelYukleSonucuDto>.Hata(cevap.Mesaj ?? "Model yuklenemedi.");
+            }
+
+            return cevap;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Model yuklenirken hata olustu");
-            return null;
+            return Cevap<ModelYukleSonucuDto>.Hata("Yükleme sırasında bir hata oluştu. Lütfen tekrar deneyin.");
         }
     }
 
@@ -462,37 +476,33 @@ public class ModellerYonetimServisi
     }
 
     /// <summary>
-    /// GLB model dosyasini API medya havuzundan indirir.
-    /// Once slug ile model detayini ceker, DosyaAdi'ni ogrenir,
-    /// sonra /medya/3d-modeller/{dosyaAdi} adresinden binary'yi alir.
+    /// GLB model dosyasini API'den dogrudan stream endpoint uzerinden indirir.
+    /// Dosya, UUID tabanli gercek saklama adiyla API tarafinda cozulur;
+    /// BFF sadece slug ile endpoint'i cagirir, dosya adiyla ugrasmaz.
     /// </summary>
     public virtual async Task<(Stream? Akis, string? IcerikTuru, string? DosyaAdi)> ModelDosyasiIndirAsync(
         string slug, CancellationToken iptal = default)
     {
         try
         {
-            // Once model detayini al, DosyaAdi'ni ogren
-            var detay = await GetirAsync(slug, iptal);
-            if (detay is null)
-                return (null, null, null);
-
-            var dosyaAdi = detay.DosyaAdi;
-            if (string.IsNullOrWhiteSpace(dosyaAdi))
-                return (null, null, null);
-
-            // API medya havuzundan GLB dosyasini indir
-            var medyaYanit = await _http.GetAsync(
-                $"medya/3d-modeller/{dosyaAdi}",
+            // API'nin dogrudan GLB stream endpoint'ini kullan
+            // Bu endpoint DosyaYolu (UUID'li gercek ad) uzerinden dosyayi cozer
+            var yanit = await _http.GetAsync(
+                $"api/modeller/{slug}/dosya",
                 HttpCompletionOption.ResponseHeadersRead, iptal);
 
-            if (!medyaYanit.IsSuccessStatusCode)
+            if (!yanit.IsSuccessStatusCode)
             {
-                _logger.LogWarning("GLB dosya indirme hatasi: {StatusCode}", (int)medyaYanit.StatusCode);
+                _logger.LogWarning("GLB dosya API hatasi: {StatusCode} slug={Slug}", (int)yanit.StatusCode, slug);
                 return (null, null, null);
             }
 
-            var akis = await medyaYanit.Content.ReadAsStreamAsync(iptal);
-            var icerikTuru = detay.IcerikTuru;
+            var akis = await yanit.Content.ReadAsStreamAsync(iptal);
+            var icerikTuru = yanit.Content.Headers.ContentType?.ToString() ?? "model/gltf-binary";
+            var dosyaAdi = yanit.Content.Headers.ContentDisposition?.FileNameStar
+                ?? yanit.Content.Headers.ContentDisposition?.FileName
+                ?? slug + ".glb";
+
             return (akis, icerikTuru, dosyaAdi);
         }
         catch (Exception ex)

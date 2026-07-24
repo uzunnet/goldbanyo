@@ -127,6 +127,7 @@ public partial class Modeller : ComponentBase
     /// <summary>
     /// Dosyayi BFF uzerinden API'ye gonderir.
     /// Basarili ise listeyi yeniler.
+    /// Hata durumunda API'nin kullanici dostu mesajini guvenle gosterir.
     /// </summary>
     private async Task DosyaYukle()
     {
@@ -142,7 +143,7 @@ public partial class Modeller : ComponentBase
         {
             await using var dosyaAkisi = _seciliDosya.OpenReadStream(maxAllowedSize: 100_000_000);
 
-            var sonuc = await ModellerServisi.YukleAsync(
+            var cevap = await ModellerServisi.YukleAsync(
                 _modelAdi.Trim(),
                 string.IsNullOrWhiteSpace(_modelAciklama) ? null : _modelAciklama.Trim(),
                 dosyaAkisi,
@@ -150,7 +151,7 @@ public partial class Modeller : ComponentBase
                 _seciliDosya.ContentType,
                 CancellationToken.None);
 
-            if (sonuc is not null)
+            if (cevap is not null && cevap.BasariliMi)
             {
                 _yuklemeBasariliMesaji = Dil.T("modeller.yuklemeBasarili", "Model basariyla yuklendi.");
                 _modelAdi = "";
@@ -166,7 +167,9 @@ public partial class Modeller : ComponentBase
             }
             else
             {
-                _yuklemeHataMesaji = Dil.T("modeller.yuklemeHata", "Model yuklenemedi. Dosya formatini ve boyutunu kontrol edin.");
+                // P03-C: API hata mesajini guvenle goster (API tarafindan uretilen kullanici dostu mesaj)
+                _yuklemeHataMesaji = cevap?.Mesaj
+                    ?? Dil.T("modeller.yuklemeHata", "Model yuklenemedi. Dosya formatini ve boyutunu kontrol edin.");
             }
         }
         catch

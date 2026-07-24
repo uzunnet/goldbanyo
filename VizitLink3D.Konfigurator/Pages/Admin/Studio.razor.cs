@@ -157,10 +157,13 @@ public partial class Studio : ComponentBase, IAsyncDisposable
             {
                 await Goruntuleyici.ModelYukleAsync(_previewModelUrl);
                 _goruntuleyiciBaslatildi = true;
+                _previewHata = false;
+                StateHasChanged();
             }
         }
-        catch
+        catch (Exception ex)
         {
+            System.Console.Error.WriteLine($"[Studio] 3D goruntuleyici baslatma/yukleme hatasi: {ex.Message}");
             _previewHata = true;
             _previewHazir = false;
             StateHasChanged();
@@ -470,5 +473,44 @@ public partial class Studio : ComponentBase, IAsyncDisposable
     {
         await GoruntuleyiciyiTemizleAsync();
         GC.SuppressFinalize(this);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // JS → .NET Callback'ler (ucboyut-goruntuleyici.js tarafindan cagrilir)
+    // ═══════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Three.js model yuklemesi basladiginda JS tarafindan cagrilir.
+    /// UI'da spinner zaten gosterildigi icin ek islem yapilmaz.
+    /// </summary>
+    [JSInvokable]
+    public void OnModelYukleniyor()
+    {
+        // Spinner zaten aktif — ek UI guncellemesi gerekmez
+    }
+
+    /// <summary>
+    /// Three.js model yuklemesi basariyla tamamlandiginda JS tarafindan cagrilir.
+    /// Goruntuleyici hazir duruma gecer ve "Parcalari Tara" butonu aktiflesir.
+    /// </summary>
+    [JSInvokable]
+    public void OnModelYuklendi()
+    {
+        _goruntuleyiciBaslatildi = true;
+        _previewHata = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Three.js model yuklemesi basarisiz oldugunda JS tarafindan cagrilir.
+    /// Hata detayi konsola yazilir; UI'a teknik detay sizdirilmaz.
+    /// </summary>
+    [JSInvokable]
+    public void OnModelHata(string mesaj)
+    {
+        System.Console.Error.WriteLine($"[Studio] JS model yukleme hatasi: {mesaj}");
+        _previewHata = true;
+        _previewHazir = false;
+        InvokeAsync(StateHasChanged);
     }
 }

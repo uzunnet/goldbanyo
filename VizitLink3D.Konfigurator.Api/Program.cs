@@ -118,13 +118,13 @@ public class Program
             var db = kapsam.ServiceProvider.GetRequiredService<KonfiguratorDbContext>();
             await db.Database.MigrateAsync();
 
-            if (!await db.Kullanicilar.AnyAsync())
-            {
-                var yapilandirma = kapsam.ServiceProvider.GetRequiredService<IConfiguration>();
-                var kullaniciAdi = yapilandirma["IlkYonetici:KullaniciAdi"];
-                var sifre = yapilandirma["IlkYonetici:Sifre"];
+            var yapilandirma = kapsam.ServiceProvider.GetRequiredService<IConfiguration>();
+            var kullaniciAdi = yapilandirma["IlkYonetici:KullaniciAdi"];
+            var sifre = yapilandirma["IlkYonetici:Sifre"];
 
-                if (!string.IsNullOrWhiteSpace(kullaniciAdi) && !string.IsNullOrWhiteSpace(sifre))
+            if (!string.IsNullOrWhiteSpace(kullaniciAdi) && !string.IsNullOrWhiteSpace(sifre))
+            {
+                if (!await db.Kullanicilar.AnyAsync(k => k.KullaniciAdi == kullaniciAdi))
                 {
                     // IlkYonetici:Eposta secret varsa ve mevcut placeholder @konfigurator.local ise
                     // gerçek e-posta ile güncelle (bootstrap)
@@ -149,11 +149,11 @@ public class Program
                     db.Kullanicilar.Add(yonetici);
                     await db.SaveChangesAsync();
                 }
-                else
-                {
-                    var logger = kapsam.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogInformation("IlkYonetici yapilandirmasi eksik, atlaniyor.");
-                }
+            }
+            else
+            {
+                var logger = kapsam.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("IlkYonetici yapilandirmasi eksik, atlaniyor.");
             }
         }
 

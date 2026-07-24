@@ -74,4 +74,10 @@ public class Cevap<T>
     public string? Mesaj { get; set; }
     public T? Veri { get; set; }
     public List<string>? Hatalar { get; set; }
+
+    public static Cevap<T> Basarili(T veri, string mesaj = "Islem basarili.") =>
+        new() { BasariliMi = true, Mesaj = mesaj, Veri = veri };
+
+    public static Cevap<T> Hata(string mesaj, List<string>? hatalar = null) =>
+        new() { BasariliMi = false, Mesaj = mesaj, Hatalar = hatalar ?? [] };
 }

@@ -52,6 +52,33 @@ namespace [PROJE_ADI].Api.Moduller.Urunler
 
 `[PROJE_ADI]` — `00_PROJE_BILGISI.md`'den okur.
 
+### 2.4 Vertical Slice Yapı Tercihi (Aksiyon Odaklı)
+
+**Mevcut modüllerde yapı korunur** — taşınmaz, bozulmaz, sadece yeni eklenenlerde uygulanır.
+
+Yeni modül eklerken **aksiyon odaklı** yapı tercih edilebilir:
+
+```
+ModulAdi/
+├── IslemAdi/
+│   ├── IslemAdiKomutu.cs      (veya IslemAdiSorgusu.cs)
+│   ├── IslemAdiIsleyici.cs     (IRequestHandler)
+│   ├── IslemAdiDogrulayici.cs  (FluentValidation, opsiyonel)
+│   └── IslemAdiCevap.cs        (Mapster DTO)
+├── Ortak/                     (Sadece o modüle özel paylaşılan kodlar)
+│   └── IModulServisi.cs
+└── ModulKontrolcu.cs          (Tek controller — mediator.Send ile yönlendirir)
+```
+
+**Kurallar:**
+- Her iş (oluştur, güncelle, sil, getir) ayrı bir klasör
+- Controller tek dosya — tüm istekleri `mediator.Send()` ile yönlendirir
+- İş mantığı controller'da olmaz (3 satır kuralı:接收, mediator.Send, dön)
+- Entity'ler `Ortak/` klasöründe veya `VizitLink3D.Ortak` projesinde
+- Yeni modül eklerken mevcut yapıyı bozma
+
+**Avantajı:** `IslemAdi/` klasörünü kopyalayıp başka projeye taşısan bile sistem çalışır. Arkada çöp kod kalmaz.
+
 ---
 
 ## 3. 📛 İSİMLENDİRME

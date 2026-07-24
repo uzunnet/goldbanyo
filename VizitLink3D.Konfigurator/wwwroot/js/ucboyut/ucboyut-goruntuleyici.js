@@ -59,17 +59,15 @@ class UcBoyutGoruntuleyici {
      * @returns {Promise<void>}
      */
     async init() {
-        const T = 'https://cdn.jsdelivr.net/npm/three@0.170.0';
-
-        // Three.js cekirdek modulleri (pinned 0.170.0)
-        const THREE_CORE = await import(`${T}/build/three.module.js`);
+        // Three.js cekirdek modulleri — bare specifier (import map uzerinden cozumlenir)
+        const THREE_CORE = await import('three');
         const { Scene, PerspectiveCamera, WebGLRenderer,
                 AmbientLight, DirectionalLight, Color,
                 Box3, Vector3, SRGBColorSpace } = THREE_CORE;
 
-        // Eklenti modulleri
-        const { GLTFLoader } = await import(`${T}/examples/jsm/loaders/GLTFLoader.js`);
-        const { OrbitControls } = await import(`${T}/examples/jsm/controls/OrbitControls.js`);
+        // Eklenti modulleri — bare specifier (import map uzerinden cozumlenir)
+        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+        const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
         // Modul referanslarini sakla (ileride kullanmak icin)
         this._moduller = { Scene, PerspectiveCamera, WebGLRenderer,
@@ -164,6 +162,8 @@ class UcBoyutGoruntuleyici {
             return;
         }
 
+        console.log('[UcBoyutGoruntuleyici] Model yukleniyor:', url);
+
         // Dirty flag ile temizleme talep et
         this._temizlemeGerekiyor = true;
 
@@ -199,7 +199,7 @@ class UcBoyutGoruntuleyici {
                 this._secenekler.onYuklendi(gltf);
             }
         } catch (hata) {
-            console.error('[UcBoyutGoruntuleyici] Model yukleme hatasi:', hata);
+            console.error('[UcBoyutGoruntuleyici] Model yukleme hatasi — URL:', url, '— Detay:', hata);
             if (this._secenekler.onHata) {
                 this._secenekler.onHata(hata);
             }
@@ -496,19 +496,31 @@ async function baslatGoruntuleyici(dotNetRef, elementId) {
 
     _aktifGoruntuleyici = new UcBoyutGoruntuleyici(kapsayici, {
         onYukleniyor: () => {
-            if (_dotNetRef) {
-                _dotNetRef.invokeMethodAsync('OnModelYukleniyor');
+            try {
+                if (_dotNetRef) {
+                    _dotNetRef.invokeMethodAsync('OnModelYukleniyor');
+                }
+            } catch (e) {
+                console.warn('[UcBoyutGoruntuleyici] Callback hatası (onYukleniyor):', e);
             }
         },
         onYuklendi: () => {
-            if (_dotNetRef) {
-                _dotNetRef.invokeMethodAsync('OnModelYuklendi');
+            try {
+                if (_dotNetRef) {
+                    _dotNetRef.invokeMethodAsync('OnModelYuklendi');
+                }
+            } catch (e) {
+                console.warn('[UcBoyutGoruntuleyici] Callback hatası (onYuklendi):', e);
             }
         },
         onHata: (hata) => {
-            if (_dotNetRef) {
-                const mesaj = hata?.message || hata?.toString() || 'Bilinmeyen hata';
-                _dotNetRef.invokeMethodAsync('OnModelHata', mesaj);
+            try {
+                if (_dotNetRef) {
+                    const mesaj = hata?.message || hata?.toString() || 'Bilinmeyen hata';
+                    _dotNetRef.invokeMethodAsync('OnModelHata', mesaj);
+                }
+            } catch (e) {
+                console.warn('[UcBoyutGoruntuleyici] Callback hatası (onHata):', e);
             }
         }
     });

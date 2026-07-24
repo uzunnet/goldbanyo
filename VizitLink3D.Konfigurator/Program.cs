@@ -101,7 +101,8 @@ uygulama.Use(async (baglam, sonraki) =>
     // Three.js npm paketi Blazor SSR ile uyumlu olmadigindan,
     // tarayici tarafi ES module import icin pinned CDN kullanilir.
     // Sadece gerekli origin izinlidir; unsafe-inline veya unsafe-eval yoktur.
-    var scriptSrc = "'self' https://cdn.jsdelivr.net";
+    // Import map hash: App.razor icindeki inline <script type="importmap"> icin.
+    var scriptSrc = "'self' https://cdn.jsdelivr.net 'sha256-+S5cjrE2kA9WKYoBqOcm8PSjn1mZpTjpO5Uc7USBpj0='";
 
     basliklar["Content-Security-Policy"] =
         $"default-src 'self'; " +

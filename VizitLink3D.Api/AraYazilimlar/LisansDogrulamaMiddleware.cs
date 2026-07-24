@@ -23,7 +23,11 @@ public class LisansDogrulamaMiddleware(RequestDelegate sonraki, ILogger<LisansDo
         // Public sayfa icerikleri — hero slider, sayfa icerigi, blog, galeri, sertifika, referans
         "/api/slaytlar", "/api/sayfa-icerigi", "/api/blog", "/api/galeri",
         "/api/sertifikalar", "/api/referanslar", "/api/kataloglar",
-        "/api/haberler"
+        "/api/haberler",
+        // Tema, firma, SSS, yorumlar — public sayfa render icin zorunlu
+        "/api/tema", "/api/firma-tema", "/api/firma",
+        "/api/musteri-yorumlari", "/api/sss",
+        "/api/iletisim"
     };
 
     public async Task InvokeAsync(HttpContext baglam)

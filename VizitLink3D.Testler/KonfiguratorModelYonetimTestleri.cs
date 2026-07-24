@@ -177,7 +177,7 @@ public class KonfiguratorModelYonetimTestleri : IDisposable
         var mockServis = new DogrulanabilirModellerServisi(
             bffAnahtarTanimli: true,
             liste: [],
-            yuklemeAksiyonu: () => new ModelYukleSonucuDto
+            yuklemeAksiyonu: () => Cevap<ModelYukleSonucuDto>.Basarili(new ModelYukleSonucuDto
             {
                 Id = 1,
                 Ad = "Yeni Model",
@@ -185,7 +185,7 @@ public class KonfiguratorModelYonetimTestleri : IDisposable
                 DosyaAdi = "yeni.glb",
                 BoyutBayt = 100,
                 OlusturulmaTarihi = DateTime.UtcNow
-            });
+            }));
 
         _ctx.Services.AddSingleton<ModellerYonetimServisi>(mockServis);
         _ctx.Services.AddSingleton<AuthenticationStateProvider>(
@@ -329,12 +329,12 @@ public class KonfiguratorModelYonetimTestleri : IDisposable
     {
         private readonly bool _bffAnahtarTanimli;
         private readonly List<ModelListeOgesiDto>? _liste;
-        private readonly Func<ModelYukleSonucuDto?> _yuklemeAksiyonu;
+        private readonly Func<Cevap<ModelYukleSonucuDto>> _yuklemeAksiyonu;
 
         public DogrulanabilirModellerServisi(
             bool bffAnahtarTanimli,
             List<ModelListeOgesiDto>? liste,
-            Func<ModelYukleSonucuDto?> yuklemeAksiyonu)
+            Func<Cevap<ModelYukleSonucuDto>> yuklemeAksiyonu)
             : base(new HttpClient { BaseAddress = new Uri("http://localhost:5116/") },
                    Options.Create(new BffGuvenlikAyarlari { Anahtar = "TEST" }),
                    NullLogger<ModellerYonetimServisi>.Instance)
@@ -352,7 +352,7 @@ public class KonfiguratorModelYonetimTestleri : IDisposable
             return _liste;
         }
 
-        public override async Task<ModelYukleSonucuDto?> YukleAsync(
+        public override async Task<Cevap<ModelYukleSonucuDto>> YukleAsync(
             string ad, string? aciklama, Stream dosyaAkisi,
             string dosyaAdi, string icerikTuru, CancellationToken iptal = default)
         {
