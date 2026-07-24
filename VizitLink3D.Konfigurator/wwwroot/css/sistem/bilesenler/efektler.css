@@ -1,0 +1,33 @@
+/* efektler.css — Glass morphism, gradient, golge efektleri */
+.cam-yuzey {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--golge-orta);
+}
+
+.cam-yuzey-koyu {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* 3D Studio gradient */
+.studio-gradyan {
+  background: linear-gradient(
+    135deg,
+    var(--ana-renk) 0%,
+    var(--ana-renk-2) 50%,
+    var(--ikincil-renk-2) 100%
+  );
+}
+
+.studio-gradyan-yumusak {
+  background: linear-gradient(
+    180deg,
+    var(--ana-renk) 0%,
+    var(--ana-renk-2) 50%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+}

@@ -1,6 +1,8 @@
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Api.AraYazilimlar;
 using VizitLink3D.Api.Servisler;
+using VizitLink3D.Api.Moduller.Konfigurasyon.Kontrolcu;
+using VizitLink3D.Api.Moduller.Konfigurasyon.Servisler;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -110,6 +112,16 @@ yapici.Services.AddDataProtection();
 yapici.Services.AddSingleton<IApiKeySifrelemeServisi, ApiKeySifrelemeServisi>();
 yapici.Services.AddSingleton<IPIIFiltreServisi, PIIFiltreServisi>();
 
+// Embed token servisi (DataProtection time-limited token)
+// Scoped: EmbedNonceDeposu DbContext'e bagimli oldugu icin Singleton OLAMAZ.
+// Multi-instance SaaS: DB unique constraint ile atomik one-time nonce tuketimi.
+yapici.Services.AddScoped<IEmbedNonceDeposu, EmbedNonceDeposu>();
+yapici.Services.AddScoped<IEmbedTokenServisi, EmbedTokenServisi>();
+
+// Embed guvenlik ayarlari (appsettings.json → EmbedGuvenlik bolumu)
+yapici.Services.Configure<EmbedGuvenlikAyarlari>(
+    yapici.Configuration.GetSection("EmbedGuvenlik"));
+
 // AI Asistan servisleri
 yapici.Services.AddHttpClient();
 yapici.Services.AddScoped<VizitLink3D.Api.Moduller.AI.Servisler.AIGuvenlikServisi>();
@@ -136,6 +148,9 @@ yapici.Services.AddScoped<MedyaGocServisi>();
 yapici.Services.AddScoped<KiraciServisi>();
 yapici.Services.AddScoped<VizitLink3D.Api.Moduller.Tema.Servisler.StitchTemaServisi>();
 yapici.Services.AddScoped<VizitLink3D.Api.Moduller.Tema.Servisler.CokluTemaServisi>();
+
+// 3D Konfigüratör — tenant sahiplik doğrulayıcı
+yapici.Services.AddScoped<VizitLink3D.Api.Moduller.Urunler.Servisler.IUcBoyutModelSahiplikDogrulayici, VizitLink3D.Api.Moduller.Urunler.Servisler.UcBoyutModelSahiplikDogrulayici>();
 
 // Lisans servisi
 yapici.Services.AddScoped<VizitLink3D.Api.Servisler.Kimlik.LisansServisi>();
@@ -169,10 +184,17 @@ using (var kapsam = uygulama.Services.CreateScope())
     vt.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsLock\";");
     await vt.Database.MigrateAsync();
     }
-    // Bu düzeltme, üretimde tohumlama kapalı olsa bile statik katalog dosyası
-    // PNG'den WebP'ye dönüştürülmüş ürünlerin medya yolunu güvenli biçimde güncel tutar.
-    await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
-    await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
+
+    var startupFixupAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_STARTUP_FIXUPS"), "1", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_STARTUP_FIXUPS"), "true", StringComparison.OrdinalIgnoreCase);
+
+    if (!startupFixupAtla)
+    {
+        // Bu düzeltme, üretimde tohumlama kapalı olsa bile statik katalog dosyası
+        // PNG'den WebP'ye dönüştürülmüş ürünlerin medya yolunu güvenli biçimde güncel tutar.
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
+    }
 
     // Tohum verisi sadece Development ortaminda calissin (best practice).
     // Production'da DB zaten dolu, tohum verisi gereksiz islem + potansiyel AuditLog dongusu riski tasir.
@@ -293,7 +315,10 @@ uygulama.UseRateLimiter();
 // 6. CORS
 uygulama.UseCors();
 
-// 7. Statik dosyalar (3D modeller icin GLB/GLTF MIME)
+// 7. API Anahtari dogrulama (embed/public endpoint'ler icin — CORS'tan sonra, Auth'tan once)
+uygulama.UseMiddleware<ApiAnahtarDogrulamaMiddleware>();
+
+// 8. Statik dosyalar (3D modeller icin GLB/GLTF MIME)
 var saglayici = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 saglayici.Mappings[".glb"] = "model/gltf-binary";
 saglayici.Mappings[".gltf"] = "model/gltf+json";

@@ -1,0 +1,55 @@
+@page "/sifre-sifirla"
+@layout BosDuzen
+
+<PageTitle>@Dil.T("sifreSifirla.baslik", "VizitLink3D Studio — Sifre Sifirlama")</PageTitle>
+
+<div class="studio-login-scene">
+    <div class="studio-login-card">
+        <div class="studio-login-header">
+            <MudText Typo="Typo.h4" Class="studio-login-brand">
+                @Dil.T("sifreSifirla.baslik", "Sifre Sifirlama")
+            </MudText>
+            <MudText Typo="Typo.body2" Class="studio-login-sub">
+                @Dil.T("sifreSifirla.aciklama", "E-posta adresinizi girin, sifre sifirlama baglantisi gonderelim.")
+            </MudText>
+        </div>
+
+        @if (_durum == "basarili")
+        {
+            <MudAlert Severity="Severity.Success" Class="mt-3 mb-3">
+                @Dil.T("sifreSifirla.basarili", "E-posta adresiniz sistemde kayitli ise, sifre sifirlama baglantisi gonderilmistir.")
+            </MudAlert>
+        }
+
+        <form method="post" action="/oturum/sifre-sifirlama-istegi" data-enhance="false" class="studio-login-form">
+            <AntiforgeryToken />
+
+            <div class="studio-login-field">
+                <label class="studio-login-label" for="sifirla-eposta">
+                    @Dil.T("sifreSifirla.eposta", "E-posta Adresi")
+                </label>
+                <input type="email" id="sifirla-eposta" name="email"
+                       class="studio-login-input" required autocomplete="email"
+                       placeholder="@Dil.T("sifreSifirla.epostaYer", "E-posta adresinizi girin")" />
+            </div>
+
+            <button type="submit" class="studio-login-btn mud-button-root mud-button mud-button-filled mud-button-primary mud-ripple">
+                <span class="mud-button-label">
+                    @Dil.T("sifreSifirla.buton", "SIFIRLAMA BAGLANTISI GONDER")
+                </span>
+            </button>
+        </form>
+
+        <div class="studio-sifirla-geridon">
+            <a href="/admin" class="studio-sifirla-link">
+                @Dil.T("sifreSifirla.girisDon", "Giris sayfasina don")
+            </a>
+        </div>
+
+        <div class="studio-login-footer">
+            <MudText Typo="Typo.caption" Class="studio-login-version">
+                VizitLink3D Studio &copy; @DateTime.UtcNow.Year
+            </MudText>
+        </div>
+    </div>
+</div>

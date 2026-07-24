@@ -29,6 +29,18 @@ public class UrunUcBoyutParcasi
     public int? VarsayilanMalzemeId { get; set; }
     public int SiraNo { get; set; }
 
+    /// <summary>ASCII slug/kod — model içinde unique. Admin tarafından atanır.</summary>
+    public string? MantiksalKod { get; set; }
+
+    /// <summary>Bu parçaya doku/tekstür uygulanabilir mi?</summary>
+    public bool DokuUygulanabilirMi { get; set; }
+
+    /// <summary>
+    /// Hareket ayarları JSON: yön, eksen, pivot noktası, kaydırma limiti vb.
+    /// Admin tarafından yapılandırılır. Schema: { "eksen":"x", "pivot":[0,0,0], "minAci":0, "maxAci":90, "kaydirmaSinir":0.5 }
+    /// </summary>
+    public string? HareketAyarlariJson { get; set; }
+
     // Admin onay sistemi
     /// <summary>Admin onaylamadan kullanıcı arayüzde görünmez.</summary>
     public bool AdminOnayliMi { get; set; } = false;

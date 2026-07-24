@@ -68,6 +68,15 @@
           </label>
         </div>
 
+        <!-- MODEL RENK / KAPLAMA DEĞİŞTİR TOGGLE -->
+        <div class="kontrol-grubu model-toggle-bolumu">
+          <label class="checkbox toggle-checkbox">
+            <input type="checkbox" id="modelRenkKaplamaAktif" />
+            <span><strong>Model Renk / Kaplama Değiştir</strong></span>
+          </label>
+          <p class="toggle-yardimci-metin">Kapalıyken katalogdaki mevcut görünüm korunur.</p>
+          <p id="secilenParcaBilgisi" class="secilen-parca-bilgisi" aria-live="polite">Model üzerinde bir parça seçin.</p>
+        </div>
 
         <!-- SAHNE / RENDER AYARLARI -->
         <div class="kontrol-grubu sahne-ayar-paneli">
@@ -81,41 +90,164 @@
             <input type="file" id="sahneAyarDosya" accept=".json,application/json" />
           </label>
 
-          <span class="parca-etiket">Render Exposure</span>
-          <input class="ayar-range" type="range" id="ayarExposure" min="0.2" max="1.2" step="0.01" value="0.56">
+          <!-- ═══ ARKA PLAN RENGİ ═══ -->
+          <span class="parca-etiket">Arka Plan Rengi</span>
+          <div class="zemin-renk-grubu">
+            <input type="color" id="ayarArkaPlanRenk" value="#050505" class="zemin-renk-piksel" />
+            <span class="zemin-renk-deger" id="arkaPlanRenkDeger">#050505</span>
+          </div>
+          <div class="renk-secici" data-hedef="arkaPlanHizli">
+            <button class="renk-ornek aktif" style="background:#050505" data-deger="#050505" title="Siyah (Stüdyo)"></button>
+            <button class="renk-ornek" style="background:#1a1a1a" data-deger="#1a1a1a" title="Koyu Gri"></button>
+            <button class="renk-ornek" style="background:#f5f1e7" data-deger="#f5f1e7" title="Açık Krem"></button>
+            <button class="renk-ornek" style="background:#ffffff" data-deger="#ffffff" title="Beyaz"></button>
+            <button class="renk-ornek" style="background:#2c2c2c" data-deger="#2c2c2c" title="Antrasit"></button>
+          </div>
 
-          <span class="parca-etiket">Kamera FOV</span>
-          <input class="ayar-range" type="range" id="ayarFov" min="24" max="55" step="1" value="32">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Render Exposure</span>
+            <input class="ayar-range" type="range" id="ayarExposure" min="0.2" max="1.2" step="0.01" value="0.56">
+            <input class="doku-sayisal-giris" type="number" id="ayarExposure_deger" min="0.2" max="1.2" step="0.01" value="0.56">
+          </div>
 
-          <span class="parca-etiket">Kamera Mesafe</span>
-          <input class="ayar-range" type="range" id="ayarKameraMesafe" min="1.6" max="3.2" step="0.01" value="2.28">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Kamera FOV</span>
+            <input class="ayar-range" type="range" id="ayarFov" min="24" max="55" step="1" value="32">
+            <input class="doku-sayisal-giris" type="number" id="ayarFov_deger" min="24" max="55" step="1" value="32">
+          </div>
 
-          <span class="parca-etiket">Ortam Işığı</span>
-          <input class="ayar-range" type="range" id="ayarOrtamIsik" min="0" max="1" step="0.01" value="0.24">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Kamera Mesafe</span>
+            <input class="ayar-range" type="range" id="ayarKameraMesafe" min="1.6" max="3.2" step="0.01" value="2.28">
+            <input class="doku-sayisal-giris" type="number" id="ayarKameraMesafe_deger" min="1.6" max="3.2" step="0.01" value="2.28">
+          </div>
 
-          <span class="parca-etiket">Ana Işık</span>
-          <input class="ayar-range" type="range" id="ayarAnaIsik" min="0" max="1.5" step="0.01" value="0.30">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Ortam Işığı</span>
+            <input class="ayar-range" type="range" id="ayarOrtamIsik" min="0" max="1" step="0.01" value="0.24">
+            <input class="doku-sayisal-giris" type="number" id="ayarOrtamIsik_deger" min="0" max="1" step="0.01" value="0.24">
+          </div>
 
-          <span class="parca-etiket">Dolgu Işığı</span>
-          <input class="ayar-range" type="range" id="ayarDolguIsik" min="0" max="0.8" step="0.01" value="0.06">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Ana Işık</span>
+            <input class="ayar-range" type="range" id="ayarAnaIsik" min="0" max="1.5" step="0.01" value="0.30">
+            <input class="doku-sayisal-giris" type="number" id="ayarAnaIsik_deger" min="0" max="1.5" step="0.01" value="0.30">
+          </div>
 
-          <span class="parca-etiket">Ayna Yansıması</span>
-          <input class="ayar-range" type="range" id="ayarAynaYansima" min="0" max="3" step="0.01" value="1.25">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Dolgu Işığı</span>
+            <input class="ayar-range" type="range" id="ayarDolguIsik" min="0" max="0.8" step="0.01" value="0.06">
+            <input class="doku-sayisal-giris" type="number" id="ayarDolguIsik_deger" min="0" max="0.8" step="0.01" value="0.06">
+          </div>
 
-          <span class="parca-etiket">Ayna Pürüzlülük</span>
-          <input class="ayar-range" type="range" id="ayarAynaRoughness" min="0" max="0.25" step="0.001" value="0.045">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Ayna Yansıması</span>
+            <input class="ayar-range" type="range" id="ayarAynaYansima" min="0" max="3" step="0.01" value="1.25">
+            <input class="doku-sayisal-giris" type="number" id="ayarAynaYansima_deger" min="0" max="3" step="0.01" value="1.25">
+          </div>
 
-          <span class="parca-etiket">Cam Opaklık</span>
-          <input class="ayar-range" type="range" id="ayarCamOpacity" min="0" max="1" step="0.01" value="0.82">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Ayna Pürüzlülük</span>
+            <input class="ayar-range" type="range" id="ayarAynaRoughness" min="0" max="0.25" step="0.001" value="0.045">
+            <input class="doku-sayisal-giris" type="number" id="ayarAynaRoughness_deger" min="0" max="0.25" step="0.001" value="0.045">
+          </div>
 
-          <span class="parca-etiket">Genel Yansıma Çarpanı</span>
-          <input class="ayar-range" type="range" id="ayarEnvScale" min="0" max="2" step="0.01" value="1">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Cam Opaklık</span>
+            <input class="ayar-range" type="range" id="ayarCamOpacity" min="0" max="1" step="0.01" value="0.82">
+            <input class="doku-sayisal-giris" type="number" id="ayarCamOpacity_deger" min="0" max="1" step="0.01" value="0.82">
+          </div>
 
-          <span class="parca-etiket">Genel Clearcoat Çarpanı</span>
-          <input class="ayar-range" type="range" id="ayarClearcoatScale" min="0" max="2" step="0.01" value="1">
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Genel Yansıma Çarpanı</span>
+            <input class="ayar-range" type="range" id="ayarEnvScale" min="0" max="2" step="0.01" value="1">
+            <input class="doku-sayisal-giris" type="number" id="ayarEnvScale_deger" min="0" max="2" step="0.01" value="1">
+          </div>
+
+          <!-- ═══ HDR ORTAM SEÇİMİ ═══ -->
+          <span class="parca-etiket">HDR Ortam</span>
+          <div class="hdr-secici" id="hdrSecici">
+            <button class="hdr-ornek aktif" data-hdr="varsayilan" title="Varsayılan HDR">
+              <span class="hdr-onizleme" style="background:linear-gradient(135deg,#8d877b,#3b3935)"></span>
+              <span class="hdr-ad">Varsayılan</span>
+            </button>
+            <button class="hdr-ornek" data-hdr="banyo" title="Banyo HDR">
+              <span class="hdr-onizleme" style="background:linear-gradient(135deg,#a09080,#4a4035)"></span>
+              <span class="hdr-ad">Banyo</span>
+            </button>
+            <button class="hdr-ornek" data-hdr="studiyo" title="Stüdyo HDR">
+              <span class="hdr-onizleme" style="background:linear-gradient(135deg,#e8e0d0,#887868)"></span>
+              <span class="hdr-ad">Stüdyo</span>
+            </button>
+            <button class="hdr-ornek" data-hdr="dis" title="Dış Mekan HDR">
+              <span class="hdr-onizleme" style="background:linear-gradient(135deg,#87ceeb,#4682b4)"></span>
+              <span class="hdr-ad">Dış Mekan</span>
+            </button>
+          </div>
+          <input type="hidden" id="hdrOrtam" value="varsayilan">
+          <label class="hdr-yukle-etiket">
+            <span>+ Özel HDR Yükle (.hdr/.exr)</span>
+            <input type="file" id="hdrDosyaSec" accept=".hdr,.exr,.hdr" style="display:none" />
+          </label>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">HDR Yoğunluğu</span>
+            <input class="ayar-range" type="range" id="ayarHdrYogunluk" min="0" max="3" step="0.01" value="1">
+            <input class="doku-sayisal-giris" type="number" id="ayarHdrYogunluk_deger" min="0" max="3" step="0.01" value="1">
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">HDR Döndürme</span>
+            <input class="ayar-range" type="range" id="ayarHdrDondurme" min="0" max="360" step="1" value="0">
+            <input class="doku-sayisal-giris" type="number" id="ayarHdrDondurme_deger" min="0" max="360" step="1" value="0">
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">HDR Bulanıklık</span>
+            <input class="ayar-range" type="range" id="ayarHdrBlurluk" min="0" max="1" step="0.01" value="0">
+            <input class="doku-sayisal-giris" type="number" id="ayarHdrBlurluk_deger" min="0" max="1" step="0.01" value="0">
+          </div>
+
+          <!-- ═══ ZEMİN AYARLARI ═══ -->
+          <span class="parca-etiket">Zemin Rengi</span>
+          <div class="zemin-renk-grubu">
+            <input type="color" id="ayarZeminRenk" value="#050505" class="zemin-renk-piksel" />
+            <span class="zemin-renk-deger" id="zeminRenkDeger">#050505</span>
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Zemin Opaklığı</span>
+            <input class="ayar-range" type="range" id="ayarZeminOpaklik" min="0" max="1" step="0.01" value="0.16">
+            <input class="doku-sayisal-giris" type="number" id="ayarZeminOpaklik_deger" min="0" max="1" step="0.01" value="0.16">
+          </div>
+
+          <!-- ═══ GÖLGE AYARLARI ═══ -->
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Gölge Opaklığı</span>
+            <input class="ayar-range" type="range" id="ayarGolgeOpaklik" min="0" max="1" step="0.01" value="0.16">
+            <input class="doku-sayisal-giris" type="number" id="ayarGolgeOpaklik_deger" min="0" max="1" step="0.01" value="0.16">
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Gölge Boyutu</span>
+            <input class="ayar-range" type="range" id="ayarGolgeBoyut" min="512" max="4096" step="256" value="2048">
+            <input class="doku-sayisal-giris" type="number" id="ayarGolgeBoyut_deger" min="512" max="4096" step="256" value="2048">
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Gölge Kalitesi (Bias)</span>
+            <input class="ayar-range" type="range" id="ayarGolgeBias" min="-0.01" max="0.01" step="0.0001" value="-0.0008">
+            <input class="doku-sayisal-giris" type="number" id="ayarGolgeBias_deger" min="-0.01" max="0.01" step="0.0001" value="-0.0008">
+          </div>
+
+          <div class="doku-ayar-satir">
+            <span class="parca-etiket mini">Genel Clearcoat Çarpanı</span>
+            <input class="ayar-range" type="range" id="ayarClearcoatScale" min="0" max="2" step="0.01" value="1">
+            <input class="doku-sayisal-giris" type="number" id="ayarClearcoatScale_deger" min="0" max="2" step="0.01" value="1">
+          </div>
         </div>
         <!-- GÖVDE -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="govde">
           <h3>Gövde</h3>
           <span class="parca-etiket">Gövde Rengi</span>
           <div class="renk-secici" data-hedef="govdeRenk">
@@ -150,11 +282,34 @@
               <span class="doku-ad">Ceviz</span>
             </button>
           </div>
+          <div class="doku-ayar-grubu" id="govdeDokuAyar" style="display:none;">
+            <span class="parca-etiket">Doku Hizalama</span>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Yatay Kaydırma</span>
+              <input class="ayar-range" type="range" id="govdeDokuOffsetX" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="govdeDokuOffsetX_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Dikey Kaydırma</span>
+              <input class="ayar-range" type="range" id="govdeDokuOffsetY" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="govdeDokuOffsetY_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Tekrar (Yakınlaştır)</span>
+              <input class="ayar-range" type="range" id="govdeDokuRepeat" min="0.5" max="8" step="0.1" value="1" />
+              <input class="doku-sayisal-giris" type="number" id="govdeDokuRepeat_deger" min="0.5" max="8" step="0.1" value="1" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Döndürme</span>
+              <input class="ayar-range" type="range" id="govdeDokuRotation" min="0" max="360" step="1" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="govdeDokuRotation_deger" min="0" max="360" step="1" value="0" />
+            </div>
+          </div>
           <input type="hidden" id="govdeDoku" value="yok">
         </div>
 
         <!-- KAPAK -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="kapak">
           <h3>Kapak</h3>
           <span class="parca-etiket">Kapak Rengi</span>
           <div class="renk-secici" data-hedef="kapakRenk">
@@ -198,11 +353,34 @@
               <span class="doku-ad">Luna</span>
             </button>
           </div>
+          <div class="doku-ayar-grubu" id="kapakDokuAyar" style="display:none;">
+            <span class="parca-etiket">Doku Hizalama</span>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Yatay Kaydırma</span>
+              <input class="ayar-range" type="range" id="kapakDokuOffsetX" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="kapakDokuOffsetX_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Dikey Kaydırma</span>
+              <input class="ayar-range" type="range" id="kapakDokuOffsetY" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="kapakDokuOffsetY_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Tekrar (Yakınlaştır)</span>
+              <input class="ayar-range" type="range" id="kapakDokuRepeat" min="0.5" max="8" step="0.1" value="1" />
+              <input class="doku-sayisal-giris" type="number" id="kapakDokuRepeat_deger" min="0.5" max="8" step="0.1" value="1" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Döndürme</span>
+              <input class="ayar-range" type="range" id="kapakDokuRotation" min="0" max="360" step="1" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="kapakDokuRotation_deger" min="0" max="360" step="1" value="0" />
+            </div>
+          </div>
           <input type="hidden" id="kapakDoku" value="yok">
         </div>
 
         <!-- KULP -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="kulp">
           <h3>Kulp</h3>
           <span class="parca-etiket">Kulp Kaplama</span>
           <div class="renk-secici" data-hedef="kulpKaplama">
@@ -215,7 +393,7 @@
         </div>
 
         <!-- LED -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="led">
           <h3>LED Işık</h3>
           <label class="checkbox">
             <input type="checkbox" id="ledIsik" checked>
@@ -240,7 +418,7 @@
         </div>
 
         <!-- MUSLUK -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="musluk">
           <h3>Musluk</h3>
           <span class="parca-etiket">Musluk Kaplama</span>
           <div class="renk-secici" data-hedef="muslukKaplama">
@@ -253,7 +431,7 @@
         </div>
 
         <!-- LAVABO -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="lavabo">
           <h3>Lavabo</h3>
           <div class="renk-secici" data-hedef="lavaboRenk">
             <button class="renk-ornek aktif" style="background:#F2ECE1" data-deger="RAL 9010|#F2ECE1" title="RAL 9010 Saf Beyaz"></button>
@@ -265,7 +443,7 @@
         </div>
 
         <!-- ÜST TABLA -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="ustTabla">
           <h3>Üst Tabla</h3>
           <div class="renk-secici" data-hedef="ustTablaRenk">
             <button class="renk-ornek aktif" style="background:#928E85" data-deger="RAL 7030|#928E85" title="RAL 7030 Taş Grisi"></button>
@@ -277,7 +455,7 @@
         </div>
 
         <!-- TEZGAH -->
-        <div class="kontrol-grubu">
+        <div class="kontrol-grubu" data-model-ayari="true" data-parca-grubu="tezgah">
           <h3>Tezgah</h3>
           <div class="malzeme-secici" data-hedef="tezgahMalzeme">
             <button class="malzeme-ornek aktif" data-deger="mermer">Mermer (Doğal Taş)</button>
@@ -296,11 +474,34 @@
               <span class="doku-ad">Florida</span>
             </button>
           </div>
+          <div class="doku-ayar-grubu" id="tezgahDokuAyar" style="display:none;">
+            <span class="parca-etiket">Doku Hizalama</span>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Yatay Kaydırma</span>
+              <input class="ayar-range" type="range" id="tezgahDokuOffsetX" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="tezgahDokuOffsetX_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Dikey Kaydırma</span>
+              <input class="ayar-range" type="range" id="tezgahDokuOffsetY" min="-1" max="1" step="0.01" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="tezgahDokuOffsetY_deger" min="-1" max="1" step="0.01" value="0" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Tekrar (Yakınlaştır)</span>
+              <input class="ayar-range" type="range" id="tezgahDokuRepeat" min="0.5" max="8" step="0.1" value="1" />
+              <input class="doku-sayisal-giris" type="number" id="tezgahDokuRepeat_deger" min="0.5" max="8" step="0.1" value="1" />
+            </div>
+            <div class="doku-ayar-satir">
+              <span class="parca-etiket mini">Döndürme</span>
+              <input class="ayar-range" type="range" id="tezgahDokuRotation" min="0" max="360" step="1" value="0" />
+              <input class="doku-sayisal-giris" type="number" id="tezgahDokuRotation_deger" min="0" max="360" step="1" value="0" />
+            </div>
+          </div>
           <input type="hidden" id="tezgahDoku" value="yok">
         </div>
 
         <!-- ÜRÜN GALERİSİ -->
-        <div class="urun-galeri">
+        <div class="urun-galeri" data-model-ayari="true">
           <h3>Ürün Görselleri</h3>
           <div class="galeri-container">
             <button class="galeri-kart aktif" data-tema="gorsel1">

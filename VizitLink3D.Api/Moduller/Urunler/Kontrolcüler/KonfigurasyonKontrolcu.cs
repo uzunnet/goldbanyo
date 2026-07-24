@@ -1,3 +1,4 @@
+using System;
 using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Ortak.Modeller;
 using VizitLink3D.Ortak.Modeller.Urunler;
@@ -7,9 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VizitLink3D.Api.Moduller.Urunler.Kontrolcüler;
 
+// ESKI KONTROLCU — Yerini Moduller/Konfigurasyon/Kontrolcu/KonfigurasyonKontrolcu aldi.
+// Cakismayi onlemek icin pasif. Paket-1 ile yeni CQRS yapisi kullaniliyor.
+[NonController]
+[Obsolete("Paket-1: Yeni KonfigurasyonKontrolcu kullaniliyor.")]
 [ApiController]
-[Route("api/konfigurasyon")]
-public class KonfigurasyonKontrolcu(VizitLink3DDbContext vt) : ControllerBase
+[Route("api/konfigurasyon-eski")]
+public class KonfigurasyonKontrolcuEski(VizitLink3DDbContext vt) : ControllerBase
 {
     [HttpGet("{id:int}")]
     public async Task<Cevap<MusteriKonfigurasyonu>> KonfigurasyonGetir(int id)

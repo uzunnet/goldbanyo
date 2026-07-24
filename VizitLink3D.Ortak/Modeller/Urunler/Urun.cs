@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
+using VizitLink3D.Ortak.Modeller;
 
 namespace VizitLink3D.Ortak.Modeller.Urunler;
 
@@ -13,6 +14,10 @@ public class Urun
     public string? Aciklama { get; set; }
     public int UrunAilesiId { get; set; }
     public int? UrunKategoriId { get; set; }
+
+    /// <summary>SaaS tenant sahiplik. Null eski veriler için; seed ile doldurulur.</summary>
+    public int? FirmaId { get; set; }
+
     public bool AktifMi { get; set; } = true;
     public bool OneCikanMi { get; set; }
     public bool YeniMi { get; set; }
@@ -30,4 +35,7 @@ public class Urun
 
     [JsonIgnore]
     public UrunAilesi? UrunAilesi { get; set; }
+
+    [JsonIgnore]
+    public Firma? Firma { get; set; }
 }

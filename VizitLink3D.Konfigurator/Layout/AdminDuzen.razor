@@ -1,0 +1,49 @@
+@inherits LayoutComponentBase
+@inject DilServisi Dil
+
+<MudThemeProvider Theme="_tema" IsDarkMode="@_koyuTema" />
+<MudSnackbarProvider />
+<MudDialogProvider />
+
+<MudLayout Class="studio-layout">
+    <MudAppBar Elevation="1" Class="studio-appbar">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@CekmeceAcKapat" />
+        <MudText Typo="Typo.h6" Class="ml-2">VizitLink3D Studio</MudText>
+        <MudSpacer />
+        <MudText Typo="Typo.body2" Class="studio-user-info mr-3">@_kullaniciAdi</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="TemaDegistir" title="@Dil.T("tema.degistir", "Tema Degistir")" />
+        <form method="post" action="/oturum/cikis" data-enhance="false" class="studio-logout-form">
+            <AntiforgeryToken />
+            <MudIconButton ButtonType="ButtonType.Submit" Icon="@Icons.Material.Filled.ExitToApp" Color="Color.Inherit" title="@Dil.T("oturum.cikis", "Cikis Yap")" />
+        </form>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_cekmeceAcik" Elevation="2" ClipMode="DrawerClipMode.Always" Variant="DrawerVariant.Responsive" Class="studio-drawer">
+        <div class="studio-drawer-brand pa-4">
+            <MudText Typo="Typo.h6" Class="font-weight-bold">VizitLink3D</MudText>
+            <MudText Typo="Typo.caption">Studio Yonetim</MudText>
+        </div>
+        <MudDivider />
+        <MudNavMenu Class="studio-nav-menu">
+            <MudNavLink Href="/admin/dashboard" Icon="@Icons.Material.Filled.Dashboard" Match="NavLinkMatch.Prefix">
+                @Dil.T("menu.dashboard", "Gosterge Paneli")
+            </MudNavLink>
+            <MudNavLink Href="/admin/modeller" Icon="@Icons.Material.Filled.ViewInAr" Match="NavLinkMatch.Prefix">
+                @Dil.T("menu.modeller", "Model Yonetimi")
+            </MudNavLink>
+            <MudNavLink Href="/admin/studio" Icon="@Icons.Material.Filled.ViewInAr" Match="NavLinkMatch.Prefix">
+                @Dil.T("menu.studio", "3D Studio")
+            </MudNavLink>
+            <MudDivider Class="my-1" />
+            <MudNavLink Href="/" Icon="@Icons.Material.Filled.Public">
+                @Dil.T("menu.siteyeDon", "Siteye Don")
+            </MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent Class="studio-main">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-6 pb-8">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

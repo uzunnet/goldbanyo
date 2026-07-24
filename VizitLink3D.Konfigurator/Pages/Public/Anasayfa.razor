@@ -1,0 +1,111 @@
+@page "/"
+@layout VizitLink3D.Konfigurator.Layout.BosDuzen
+@inject DilServisi Dil
+
+@* P04: Sayfaya ozel CSS — anasayfa.css *@
+
+<PageTitle>@Dil.T("anasayfa.baslik", "3D Urun Goruntuleyici")</PageTitle>
+
+@if (_yukleniyor)
+{
+    <div class="viewer-durum">
+        <div class="viewer-yukleniyor">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <p class="viewer-durum-metin">@Dil.T("anasayfa.modellerYukleniyor", "Modeller yukleniyor...")</p>
+        </div>
+    </div>
+}
+else if (_hataVar)
+{
+    <div class="viewer-durum">
+        <div class="viewer-hata">
+            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error" Size="Size.Large" />
+            <p class="viewer-durum-metin">@_hataMesaji</p>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(async () => await ModelListesiniYukleAsync())">
+                @Dil.T("anasayfa.tekrarDene", "Tekrar Dene")
+            </MudButton>
+        </div>
+    </div>
+}
+else if (_modeller is null || _modeller.Count == 0)
+{
+    <div class="viewer-durum">
+        <div class="viewer-bos">
+            <MudIcon Icon="@Icons.Material.Filled.Inventory2" Color="Color.Primary" Size="Size.Large" />
+            <h2 class="viewer-bos-baslik">@Dil.T("anasayfa.modelYok", "Henuz bir 3D model yuklenmemis.")</h2>
+            <p class="viewer-durum-metin">@Dil.T("anasayfa.modelYokAciklama", "Yonetici panelinden model yuklendiginde burada goruntulenecektir.")</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="ucboyut-sayfa">
+        @* Sol panel: Model listesi *@
+        <aside class="model-listesi-panel">
+            <h2 class="model-listesi-baslik">@Dil.T("anasayfa.modeller", "Modeller")</h2>
+
+            <div class="model-kartlari">
+                @foreach (var model in _modeller)
+                {
+                    var seciliMi = _seciliModelId == model.Id;
+                    <div class="model-karti @(seciliMi ? "model-karti--secili" : "")"
+                         @onclick="(() => ModelSecAsync(model))"
+                         role="button"
+                         tabindex="0"
+                         aria-label="@Dil.T("anasayfa.modelSec", "Model sec") : @model.Ad">
+                        <div class="model-karti-baslik">
+                            <h3 class="model-karti-ad">@model.Ad</h3>
+                            @if (seciliMi)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
+                                         Color="Color.Success" Size="Size.Small" />
+                            }
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(model.Aciklama))
+                        {
+                            <p class="model-karti-aciklama">@model.Aciklama</p>
+                        }
+                        <div class="model-karti-detay">
+                            <span class="model-karti-boyut">
+                                @ModelBoyutuFormatla(model.BoyutBayt)
+                            </span>
+                            <span class="model-karti-tarih">
+                                @model.OlusturulmaTarihi.ToString("dd.MM.yyyy")
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </aside>
+
+        @* Sag panel: 3D Goruntuleyici *@
+        <main class="goruntuleyici-panel">
+            <div id="ucboyut-canvas" class="goruntuleyici-canvas">
+                @if (_modelYukleniyor)
+                {
+                    <div class="viewer-durum viewer-durum--kucuk">
+                        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Medium" />
+                        <p class="viewer-durum-metin">@Dil.T("anasayfa.modelYukleniyor", "3D model yukleniyor...")</p>
+                    </div>
+                }
+                else if (_modelHataVar)
+                {
+                    <div class="viewer-durum viewer-durum--kucuk">
+                        <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error" Size="Size.Large" />
+                        <p class="viewer-durum-metin">@_modelHataMesaji</p>
+                    </div>
+                }
+                else if (_seciliModelId is null)
+                {
+                    <div class="viewer-durum viewer-durum--kucuk">
+                        <MudIcon Icon="@Icons.Material.Filled.TouchApp" Color="Color.Primary" Size="Size.Large" />
+                        <p class="viewer-durum-metin">@Dil.T("anasayfa.modelSecin", "Goruntulemek icin bir model secin.")</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+}
+
+@* CSS: sayfaya ozel, tokens.css ile uyumlu *@

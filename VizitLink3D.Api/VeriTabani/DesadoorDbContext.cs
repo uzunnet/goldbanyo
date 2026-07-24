@@ -7,6 +7,7 @@ using VizitLink3D.Ortak.Modeller.Urunler;
 using VizitLink3D.Ortak.Modeller.Renkler;
 using VizitLink3D.Ortak.Modeller.Malzemeler;
 using VizitLink3D.Ortak.Modeller.Tema;
+using VizitLink3D.Ortak.Modeller.Guvenlik;
 using Microsoft.EntityFrameworkCore;
 
 namespace VizitLink3D.Api.VeriTabani;
@@ -100,6 +101,7 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
     public DbSet<UrunKonfigurasyonSablonu> UrunKonfigurasyonSablonlari => Set<UrunKonfigurasyonSablonu>();
     public DbSet<UrunKonfigurasyonKurali> UrunKonfigurasyonKurallari => Set<UrunKonfigurasyonKurali>();
     public DbSet<UrunUcBoyutModeli> UrunUcBoyutModelleri => Set<UrunUcBoyutModeli>();
+    public DbSet<UrunUcBoyutSahneOnayari> UrunUcBoyutSahneOnayarlari => Set<UrunUcBoyutSahneOnayari>();
     public DbSet<MusteriKonfigurasyonu> MusteriKonfigurasyonlari => Set<MusteriKonfigurasyonu>();
     public DbSet<MusteriKonfigurasyonParcasi> MusteriKonfigurasyonParcalari => Set<MusteriKonfigurasyonParcasi>();
     public DbSet<TeklifIstegi> TeklifIstekleri => Set<TeklifIstegi>();
@@ -108,6 +110,12 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
     public DbSet<PdfSayfaGorseli> PdfSayfaGorselleri => Set<PdfSayfaGorseli>();
     public DbSet<IsTakipKaydi> IsTakipKayitlari => Set<IsTakipKaydi>();
     public DbSet<SayfaDuzenAyari> SayfaDuzenAyarlari => Set<SayfaDuzenAyari>();
+
+    // Guvenlik — Tenant API Anahtarlari
+    public DbSet<FirmaApiAnahtari> FirmaApiAnahtarlari => Set<FirmaApiAnahtari>();
+
+    // Guvenlik — Embed Oturum Nonce Kayitlari (replay korumasi)
+    public DbSet<EmbedOturumNonceKaydi> EmbedOturumNonceKayitlari => Set<EmbedOturumNonceKaydi>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder secenekler)
     {
@@ -272,17 +280,40 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
 
 
 
-        // Urun Yonetimi (3D Konfigurator) — index + soft delete filtreleri
+        // Urun Yonetimi (3D Konfigurator) — index + soft delete filtreleri + tenant FK
         modelOlusturucu.Entity<Urun>()
             .HasIndex(u => u.Slug).IsUnique();
         modelOlusturucu.Entity<Urun>()
             .HasQueryFilter(u => !u.SilindiMi);
+        modelOlusturucu.Entity<Urun>()
+            .HasOne(u => u.Firma)
+            .WithMany()
+            .HasForeignKey(u => u.FirmaId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelOlusturucu.Entity<Urun>()
+            .HasIndex(u => new { u.FirmaId, u.Slug })
+            .IsUnique()
+            .HasFilter("[FirmaId] IS NOT NULL");
         modelOlusturucu.Entity<UrunAilesi>()
             .HasQueryFilter(a => !a.SilindiMi);
         modelOlusturucu.Entity<UrunKategori>()
             .HasQueryFilter(k => !k.SilindiMi);
         modelOlusturucu.Entity<UrunUcBoyutModeli>()
             .HasQueryFilter(m => !m.SilindiMi);
+        modelOlusturucu.Entity<UrunUcBoyutSahneOnayari>()
+            .HasQueryFilter(s => !s.SilindiMi);
+        modelOlusturucu.Entity<UrunUcBoyutSahneOnayari>()
+            .HasIndex(s => new { s.UrunUcBoyutModeliId, s.Kod })
+            .IsUnique();
+        modelOlusturucu.Entity<UrunUcBoyutSahneOnayari>()
+            .HasOne(s => s.UrunUcBoyutModeli)
+            .WithMany()
+            .HasForeignKey(s => s.UrunUcBoyutModeliId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelOlusturucu.Entity<UrunParcaGrubu>()
+            .HasQueryFilter(g => !g.SilindiMi);
+        modelOlusturucu.Entity<UrunParcaGrubu>()
+            .HasIndex(g => new { g.UrunId, g.Ad });
         modelOlusturucu.Entity<UrunMedya>()
             .HasQueryFilter(m => !m.SilindiMi);
         modelOlusturucu.Entity<Malzeme>()
@@ -291,14 +322,47 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
             .HasQueryFilter(k => !k.SilindiMi);
         modelOlusturucu.Entity<MusteriKonfigurasyonu>()
             .HasQueryFilter(m => !m.SilindiMi);
+        modelOlusturucu.Entity<MusteriKonfigurasyonu>()
+            .HasOne(k => k.Firma)
+            .WithMany()
+            .HasForeignKey(k => k.FirmaId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelOlusturucu.Entity<MusteriKonfigurasyonParcasi>()
+            .HasQueryFilter(p => !p.SilindiMi);
         modelOlusturucu.Entity<TeklifIstegi>()
             .HasQueryFilter(t => !t.SilindiMi);
         modelOlusturucu.Entity<UrunUcBoyutParcasi>()
             .HasQueryFilter(p => !p.SilindiMi);
+        modelOlusturucu.Entity<UrunUcBoyutParcasi>()
+            .HasIndex(p => new { p.UrunUcBoyutModeliId, p.MantiksalKod })
+            .IsUnique()
+            .HasFilter("[MantiksalKod] IS NOT NULL");
         modelOlusturucu.Entity<UrunPdfKaynagi>()
             .HasQueryFilter(p => !p.SilindiMi);
         modelOlusturucu.Entity<PdfSayfaGorseli>()
             .HasQueryFilter(p => !p.SilindiMi);
+
+        // === Tenant API Anahtari ===
+        modelOlusturucu.Entity<FirmaApiAnahtari>()
+            .HasIndex(a => a.ApiKeyHash)
+            .IsUnique();
+        modelOlusturucu.Entity<FirmaApiAnahtari>()
+            .HasIndex(a => new { a.FirmaId, a.AnahtarAd })
+            .IsUnique();
+        modelOlusturucu.Entity<FirmaApiAnahtari>()
+            .HasOne(a => a.Firma)
+            .WithMany()
+            .HasForeignKey(a => a.FirmaId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelOlusturucu.Entity<FirmaApiAnahtari>()
+            .HasQueryFilter(a => !a.SilindiMi);
+
+        // === Embed Oturum Nonce Kaydi ===
+        modelOlusturucu.Entity<EmbedOturumNonceKaydi>()
+            .HasIndex(n => n.NonceHash)
+            .IsUnique();
+        modelOlusturucu.Entity<EmbedOturumNonceKaydi>()
+            .HasQueryFilter(n => !n.SilindiMi);
 
         // Bagimli entity'ler icin bos filter (EF global query filter tutarliligi)
         modelOlusturucu.Entity<KapiModeliResim>()
@@ -310,7 +374,7 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
         modelOlusturucu.Entity<TeklifIstegiParcasi>()
             .HasQueryFilter(p => true);
         modelOlusturucu.Entity<UrunParcaEslemesi>()
-            .HasQueryFilter(e => true);
+            .HasQueryFilter(e => !e.SilindiMi);
         modelOlusturucu.Entity<RalRengi>()
             .HasQueryFilter(r => !r.SilindiMi);
         modelOlusturucu.Entity<IsTakipKaydi>()

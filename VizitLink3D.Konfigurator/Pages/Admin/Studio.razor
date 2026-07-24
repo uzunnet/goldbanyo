@@ -1,0 +1,383 @@
+@page "/admin/studio"
+@layout AdminDuzen
+@attribute [Authorize]
+
+<PageTitle>@Dil.T("studio.baslik", "3D Studio — VizitLink3D Studio")</PageTitle>
+
+<div class="studio-sayfasi">
+    @if (_yukleniyor)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+    }
+    else if (_yapilandirmaHatasi)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4" Variant="Variant.Filled">
+            @Dil.T("studio.yapilandirmaHatasi", "Yapilandirma hatasi: BFF guvenlik ayarlari eksik. Lutfen sistem yoneticinize basvurun.")
+        </MudAlert>
+    }
+    else if (_listeHatasi)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">
+            @Dil.T("studio.listeHata", "Model listesi alinamadi. Lutfen daha sonra tekrar deneyin.")
+        </MudAlert>
+    }
+    else if (_modeller.Count == 0)
+    {
+        @* ── DURUS (Empty State) ── *@
+        <div class="studio-bos-durum">
+            <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Size="Size.Large" Color="Color.Default" />
+            <MudText Typo="Typo.h5" Color="Color.Default">
+                @Dil.T("studio.bosDurum", "Henuz hic 3D model yuklenmemis.")
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Default">
+                @Dil.T("studio.bosDurumAlt", "Ilk modelinizi yukleyerek 3D goruntulemeyi baslatin.")
+            </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                       Href="/admin/modeller" Class="mt-2">
+                @Dil.T("studio.yukleButon", "Model Yukle")
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        @* ── Ust Baslik ── *@
+        <MudText Typo="Typo.h3" Class="mb-2">
+            <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Class="mr-2" />
+            @Dil.T("studio.baslikSayfa", "3D Studio")
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Default" Class="mb-6">
+            @Dil.T("studio.altBaslik", "Modelleri goruntuleyin, yayin durumlarini yonetin ve on izleyin.")
+        </MudText>
+
+        <MudGrid>
+            @* ── Sol: Model Listesi ── *@
+            <MudItem xs="12" md="4" lg="3">
+                <MudPaper Elevation="1" Class="pa-2" style="border-radius:var(--kose-lg); max-height:70vh; overflow-y:auto;">
+                    <MudText Typo="Typo.subtitle2" Class="px-2 py-2">
+                        @Dil.T("studio.modelListe", "Modeller") (@_modeller.Count)
+                    </MudText>
+                    <MudDivider Class="mb-1" />
+                    @foreach (var model in _modeller)
+                    {
+                        <div class="studio-liste-satir pa-2 @(_seciliModel?.Id == model.Id ? "studio-liste-satir-secili" : "")"
+                             @onclick="() => ModelSec(model.Id)" @onclick:preventdefault="false">
+                            <MudText Typo="Typo.body2" Class="font-weight-bold">@model.Ad</MudText>
+                            <div class="d-flex gap-2 mt-1" style="gap:6px;">
+                                <span class="studio-meta-etiket">@model.Slug</span>
+                                <MudChip T="string" Size="Size.Small"
+                                         Color="@(model.AktifMi ? Color.Success : Color.Default)"
+                                         Variant="Variant.Outlined" Class="ma-0">
+                                    @(model.AktifMi ? Dil.T("studio.aktif", "Aktif") : Dil.T("studio.pasif", "Pasif"))
+                                </MudChip>
+                            </div>
+                        </div>
+                        <MudDivider Class="ma-0" />
+                    }
+                </MudPaper>
+
+                @* Yukleme linki *@
+                <MudButton Variant="Variant.Text" Color="Color.Primary" FullWidth="true"
+                           StartIcon="@Icons.Material.Filled.Add" Href="/admin/modeller" Class="mt-2">
+                    @Dil.T("studio.yeniModel", "Yeni Model Yukle")
+                </MudButton>
+            </MudItem>
+
+            @* ── Sag: Secili Model Detayi + Preview ── *@
+            <MudItem xs="12" md="8" lg="9">
+                @if (_seciliModel is not null)
+                {
+                    @* Model bilgi karti *@
+                    <MudPaper Elevation="1" Class="pa-4 mb-4" style="border-radius:var(--kose-lg);">
+                        <MudText Typo="Typo.h5" Class="mb-1">@_seciliModel.Ad</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Default" Class="mb-3">
+                            @Dil.T("studio.slug", "Slug") : @_seciliModel.Slug
+                        </MudText>
+
+                        @if (!string.IsNullOrWhiteSpace(_seciliModel.Aciklama))
+                        {
+                            <MudText Typo="Typo.body2" Color="Color.Default" Class="mb-3">
+                                @_seciliModel.Aciklama
+                            </MudText>
+                        }
+
+                        <MudGrid Class="mb-3">
+                            <MudItem xs="6" sm="3">
+                                <MudText Typo="Typo.caption" Color="Color.Default">
+                                    @Dil.T("studio.boyut", "Boyut")
+                                </MudText>
+                                <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                    @DosyaBoyutuFormatla(_seciliModel.BoyutBayt)
+                                </MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudText Typo="Typo.caption" Color="Color.Default">
+                                    @Dil.T("studio.eklenme", "Eklenme")
+                                </MudText>
+                                <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                    @_seciliModel.OlusturulmaTarihi.ToString("dd.MM.yyyy")
+                                </MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudText Typo="Typo.caption" Color="Color.Default">
+                                    @Dil.T("studio.durum", "Durum")
+                                </MudText>
+                                <MudChip T="string" Size="Size.Small"
+                                         Color="@(_seciliModel.AktifMi ? Color.Success : Color.Default)"
+                                         Variant="Variant.Outlined">
+                                    @(_seciliModel.AktifMi ? Dil.T("studio.aktif", "Aktif") : Dil.T("studio.pasif", "Pasif"))
+                                </MudChip>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudText Typo="Typo.caption" Color="Color.Default">
+                                    @Dil.T("studio.guncelleme", "Guncellenme")
+                                </MudText>
+                                <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                    @(_seciliModel.GuncellenmeTarihi?.ToString("dd.MM.yyyy") ?? "-")
+                                </MudText>
+                            </MudItem>
+                        </MudGrid>
+
+                        @* Aksiyon cubugu *@
+                        <div class="studio-aksiyon-cubugu">
+                            @* Aktif/Pasif toggle *@
+                            <MudButton Variant="Variant.Filled"
+                                       Color="@(_seciliModel.AktifMi ? Color.Warning : Color.Success)"
+                                       Size="Size.Small"
+                                       Disabled="@_toggleCalisiyor"
+                                       OnClick="YayinDurumuDegistir"
+                                       StartIcon="@Icons.Material.Filled.Publish">
+                                @(_seciliModel.AktifMi
+                                    ? Dil.T("studio.pasifYap", "Pasif Yap")
+                                    : Dil.T("studio.aktifYap", "Aktif Yap"))
+                            </MudButton>
+
+                            @if (_toggleCalisiyor)
+                            {
+                                <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="ml-2" />
+                            }
+
+                            @* Public viewer linki *@
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small"
+                                       Href="/" Target="_blank"
+                                       StartIcon="@Icons.Material.Filled.OpenInNew">
+                                @Dil.T("studio.publicViewer", "Public Viewer")
+                            </MudButton>
+
+                            @* Model yukleme sayfasi *@
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small"
+                                       Href="/admin/modeller"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                @Dil.T("studio.modelYukle", "Model Yukle")
+                            </MudButton>
+                        </div>
+                    </MudPaper>
+
+                    @* ── 3D Preview ── *@
+                    <MudPaper Elevation="1" style="border-radius:var(--kose-lg); overflow:hidden;">
+                        @if (!string.IsNullOrWhiteSpace(_previewModelUrl) && _previewHazir)
+                        {
+                            <div class="studio-preview-kapsayici" id="studio-3d-preview">
+                                <MudProgressCircular Indeterminate="true" Size="Size.Large" Class="studio-preview-yukleniyor" />
+                            </div>
+                        }
+                        else if (_previewHata)
+                        {
+                            <div class="studio-preview-yok">
+                                <MudIcon Icon="@Icons.Material.Filled.Warning" Size="Size.Large" Color="Color.Warning" />
+                                <MudText Typo="Typo.body1" Color="Color.Default">
+                                    @Dil.T("studio.previewHata", "3D onizleme yuklenemedi.")
+                                </MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Default">
+                                    @Dil.T("studio.previewHataAlt", "Dosya formatini veya model URL'ini kontrol edin.")
+                                </MudText>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="studio-preview-yok">
+                                <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Size="Size.Large" Color="Color.Default" />
+                                <MudText Typo="Typo.body1" Color="Color.Default">
+                                    @Dil.T("studio.previewYok", "Bu model icin 3D onizleme kullanilamiyor.")
+                                </MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Default">
+                                    @Dil.T("studio.previewYokAlt", "Modelin .glb dosyasi mevcut degil veya dosya URL'i guvenli degil.")
+                                </MudText>
+                            </div>
+                        }
+                    </MudPaper>
+
+                    @* ── P06-C: Parca Paneli ── *@
+                    @if (_seciliModel is not null)
+                    {
+                        <MudPaper Elevation="1" Class="pa-4 mt-4" style="border-radius:var(--kose-lg);">
+                            <div class="d-flex align-center justify-space-between mb-3">
+                                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">
+                                    <MudIcon Icon="@Icons.Material.Filled.Category" Class="mr-1" Size="Size.Small" />
+                                    @Dil.T("studio.parcaPaneliBaslik", "Model Parcalari")
+                                    @if (_parcalar.Count > 0)
+                                    {
+                                        <MudChip T="string" Size="Size.Small" Class="ml-2">@_parcalar.Count</MudChip>
+                                    }
+                                </MudText>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                                           Disabled="@(!_goruntuleyiciBaslatildi || _senkronizeEdiliyor)"
+                                           OnClick="ParcalariSenkronizeEtAsync"
+                                           StartIcon="@Icons.Material.Filled.ManageSearch">
+                                    @Dil.T("studio.parcaSenkronizeEt", "Parcalari Tara ve Senkronize Et")
+                                </MudButton>
+                            </div>
+
+                            @* Senkronizasyon sonucu *@
+                            @if (_senkronizeSonuc is not null)
+                            {
+                                <MudAlert Severity="Severity.Success" Variant="Variant.Text" Class="mb-3 pa-2" Dense="true">
+                                    @Dil.T("studio.senkronizeSonucMetin", "Eklenen: {0}, Geri yüklenen: {1}, Kaldırılan: {2}")
+                                        .Replace("{0}", _senkronizeSonuc.Eklenen.ToString())
+                                        .Replace("{1}", _senkronizeSonuc.GeriYuklenen.ToString())
+                                        .Replace("{2}", _senkronizeSonuc.YumusakSilinen.ToString())
+                                </MudAlert>
+                            }
+
+                            @if (_senkronizeEdiliyor)
+                            {
+                                <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-3" />
+                            }
+                            else if (_parcaYukleniyor)
+                            {
+                                <MudProgressLinear Indeterminate="true" Color="Color.Default" Class="mb-3" />
+                            }
+                            else if (_parcaHatasi)
+                            {
+                                <MudAlert Severity="Severity.Error" Variant="Variant.Text" Class="mb-3 pa-2" Dense="true">
+                                    @Dil.T("studio.parcaListeHata", "Parca listesi alinamadi. Lutfen daha sonra tekrar deneyin.")
+                                </MudAlert>
+                            }
+                            else if (_parcalar.Count == 0)
+                            {
+                                @* ── Bos durum ── *@
+                                <div class="studio-parca-bos">
+                                    <MudIcon Icon="@Icons.Material.Filled.Psychology" Size="Size.Medium" Color="Color.Default" />
+                                    <MudText Typo="Typo.body2" Color="Color.Default">
+                                        @Dil.T("studio.parcaBos", "Henuz hic parca tanimlanmamis. \"Parcalari Tara ve Senkronize Et\" butonu ile modeldeki meshleri kesfedin.")
+                                    </MudText>
+                                </div>
+                            }
+                            else
+                            {
+                                @* ── Parca listesi ── *@
+                                <div class="studio-parca-liste" style="max-height:400px; overflow-y:auto;">
+                                    @foreach (var parca in _parcalar)
+                                    {
+                                        var seciliMi = _seciliParcaId == parca.Id;
+                                        <div class="studio-parca-satir pa-3 @(seciliMi ? "studio-parca-satir-secili" : "")"
+                                             @onclick="() => ParcaSecAsync(parca)" @onclick:preventdefault="false"
+                                             style="cursor:pointer;">
+                                            <div class="d-flex align-center justify-space-between">
+                                                <div>
+                                                    <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                                        @parca.GorunenAd
+                                                    </MudText>
+                                                    <div class="d-flex gap-2 mt-1" style="gap:8px;">
+                                                        <span class="studio-meta-etiket">@parca.MeshAdi</span>
+                                                        <MudChip T="string" Size="Size.Small"
+                                                                 Color="@(parca.GorunurMu ? Color.Success : Color.Default)"
+                                                                 Variant="Variant.Outlined" Class="ma-0">
+                                                            @(parca.GorunurMu ? Dil.T("studio.gorunur", "Gorunur") : Dil.T("studio.gizli", "Gizli"))
+                                                        </MudChip>
+                                                        <MudChip T="string" Size="Size.Small"
+                                                                 Variant="Variant.Text" Class="ma-0">
+                                                            @parca.ParcaTuru
+                                                        </MudChip>
+                                                    </div>
+                                                </div>
+                                                <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small"
+                                                         Color="@(seciliMi ? Color.Primary : Color.Default)" />
+                                            </div>
+
+                                            @* ── Secili parca duzenleme formu ── *@
+                                            @if (seciliMi)
+                                            {
+                                                <MudDivider Class="my-2" />
+                                                <MudGrid Spacing="2">
+                                                    <MudItem xs="12" sm="6">
+                                                        <MudTextField T="string"
+                                                                      Label="@Dil.T("studio.parcaGorunenAd", "Gorunen Ad")"
+                                                                      @bind-Value="_duzenlemeGorunenAd"
+                                                                      Variant="Variant.Outlined"
+                                                                      Margin="Margin.Dense" />
+                                                    </MudItem>
+                                                    <MudItem xs="12" sm="6">
+                                                        <MudSelect T="string"
+                                                                   Label="@Dil.T("studio.parcaTuru", "Parca Turu")"
+                                                                   @bind-Value="_duzenlemeParcaTuru"
+                                                                   Variant="Variant.Outlined"
+                                                                   Margin="Margin.Dense">
+                                                        <MudSelectItem T="string" Value="@("Govde")">@Dil.T("studio.parcaTurGovde", "Govde")</MudSelectItem>
+                                                        <MudSelectItem T="string" Value="@("Kapak")">@Dil.T("studio.parcaTurKapak", "Kapak")</MudSelectItem>
+                                                        <MudSelectItem T="string" Value="@("Cekmece")">@Dil.T("studio.parcaTurCekmece", "Cekmece")</MudSelectItem>
+                                                        <MudSelectItem T="string" Value="@("Led")">@Dil.T("studio.parcaTurLed", "LED")</MudSelectItem>
+                                                        <MudSelectItem T="string" Value="@("Diger")">@Dil.T("studio.parcaTurDiger", "Diger")</MudSelectItem>
+                                                        </MudSelect>
+                                                    </MudItem>
+                                                    <MudItem xs="6" sm="3">
+                                                        <MudSwitch T="bool"
+                                                                   Label="@Dil.T("studio.parcaGorunurluk", "Gorunur")"
+                                                                   @bind-Value="_duzenlemeGorunurMu"
+                                                                   Color="Color.Primary" />
+                                                    </MudItem>
+                                                    <MudItem xs="6" sm="3">
+                                                        <MudSwitch T="bool"
+                                                                   Label="@Dil.T("studio.parcaRenkDegistirilebilir", "Renk Ozellestirme")"
+                                                                   @bind-Value="_duzenlemeRenkDegistirilebilirMi"
+                                                                   Color="Color.Primary" />
+                                                    </MudItem>
+                                                    <MudItem xs="12" sm="4">
+                                                        <MudTextField T="string"
+                                                                      Label="@Dil.T("studio.parcaVarsayilanRenk", "Varsayilan Renk (Hex)")"
+                                                                      @bind-Value="_duzenlemeVarsayilanRenk"
+                                                                      Variant="Variant.Outlined"
+                                                                      Margin="Margin.Dense"
+                                                                      Placeholder="#C8952A" />
+                                                    </MudItem>
+                                                    <MudItem xs="12" class="d-flex justify-end">
+                                                        <MudButton Variant="Variant.Filled"
+                                                                   Color="Color.Primary"
+                                                                   Size="Size.Small"
+                                                                   Disabled="@(_parcaKaydediliyor)"
+                                                                   OnClick="ParcaMetadataKaydetAsync"
+                                                                   StartIcon="@Icons.Material.Filled.Save">
+                                                            @Dil.T("studio.parcaKaydet", "Kaydet")
+                                                        </MudButton>
+                                                        @if (_parcaKaydediliyor)
+                                                        {
+                                                            <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="ml-2" />
+                                                        }
+                                                    </MudItem>
+                                                </MudGrid>
+                                            }
+                                        </div>
+                                        <MudDivider Class="ma-0" />
+                                    }
+                                </div>
+                            }
+                        </MudPaper>
+                    }
+                }
+                else
+                {
+                    @* Henuz model secilmemis *@
+                    <div class="studio-bos-durum pa-8">
+                        <MudIcon Icon="@Icons.Material.Filled.TouchApp" Size="Size.Large" Color="Color.Default" />
+                        <MudText Typo="Typo.h6" Color="Color.Default">
+                            @Dil.T("studio.secimYok", "Bir model secin")
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Default">
+                            @Dil.T("studio.secimYokAlt", "Soldaki listeden bir model secerek detaylari goruntuleyin ve 3D onizleme yapin.")
+                        </MudText>
+                    </div>
+                }
+            </MudItem>
+        </MudGrid>
+    }
+</div>

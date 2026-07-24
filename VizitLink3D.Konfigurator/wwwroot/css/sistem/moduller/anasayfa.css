@@ -1,0 +1,261 @@
+/* anasayfa.css — P04: Public 3D Viewer sayfasi stilleri */
+/* Tum renk/boyut/font: tokens.css (temeller/degiskenler.css) */
+
+/* ================================================================
+   SAYFA DUZENI
+   ================================================================ */
+
+.ucboyut-sayfa {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--arkaplan);
+}
+
+/* ================================================================
+   MODEL LISTESI PANEL (SOL)
+   ================================================================ */
+
+.model-listesi-panel {
+  width: 320px;
+  min-width: 280px;
+  background: var(--arkaplan-koyu);
+  color: var(--metin-ters);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--cizgi-koyu);
+  overflow: hidden;
+}
+
+.model-listesi-baslik {
+  font-family: var(--font-baslik);
+  font-size: var(--boyut-lg);
+  font-weight: var(--kalin-yari);
+  color: var(--metin-ters);
+  padding: var(--bosluk-lg) var(--bosluk-md);
+  margin: 0;
+  border-bottom: 1px solid var(--cizgi-koyu);
+  flex-shrink: 0;
+}
+
+.model-kartlari {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--bosluk-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--bosluk-sm);
+}
+
+/* Scrollbar (koyu tema) */
+.model-kartlari::-webkit-scrollbar {
+  width: 6px;
+}
+
+.model-kartlari::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.model-kartlari::-webkit-scrollbar-thumb {
+  background: var(--cizgi-koyu);
+  border-radius: var(--kose-tam);
+}
+
+/* ================================================================
+   MODEL KARTI
+   ================================================================ */
+
+.model-karti {
+  padding: var(--bosluk-md);
+  border: 1px solid var(--cizgi-koyu);
+  border-radius: var(--kose-md);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all var(--gecis-hizli);
+  user-select: none;
+}
+
+.model-karti:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--ikincil-renk);
+  transform: translateX(2px);
+}
+
+.model-karti--secili {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--ikincil-renk);
+  box-shadow: inset 2px 0 0 var(--ikincil-renk);
+}
+
+.model-karti-baslik {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bosluk-sm);
+}
+
+.model-karti-ad {
+  font-family: var(--font-baslik);
+  font-size: var(--boyut-sm);
+  font-weight: var(--kalin-yari);
+  color: var(--metin-ters);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.model-karti-aciklama {
+  font-size: var(--boyut-xs);
+  color: var(--metin-soluk);
+  margin: var(--bosluk-xs) 0 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.model-karti-detay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--bosluk-sm);
+  font-size: var(--boyut-xs);
+  color: var(--metin-acik);
+}
+
+.model-karti-boyut {
+  font-family: var(--font-mono);
+  color: var(--vurgu-parlak);
+}
+
+.model-karti-tarih {
+  color: var(--metin-soluk);
+}
+
+/* ================================================================
+   GORUNTULEYICI PANEL (SAG)
+   ================================================================ */
+
+.goruntuleyici-panel {
+  flex: 1;
+  position: relative;
+  background: #d4d4d4;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.goruntuleyici-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.goruntuleyici-canvas canvas {
+  display: block;
+}
+
+/* ================================================================
+   DURUM GOSTERGELERI (yukleniyor / hata / bos)
+   ================================================================ */
+
+.viewer-durum {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--arkaplan);
+}
+
+.viewer-durum--kucuk {
+  position: absolute;
+  inset: 0;
+  background: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-normal);
+}
+
+.viewer-yukleniyor,
+.viewer-hata,
+.viewer-bos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bosluk-md);
+  max-width: 420px;
+  text-align: center;
+  padding: var(--bosluk-xl);
+}
+
+.viewer-bos-baslik {
+  font-family: var(--font-baslik);
+  font-size: var(--boyut-xl);
+  font-weight: var(--kalin-yari);
+  color: var(--metin);
+  margin: 0;
+}
+
+.viewer-durum-metin {
+  font-size: var(--boyut-sm);
+  color: var(--metin-acik);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+  .ucboyut-sayfa {
+    flex-direction: column;
+  }
+
+  .model-listesi-panel {
+    width: 100%;
+    min-width: 0;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid var(--cizgi-koyu);
+  }
+
+  .model-kartlari {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--bosluk-sm);
+  }
+
+  .model-karti {
+    min-width: 200px;
+    flex-shrink: 0;
+  }
+
+  .model-karti:hover {
+    transform: translateY(-2px);
+  }
+
+  .goruntuleyici-panel {
+    flex: 1;
+  }
+}
+
+/* ================================================================
+   ANIMASYONLAR
+   ================================================================ */
+
+.model-karti {
+  animation: model-kart-giris 0.3s ease backwards;
+}
+
+@keyframes model-kart-giris {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

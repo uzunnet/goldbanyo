@@ -1,0 +1,18 @@
+/* tokens.css — Tek giris noktasi (sadece @import) */
+@import "temeller/degiskenler.css";
+@import "temeller/reset.css";
+@import "temeller/tipografi.css";
+@import "temeller/breakpoint.css";
+
+@import "bilesenler/butonlar.css";
+@import "bilesenler/kartlar.css";
+@import "bilesenler/form.css";
+@import "bilesenler/animasyon.css";
+@import "bilesenler/efektler.css";
+
+@import "moduller/anasayfa.css";
+@import "moduller/giris.css";
+@import "moduller/yonetim.css";
+@import "moduller/modeller.css";
+@import "moduller/sifre-sifirlama.css";
+@import "moduller/studio.css";

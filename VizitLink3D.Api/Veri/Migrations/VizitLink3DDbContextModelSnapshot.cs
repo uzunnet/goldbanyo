@@ -46,7 +46,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CanliSohbetMesajlari", (string)null);
+                    b.ToTable("CanliSohbetMesajlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.GaleriGorseli", b =>
@@ -76,7 +76,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GaleriGorselleri", (string)null);
+                    b.ToTable("GaleriGorselleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.KapakModeli", b =>
@@ -196,7 +196,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("KapakModelleri", (string)null);
+                    b.ToTable("KapakModelleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.KapiModeliResim", b =>
@@ -222,7 +222,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("KapakModeliId");
 
-                    b.ToTable("KapiModeliResimleri", (string)null);
+                    b.ToTable("KapiModeliResimleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.KapiModeliYerellestirme", b =>
@@ -259,7 +259,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("KapakModeliId", "Dil")
                         .IsUnique();
 
-                    b.ToTable("KapiModeliYerellestirmeleri", (string)null);
+                    b.ToTable("KapiModeliYerellestirmeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.SayfaIcerigi", b =>
@@ -301,7 +301,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("FirmaId", "Bolum", "Anahtar", "Dil")
                         .IsUnique();
 
-                    b.ToTable("SayfaIcerikleri", (string)null);
+                    b.ToTable("SayfaIcerikleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.AI.AICagrisiKaydi", b =>
@@ -348,7 +348,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("SaglayiciId");
 
-                    b.ToTable("AICagrisiKayitlari", (string)null);
+                    b.ToTable("AICagrisiKayitlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.AI.AISaglayicisi", b =>
@@ -398,7 +398,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AISaglayicilari", (string)null);
+                    b.ToTable("AISaglayicilari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.AuditLog", b =>
@@ -440,7 +440,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuditLoglar", (string)null);
+                    b.ToTable("AuditLoglar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.BultenAbonesi", b =>
@@ -479,7 +479,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BultenAboneleri", (string)null);
+                    b.ToTable("BultenAboneleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Ceviri", b =>
@@ -514,7 +514,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("Anahtar", "Dil")
                         .IsUnique();
 
-                    b.ToTable("Ceviriler", (string)null);
+                    b.ToTable("Ceviriler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Dil", b =>
@@ -548,7 +548,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("Kod")
                         .IsUnique();
 
-                    b.ToTable("Diller", (string)null);
+                    b.ToTable("Diller");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.EkipUyesi", b =>
@@ -590,7 +590,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EkipUyeleri", (string)null);
+                    b.ToTable("EkipUyeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.EpostaSablonu", b =>
@@ -622,7 +622,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EpostaSablonlari", (string)null);
+                    b.ToTable("EpostaSablonlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Firma", b =>
@@ -771,7 +771,103 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Firmalar", (string)null);
+                    b.ToTable("Firmalar");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Guvenlik.EmbedOturumNonceKaydi", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NonceHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SonKullanmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NonceHash")
+                        .IsUnique();
+
+                    b.ToTable("EmbedOturumNonceKayitlari");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Guvenlik.FirmaApiAnahtari", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AktifMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AnahtarAd")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AnahtarOnEki")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ApiKeyHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FirmaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("GuncelleyenKullaniciId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IzinVerilenDomainler")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Kapsam")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OlusturanKullaniciId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("SonKullanimTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("SonKullanmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiKeyHash")
+                        .IsUnique();
+
+                    b.HasIndex("FirmaId", "AnahtarAd")
+                        .IsUnique();
+
+                    b.ToTable("FirmaApiAnahtarlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.HaberResim", b =>
@@ -794,7 +890,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("HaberYazisiId");
 
-                    b.ToTable("HaberResim", (string)null);
+                    b.ToTable("HaberResim");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.HaberYazisi", b =>
@@ -851,7 +947,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("FirmaId");
 
-                    b.ToTable("Haberler", (string)null);
+                    b.ToTable("Haberler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.HizmetAdimi", b =>
@@ -890,7 +986,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HizmetAdimlari", (string)null);
+                    b.ToTable("HizmetAdimlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.IletisimMesaji", b =>
@@ -960,7 +1056,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("FirmaId");
 
-                    b.ToTable("IletisimMesajlari", (string)null);
+                    b.ToTable("IletisimMesajlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.IsTakipKaydi", b =>
@@ -1008,7 +1104,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IsTakipKayitlari", (string)null);
+                    b.ToTable("IsTakipKayitlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.KapiKategorisi", b =>
@@ -1057,7 +1153,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KapiKategorileri", (string)null);
+                    b.ToTable("KapiKategorileri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.KapiKategorisiYerellestirme", b =>
@@ -1091,7 +1187,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("KapiKategorisiId", "Dil")
                         .IsUnique();
 
-                    b.ToTable("KapiKategorisiYerellestirmeleri", (string)null);
+                    b.ToTable("KapiKategorisiYerellestirmeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Katalog", b =>
@@ -1143,7 +1239,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Kataloglar", (string)null);
+                    b.ToTable("Kataloglar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Kategori", b =>
@@ -1189,7 +1285,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("UstKategoriId");
 
-                    b.ToTable("Kategoriler", (string)null);
+                    b.ToTable("Kategoriler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Kullanici", b =>
@@ -1308,7 +1404,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("KullaniciAdi")
                         .IsUnique();
 
-                    b.ToTable("Kullanicilar", (string)null);
+                    b.ToTable("Kullanicilar");
 
                     b.HasData(
                         new
@@ -1386,7 +1482,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("FirmaId");
 
-                    b.ToTable("Lisanslar", (string)null);
+                    b.ToTable("Lisanslar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Malzemeler.KaplamaSecenegi", b =>
@@ -1431,7 +1527,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KaplamaSecenekleri", (string)null);
+                    b.ToTable("KaplamaSecenekleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Malzemeler.Malzeme", b =>
@@ -1474,7 +1570,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Malzemeler", (string)null);
+                    b.ToTable("Malzemeler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Medya.Medya", b =>
@@ -1560,7 +1656,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("KlasorId");
 
-                    b.ToTable("Medyalar", (string)null);
+                    b.ToTable("Medyalar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Medya.MedyaKlasoru", b =>
@@ -1601,7 +1697,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("UstKlasorId");
 
-                    b.ToTable("MedyaKlasorleri", (string)null);
+                    b.ToTable("MedyaKlasorleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Medya.MedyaKullanim", b =>
@@ -1635,7 +1731,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("EntiteAdi", "EntiteId");
 
-                    b.ToTable("MedyaKullanimlari", (string)null);
+                    b.ToTable("MedyaKullanimlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MenuOgesi", b =>
@@ -1707,7 +1803,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("UstMenuId");
 
-                    b.ToTable("MenuOgeleri", (string)null);
+                    b.ToTable("MenuOgeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MobilyaKategorisi", b =>
@@ -1750,7 +1846,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MobilyaKategorileri", (string)null);
+                    b.ToTable("MobilyaKategorileri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MobilyaKategorisiYerellestirme", b =>
@@ -1778,7 +1874,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("MobilyaKategorisiId", "Dil")
                         .IsUnique();
 
-                    b.ToTable("MobilyaKategorisiYerellestirmeleri", (string)null);
+                    b.ToTable("MobilyaKategorisiYerellestirmeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MobilyaUrunu", b =>
@@ -1832,7 +1928,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("MobilyaKategorisiId");
 
-                    b.ToTable("MobilyaUrunleri", (string)null);
+                    b.ToTable("MobilyaUrunleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MobilyaUrunuYerellestirme", b =>
@@ -1860,7 +1956,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("MobilyaUrunuId", "Dil")
                         .IsUnique();
 
-                    b.ToTable("MobilyaUrunuYerellestirmeleri", (string)null);
+                    b.ToTable("MobilyaUrunuYerellestirmeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.MusteriYorumu", b =>
@@ -1918,7 +2014,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MusteriYorumlari", (string)null);
+                    b.ToTable("MusteriYorumlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Proje", b =>
@@ -1984,7 +2080,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("KategoriId");
 
-                    b.ToTable("Projeler", (string)null);
+                    b.ToTable("Projeler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.ProjeKategorisi", b =>
@@ -2015,7 +2111,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProjeKategorileri", (string)null);
+                    b.ToTable("ProjeKategorileri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.ProjeResim", b =>
@@ -2041,7 +2137,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("ProjeId");
 
-                    b.ToTable("ProjeResimleri", (string)null);
+                    b.ToTable("ProjeResimleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Referans", b =>
@@ -2084,7 +2180,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Referanslar", (string)null);
+                    b.ToTable("Referanslar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Renkler.RalRengi", b =>
@@ -2134,7 +2230,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RalRenkleri", (string)null);
+                    b.ToTable("RalRenkleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Renkler.RenkKatalogu", b =>
@@ -2158,7 +2254,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RenkKataloglari", (string)null);
+                    b.ToTable("RenkKataloglari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.SayfaDuzenAyari", b =>
@@ -2201,7 +2297,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SayfaDuzenAyarlari", (string)null);
+                    b.ToTable("SayfaDuzenAyarlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Sektor", b =>
@@ -2234,7 +2330,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sektorler", (string)null);
+                    b.ToTable("Sektorler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Sertifika", b =>
@@ -2282,7 +2378,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sertifikalar", (string)null);
+                    b.ToTable("Sertifikalar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.SikSorulanSoru", b =>
@@ -2325,7 +2421,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SikSorulanSorular", (string)null);
+                    b.ToTable("SikSorulanSorular");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.SistemAyari", b =>
@@ -2356,7 +2452,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SistemAyarlari", (string)null);
+                    b.ToTable("SistemAyarlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Slayt", b =>
@@ -2438,7 +2534,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Slaytlar", (string)null);
+                    b.ToTable("Slaytlar");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Sube", b =>
@@ -2501,7 +2597,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subeler", (string)null);
+                    b.ToTable("Subeler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.TanitimVideo", b =>
@@ -2539,7 +2635,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TanitimVideolari", (string)null);
+                    b.ToTable("TanitimVideolari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Tema.FirmaTemaAtama", b =>
@@ -2569,7 +2665,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FirmaTemaAtamalari", (string)null);
+                    b.ToTable("FirmaTemaAtamalari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Tema.TemaRevizyonu", b =>
@@ -2603,7 +2699,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TemaRevizyonlari", (string)null);
+                    b.ToTable("TemaRevizyonlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Tema.TemaSablonu", b =>
@@ -2739,7 +2835,7 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("TemaSablonlari", (string)null);
+                    b.ToTable("TemaSablonlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonParcasi", b =>
@@ -2748,16 +2844,28 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<double?>("Aci")
+                        .HasColumnType("REAL");
+
                     b.Property<double?>("Deger")
                         .HasColumnType("REAL");
 
                     b.Property<bool>("GorunurMu")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("HareketDegeri")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("MusteriKonfigurasyonuId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("OlusturulmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SeciliDoku")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("SeciliKaplamaId")
@@ -2769,12 +2877,28 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Property<int?>("SeciliRenkId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("UrunUcBoyutParcasiId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MusteriKonfigurasyonParcalari", (string)null);
+                    b.HasIndex("MusteriKonfigurasyonuId");
+
+                    b.HasIndex("SeciliKaplamaId");
+
+                    b.HasIndex("SeciliMalzemeId");
+
+                    b.HasIndex("SeciliRenkId");
+
+                    b.HasIndex("UrunUcBoyutParcasiId");
+
+                    b.ToTable("MusteriKonfigurasyonParcalari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonu", b =>
@@ -2783,14 +2907,27 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Durum")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("FirmaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime?>("GuncellenmeTarihi")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("GuncelleyenKullaniciId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("KullaniciId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Not")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("OlusturanKullaniciId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("OlusturulmaTarihi")
                         .HasColumnType("TEXT");
@@ -2804,12 +2941,19 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Property<DateTime?>("SilinmeTarihi")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal?>("ToplamFiyat")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("UrunId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MusteriKonfigurasyonlari", (string)null);
+                    b.HasIndex("FirmaId");
+
+                    b.HasIndex("UrunId");
+
+                    b.ToTable("MusteriKonfigurasyonlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.PdfSayfaGorseli", b =>
@@ -2850,7 +2994,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PdfSayfaGorselleri", (string)null);
+                    b.ToTable("PdfSayfaGorselleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.TeklifIstegi", b =>
@@ -2900,7 +3044,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("MusteriKonfigurasyonuId");
 
-                    b.ToTable("TeklifIstekleri", (string)null);
+                    b.ToTable("TeklifIstekleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.TeklifIstegiParcasi", b =>
@@ -2935,7 +3079,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("TeklifIstegiId");
 
-                    b.ToTable("TeklifIstegiParcalari", (string)null);
+                    b.ToTable("TeklifIstegiParcalari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.Urun", b =>
@@ -2959,6 +3103,9 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.Property<string>("Birim")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("FirmaId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal?>("Fiyat")
                         .HasColumnType("TEXT");
@@ -3017,7 +3164,11 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("UrunAilesiId");
 
-                    b.ToTable("Urunler", (string)null);
+                    b.HasIndex("FirmaId", "Slug")
+                        .IsUnique()
+                        .HasFilter("[FirmaId] IS NOT NULL");
+
+                    b.ToTable("Urunler");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunAilesi", b =>
@@ -3060,7 +3211,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunAilesileri", (string)null);
+                    b.ToTable("UrunAilesileri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunKategori", b =>
@@ -3103,7 +3254,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunKategorileri", (string)null);
+                    b.ToTable("UrunKategorileri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunKonfigurasyonKurali", b =>
@@ -3145,7 +3296,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunKonfigurasyonKurallari", (string)null);
+                    b.ToTable("UrunKonfigurasyonKurallari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunKonfigurasyonSablonu", b =>
@@ -3203,7 +3354,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunKonfigurasyonSablonlari", (string)null);
+                    b.ToTable("UrunKonfigurasyonSablonlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunMedya", b =>
@@ -3237,7 +3388,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunMedyalari", (string)null);
+                    b.ToTable("UrunMedyalari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunParcaEslemesi", b =>
@@ -3252,6 +3403,12 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Property<DateTime>("OlusturulmaTarihi")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("UrunUcBoyutModeliId")
                         .HasColumnType("INTEGER");
 
@@ -3264,7 +3421,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasIndex("UrunUcBoyutParcasiId");
 
-                    b.ToTable("UrunParcaEslemeleri", (string)null);
+                    b.ToTable("UrunParcaEslemeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunParcaGrubu", b =>
@@ -3283,6 +3440,21 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Property<bool>("AktifMi")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("FirmaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SiraNo")
                         .HasColumnType("INTEGER");
 
@@ -3291,7 +3463,9 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunParcaGruplari", (string)null);
+                    b.HasIndex("UrunId", "Ad");
+
+                    b.ToTable("UrunParcaGruplari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunParcaMalzemeSecenegi", b =>
@@ -3317,7 +3491,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunParcaMalzemeSecenekleri", (string)null);
+                    b.ToTable("UrunParcaMalzemeSecenekleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunParcaRenkSecenegi", b =>
@@ -3343,7 +3517,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunParcaRenkSecenekleri", (string)null);
+                    b.ToTable("UrunParcaRenkSecenekleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunPdfKaynagi", b =>
@@ -3385,7 +3559,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunPdfKaynaklari", (string)null);
+                    b.ToTable("UrunPdfKaynaklari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutModeli", b =>
@@ -3458,7 +3632,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunUcBoyutModelleri", (string)null);
+                    b.ToTable("UrunUcBoyutModelleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutParcasi", b =>
@@ -3473,6 +3647,9 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Property<bool>("AktifMi")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("DokuUygulanabilirMi")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("GizlenebilirMi")
                         .HasColumnType("INTEGER");
 
@@ -3481,6 +3658,9 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HareketAyarlariJson")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HareketTipi")
@@ -3494,6 +3674,9 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("MalzemeTipiKisiti")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MantiksalKod")
                         .HasColumnType("TEXT");
 
                     b.Property<double?>("MaxDeger")
@@ -3544,7 +3727,63 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunUcBoyutParcalari", (string)null);
+                    b.HasIndex("UrunUcBoyutModeliId", "MantiksalKod")
+                        .IsUnique()
+                        .HasFilter("[MantiksalKod] IS NOT NULL");
+
+                    b.ToTable("UrunUcBoyutParcalari");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutSahneOnayari", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Ad")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AdminOnayliMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AktifMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AyarlarJson")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Kod")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SilinmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SiraNo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UrunUcBoyutModeliId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("VarsayilanMi")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UrunUcBoyutModeliId", "Kod")
+                        .IsUnique();
+
+                    b.ToTable("UrunUcBoyutSahneOnayarlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunYerellestirme", b =>
@@ -3577,7 +3816,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UrunYerellestirmeleri", (string)null);
+                    b.ToTable("UrunYerellestirmeleri");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.ZiyaretKaydi", b =>
@@ -3615,7 +3854,7 @@ namespace VizitLink3D.Api.Veri.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ZiyaretKayitlari", (string)null);
+                    b.ToTable("ZiyaretKayitlari");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.KapakModeli", b =>
@@ -3668,6 +3907,17 @@ namespace VizitLink3D.Api.Veri.Migrations
                         .IsRequired();
 
                     b.Navigation("Saglayici");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Guvenlik.FirmaApiAnahtari", b =>
+                {
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Firma", "Firma")
+                        .WithMany()
+                        .HasForeignKey("FirmaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Firma");
                 });
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.HaberResim", b =>
@@ -3846,6 +4096,61 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Navigation("Proje");
                 });
 
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonParcasi", b =>
+                {
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonu", "MusteriKonfigurasyonu")
+                        .WithMany("Parcalar")
+                        .HasForeignKey("MusteriKonfigurasyonuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Malzemeler.KaplamaSecenegi", "SeciliKaplama")
+                        .WithMany()
+                        .HasForeignKey("SeciliKaplamaId");
+
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Malzemeler.Malzeme", "SeciliMalzeme")
+                        .WithMany()
+                        .HasForeignKey("SeciliMalzemeId");
+
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Renkler.RalRengi", "SeciliRenk")
+                        .WithMany()
+                        .HasForeignKey("SeciliRenkId");
+
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutParcasi", "UrunUcBoyutParcasi")
+                        .WithMany()
+                        .HasForeignKey("UrunUcBoyutParcasiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MusteriKonfigurasyonu");
+
+                    b.Navigation("SeciliKaplama");
+
+                    b.Navigation("SeciliMalzeme");
+
+                    b.Navigation("SeciliRenk");
+
+                    b.Navigation("UrunUcBoyutParcasi");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonu", b =>
+                {
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Firma", "Firma")
+                        .WithMany()
+                        .HasForeignKey("FirmaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.Urun", "Urun")
+                        .WithMany()
+                        .HasForeignKey("UrunId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Firma");
+
+                    b.Navigation("Urun");
+                });
+
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.TeklifIstegi", b =>
                 {
                     b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonu", "MusteriKonfigurasyonu")
@@ -3868,11 +4173,18 @@ namespace VizitLink3D.Api.Veri.Migrations
 
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.Urun", b =>
                 {
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Firma", "Firma")
+                        .WithMany()
+                        .HasForeignKey("FirmaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.UrunAilesi", "UrunAilesi")
                         .WithMany()
                         .HasForeignKey("UrunAilesiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Firma");
 
                     b.Navigation("UrunAilesi");
                 });
@@ -3894,6 +4206,17 @@ namespace VizitLink3D.Api.Veri.Migrations
                     b.Navigation("UrunUcBoyutModeli");
 
                     b.Navigation("UrunUcBoyutParcasi");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutSahneOnayari", b =>
+                {
+                    b.HasOne("VizitLink3D.Ortak.Modeller.Urunler.UrunUcBoyutModeli", "UrunUcBoyutModeli")
+                        .WithMany()
+                        .HasForeignKey("UrunUcBoyutModeliId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("UrunUcBoyutModeli");
                 });
 
             modelBuilder.Entity("VizitLink3D.Api.Modeller.KapakModeli", b =>
@@ -3926,6 +4249,11 @@ namespace VizitLink3D.Api.Veri.Migrations
             modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Proje", b =>
                 {
                     b.Navigation("Resimler");
+                });
+
+            modelBuilder.Entity("VizitLink3D.Ortak.Modeller.Urunler.MusteriKonfigurasyonu", b =>
+                {
+                    b.Navigation("Parcalar");
                 });
 #pragma warning restore 612, 618
         }

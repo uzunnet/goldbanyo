@@ -178,6 +178,19 @@
     --vizit-3d-accent: var(--vizit-gold);
     --vizit-3d-metal: #73706a;
     --vizit-3d-shadow: 0 20px 60px rgba(10, 10, 10, 0.18);
+
+    /* Konfigurator Studio tokenlari */
+    --konfigurator-secili-arka-plan: rgba(200, 149, 42, 0.06);
+    --konfigurator-hover-arka-plan: rgba(212, 165, 116, 0.08);
+    --konfigurator-overlay-arka-plan: rgba(26, 26, 39, 0.4);
+    --konfigurator-cizgi: rgba(0, 0, 0, 0.04);
+    --konfigurator-cizgi-orta: rgba(0, 0, 0, 0.06);
+    --konfigurator-cizgi-kalin: rgba(0, 0, 0, 0.08);
+
+    /* Konfigurator Studio fallback tokenlari — tanimsiz token'lara karsı guvenlik */
+    --arkaplan-yumusak: var(--vizit-bg-alt);
+    --metin-acik: var(--vizit-text-muted);
+    --metin: var(--vizit-text);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -220,6 +233,11 @@
 
     /* Ekstra Tokenlar */
     --metin-ters: var(--vizit-text-inverse);
+
+    /* Konfigurator Studio fallback tokenlari */
+    --arkaplan-yumusak: var(--vizit-bg-alt);
+    --metin-acik: var(--vizit-text-muted);
+    --metin: var(--vizit-text);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -287,4 +305,9 @@
 
     /* Geriye uyumlu override */
     --metin-ters: var(--vizit-text-inverse);
+
+    /* Konfigurator Studio fallback tokenlari */
+    --arkaplan-yumusak: var(--vizit-bg-alt);
+    --metin-acik: var(--vizit-text-muted);
+    --metin: var(--vizit-text);
 }

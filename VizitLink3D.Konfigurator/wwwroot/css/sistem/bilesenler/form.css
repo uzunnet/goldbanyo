@@ -1,0 +1,11 @@
+/* form.css — Form elemanlari stilleri */
+.studio-form-grup {
+  margin-bottom: var(--bosluk-md);
+}
+
+.studio-form-label {
+  display: block;
+  font-weight: var(--kalin-orta);
+  margin-bottom: var(--bosluk-xs);
+  color: var(--metin);
+}

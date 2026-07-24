@@ -1,0 +1,67 @@
+/* sifre-sifirlama.css — Sifre sifirlama ve yenileme sayfasi stilleri */
+
+/* ── Sifre alani (göz ikonu icin) ── */
+.studio-sifre-alani {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.studio-sifre-alani .studio-login-input {
+  padding-right: 44px;
+}
+
+/* ── Göz (toggle) butonu ── */
+.studio-goz-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--metin-soluk);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--gecis-hizli);
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.studio-goz-toggle:hover {
+  color: var(--metin-ters);
+  opacity: 1;
+}
+
+.studio-goz-toggle:focus-visible {
+  outline: 2px solid var(--ikincil-renk);
+  outline-offset: 2px;
+  border-radius: var(--kose-sm);
+}
+
+/* ── Sifre alani baglanti (sifremi unuttum) ── */
+.studio-sifirla-baglanti {
+  text-align: right;
+  margin-top: var(--bosluk-xs);
+}
+
+/* ── Geri don baglantisi ── */
+.studio-sifirla-geridon {
+  text-align: center;
+  margin-top: var(--bosluk-md);
+}
+
+/* ── Link stili (ortak) ── */
+.studio-sifirla-link {
+  color: var(--metin-soluk);
+  text-decoration: none;
+  font-size: var(--boyut-sm);
+  transition: color var(--gecis-hizli);
+}
+
+.studio-sifirla-link:hover {
+  color: var(--ikincil-renk);
+  text-decoration: underline;
+}

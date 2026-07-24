@@ -3,4 +3,6 @@
   <Project Path="VizitLink3D.Api/VizitLink3D.Api.csproj" />
   <Project Path="VizitLink3D.Testler/VizitLink3D.Testler.csproj" />
   <Project Path="VizitLink3D.UI/VizitLink3D.UI.csproj" />
+  <Project Path="VizitLink3D.Konfigurator.Api/VizitLink3D.Konfigurator.Api.csproj" />
+  <Project Path="VizitLink3D.Konfigurator/VizitLink3D.Konfigurator.csproj" />
 </Solution>

@@ -1,0 +1,199 @@
+@page "/admin/dashboard"
+@layout AdminDuzen
+@attribute [Authorize]
+
+<PageTitle>@Dil.T("dashboard.baslik", "Gosterge Paneli — VizitLink3D Studio")</PageTitle>
+
+@if (_yukleniyor)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+}
+else
+{
+    @* ── Hosgeldiniz ── *@
+    <MudText Typo="Typo.h3" Class="mb-2">
+        @Dil.T("dashboard.hosgeldin", "Hos geldiniz")@(_kullaniciAdi is not null ? $", {_kullaniciAdi}" : "")
+    </MudText>
+    <div class="mb-6">
+        <MudChip T="string" Color="Color.Info" Size="Size.Small" Variant="Variant.Outlined" Class="mr-2">@_rol</MudChip>
+        <MudText Typo="Typo.body2" Color="Color.Default" Class="studio-inline-text">
+            @Dil.T("dashboard.rolBilgi", "rolu ile yonetim paneline erisiyorsunuz.")
+        </MudText>
+    </div>
+
+    @* ── Hizli Eylem Kartlari ── *@
+    <MudText Typo="Typo.h5" Class="mb-4">@Dil.T("dashboard.hizliEylemler", "Hizli Eylemler")</MudText>
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="1" Class="studio-dash-eylem-kart">
+                <MudCardContent Class="text-center pa-4">
+                    <MudIcon Icon="@Icons.Material.Filled.CloudUpload" Size="Size.Large" Color="Color.Primary" Class="mb-2" />
+                    <MudText Typo="Typo.h6">@Dil.T("dashboard.hizliModelYukle", "Model Yukle")</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @Dil.T("dashboard.hizliModelYukleAlt", "Yeni bir .glb 3D model dosyasi yukleyin")
+                    </MudText>
+                </MudCardContent>
+                <MudCardActions Class="studio-dash-eylem-kart-actions">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.ArrowForward"
+                               Href="/admin/modeller" Class="w-100">
+                        @Dil.T("dashboard.git", "Git")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="1" Class="studio-dash-eylem-kart">
+                <MudCardContent Class="text-center pa-4">
+                    <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Size="Size.Large" Color="Color.Secondary" Class="mb-2" />
+                    <MudText Typo="Typo.h6">@Dil.T("dashboard.hizliModelYonetim", "Model Yonetimi")</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @Dil.T("dashboard.hizliModelYonetimAlt", "Yuklu modelleri goruntuleyin ve yonetin")
+                    </MudText>
+                </MudCardContent>
+                <MudCardActions Class="studio-dash-eylem-kart-actions">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Secondary"
+                               StartIcon="@Icons.Material.Filled.ArrowForward"
+                               Href="/admin/modeller" Class="w-100">
+                        @Dil.T("dashboard.git", "Git")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="1" Class="studio-dash-eylem-kart">
+                <MudCardContent Class="text-center pa-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info" Class="mb-2" />
+                    <MudText Typo="Typo.h6">@Dil.T("dashboard.hizliPublic", "Public Viewer")</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @Dil.T("dashboard.hizliPublicAlt", "Genel 3D goruntuleme sayfasini acin")
+                    </MudText>
+                </MudCardContent>
+                <MudCardActions Class="studio-dash-eylem-kart-actions">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Info"
+                               StartIcon="@Icons.Material.Filled.ArrowForward"
+                               Href="/" Class="w-100">
+                        @Dil.T("dashboard.git", "Git")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="1" Class="studio-dash-eylem-kart">
+                <MudCardContent Class="text-center pa-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Warning" Class="mb-2" />
+                    <MudText Typo="Typo.h6">@Dil.T("dashboard.hizliSifre", "Sifre Guvenligi")</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @Dil.T("dashboard.hizliSifreAlt", "Sifrenizi sifirlayin veya guncelleyin")
+                    </MudText>
+                </MudCardContent>
+                <MudCardActions Class="studio-dash-eylem-kart-actions">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.ArrowForward"
+                               Href="/sifre-sifirla" Class="w-100">
+                        @Dil.T("dashboard.git", "Git")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    @* ── Sistem Durumu ── *@
+    <MudText Typo="Typo.h5" Class="mb-4">@Dil.T("dashboard.sistemDurum", "Sistem Durumu")</MudText>
+    <MudGrid Class="mb-6">
+        @* API Baglantisi *@
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Class="studio-dash-card pa-4">
+                <MudText Typo="Typo.h6" Class="mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Api" Class="mr-2" />
+                    @Dil.T("dashboard.apiDurum", "API Baglantisi")
+                </MudText>
+                <MudChip T="string" Color="@(_apiDurum ? Color.Success : Color.Error)" Size="Size.Small" Variant="Variant.Outlined">
+                    @(_apiDurum ? Dil.T("dashboard.bagli", "Bagli") : Dil.T("dashboard.baglantiYok", "Baglanti Yok"))
+                </MudChip>
+                @if (!_apiDurum)
+                {
+                    <MudText Typo="Typo.caption" Color="Color.Error" Class="mt-2">
+                        @Dil.T("dashboard.apiUyari", "Konfigurator API'ye erisilemiyor. Bazi ozellikler calismayabilir.")
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+
+        @* Model Durumu *@
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Class="studio-dash-card pa-4">
+                <MudText Typo="Typo.h6" Class="mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Class="mr-2" />
+                    @Dil.T("dashboard.modelDurum", "3D Model Katalogu")
+                </MudText>
+                @if (_modelHatasi)
+                {
+                    <MudChip T="string" Color="Color.Error" Size="Size.Small" Variant="Variant.Outlined" Class="mb-2">
+                        @Dil.T("dashboard.modelListeHata", "Katalog alinamadi")
+                    </MudChip>
+                    <MudText Typo="Typo.caption" Color="Color.Default">
+                        @Dil.T("dashboard.modelListeHataAlt", "API baglantisi kurulduktan sonra katalog yuklenecektir.")
+                    </MudText>
+                }
+                else if (_modelSayisi == 0)
+                {
+                    <MudText Typo="Typo.h4" Color="Color.Default" Class="mb-1">0</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        <MudIcon Icon="@Icons.Material.Filled.Inbox" Class="mr-1" Size="Size.Small" />
+                        @Dil.T("dashboard.bosModel", "Henuz hic model yuklenmemis.")
+                    </MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Default" Class="mt-1">
+                        @Dil.T("dashboard.bosModelAlt", "\"Model Yukle\" karti uzerinden ilk modelinizi ekleyebilirsiniz.")
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="mb-1">@_modelSayisi</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @Dil.T("dashboard.aktifModeller", "aktif 3D model")
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+
+        @* Runtime Bilgisi *@
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Class="studio-dash-card pa-4">
+                <MudText Typo="Typo.h6" Class="mb-3">
+                    <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" />
+                    @Dil.T("dashboard.runtime", "Runtime Bilgisi")
+                </MudText>
+                <div class="studio-dash-meta-satir">
+                    <MudText Typo="Typo.caption" Color="Color.Default">@Dil.T("dashboard.proje", "Proje")</MudText>
+                    <MudText Typo="Typo.body2" Class="font-weight-bold">@_runtimeBilgi.Proje</MudText>
+                </div>
+                <div class="studio-dash-meta-satir">
+                    <MudText Typo="Typo.caption" Color="Color.Default">@Dil.T("dashboard.versiyon", "Versiyon")</MudText>
+                    <MudText Typo="Typo.body2" Class="font-weight-bold">@_runtimeBilgi.Versiyon</MudText>
+                </div>
+                <div class="studio-dash-meta-satir">
+                    <MudText Typo="Typo.caption" Color="Color.Default">@Dil.T("dashboard.port", "Port")</MudText>
+                    <MudText Typo="Typo.body2" Class="font-weight-bold">@_runtimeBilgi.Port</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    @* ── Oturum ── *@
+    <MudPaper Elevation="0" Class="pa-4 studio-dash-bottom-bar">
+        <MudText Typo="Typo.body2" Color="Color.Default" Class="mb-3">
+            @Dil.T("dashboard.oturumDurum", "Oturumunuz aktif. Tum yonetim islemlerini gerceklestirebilirsiniz.")
+        </MudText>
+        <form method="post" action="/oturum/cikis" data-enhance="false">
+            <AntiforgeryToken />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                       StartIcon="@Icons.Material.Filled.ExitToApp">
+                @Dil.T("dashboard.cikis", "Cikis Yap")
+            </MudButton>
+        </form>
+    </MudPaper>
+}

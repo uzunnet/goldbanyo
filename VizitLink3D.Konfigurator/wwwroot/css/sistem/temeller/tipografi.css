@@ -1,0 +1,25 @@
+/* tipografi.css — Tipografi temelleri */
+body {
+  font-family: var(--font-metin);
+  font-size: var(--boyut-md);
+  color: var(--metin);
+  background-color: var(--arkaplan);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-baslik);
+  font-weight: var(--kalin-koyu);
+  line-height: 1.2;
+  color: var(--ana-renk);
+}
+
+h1 { font-size: var(--boyut-4xl); letter-spacing: -0.03em; }
+h2 { font-size: var(--boyut-3xl); letter-spacing: -0.02em; }
+h3 { font-size: var(--boyut-2xl); }
+h4 { font-size: var(--boyut-xl); }
+h5 { font-size: var(--boyut-lg); }
+h6 { font-size: var(--boyut-md); }
+
+code, pre {
+  font-family: var(--font-mono);
+}

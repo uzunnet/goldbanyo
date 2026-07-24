@@ -1,0 +1,22 @@
+/* breakpoint.css — Responsive yardimci siniflar */
+@media (max-width: 768px) {
+  :root {
+    --bosluk-xl: 1.5rem;
+    --bosluk-2xl: 2.5rem;
+    --bosluk-3xl: 4rem;
+  }
+}
+
+.gizle-mobil {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .gizle-mobil {
+    display: initial;
+  }
+
+  .gizle-masaustu {
+    display: none;
+  }
+}

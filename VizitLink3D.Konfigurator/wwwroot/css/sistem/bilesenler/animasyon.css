@@ -1,0 +1,25 @@
+/* animasyon.css — Gecis ve keyframe presetleri */
+.gecis-fade { transition: opacity var(--gecis-orta); }
+.gecis-slide { transition: transform var(--gecis-yumusak); }
+.gecis-renk { transition: background-color var(--gecis-hizli), color var(--gecis-hizli); }
+.gecis-tum { transition: all var(--gecis-orta); }
+
+@keyframes belir {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes kaydir-sag {
+  from { transform: translateX(-30px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes nabiz {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+
+@keyframes yukari-kay {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

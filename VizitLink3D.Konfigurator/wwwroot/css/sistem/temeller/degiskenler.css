@@ -1,0 +1,93 @@
+/* degiskenler.css — VizitLink3D Studio bagimsiz 3D SaaS token sistemi */
+/* Tum degerler generic 3D SaaS temasidir. */
+
+:root {
+  /* === ANA RENKLER (Tech/SaaS 3D) === */
+  --ana-renk: #0F172A;
+  --ana-renk-2: #1E293B;
+  --ikincil-renk: #3B82F6;
+  --ikincil-renk-2: #2563EB;
+  --vurgu-renk: #8B5CF6;
+  --vurgu-parlak: #A78BFA;
+
+  --arkaplan: #F8FAFC;
+  --arkaplan-yumusak: #F1F5F9;
+  --arkaplan-koyu: #0F172A;
+
+  --metin: #1E293B;
+  --metin-acik: #64748B;
+  --metin-soluk: #94A3B8;
+  --metin-ters: #FFFFFF;
+
+  --cizgi: #E2E8F0;
+  --cizgi-koyu: #334155;
+
+  --basari: #10B981;
+  --uyari: #F59E0B;
+  --hata: #EF4444;
+  --bilgi: #3B82F6;
+
+  /* === TIPOGRAFI === */
+  --font-baslik: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-metin: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  --boyut-xs: 0.75rem;
+  --boyut-sm: 0.875rem;
+  --boyut-md: 1rem;
+  --boyut-lg: 1.25rem;
+  --boyut-xl: 1.5rem;
+  --boyut-2xl: 2rem;
+  --boyut-3xl: 3rem;
+  --boyut-4xl: 4.5rem;
+
+  --kalin-acik: 300;
+  --kalin-normal: 400;
+  --kalin-orta: 500;
+  --kalin-yari: 600;
+  --kalin-koyu: 700;
+
+  /* === BOSLUK === */
+  --bosluk-xs: 0.25rem;
+  --bosluk-sm: 0.5rem;
+  --bosluk-md: 1rem;
+  --bosluk-lg: 1.5rem;
+  --bosluk-xl: 2.5rem;
+  --bosluk-2xl: 4rem;
+  --bosluk-3xl: 6rem;
+
+  /* === KOSE === */
+  --kose-sm: 4px;
+  --kose-md: 8px;
+  --kose-lg: 12px;
+  --kose-xl: 24px;
+  --kose-tam: 9999px;
+
+  /* === GOLGE === */
+  --golge-yumusak: 0 4px 20px rgba(0,0,0,0.08);
+  --golge-orta: 0 10px 40px rgba(0,0,0,0.12);
+  --golge-derin: 0 20px 60px rgba(0,0,0,0.18);
+  --golge-marka: 0 20px 60px rgba(59,130,246,0.25);
+  --golge-ic: inset 0 2px 8px rgba(0,0,0,0.06);
+
+  /* === GECIS === */
+  --gecis-hizli: 0.2s ease;
+  --gecis-orta: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --gecis-yavas: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  --gecis-yumusak: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* === BREAKPOINT === */
+  --ekran-mobil: 480px;
+  --ekran-tablet: 768px;
+  --ekran-masaustu: 1280px;
+  --ekran-genis: 1920px;
+
+  /* === Z-INDEX === */
+  --z-altta: -1;
+  --z-normal: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 1000;
+  --z-toast: 1100;
+  --z-tooltip: 1200;
+}

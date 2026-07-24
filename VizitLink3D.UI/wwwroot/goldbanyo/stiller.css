@@ -569,3 +569,297 @@ body {
   text-overflow: ellipsis;
   max-width: 48px;
 }
+
+/* ═══ DOKU AYAR GRUBU ═══ */
+.doku-ayar-grubu {
+  margin-top: 4px;
+  padding: 6px 8px;
+  background: #f0ede5;
+  border-radius: 6px;
+  border: 1px solid #e0dbd0;
+}
+
+.doku-ayar-grubu .parca-etiket.mini {
+  font-size: 10px;
+  color: #777;
+  margin-bottom: 0;
+  margin-top: 4px;
+}
+
+.doku-ayar-grubu .ayar-range {
+  margin-bottom: 2px;
+}
+
+/* ═══ DOKU AYAR SATIRI ═══ */
+.doku-ayar-satir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.doku-ayar-satir .parca-etiket.mini {
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.doku-ayar-satir .ayar-range {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ═══ SAYISAL GİRİŞ ALANI ═══ */
+.doku-sayisal-giris {
+  width: 56px;
+  padding: 3px 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 11px;
+  text-align: center;
+  background: #fff;
+  color: #333;
+  font-family: "Manrope", sans-serif;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.doku-sayisal-giris::-webkit-inner-spin-button,
+.doku-sayisal-giris::-webkit-outer-spin-button {
+  opacity: 1;
+  height: 24px;
+}
+
+.doku-sayisal-giris:focus {
+  border-color: #c5a059;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(197,160,89,0.2);
+}
+
+/* ═══ HDR SEÇİCİ ═══ */
+.hdr-secici {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.hdr-ornek {
+  width: 60px;
+  height: 48px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px;
+  background: #f0ede5;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hdr-ornek:hover {
+  border-color: #c5a059;
+}
+
+.hdr-ornek.aktif {
+  border-color: #c5a059;
+  box-shadow: 0 0 0 2px rgba(197,160,89,0.3);
+}
+
+.hdr-onizleme {
+  width: 54px;
+  height: 30px;
+  border-radius: 3px;
+}
+
+.hdr-ad {
+  font-size: 8px;
+  color: #666;
+  margin-top: 1px;
+  text-align: center;
+  line-height: 1;
+}
+
+.hdr-yukle-etiket {
+  display: block;
+  margin: 4px 0 8px;
+  padding: 6px 10px;
+  background: #f0ede5;
+  border: 1px dashed #c5a059;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #8a7050;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.hdr-yukle-etiket:hover {
+  background: #e8e0d0;
+  border-color: #a08040;
+}
+
+/* ═══ ZEMİN RENK GRUBU ═══ */
+.zemin-renk-grubu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.zemin-renk-piksel {
+  width: 36px;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+
+.zemin-renk-piksel::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.zemin-renk-piksel::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.zemin-renk-deger {
+  font-size: 11px;
+  font-family: "JetBrains Mono", monospace;
+  color: #666;
+}
+
+/* ═══ KATLANABİLİR BÖLÜM BAŞLIK BUTONU ═══ */
+.bolum-baslik {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 0;
+  margin: 0 0 8px;
+  border: none;
+  background: transparent;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.bolum-baslik:hover {
+  color: #c5a059;
+}
+
+.bolum-baslik:focus-visible {
+  outline: 2px solid #c5a059;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Açık/kapalı ok işareti */
+.bolum-baslik::after {
+  content: "▾";
+  font-size: 0.7rem;
+  color: #999;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.kontrol-grubu.kapali .bolum-baslik::after,
+.urun-galeri.kapali .bolum-baslik::after {
+  transform: rotate(-90deg);
+}
+
+/* Katlanmış grupta h3/header dışındaki tüm çocukları gizle */
+.kontrol-grubu.kapali > *:not(.bolum-baslik),
+.urun-galeri.kapali > *:not(.bolum-baslik) {
+  display: none !important;
+}
+
+/* ═══ MODEL RENK/KAPLAMA TOGGLE ═══ */
+.model-toggle-bolumu {
+  background: #fbfaf7;
+  border: 1px solid #e7dcc8;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.toggle-checkbox {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 6px;
+}
+
+.toggle-checkbox input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #c5a059;
+}
+
+.toggle-checkbox span strong {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.toggle-yardimci-metin {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #999;
+  line-height: 1.3;
+  padding-left: 30px;
+}
+
+/* ═══ PASİF MODEL AYAR GRUPLARI ═══ */
+.model-ayarlari-pasif {
+  opacity: 0.55;
+  filter: grayscale(30%);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.model-ayarlari-pasif:hover {
+  opacity: 0.7;
+}
+
+/* Pasif durumda etkileşimli kontroller için görsel ipucu */
+.model-ayarlari-pasif button:disabled,
+.model-ayarlari-pasif select:disabled,
+.model-ayarlari-pasif input:disabled,
+.model-ayarlari-pasif .renk-ornek,
+.model-ayarlari-pasif .malzeme-ornek,
+.model-ayarlari-pasif .doku-ornek,
+.model-ayarlari-pasif .galeri-kart {
+  cursor: not-allowed;
+}
+
+/* h3 içermeyen gruplar (GLB yükleme gibi) için katlanabilir yapma */
+.kontrol-grubu:not(.kapali) > .bolum-baslik + * {
+  display: unset;
+}
+
+/* ═══ SEÇİLEN PARÇA BİLGİSİ ═══ */
+.secilen-parca-bilgisi {
+  margin: 8px 0 0 30px;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.4;
+  min-height: 1.2em;
+  transition: color 0.3s ease;
+}
+
+.secilen-parca-bilgisi.vurgulu {
+  color: #c5a059;
+  font-weight: 600;
+}

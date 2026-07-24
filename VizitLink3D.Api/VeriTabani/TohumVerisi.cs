@@ -126,6 +126,10 @@ public static class TohumVerisi
         await Bolum(vt, "Malzemeler", async () => { if (!vt.Malzemeler.Any()) await TohumlaMalzemeleriAsync(vt); });
         await Bolum(vt, "KaplamaSecenekleri", async () => { if (!vt.KaplamaSecenekleri.Any()) await TohumlaKaplamaSecenekleriniAsync(vt); });
         await Bolum(vt, "ReferansUrunleri", async () => { if (!vt.Urunler.Any()) await TohumlaReferansUrunleriniAsync(vt); });
+        // Multi-tenant: mevcut ürünlere FirmaId ata (sadece null olanlara)
+        await Bolum(vt, "UrunFirmaIdAta", async () => await UrunFirmaIdAtaAsync(vt));
+        // Sahne önayarlarına admin onayı ver (varsayılan aktif preset'ler)
+        await Bolum(vt, "SahneOnayariAdminOnay", async () => await SahneOnayariAdminOnayAsync(vt));
         // GoldBanyoKatalogUrunleriniTohumlaAsync kendi icinde Slug'a gore idempotent'tir (yoksa ekler,
         // varsa gunceller) - bu yuzden yukaridaki "Urunler.Any()" kapisindan BAGIMSIZ, her baslangicta
         // calistirilir. Aksi halde GoldBanyoKatalogUrunleri.Tum listesine sonradan eklenen yeni urunler
@@ -1279,6 +1283,66 @@ public static class TohumVerisi
         });
 
         await vt.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Multi-tenant geçiş: FirmaId null olan mevcut ürünleri varsayılan firmaya (goldbanyo) ata.
+    /// İdempotent — sadece null olanları günceller, mevcut atamaları değiştirmez.
+    /// Firma bulunamazsa fail-safe log bırakır, ürünleri başka tenant'a açmaz.
+    /// </summary>
+    private static async Task UrunFirmaIdAtaAsync(VizitLink3DDbContext vt)
+    {
+        // Sadece FirmaId NULL olan ürünleri getir
+        var atanmamisUrunler = await vt.Urunler
+            .Where(u => u.FirmaId == null && !u.SilindiMi)
+            .ToListAsync();
+
+        if (atanmamisUrunler.Count == 0)
+            return;
+
+        // Varsayılan firmayı bul (goldbanyo slug — config Saas:VarsayilanFirmaSlug karşılığı)
+        var varsayilanFirma = await vt.Firmalar
+            .FirstOrDefaultAsync(f => f.Slug == "goldbanyo" && f.AktifMi);
+
+        if (varsayilanFirma is null)
+        {
+            Console.Error.WriteLine(
+                "[TOHUM UYARISI] UrunFirmaIdAta: Varsayılan 'goldbanyo' firması bulunamadı. " +
+                $"{atanmamisUrunler.Count} ürün FirmaId atanamadı.");
+            return;
+        }
+
+        foreach (var urun in atanmamisUrunler)
+        {
+            urun.FirmaId = varsayilanFirma.Id;
+        }
+
+        await vt.SaveChangesAsync();
+        Console.WriteLine(
+            $"[TOHUM] {atanmamisUrunler.Count} ürün FirmaId={varsayilanFirma.Id} (goldbanyo) olarak atandı.");
+    }
+
+    /// <summary>
+    /// Mevcut varsayılan (VarsayilanMi=true) aktif sahne önayarlarına admin onayı ver.
+    /// Sadece AdminOnayliMi=false olanları true yapar — tahmin etmez.
+    /// </summary>
+    private static async Task SahneOnayariAdminOnayAsync(VizitLink3DDbContext vt)
+    {
+        var onaysizVarsayilanlar = await vt.UrunUcBoyutSahneOnayarlari
+            .Where(s => s.VarsayilanMi && s.AktifMi && !s.SilindiMi && !s.AdminOnayliMi)
+            .ToListAsync();
+
+        if (onaysizVarsayilanlar.Count == 0)
+            return;
+
+        foreach (var s in onaysizVarsayilanlar)
+        {
+            s.AdminOnayliMi = true;
+        }
+
+        await vt.SaveChangesAsync();
+        Console.WriteLine(
+            $"[TOHUM] {onaysizVarsayilanlar.Count} varsayılan sahne önayarına admin onayı verildi.");
     }
 
     private static async Task TohumlaLisansAsync(VizitLink3DDbContext vt)

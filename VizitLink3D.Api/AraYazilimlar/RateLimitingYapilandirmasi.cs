@@ -25,6 +25,24 @@ public static class RateLimitingYapilandirmasi
                 opt.QueueLimit = 2;
             });
 
+            // Embed/widget istekleri: iframe kaynaklı, daha sıkı limit
+            options.AddFixedWindowLimiter("Embed", opt =>
+            {
+                opt.PermitLimit = 100;
+                opt.Window = TimeSpan.FromMinutes(5);
+                opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                opt.QueueLimit = 5;
+            });
+
+            // Sunucular-arası entegrasyon: daha yüksek limit, batch işlemlere uygun
+            options.AddFixedWindowLimiter("Entegrasyon", opt =>
+            {
+                opt.PermitLimit = 300;
+                opt.Window = TimeSpan.FromMinutes(5);
+                opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                opt.QueueLimit = 20;
+            });
+
             options.RejectionStatusCode = 429;
         });
 

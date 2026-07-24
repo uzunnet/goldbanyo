@@ -1,0 +1,107 @@
+/* yonetim.css — Admin yonetim stilleri */
+.studio-layout {
+  min-height: 100vh;
+}
+
+.studio-appbar {
+  background: var(--ana-renk) !important;
+}
+
+.studio-drawer {
+  background: var(--arkaplan-yumusak) !important;
+}
+
+.studio-drawer-brand {
+  text-align: center;
+}
+
+.studio-nav-menu .mud-nav-link {
+  border-radius: var(--kose-md);
+  margin: 2px 8px;
+}
+
+.studio-nav-menu .mud-nav-link.active {
+  background: rgba(59,130,246,0.1) !important;
+  color: var(--ikincil-renk) !important;
+}
+
+.studio-main {
+  background: var(--arkaplan);
+  min-height: calc(100vh - 64px);
+}
+
+.studio-dash-card {
+  transition: var(--gecis-hizli);
+}
+
+.studio-dash-card:hover {
+  box-shadow: var(--golge-orta) !important;
+}
+
+.studio-user-info {
+  color: var(--metin-soluk) !important;
+}
+
+.studio-info-panel {
+  border-left: 4px solid var(--bilgi);
+}
+
+/* Logout form — satir ici gorunum, form kenarligi gizli */
+.studio-logout-form {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — Hizli Eylem Kartlari
+   ═══════════════════════════════════════════════════════════════ */
+.studio-dash-eylem-kart {
+  transition: var(--gecis-hizli);
+  height: 100%;
+}
+
+.studio-dash-eylem-kart:hover {
+  box-shadow: var(--golge-yumusak) !important;
+  transform: translateY(-2px);
+}
+
+.studio-dash-eylem-kart .mud-card-content {
+  padding-bottom: 0;
+}
+
+.studio-dash-eylem-kart-actions {
+  justify-content: center;
+  padding-top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — Durum Kartlari
+   ═══════════════════════════════════════════════════════════════ */
+.studio-dash-meta-satir {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.studio-dash-meta-satir + .studio-dash-meta-satir {
+  border-top: 1px solid var(--cizgi);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — Alt bar (oturum)
+   ═══════════════════════════════════════════════════════════════ */
+.studio-dash-bottom-bar {
+  border: 1px solid var(--cizgi);
+  border-left: 4px solid var(--bilgi);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — Satir ici yardimci
+   ═══════════════════════════════════════════════════════════════ */
+.studio-inline-text {
+  display: inline;
+}

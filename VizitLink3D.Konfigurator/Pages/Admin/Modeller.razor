@@ -1,0 +1,136 @@
+@page "/admin/modeller"
+@layout AdminDuzen
+
+<PageTitle>@Dil.T("modeller.baslik", "Model Yonetimi — VizitLink3D Studio")</PageTitle>
+
+@if (_yapilandirmaHatasi)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4" Variant="Variant.Filled">
+        @Dil.T("modeller.yapilandirmaHatasi", "Yapilandirma hatasi: BFF guvenlik ayarlari eksik. Lutfen sistem yoneticinize basvurun.")
+    </MudAlert>
+}
+
+@if (_yukleniyor)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+}
+else if (_listeHatasi)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">
+        @Dil.T("modeller.listeHata", "Model listesi alinamadi. Lutfen daha sonra tekrar deneyin.")
+    </MudAlert>
+}
+else
+{
+    <MudText Typo="Typo.h3" Class="mb-6">
+        <MudIcon Icon="@Icons.Material.Filled.ViewInAr" Class="mr-2" />
+        @Dil.T("modeller.baslikSayfa", "Model Yonetimi")
+    </MudText>
+
+    <MudPaper Elevation="1" Class="studio-modeller-tablo mb-6">
+        <MudTable Items="_modeller" Hover="true" Striped="true" Dense="false"
+                  Loading="_yukleniyor" Class="studio-modeller-table"
+                  Elevation="0" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>@Dil.T("modeller.ad", "Model Adi")</MudTh>
+                <MudTh>@Dil.T("modeller.slug", "Slug")</MudTh>
+                <MudTh>@Dil.T("modeller.aciklama", "Aciklama")</MudTh>
+                <MudTh>@Dil.T("modeller.boyut", "Boyut")</MudTh>
+                <MudTh>@Dil.T("modeller.eklenme", "Eklenme Tarihi")</MudTh>
+                <MudTh>@Dil.T("modeller.durum", "Durum")</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="@Dil.T("modeller.ad", "Model Adi")">@context.Ad</MudTd>
+                <MudTd DataLabel="@Dil.T("modeller.slug", "Slug")">
+                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info">@context.Slug</MudChip>
+                </MudTd>
+                <MudTd DataLabel="@Dil.T("modeller.aciklama", "Aciklama")">
+                    <MudText Typo="Typo.body2" style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        @(context.Aciklama ?? "-")
+                    </MudText>
+                </MudTd>
+                <MudTd DataLabel="@Dil.T("modeller.boyut", "Boyut")">@DosyaBoyutuFormatla(context.BoyutBayt)</MudTd>
+                <MudTd DataLabel="@Dil.T("modeller.eklenme", "Eklenme Tarihi")">
+                    @context.OlusturulmaTarihi.ToString("dd.MM.yyyy HH:mm")
+                </MudTd>
+                <MudTd DataLabel="@Dil.T("modeller.durum", "Durum")">
+                    <MudChip T="string" Size="Size.Small"
+                             Color="@(context.AktifMi ? Color.Success : Color.Default)"
+                             Variant="Variant.Outlined">
+                        @(context.AktifMi ? Dil.T("modeller.aktif", "Aktif") : Dil.T("modeller.pasif", "Pasif"))
+                    </MudChip>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Typo="Typo.body1" Color="Color.Default" Class="text-center pa-6">
+                    @Dil.T("modeller.kayitYok", "Henuz hic model eklenmemis.")
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] { 5, 10, 20 }" />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+
+    <MudPaper Elevation="1" Class="studio-modeller-yukleme pa-4">
+        <MudText Typo="Typo.h5" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.CloudUpload" Class="mr-2" />
+            @Dil.T("modeller.yeniYukle", "Yeni Model Yukle")
+        </MudText>
+
+        @if (!_bffAnahtarTanimli)
+        {
+            <MudAlert Severity="Severity.Warning" Class="mb-3">
+                @Dil.T("modeller.bffEksik", "BFF guvenlik anahtari tanimli degil. Yukleme yapilamaz. Yapilandirmayi kontrol edin.")
+            </MudAlert>
+        }
+        else
+        {
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="_modelAdi" Label="@Dil.T("modeller.adAlan", "Model Adi")"
+                                  Variant="Variant.Outlined" Required="true" Class="mb-3"
+                                  HelperText="@Dil.T("modeller.adYardim", "Ornek: Modern Banyo Dolabi")" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="_modelAciklama" Label="@Dil.T("modeller.aciklamaAlan", "Aciklama (Opsiyonel)")"
+                                  Variant="Variant.Outlined" Lines="2" Class="mb-3"
+                                  HelperText="@Dil.T("modeller.aciklamaYardim", "En fazla 2000 karakter")" />
+                </MudItem>
+                <MudItem xs="12">
+                    <div class="studio-modeller-file-upload mb-2">
+                        <InputFile OnChange="DosyaSecildi" accept=".glb" disabled="@_yukleniyorDosya"
+                                   class="studio-modeller-inputfile" />
+                    </div>
+                    @if (_seciliDosya is not null)
+                    {
+                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info"
+                                 OnClose="(() => { _seciliDosya = null; _yuklemeHataMesaji = null; _yuklemeBasariliMesaji = null; })"
+                                 Class="mb-3">
+                            @_seciliDosya.Name (@DosyaBoyutuFormatla(_seciliDosya.Size))
+                        </MudChip>
+                    }
+                    <MudText Typo="Typo.caption" Color="Color.Default" Class="mb-3">
+                        @Dil.T("modeller.dosyaYardim", "Sadece .glb (glTF Binary) dosyalari kabul edilir. Maksimum dosya boyutu API tarafindan kontrol edilir.")
+                    </MudText>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick="DosyaYukle" Disabled="@(!DosyaYuklemeyeHazirMi)"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        @(_yukleniyorDosya ? Dil.T("modeller.yukleniyor", "Yukleniyor...") : Dil.T("modeller.yukleButon", "Yukle"))
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        }
+
+        @if (!string.IsNullOrEmpty(_yuklemeHataMesaji))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-3">@_yuklemeHataMesaji</MudAlert>
+        }
+        @if (!string.IsNullOrEmpty(_yuklemeBasariliMesaji))
+        {
+            <MudAlert Severity="Severity.Success" Class="mt-3">@_yuklemeBasariliMesaji</MudAlert>
+        }
+    </MudPaper>
+}

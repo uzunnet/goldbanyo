@@ -1,6 +1,7 @@
 using VizitLink3D.UI.Servisler;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.JSInterop;
 
 namespace VizitLink3D.UI.Bilesenler;
 
@@ -32,6 +33,12 @@ public partial class UcBoyutGoruntuleyici : IAsyncDisposable
     [Parameter] public EventCallback<string> SecilenRenkChanged { get; set; }
 
     /// <summary>
+    /// 3D model üzerinde bir mesh tıklandığında tetiklenir.
+    /// Tıklanan mesh adını üst bileşene iletir.
+    /// </summary>
+    [Parameter] public EventCallback<string> OnMeshSecildi { get; set; }
+
+    /// <summary>
     /// Modelin gercek fotograf yolu (istege bagli). 
     /// Eger verilirse Gorsel/3D gecis tabi gosterilir.
     /// </summary>
@@ -56,6 +63,7 @@ public partial class UcBoyutGoruntuleyici : IAsyncDisposable
     private string? _uygulananCevreJson;
     private string _aktifTab = "3d"; // "gorsel" veya "3d"
     private HubConnection? _sahneBaglantisi;
+    private DotNetObjectReference<UcBoyutGoruntuleyici>? _dotNetRef;
 
     protected override void OnInitialized()
     {
@@ -82,6 +90,13 @@ public partial class UcBoyutGoruntuleyici : IAsyncDisposable
                 await CanliSahneBaglantisiniBaslat();
                 _sahneHazir = true;
                 await SahneAyarlariUygula();
+
+                // 3D mesh tıklama callback'ini kaydet
+                if (OnMeshSecildi.HasDelegate)
+                {
+                    _dotNetRef = DotNetObjectReference.Create(this);
+                    await UcBoyutSrv.ParcaSecCallbackKaydet(_kanvasId, _dotNetRef);
+                }
             }
             _yukleniyor = false;
             StateHasChanged();
@@ -192,6 +207,17 @@ public partial class UcBoyutGoruntuleyici : IAsyncDisposable
     }
 
     /// <summary>
+    /// 3D sahnede bir mesh tıklandığında JS tarafından çağrılır.
+    /// Tıklanan mesh adını OnMeshSecildi EventCallback'i ile üst bileşene iletir.
+    /// </summary>
+    [JSInvokable]
+    public async Task ParcaSecildi(string parcaIsmi)
+    {
+        if (OnMeshSecildi.HasDelegate)
+            await OnMeshSecildi.InvokeAsync(parcaIsmi);
+    }
+
+    /// <summary>
     /// Bilesen kaldirildiginda Three.js sahnesini temizler.
     /// Bellek sizintisini onlemek icin zorunludur.
     /// </summary>
@@ -205,6 +231,7 @@ public partial class UcBoyutGoruntuleyici : IAsyncDisposable
             await _sahneBaglantisi.DisposeAsync();
         }
 
+        _dotNetRef?.Dispose();
         await UcBoyutSrv.Temizle(_kanvasId);
     }
 }

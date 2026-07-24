@@ -1,0 +1,35 @@
+/* modeller.css — Model yonetim sayfasi stilleri */
+
+/* Tablo kapsayicisi */
+.studio-modeller-tablo {
+  border-radius: var(--kose-lg);
+  overflow: hidden;
+}
+
+.studio-modeller-table {
+  width: 100%;
+}
+
+.studio-modeller-table .mud-table-cell {
+  vertical-align: middle;
+}
+
+/* Yukleme formu kapsayicisi */
+.studio-modeller-yukleme {
+  border-radius: var(--kose-lg);
+  border: 1px solid var(--cizgi);
+}
+
+/* File upload alani */
+.studio-modeller-file-upload {
+  display: flex;
+  align-items: center;
+  gap: var(--bosluk-md);
+}
+
+/* No records */
+.studio-modeller-table .mud-table-no-rows {
+  padding: var(--bosluk-xl);
+  text-align: center;
+  color: var(--metin-soluk);
+}

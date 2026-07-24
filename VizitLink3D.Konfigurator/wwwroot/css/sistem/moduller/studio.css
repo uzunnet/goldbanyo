@@ -1,0 +1,129 @@
+/* studio.css — 3D Studio / Admin sayfasi stilleri */
+
+/* Studio sayfasi ana kapsayici */
+.studio-sayfasi {
+  animation: studio-fade-in 0.3s ease-out;
+}
+
+/* Kart goruntuleyici kapsayicisi */
+.studio-preview-kapsayici {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  background: var(--arka-orta, #f1f5f9);
+  border-radius: var(--kose-lg, 12px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-preview-kapsayici canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Preview placeholder — onizleme yok */
+.studio-preview-yok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bosluk-md, 12px);
+  color: var(--metin-soluk, #94a3b8);
+  min-height: 320px;
+  text-align: center;
+  padding: var(--bosluk-lg, 24px);
+}
+
+/* Secili model aksiyon cubugu */
+.studio-aksiyon-cubugu {
+  display: flex;
+  align-items: center;
+  gap: var(--bosluk-md, 12px);
+  flex-wrap: wrap;
+}
+
+/* Model listesi satiri */
+.studio-liste-satir {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.studio-liste-satir:hover {
+  background-color: var(--arka-hafif, #f8fafc);
+}
+
+.studio-liste-satir-secili {
+  background-color: var(--arka-secili, #eff6ff);
+  border-left-color: var(--ana-renk, #3b82f6);
+}
+
+/* Bos durum */
+.studio-bos-durum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bosluk-md, 12px);
+  padding: var(--bosluk-2xl, 48px);
+  color: var(--metin-soluk, #94a3b8);
+  text-align: center;
+}
+
+/* Model metadata etiketi */
+.studio-meta-etiket {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  border-radius: var(--kose-sm, 4px);
+  background: var(--arka-orta, #f1f5f9);
+  color: var(--metin-orta, #64748b);
+}
+
+/* Animasyonlar */
+@keyframes studio-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── P06-C: Parca Paneli ── */
+
+/* Parca paneli bos durum */
+.studio-parca-bos {
+  display: flex;
+  align-items: center;
+  gap: var(--bosluk-md, 12px);
+  padding: var(--bosluk-md, 12px);
+  color: var(--metin-soluk, #94a3b8);
+  background: var(--arka-hafif, #f8fafc);
+  border-radius: var(--kose-md, 8px);
+  text-align: left;
+}
+
+/* Parca paneli liste kapsayici */
+.studio-parca-liste {
+  border: 1px solid var(--cizgi-hafif, #e2e8f0);
+  border-radius: var(--kose-md, 8px);
+  overflow: hidden;
+}
+
+/* Parca satiri */
+.studio-parca-satir {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.studio-parca-satir:hover {
+  background-color: var(--arka-hafif, #f8fafc);
+}
+
+.studio-parca-satir-secili {
+  background-color: var(--arka-secili, #eff6ff);
+  border-left-color: var(--ana-renk, #3b82f6);
+}

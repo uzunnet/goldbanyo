@@ -1,0 +1,21 @@
+/* kartlar.css — Kart bilesen stilleri */
+.studio-kart {
+  background: var(--arkaplan);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--kose-lg);
+  padding: var(--bosluk-lg);
+  transition: var(--gecis-orta);
+}
+
+.studio-kart:hover {
+  box-shadow: var(--golge-orta);
+  transform: translateY(-2px);
+}
+
+.studio-kart--etkilesimli {
+  cursor: pointer;
+}
+
+.studio-kart--yuksek {
+  box-shadow: var(--golge-yumusak);
+}

@@ -1,323 +1,53 @@
-/*
- * GOLD — bilesenler.css
- * Altın yoğunluklu component varyasyonları.
- * TEMA = FARKLI SİTE felsefesi: aurelian-onyx'ten daha altın-yoğun, dramatik.
+﻿/*
+ * Gold — bilesenler.css
+ * CokluTemaServisi tarafından manifest taslağından otomatik üretilir.
  */
 
 :root[data-tema-id="gold"] {
+    color: var(--tema-metin);
+    background: var(--tema-arkaplan);
+}
 
-    /* ─── BAŞLIKLAR (altın gradient yazı) ─── */
-    h1, h2, h3, h4, h5 {
-        font-family: var(--tema-font-baslik);
-        font-weight: var(--tema-baslik-agirlik);
-        letter-spacing: var(--tema-baslik-harf-araligi);
-        line-height: 1.1;
-        color: var(--tema-metin);
-    }
-    h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
-    h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
-    h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+:root[data-tema-id="gold"] h1,
+:root[data-tema-id="gold"] h2,
+:root[data-tema-id="gold"] h3 {
+    font-family: var(--tema-font-baslik);
+    font-weight: var(--tema-baslik-agirlik);
+    letter-spacing: var(--tema-baslik-harf-araligi);
+}
 
-    /* Altın vurgu başlık */
-    h1.altin, .altin-baslik {
-        background: var(--tema-altin-gradient-yazi);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        filter: drop-shadow(0 0 20px color-mix(in srgb, var(--tema-vurgu) 30%, transparent));
-    }
+:root[data-tema-id="gold"] .navbar {
+    background: var(--tema-yuzey);
+    border-bottom: var(--tema-border-kalinlik) var(--tema-border-stil) var(--tema-cizgi);
+    transition: var(--tema-gecis-normal);
+}
 
-    /* ─── BODY ─── */
-    body {
-        background: var(--tema-arkaplan);
-        color: var(--tema-metin);
-        font-family: var(--tema-font-govde);
-    }
+:root[data-tema-id="gold"] .urun-kart {
+    background: var(--tema-cam-bg);
+    backdrop-filter: var(--tema-cam-blur);
+    -webkit-backdrop-filter: var(--tema-cam-blur);
+    border: var(--tema-border-kalinlik) var(--tema-border-stil) var(--tema-cizgi);
+    border-radius: var(--tema-kose-md);
+    box-shadow: var(--tema-golge-md);
+    transition: transform var(--tema-gecis-yavas), box-shadow var(--tema-gecis-yavas), border-color var(--tema-gecis-normal);
+}
 
-    /* ─── NAVBAR (glassmorphism + altın border altta) ─── */
-    .navbar {
-        background: color-mix(in srgb, var(--tema-birincil) 75%, transparent);
-        backdrop-filter: var(--tema-cam-blur);
-        -webkit-backdrop-filter: var(--tema-cam-blur);
-        border-bottom: 1px solid var(--tema-cam-cizgi);
-        box-shadow: 0 1px 0 0 var(--tema-golge-vurgu), 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
+:root[data-tema-id="gold"] .urun-kart:hover {
+    transform: translateY(-4px);
+    border-color: var(--tema-vurgu);
+    box-shadow: var(--tema-golge-vurgu), var(--tema-golge-lg);
+}
 
-    .navbar-logo {
-        background: var(--tema-altin-gradient-yazi);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        font-family: var(--tema-font-baslik);
-        font-weight: var(--tema-baslik-agirlik);
-        letter-spacing: 0.02em;
-    }
+:root[data-tema-id="gold"] .btn-birincil,
+:root[data-tema-id="gold"] .mud-button-filled {
+    background: var(--tema-vurgu);
+    color: var(--tema-metin-ters);
+    border-radius: var(--tema-kose-md);
+    transition: var(--tema-gecis-normal);
+}
 
-    .navbar-link {
-        font-family: var(--tema-font-govde);
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        color: var(--tema-metin);
-    }
-
-    .navbar-link:hover { color: var(--tema-vurgu); }
-
-    .navbar-link.aktif {
-        color: var(--tema-vurgu);
-    }
-
-    .navbar-link.aktif::after {
-        content: "";
-        position: absolute;
-        bottom: -4px; left: 50%;
-        transform: translateX(-50%);
-        width: 4px; height: 4px;
-        background: var(--tema-vurgu);
-        border-radius: 50%;
-        box-shadow: 0 0 12px var(--tema-vurgu);
-    }
-
-    /* ─── ÜRÜN KARTI (glass + altın glow) ─── */
-    .urun-kart {
-        background: var(--tema-cam-bg);
-        backdrop-filter: var(--tema-cam-blur);
-        -webkit-backdrop-filter: var(--tema-cam-blur);
-        border: 1px solid var(--tema-cam-cizgi);
-        border-radius: var(--tema-kose-md);
-        box-shadow: var(--tema-golge-md);
-        overflow: hidden;
-        position: relative;
-        transition: transform var(--tema-gecis-yavas),
-                    box-shadow var(--tema-gecis-yavas),
-                    border-color var(--tema-gecis-normal);
-    }
-
-    .urun-kart::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0; height: 1px;
-        background: var(--tema-altin-gradient);
-        opacity: 0.6;
-    }
-
-    .urun-kart:hover {
-        transform: translateY(-6px);
-        border-color: var(--tema-vurgu);
-        box-shadow: var(--tema-cam-glow-guclu), var(--tema-golge-lg);
-    }
-
-    .urun-kart-gorsel {
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        transition: transform var(--tema-gecis-yavas);
-    }
-
-    .urun-kart:hover .urun-kart-gorsel {
-        transform: scale(1.05);
-    }
-
-    .urun-kart-baslik {
-        font-family: var(--tema-font-baslik);
-        font-weight: 600;
-        color: var(--tema-metin);
-    }
-
-    .urun-kart-fiyat {
-        font-family: var(--tema-font-baslik);
-        font-style: italic;
-        color: var(--tema-vurgu);
-        font-weight: 700;
-        text-shadow: 0 0 10px color-mix(in srgb, var(--tema-vurgu) 30%, transparent);
-    }
-
-    /* ─── BUTONLAR (altın gradient + glow) ─── */
-    .btn-birincil {
-        background: var(--tema-altin-gradient);
-        background-size: 200% 200%;
-        animation: gold-marka-akis 4s ease infinite;
-        color: var(--tema-metin-ters);
-        border: 1px solid var(--tema-vurgu);
-        border-radius: var(--tema-kose-md);
-        padding: var(--tema-bosluk-sm) var(--tema-bosluk-lg);
-        font-family: var(--tema-font-govde);
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        cursor: pointer;
-        transition: transform var(--tema-gecis-normal), box-shadow var(--tema-gecis-normal);
-    }
-
-    .btn-birincil:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--tema-golge-vurgu-guclu);
-    }
-
-    .btn-ghost {
-        background: transparent;
-        color: var(--tema-vurgu);
-        border: 1px solid var(--tema-vurgu);
-        border-radius: var(--tema-kose-md);
-        padding: var(--tema-bosluk-sm) var(--tema-bosluk-lg);
-        font-family: var(--tema-font-govde);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--tema-gecis-normal);
-    }
-
-    .btn-ghost:hover {
-        background: var(--tema-vurgu);
-        color: var(--tema-metin-ters);
-        box-shadow: 0 0 20px var(--tema-vurgu);
-    }
-
-    /* ─── HERO SLIDER (altın overlay) ─── */
-    .hero-overlay {
-        background: linear-gradient(135deg,
-            color-mix(in srgb, var(--tema-birincil) 85%, transparent) 0%,
-            color-mix(in srgb, var(--tema-vurgu-koyu) 50%, transparent) 50%,
-            color-mix(in srgb, var(--tema-arkaplan) 65%, transparent) 100%);
-        backdrop-filter: blur(2px);
-    }
-
-    .hero-baslik {
-        font-family: var(--tema-font-baslik);
-        font-weight: var(--tema-baslik-agirlik);
-        letter-spacing: var(--tema-baslik-harf-araligi);
-        color: var(--tema-metin);
-        font-size: clamp(2.5rem, 6vw, 5rem);
-        text-shadow: 0 0 30px color-mix(in srgb, var(--tema-vurgu) 20%, transparent);
-    }
-
-    .hero-alt-baslik {
-        font-family: var(--tema-font-govde);
-        font-weight: 600;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: var(--tema-vurgu);
-        text-shadow: 0 0 10px color-mix(in srgb, var(--tema-vurgu) 40%, transparent);
-    }
-
-    .hero-aciklama {
-        font-family: var(--tema-font-govde);
-        color: var(--tema-metin-ikincil);
-        font-size: 1.125rem;
-        line-height: 1.6;
-    }
-
-    /* ─── FOOTER (altın vurgu) ─── */
-    .footer {
-        background: linear-gradient(180deg, var(--tema-birincil) 0%, #000 100%);
-        color: var(--tema-metin);
-        border-top: 1px solid var(--tema-vurgu);
-        box-shadow: 0 -1px 30px color-mix(in srgb, var(--tema-vurgu) 10%, transparent);
-    }
-
-    .footer-baslik {
-        font-family: var(--tema-font-govde);
-        font-weight: 600;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--tema-vurgu);
-        text-shadow: 0 0 10px color-mix(in srgb, var(--tema-vurgu) 30%, transparent);
-    }
-
-    .footer-link {
-        color: var(--tema-metin-ikincil);
-        font-family: var(--tema-font-govde);
-        transition: color var(--tema-gecis-hizli);
-    }
-
-    .footer-link:hover {
-        color: var(--tema-vurgu);
-        text-shadow: 0 0 8px color-mix(in srgb, var(--tema-vurgu) 40%, transparent);
-    }
-
-    .footer-logo {
-        background: var(--tema-altin-gradient-yazi);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        font-family: var(--tema-font-baslik);
-        font-weight: var(--tema-baslik-agirlik);
-    }
-
-    /* ─── ROZET / BADGE ─── */
-    .gb-rozet {
-        background: var(--tema-altin-gradient);
-        background-size: 200% 200%;
-        animation: gold-marka-akis 4s ease infinite;
-        color: var(--tema-metin-ters);
-        font-family: var(--tema-font-govde);
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        border: 1px solid var(--tema-vurgu);
-        box-shadow: 0 0 12px color-mix(in srgb, var(--tema-vurgu) 30%, transparent);
-    }
-
-    .gb-rozet-3d {
-        background: transparent;
-        color: var(--tema-vurgu);
-        border: 1px solid var(--tema-vurgu);
-    }
-
-    /* ─── MUD BLAZOR UYUMLULUĞU ─── */
-    .mud-button-filled {
-        background: var(--tema-altin-gradient);
-        background-size: 200% 200%;
-        color: var(--tema-metin-ters);
-        border: 1px solid var(--tema-vurgu);
-        box-shadow: 0 0 15px color-mix(in srgb, var(--tema-vurgu) 30%, transparent);
-    }
-
-    .mud-button-filled:hover {
-        box-shadow: 0 0 30px color-mix(in srgb, var(--tema-vurgu) 50%, transparent);
-    }
-
-    .mud-button-outlined {
-        border-color: var(--tema-vurgu);
-        color: var(--tema-vurgu);
-    }
-
-    .mud-paper {
-        background: var(--tema-yuzey);
-        color: var(--tema-metin);
-    }
-
-    .mud-input, .mud-input-slot, .mud-typography, .mud-text, p, span, label {
-        color: var(--tema-metin);
-    }
-
-    /* ─── VIZIT-LEGACY UYUMLULUĞU ─── */
-    .vizit-navbar {
-        background: color-mix(in srgb, var(--tema-birincil) 75%, transparent);
-        backdrop-filter: var(--tema-cam-blur);
-        -webkit-backdrop-filter: var(--tema-cam-blur);
-        border-bottom: 1px solid var(--tema-cam-cizgi);
-        box-shadow: 0 1px 0 0 var(--tema-golge-vurgu), 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .vizit-teklif-btn {
-        background: var(--tema-altin-gradient);
-        background-size: 200% 200%;
-        animation: gold-marka-akis 4s ease infinite;
-        color: var(--tema-metin-ters);
-        border: 1px solid var(--tema-vurgu);
-    }
-
-    .vizit-teklif-btn:hover {
-        box-shadow: 0 0 30px color-mix(in srgb, var(--tema-vurgu) 50%, transparent);
-    }
-
-    .vizit-logo-metin {
-        background: var(--tema-altin-gradient-yazi);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        font-family: var(--tema-font-baslik);
-        font-weight: var(--tema-baslik-agirlik);
-    }
+:root[data-tema-id="gold"] .footer {
+    background: var(--tema-birincil);
+    color: var(--tema-metin);
+    border-top: var(--tema-border-kalinlik) var(--tema-border-stil) var(--tema-cizgi);
 }

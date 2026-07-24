@@ -19,7 +19,8 @@ const elemanlar = {
   kanvas: document.getElementById("ucboyutKanvas"),
   yuklemeKatmani: document.getElementById("yuklemeKatmani"),
   glbDosyaSec: document.getElementById("glbDosyaSec"),
-  sahneButonlari: document.querySelectorAll(".ikon-buton")
+  sahneButonlari: document.querySelectorAll(".ikon-buton"),
+  modelRenkKaplamaAktif: document.getElementById("modelRenkKaplamaAktif"),
 };
 
 // modelYolu kaldırıldı — artık MODEL_KATALOGU kullanılıyor
@@ -257,10 +258,40 @@ const sahneDurumu = {
   dokular: {
     govdeDoku: "yok",
     kapakDoku: "yok",
-    tezgahDoku: "yok"
+    tezgahDoku: "yok",
+    govdeDokuOffsetX: 0,
+    govdeDokuOffsetY: 0,
+    govdeDokuRepeat: 1,
+    govdeDokuRotation: 0,
+    kapakDokuOffsetX: 0,
+    kapakDokuOffsetY: 0,
+    kapakDokuRepeat: 1,
+    kapakDokuRotation: 0,
+    tezgahDokuOffsetX: 0,
+    tezgahDokuOffsetY: 0,
+    tezgahDokuRepeat: 1,
+    tezgahDokuRotation: 0
   },
+  zeminRenk: "#050505",
+  zeminOpaklik: 0.16,
+  golgeOpaklik: 0.16,
+  golgeBoyut: 2048,
+  golgeBias: -0.0008,
+  arkaPlanRenk: "#050505",
+  hdrYogunluk: 1,
+  hdrDonme: 0,
+  hdrBlurluk: 0,
+  hdrPmremDoku: null,
   dokuYukleyici: new THREE.TextureLoader(),
   dokuOnbellek: {},
+  renkKaplamaAktif: false,
+  // Parça seçim sistemi
+  raycaster: null,
+  pointerBaslangic: new THREE.Vector2(),
+  secilenMesh: null,
+  secilenParcaKategorisi: null,
+  secimVurgusu: null,
+  secimListenerKuruldu: false
 };
 
 window.__ornekDolap3D = sahneDurumu;
@@ -289,6 +320,19 @@ function yuklemeKatmaniniAyarla(goster) {
 }
 
 function modelParcalariniSifirla() {
+  // Seçim vurgusunu temizle
+  if (sahneDurumu.secimVurgusu) {
+    if (sahneDurumu.sahne) sahneDurumu.sahne.remove(sahneDurumu.secimVurgusu);
+    if (sahneDurumu.secimVurgusu.geometry) sahneDurumu.secimVurgusu.geometry.dispose();
+    if (sahneDurumu.secimVurgusu.material) sahneDurumu.secimVurgusu.material.dispose();
+    sahneDurumu.secimVurgusu = null;
+  }
+  sahneDurumu.secilenMesh = null;
+  sahneDurumu.secilenParcaKategorisi = null;
+  // Bilgi metnini sıfırla
+  var bilgiEl = document.getElementById('secilenParcaBilgisi');
+  if (bilgiEl) { bilgiEl.textContent = 'Model üzerinde bir parça seçin.'; bilgiEl.classList.remove('vurgulu'); }
+
   gercekAynaKaplamalariniTemizle();
   sahneDurumu.modelParcalari = {
     govde: [],
@@ -389,18 +433,20 @@ function fizikselMateryalOlustur(renk, metalness = 0.18, roughness = 0.58) {
   });
 }
 
-function pbrMateryalOlustur(malzemeTuru, renk = null, dokuId = null) {
+function pbrMateryalOlustur(malzemeTuru, renk = null, dokuId = null, dokuAyar) {
   const malzeme = pbrMalzemeler[malzemeTuru] || pbrMalzemeler.plastik;
   const malzemeAyarlari = sahneDurumu.sahneAyarlari?.ayarlar?.materials || {};
   const envScale = malzemeAyarlari.globalEnvMapScale ?? 1;
   const clearcoatScale = malzemeAyarlari.globalClearcoatScale ?? 1;
   const roughnessOffset = malzemeAyarlari.globalRoughnessOffset ?? 0;
+  // HDR baz intensity: env scale uygulanmis ama HDR yogunluk henuz eklenmemis
+  var baseEnvIntensity = malzeme.envMapIntensity * envScale;
   const config = {
     color: new THREE.Color(renk || malzeme.renk),
     metalness: malzeme.metalness,
     roughness: Math.min(1, Math.max(0, malzeme.roughness + roughnessOffset)),
-    envMap: sahneDurumu.sahne?.environment || null, // r128'de scene.environment otomatik uygulanmıyor, elle bağlanması gerekiyor
-    envMapIntensity: malzeme.envMapIntensity * envScale,
+    envMap: sahneDurumu.sahne?.environment || null,
+    envMapIntensity: baseEnvIntensity * (sahneDurumu.hdrYogunluk ?? 1),
     clearcoat: Math.min(1, malzeme.clearcoat * clearcoatScale),
     clearcoatRoughness: malzeme.clearcoatRoughness
   };
@@ -408,7 +454,21 @@ function pbrMateryalOlustur(malzemeTuru, renk = null, dokuId = null) {
   if (dokuId && dokuId !== "yok") {
     var doku = sahneDurumu.dokuOnbellek[dokuId];
     if (doku) {
-      config.map = doku;
+      // Texture kopyasi olustur ki farkli parcalar birbirinin ayarlarini bozmasin
+      var dokuKopya = doku.clone();
+      var ayar = dokuAyar || {};
+      var offsetX = ayar.offsetX || 0;
+      var offsetY = ayar.offsetY || 0;
+      var repeat = ayar.repeat || 1;
+      var rotation = ayar.rotation || 0;
+      dokuKopya.offset.set(offsetX, offsetY);
+      dokuKopya.repeat.set(repeat, repeat);
+      if (rotation !== 0) {
+        dokuKopya.center.set(0.5, 0.5);
+        dokuKopya.rotation = rotation * Math.PI / 180;
+      }
+      dokuKopya.needsUpdate = true;
+      config.map = dokuKopya;
     }
   }
 
@@ -420,23 +480,27 @@ function pbrMateryalOlustur(malzemeTuru, renk = null, dokuId = null) {
   }
 
 
-  return new THREE.MeshPhysicalMaterial(config);
+  var materyal = new THREE.MeshPhysicalMaterial(config);
+  materyal.userData.hdrBazEnvMapIntensity = baseEnvIntensity;
+  return materyal;
 }
 
 function camMateryalOlustur(renk) {
   // GERÇEK AYNA: gümüş kaplama, opak, canlı CubeCamera yansımalı
+  var baseEnvIntensity = sahneDurumu.sahneAyarlari?.ayarlar?.materials?.mirror?.envMapIntensity ?? 1.25;
   const materyal = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(sahneDurumu.sahneAyarlari?.ayarlar?.materials?.mirror?.color || "#d8dbd8"),
     envMap: sahneDurumu.sahne?.environment || null,
     metalness: 1.0,
     roughness: sahneDurumu.sahneAyarlari?.ayarlar?.materials?.mirror?.roughness ?? 0.045,
-    envMapIntensity: sahneDurumu.sahneAyarlari?.ayarlar?.materials?.mirror?.envMapIntensity ?? 1.25,
+    envMapIntensity: baseEnvIntensity * (sahneDurumu.hdrYogunluk ?? 1),
     clearcoat: 0,
     clearcoatRoughness: 0,
     reflectivity: 1,
     side: THREE.FrontSide
   });
   materyal.toneMapped = true;
+  materyal.userData.hdrBazEnvMapIntensity = baseEnvIntensity;
   return materyal;
 }
 
@@ -580,18 +644,85 @@ function dokuYukle(dokuId) {
       texture.repeat.set(1, 1);
       if (texture.colorSpace !== undefined) texture.colorSpace = THREE.SRGBColorSpace;
       sahneDurumu.dokuOnbellek[dokuId] = texture;
+      console.log("✅ Doku yüklendi:", dokuKayit.ad, "boyut:", texture.image.width + "x" + texture.image.height);
       resolve(texture);
-    }, undefined, function() { resolve(null); });
+    }, undefined, function(hata) {
+      console.warn("⚠️ Doku yüklenemedi:", dokuKayit.dosya);
+      resolve(null);
+    });
   });
 }
 
 function dokuSec(hedef, dokuId) {
   sahneDurumu.dokular[hedef] = dokuId;
+  // Doku ayar panelini goster/gizle
+  var ayarPanelId = hedef === "govdeDoku" ? "govdeDokuAyar" : hedef === "kapakDoku" ? "kapakDokuAyar" : hedef === "tezgahDoku" ? "tezgahDokuAyar" : null;
+  if (ayarPanelId) {
+    var ayarPanel = document.getElementById(ayarPanelId);
+    if (ayarPanel) ayarPanel.style.display = (dokuId && dokuId !== "yok") ? "" : "none";
+  }
+
   if (dokuId && dokuId !== "yok") {
     dokuYukle(dokuId).then(function() { renkleriUygula(); });
   } else {
     renkleriUygula();
   }
+}
+
+// Slider hareketlerinde TUM malzemeyi yeniden olusturmadan sadece texture parametrelerini guncelle
+function dokuAyarlariniGuncelle(parcaTipi) {
+  var parcalar = sahneDurumu.modelParcalari[parcaTipi] || [];
+  var hedefDokuId;
+  var hedefAyarlari;
+
+  if (parcaTipi === "govde") {
+    hedefDokuId = sahneDurumu.dokular.govdeDoku;
+    hedefAyarlari = {
+      offsetX: sahneDurumu.dokular.govdeDokuOffsetX,
+      offsetY: sahneDurumu.dokular.govdeDokuOffsetY,
+      repeat: sahneDurumu.dokular.govdeDokuRepeat,
+      rotation: sahneDurumu.dokular.govdeDokuRotation
+    };
+  } else if (parcaTipi === "kapak1" || parcaTipi === "kapak2" || parcaTipi === "kapak3" || parcaTipi === "kapak4" || parcaTipi === "kapaklar") {
+    hedefDokuId = sahneDurumu.dokular.kapakDoku;
+    hedefAyarlari = {
+      offsetX: sahneDurumu.dokular.kapakDokuOffsetX,
+      offsetY: sahneDurumu.dokular.kapakDokuOffsetY,
+      repeat: sahneDurumu.dokular.kapakDokuRepeat,
+      rotation: sahneDurumu.dokular.kapakDokuRotation
+    };
+  } else if (parcaTipi === "icAltTabla") {
+    hedefDokuId = sahneDurumu.dokular.tezgahDoku;
+    hedefAyarlari = {
+      offsetX: sahneDurumu.dokular.tezgahDokuOffsetX,
+      offsetY: sahneDurumu.dokular.tezgahDokuOffsetY,
+      repeat: sahneDurumu.dokular.tezgahDokuRepeat,
+      rotation: sahneDurumu.dokular.tezgahDokuRotation
+    };
+  }
+
+  if (!hedefDokuId || hedefDokuId === "yok") return;
+
+  parcalar.forEach(function(parca) {
+    parca.traverse(function(nesne) {
+      if (!nesne.isMesh || !nesne.material) return;
+      var mat = nesne.material;
+      if (mat.map && mat.map.isTexture) {
+        var orijinalDoku = sahneDurumu.dokuOnbellek[hedefDokuId];
+        if (!orijinalDoku) return;
+        var yeniDoku = orijinalDoku.clone();
+        yeniDoku.offset.set(hedefAyarlari.offsetX || 0, hedefAyarlari.offsetY || 0);
+        yeniDoku.repeat.set(hedefAyarlari.repeat || 1, hedefAyarlari.repeat || 1);
+        if (hedefAyarlari.rotation && hedefAyarlari.rotation !== 0) {
+          yeniDoku.center.set(0.5, 0.5);
+          yeniDoku.rotation = hedefAyarlari.rotation * Math.PI / 180;
+        }
+        yeniDoku.needsUpdate = true;
+        mat.map = yeniDoku;
+        mat.needsUpdate = true;
+      }
+    });
+  });
 }
 
 function gercekHdrYukle(sahne) {
@@ -617,7 +748,7 @@ function gercekHdrYukle(sahne) {
         pmremGenerator.compileEquirectangularShader();
         const pmrem = pmremGenerator.fromEquirectangular(texture);
         sahne.environment = pmrem.texture;
-        texture.dispose();
+        sahneDurumu._hdrDoku = texture; // Cache'le (dispose ETME)
         pmremGenerator.dispose();
       } else {
         sahne.environment = texture;
@@ -918,7 +1049,7 @@ function renkleriUygula() {
   parcaMateryaliUygula(sahneDurumu.modelParcalari.ayna, () => camMateryalOlustur(aynaRenk));
 
   // GÖVDE
-  parcaMateryaliUygula(sahneDurumu.modelParcalari.govde, () => pbrMateryalOlustur(govdeMalzeme, govdeRenk, sahneDurumu.dokular.govdeDoku));
+  parcaMateryaliUygula(sahneDurumu.modelParcalari.govde, () => pbrMateryalOlustur(govdeMalzeme, govdeRenk, sahneDurumu.dokular.govdeDoku, { offsetX: sahneDurumu.dokular.govdeDokuOffsetX, offsetY: sahneDurumu.dokular.govdeDokuOffsetY, repeat: sahneDurumu.dokular.govdeDokuRepeat, rotation: sahneDurumu.dokular.govdeDokuRotation }));
 
   // METAL/KASA/ÇERÇEVE — camlı modellerde sabit saten metal, gövde/cam rengine karışmaz
   parcaMateryaliUygula(sahneDurumu.modelParcalari.metalAksam || [], () => pbrMateryalOlustur("metal", "#b7b2a8"));
@@ -926,13 +1057,19 @@ function renkleriUygula() {
   // KAPAK — Mesh adında "cam" geçiyorsa cam malzeme, değilse seçili kapak malzemesi
   function kapakMateryaliUret(mesh) {
     var kapakDoku = sahneDurumu.dokular.kapakDoku;
+    var kapakDokuAyar = { offsetX: sahneDurumu.dokular.kapakDokuOffsetX, offsetY: sahneDurumu.dokular.kapakDokuOffsetY, repeat: sahneDurumu.dokular.kapakDokuRepeat, rotation: sahneDurumu.dokular.kapakDokuRotation };
+    // DEBUG: UV ve doku durumunu kontrol et
+    if (mesh.geometry) {
+      var hasUV = !!mesh.geometry.attributes.uv;
+      console.log("🔍 Kapak mesh:", mesh.name, "UV var mi:", hasUV, "Doku:", kapakDoku);
+    }
     var meshAdi = (mesh.name || "").toLowerCase();
     var yolAdi = nesneAdYolunuAl(mesh).toLowerCase();
     if (meshAdi.includes("cam") || yolAdi.includes("cam") || meshAdi.includes("glass") || yolAdi.includes("glass") || meshAdi.includes("seffaf") || yolAdi.includes("seffaf")) {
       return pbrMateryalOlustur("cam", kapakRenk);
     }
     if (kapakDoku && kapakDoku !== "yok") {
-      return pbrMateryalOlustur(kapakMalzeme, kapakRenk, kapakDoku);
+      return pbrMateryalOlustur(kapakMalzeme, kapakRenk, kapakDoku, kapakDokuAyar);
     }
     return pbrMateryalOlustur(kapakMalzeme, kapakRenk);
   }
@@ -980,7 +1117,12 @@ function renkleriUygula() {
   parcaMateryaliUygula(sahneDurumu.modelParcalari.icUstTabla, () => pbrMateryalOlustur(govdeMalzeme, ustTablaRenk));
 
   // TEZGAH — kendi doğal taş rengini kullanır, gövde rengine zorla bağlı değil
-  parcaMateryaliUygula(sahneDurumu.modelParcalari.icAltTabla, () => pbrMateryalOlustur(tezgahMalzeme, null, sahneDurumu.dokular.tezgahDoku));
+  parcaMateryaliUygula(sahneDurumu.modelParcalari.icAltTabla, () => pbrMateryalOlustur(tezgahMalzeme, null, sahneDurumu.dokular.tezgahDoku, { offsetX: sahneDurumu.dokular.tezgahDokuOffsetX, offsetY: sahneDurumu.dokular.tezgahDokuOffsetY, repeat: sahneDurumu.dokular.tezgahDokuRepeat, rotation: sahneDurumu.dokular.tezgahDokuRotation }));
+
+  // Renk değişiminden sonra seçim vurgusunu koru
+  if (sahneDurumu.secilenMesh) {
+    secimVurgusunuGuncelle(sahneDurumu.secilenMesh);
+  }
 }
 
 function kapakAyarla() {
@@ -1117,8 +1259,8 @@ function sahneyiHazirla() {
   kontroller.enableDamping = true;
   kontroller.dampingFactor = 0.08;
   kontroller.target.set(0, 1.2, 0);
-  kontroller.minDistance = 2.5;
-  kontroller.maxDistance = 10;
+  kontroller.minDistance = 1.5;
+  kontroller.maxDistance = 20;
 
   const ortamIsigi = new THREE.HemisphereLight(0xf0eadf, 0x151515, 0.24);
   sahne.add(ortamIsigi);
@@ -1198,6 +1340,184 @@ function modeliOrtalaVeOlcekle(model) {
   model.position.z -= yeniMerkez.z;
 }
 
+// ═══ PARÇA SEÇİM SİSTEMİ ═══════════════════════════════════
+
+// Parça kategorisini (iç isim) UI grup adına ve bilgi metnine çevir
+function parcaKategorisiniCoz(kategori) {
+  var harita = {
+    govde: { grup: 'govde', metin: 'Gövde seçildi.' },
+    kapak1: { grup: 'kapak', metin: 'Kapak seçildi.' },
+    kapak2: { grup: 'kapak', metin: 'Kapak seçildi.' },
+    kapak3: { grup: 'kapak', metin: 'Kapak seçildi.' },
+    kapak4: { grup: 'kapak', metin: 'Kapak seçildi.' },
+    kapaklar: { grup: 'kapak', metin: 'Kapak seçildi.' },
+    kulp: { grup: 'kulp', metin: 'Kulp seçildi.' },
+    musluk: { grup: 'musluk', metin: 'Musluk seçildi.' },
+    lavabo: { grup: 'lavabo', metin: 'Lavabo seçildi.' },
+    ustTabla: { grup: 'ustTabla', metin: 'Üst Tabla seçildi.' },
+    icUstTabla: { grup: 'ustTabla', metin: 'Üst Tabla seçildi.' },
+    icAltTabla: { grup: 'tezgah', metin: 'Tezgah seçildi.' },
+    led: { grup: 'led', metin: 'LED Işık seçildi.' }
+  };
+  return harita[kategori] || null;
+}
+
+// Sadece hedef parça grubunu aç, diğer tüm data-model-ayari gruplarını kapat
+function parcaAyarGrubunuAc(hedefGrup) {
+  var tumGruplar = document.querySelectorAll('[data-model-ayari]');
+  tumGruplar.forEach(function(grup) {
+    var parcaGrubu = grup.getAttribute('data-parca-grubu');
+    if (!parcaGrubu) return; // Ürün Galerisi gibi parca-grubu olmayanları atla
+    if (parcaGrubu === hedefGrup) {
+      // Hedef grubu aç
+      grup.classList.remove('kapali');
+      var baslik = grup.querySelector('.bolum-baslik');
+      if (baslik) baslik.setAttribute('aria-expanded', 'true');
+    } else {
+      // Diğerlerini kapat
+      grup.classList.add('kapali');
+      var baslik = grup.querySelector('.bolum-baslik');
+      if (baslik) baslik.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+// Seçim vurgusu temizle
+function secimVurgusunuTemizle() {
+  if (sahneDurumu.secimVurgusu) {
+    if (sahneDurumu.sahne) sahneDurumu.sahne.remove(sahneDurumu.secimVurgusu);
+    if (sahneDurumu.secimVurgusu.geometry) sahneDurumu.secimVurgusu.geometry.dispose();
+    if (sahneDurumu.secimVurgusu.material) sahneDurumu.secimVurgusu.material.dispose();
+    sahneDurumu.secimVurgusu = null;
+  }
+}
+
+// Seçim vurgusunu güncelle
+function secimVurgusunuGuncelle(mesh) {
+  secimVurgusunuTemizle();
+  if (!mesh || !sahneDurumu.sahne) return;
+  try {
+    var vurgu = new THREE.BoxHelper(mesh, 0xC8952A);
+    sahneDurumu.sahne.add(vurgu);
+    sahneDurumu.secimVurgusu = vurgu;
+  } catch (e) {
+    console.warn('BoxHelper oluşturulamadı:', e);
+  }
+}
+
+// Canvas üzerinde parça seçim listener'larını kur (bir kez)
+function modelParcasiSeciminiKur() {
+  if (sahneDurumu.secimListenerKuruldu) return;
+  if (!elemanlar.kanvas) return;
+  sahneDurumu.secimListenerKuruldu = true;
+  if (!sahneDurumu.raycaster) sahneDurumu.raycaster = new THREE.Raycaster();
+
+  var suruklemeEsigi = 6; // piksel
+
+  elemanlar.kanvas.addEventListener('pointerdown', function(olay) {
+    if (olay.pointerType !== 'mouse' || olay.button !== 0) return;
+    sahneDurumu.pointerBaslangic.set(olay.clientX, olay.clientY);
+  });
+
+  elemanlar.kanvas.addEventListener('pointerup', function(olay) {
+    if (olay.pointerType !== 'mouse' || olay.button !== 0) return;
+    var dx = olay.clientX - sahneDurumu.pointerBaslangic.x;
+    var dy = olay.clientY - sahneDurumu.pointerBaslangic.y;
+    var mesafe = Math.sqrt(dx * dx + dy * dy);
+    if (mesafe > suruklemeEsigi) return; // drag, tıklama değil
+
+    if (!sahneDurumu.modelKoku || !sahneDurumu.kamera) return;
+
+    var rect = elemanlar.kanvas.getBoundingClientRect();
+    var ndcX = ((olay.clientX - rect.left) / rect.width) * 2 - 1;
+    var ndcY = -((olay.clientY - rect.top) / rect.height) * 2 + 1;
+
+    sahneDurumu.raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), sahneDurumu.kamera);
+
+    // Sadece modelKoku altındaki mesh'leri recursive intersect et
+    var tumMeshler = [];
+    sahneDurumu.modelKoku.traverse(function(nesne) {
+      if (nesne.isMesh) tumMeshler.push(nesne);
+    });
+
+    var kesisme = sahneDurumu.raycaster.intersectObjects(tumMeshler, false);
+    if (kesisme.length === 0) {
+      // Boş alana tıklandı, seçimi temizle
+      secimVurgusunuTemizle();
+      sahneDurumu.secilenMesh = null;
+      sahneDurumu.secilenParcaKategorisi = null;
+      var bilgiEl = document.getElementById('secilenParcaBilgisi');
+      if (bilgiEl) { bilgiEl.textContent = 'Model üzerinde bir parça seçin.'; bilgiEl.classList.remove('vurgulu'); }
+      return;
+    }
+
+    var mesh = kesisme[0].object;
+    var modelKutu = new THREE.Box3().setFromObject(sahneDurumu.modelKoku);
+    var kategori = modelParcasiniSiniflandir(mesh, modelKutu);
+    var cozum = parcaKategorisiniCoz(kategori);
+
+    var bilgiEl = document.getElementById('secilenParcaBilgisi');
+
+    if (!cozum) {
+      // Bilinmeyen/ayarlanamaz parça (ayna, metalAksam, montajAparati vb.)
+      secimVurgusunuTemizle();
+      sahneDurumu.secilenMesh = null;
+      sahneDurumu.secilenParcaKategorisi = null;
+      if (bilgiEl) { bilgiEl.textContent = 'Bu parçanın değiştirilebilir bir ayarı yok.'; bilgiEl.classList.remove('vurgulu'); }
+      return;
+    }
+
+    // Geçerli parça seçildi
+    sahneDurumu.secilenMesh = mesh;
+    sahneDurumu.secilenParcaKategorisi = kategori;
+    secimVurgusunuGuncelle(mesh);
+    parcaAyarGrubunuAc(cozum.grup);
+    if (bilgiEl) { bilgiEl.textContent = cozum.metin; bilgiEl.classList.add('vurgulu'); }
+  });
+}
+
+function kutuUVOlustur(geometri) {
+  if (!geometri || !geometri.attributes.position) return;
+  // Eger UV zaten varsa dokunma — modelin kendi UV'sini koru
+  if (geometri.attributes.uv) {
+    console.log("ℹ️ UV zaten mevcut, atlaniyor");
+    return;
+  }
+  var pozisyon = geometri.attributes.position;
+  var sayi = pozisyon.count;
+  var uvDizisi = new Float32Array(sayi * 2);
+  var kutu = new THREE.Box3().setFromBufferAttribute(pozisyon);
+  var olcu = kutu.getSize(new THREE.Vector3());
+  var merkez = kutu.getCenter(new THREE.Vector3());
+  var enBuyuk = Math.max(olcu.x, olcu.y, olcu.z) || 1;
+
+  for (var i = 0; i < sayi; i++) {
+    var x = pozisyon.getX(i);
+    var y = pozisyon.getY(i);
+    var z = pozisyon.getZ(i);
+    // Box-projection: her yuzu duzleme esitle
+    var nx = (x - merkez.x) / enBuyuk + 0.5;
+    var ny = (y - merkez.y) / enBuyuk + 0.5;
+    var nz = (z - merkez.z) / enBuyuk + 0.5;
+    // En buyuk absolute degeri hangi yuze projekte edilecegini belirler
+    var ax = Math.abs(x - merkez.x);
+    var ay = Math.abs(y - merkez.y);
+    var az = Math.abs(z - merkez.z);
+    if (ax >= ay && ax >= az) {
+      uvDizisi[i * 2] = ny;
+      uvDizisi[i * 2 + 1] = nz;
+    } else if (ay >= ax && ay >= az) {
+      uvDizisi[i * 2] = nx;
+      uvDizisi[i * 2 + 1] = nz;
+    } else {
+      uvDizisi[i * 2] = nx;
+      uvDizisi[i * 2 + 1] = ny;
+    }
+  }
+  geometri.setAttribute("uv", new THREE.BufferAttribute(uvDizisi, 2));
+  console.log("✅ Box-projection UV olusturuldu:", sayi + " vertex");
+}
+
 function parcalariAyikla(model) {
   modelParcalariniSifirla();
   const modelKutu = new THREE.Box3().setFromObject(model);
@@ -1224,6 +1544,18 @@ function parcalariAyikla(model) {
     if (adYolu.includes("ayna") || adYolu.includes("mirror")) {
       parcayiTumListelerdenCikar(nesne);
       sahneDurumu.modelParcalari.ayna.push(nesne);
+    }
+  });
+
+  // UV'si olmayan mesh'lere box-projection UV olustur
+  model.traverse(function(nesne) {
+    if (!nesne.isMesh) return;
+    var geo = nesne.geometry;
+    if (geo && !geo.attributes.uv) {
+      console.log("🔧 UV yok, box-projection UV olusturuluyor:", nesne.name, "vertex:", geo.attributes.position?.count);
+      kutuUVOlustur(geo);
+    } else if (geo && geo.attributes.uv) {
+      console.log("ℹ️ UV mevcut korunuyor:", nesne.name, "UV count:", geo.attributes.uv.count);
     }
   });
 }
@@ -1254,6 +1586,9 @@ function gltfIslendiktenSonra(gltf, kaynakEtiketi) {
   renkleriUygula();
   // gercekAynaKaplamalariniKur(); // kapalı: dikdörtgen plane izi/kare oluşturuyordu
   kamerayiModeleSigdir(model);
+
+  // Model değişimi sonrası toggle durumunu koru
+  modelRenkKaplamaArayuzunuGuncelle();
 
   const meshler = [];
   const malzemeler = new Set();
@@ -1290,6 +1625,16 @@ function gltfIslendiktenSonra(gltf, kaynakEtiketi) {
     sahneDurumu.sahne.add(ledLight);
     sahneDurumu.ledIsigi = ledLight;
   }
+
+  // Bekleyen ürün konfigürasyonu varsa uygula
+  if (bekleyenUrunKonfigurasyonu) {
+    var pending = bekleyenUrunKonfigurasyonu;
+    bekleyenUrunKonfigurasyonu = null;
+    urunKonfigurasyonunuUygula(pending);
+  }
+
+  // Model değişiminde parça seçim listener'ını bir kez kur
+  modelParcasiSeciminiKur();
 
   yuklemeKatmaniniAyarla(false);
 }
@@ -1351,8 +1696,79 @@ document.querySelectorAll('.doku-secici').forEach(function(grup) {
   });
 });
 
+// Doku ayar slider'lari
+var dokuAyarlari = [
+  { id: "govdeDokuOffsetX", alan: "govdeDokuOffsetX" },
+  { id: "govdeDokuOffsetY", alan: "govdeDokuOffsetY" },
+  { id: "govdeDokuRepeat", alan: "govdeDokuRepeat" },
+  { id: "govdeDokuRotation", alan: "govdeDokuRotation" },
+  { id: "kapakDokuOffsetX", alan: "kapakDokuOffsetX" },
+  { id: "kapakDokuOffsetY", alan: "kapakDokuOffsetY" },
+  { id: "kapakDokuRepeat", alan: "kapakDokuRepeat" },
+  { id: "kapakDokuRotation", alan: "kapakDokuRotation" },
+  { id: "tezgahDokuOffsetX", alan: "tezgahDokuOffsetX" },
+  { id: "tezgahDokuOffsetY", alan: "tezgahDokuOffsetY" },
+  { id: "tezgahDokuRepeat", alan: "tezgahDokuRepeat" },
+  { id: "tezgahDokuRotation", alan: "tezgahDokuRotation" }
+];
+dokuAyarlari.forEach(function(kayit) {
+  var el = document.getElementById(kayit.id);
+  var degerEl = document.getElementById(kayit.id + "_deger");
+  
+  // Slider → sayisal giris senkronizasyonu
+  if (el) {
+    el.addEventListener("input", function() {
+      sahneDurumu.dokular[kayit.alan] = parseFloat(el.value);
+      if (degerEl) degerEl.value = el.value;
+      if (kayit.alan.startsWith("govde")) {
+        dokuAyarlariniGuncelle("govde");
+      } else if (kayit.alan.startsWith("kapak")) {
+        ["kapak1","kapak2","kapak3","kapak4","kapaklar"].forEach(function(p) { dokuAyarlariniGuncelle(p); });
+      } else if (kayit.alan.startsWith("tezgah")) {
+        dokuAyarlariniGuncelle("icAltTabla");
+      }
+    });
+  }
+  
+  // Sayisal giris → slider senkronizasyonu
+  if (degerEl) {
+    degerEl.addEventListener("input", function() {
+      var deger = parseFloat(degerEl.value);
+      if (isNaN(deger)) return;
+      sahneDurumu.dokular[kayit.alan] = deger;
+      if (el) el.value = deger;
+      if (kayit.alan.startsWith("govde")) {
+        dokuAyarlariniGuncelle("govde");
+      } else if (kayit.alan.startsWith("kapak")) {
+        ["kapak1","kapak2","kapak3","kapak4","kapaklar"].forEach(function(p) { dokuAyarlariniGuncelle(p); });
+      } else if (kayit.alan.startsWith("tezgah")) {
+        dokuAyarlariniGuncelle("icAltTabla");
+      }
+    });
+    // Sayisal giristen cikinca (blur) degeri sinirla
+    degerEl.addEventListener("blur", function() {
+      var deger = parseFloat(degerEl.value);
+      var min = parseFloat(el?.min || degerEl.min);
+      var max = parseFloat(el?.max || degerEl.max);
+      if (isNaN(deger)) deger = parseFloat(el?.value || 0);
+      deger = Math.max(min, Math.min(max, deger));
+      degerEl.value = deger;
+      if (el) el.value = deger;
+      sahneDurumu.dokular[kayit.alan] = deger;
+      if (kayit.alan.startsWith("govde")) {
+        dokuAyarlariniGuncelle("govde");
+      } else if (kayit.alan.startsWith("kapak")) {
+        ["kapak1","kapak2","kapak3","kapak4","kapaklar"].forEach(function(p) { dokuAyarlariniGuncelle(p); });
+      } else if (kayit.alan.startsWith("tezgah")) {
+        dokuAyarlariniGuncelle("icAltTabla");
+      }
+    });
+  }
+});
+
 // ═══ MODEL SEÇİCİ SİSTEMİ ═══════════════════════════════════
 let aktifModelId = null;
+let bekleyenUrunKonfigurasyonu = null;
 
 function modelSeciciyiHazirla() {
   const kutu = document.getElementById("modelKartKutusu");
@@ -1805,6 +2221,92 @@ function temaVerisindenUygula(tema) {
 }
 
 
+// ═══════════════════════════════════════════════════════════════
+// KATLANABİLİR BÖLÜM BAŞLIKLARI
+// ═══════════════════════════════════════════════════════════════
+
+function bolumleriKatlanabilirYap() {
+  var panel = document.querySelector(".urun-panel");
+  if (!panel) return;
+
+  // Sadece h3 içeren .kontrol-grubu ve .urun-galeri gruplarını katlanabilir yap
+  var h3Gruplari = panel.querySelectorAll(".kontrol-grubu h3, .urun-galeri h3");
+  h3Gruplari.forEach(function(h3) {
+    var grup = h3.closest(".kontrol-grubu") || h3.closest(".urun-galeri");
+    if (!grup || grup.querySelector(".bolum-baslik")) return; // zaten yapıldıysa atla
+
+    var baslikMetni = h3.textContent;
+    var buton = document.createElement("button");
+    buton.className = "bolum-baslik";
+    buton.type = "button";
+    buton.setAttribute("aria-expanded", "true");
+    buton.textContent = baslikMetni;
+
+    // h3'ü buton ile değiştir
+    h3.replaceWith(buton);
+
+    buton.addEventListener("click", function() {
+      var kapali = grup.classList.toggle("kapali");
+      buton.setAttribute("aria-expanded", kapali ? "false" : "true");
+    });
+  });
+
+  // ═══ BAŞLANGIÇ DURUMU ═══
+  // Sahne/Render Ayarları → kapalı
+  var sahnePaneli = panel.querySelector(".sahne-ayar-paneli");
+  if (sahnePaneli) {
+    sahnePaneli.classList.add("kapali");
+    var sahneButon = sahnePaneli.querySelector(".bolum-baslik");
+    if (sahneButon) sahneButon.setAttribute("aria-expanded", "false");
+  }
+
+  // Tüm data-model-ayari grupları → kapalı
+  var modelGruplari = panel.querySelectorAll("[data-model-ayari]");
+  modelGruplari.forEach(function(g) {
+    g.classList.add("kapali");
+    var b = g.querySelector(".bolum-baslik");
+    if (b) b.setAttribute("aria-expanded", "false");
+  });
+
+  // Model Seç → açık (varsayılan)
+  // modelRenkKaplamaAktif grubu açık (toggle bölümü, h3 yok zaten)
+
+  console.log("✅ Katlanabilir bölüm başlıkları hazır");
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODEL RENK/KAPLAMA TOGGLE DAVRANIŞI
+// ═══════════════════════════════════════════════════════════════
+
+function modelRenkKaplamaArayuzunuGuncelle() {
+  var aktif = !!sahneDurumu.renkKaplamaAktif;
+  var modelGruplari = document.querySelectorAll("[data-model-ayari]");
+
+  modelGruplari.forEach(function(grup) {
+    if (aktif) {
+      grup.classList.remove("model-ayarlari-pasif");
+    } else {
+      grup.classList.add("model-ayarlari-pasif");
+    }
+
+    // Etkileşimli kontrolleri bul ve pasif/aktif yap
+    var kontroller = grup.querySelectorAll("button, select, input");
+    kontroller.forEach(function(kontrol) {
+      // Hidden input'ları disable etme
+      if (kontrol.type === "hidden") return;
+      // Bölüm başlıkları (accordion) her zaman aktif kalsın — toggle kapalıyken
+      // kullanıcı bölümü açıp ayarları görebilsin, yalnız içteki kontroller disabled olsun
+      if (kontrol.classList && kontrol.classList.contains("bolum-baslik")) return;
+
+      if (aktif) {
+        kontrol.disabled = false;
+      } else {
+        kontrol.disabled = true;
+      }
+    });
+  });
+}
+
 function modeliYukle() {
   // Katalogtan ilk modeli yükle
   if (typeof MODEL_KATALOGU !== "undefined" && MODEL_KATALOGU.length > 0) {
@@ -1859,9 +2361,10 @@ function canlandir() {
         mesh.material.emissive.set(ledAyar.renk);
         mesh.material.color.set(ledAyar.renk);
         mesh.material.emissiveIntensity = ledAyar.emissive;
-      }
-    });
-  }
+    }
+  });
+
+}
 
   if (sahneDurumu.renderer && sahneDurumu.sahne && sahneDurumu.kamera) {
     // aynaYansimasiniGuncelle(); // koyu arka planı aynaya basmasın diye kapalı
@@ -1923,6 +2426,37 @@ function derinKopya(nesne) {
   return JSON.parse(JSON.stringify(nesne));
 }
 
+function urunKonfigurasyonunuOku() {
+  var hdrEl = document.getElementById("hdrOrtam");
+  return {
+    surum: 1,
+    modelId: aktifModelId || null,
+    renkler: {
+      govdeRenk: elemanlar.govdeRenk?.value || "",
+      kapakRenk: elemanlar.kapakRenk?.value || "",
+      lavaboRenk: elemanlar.lavaboRenk?.value || "",
+      ustTablaRenk: elemanlar.ustTablaRenk?.value || ""
+    },
+    malzemeler: {
+      govdeMalzeme: elemanlar.govdeMalzeme?.value || "",
+      kapakMalzeme: elemanlar.kapakMalzeme?.value || "",
+      tezgahMalzeme: elemanlar.tezgahMalzeme?.value || ""
+    },
+    kaplamalar: {
+      kulpKaplama: elemanlar.kulpKaplama?.value || "",
+      muslukKaplama: elemanlar.muslukKaplama?.value || ""
+    },
+    led: {
+      acik: elemanlar.ledIsik?.checked ?? true,
+      seviye: elemanlar.ledSeviye?.value || "dusuk",
+      renk: elemanlar.ledRenk?.value || "sicakSari"
+    },
+    dokular: derinKopya(sahneDurumu.dokular),
+    hdrOrtam: (hdrEl && hdrEl.value) ? hdrEl.value : "varsayilan",
+    renkKaplamaAktif: !!sahneDurumu.renkKaplamaAktif
+  };
+}
+
 function sayiInputDegeri(id, varsayilan) {
   const el = document.getElementById(id);
   const deger = Number.parseFloat(el?.value);
@@ -1952,6 +2486,20 @@ function sahneAyarFormundanOku() {
   mevcut.ayarlar.materials.camOpacity = sayiInputDegeri("ayarCamOpacity", 0.82);
   mevcut.ayarlar.materials.globalEnvMapScale = sayiInputDegeri("ayarEnvScale", 1);
   mevcut.ayarlar.materials.globalClearcoatScale = sayiInputDegeri("ayarClearcoatScale", 1);
+  mevcut.ayarlar.hdr = mevcut.ayarlar.hdr || {};
+  mevcut.ayarlar.hdr.intensity = sayiInputDegeri("ayarHdrYogunluk", 1);
+  mevcut.ayarlar.hdr.rotation = sayiInputDegeri("ayarHdrDondurme", 0);
+  mevcut.ayarlar.hdr.blur = sayiInputDegeri("ayarHdrBlurluk", 0);
+  mevcut.ayarlar.arkaPlan = mevcut.ayarlar.arkaPlan || {};
+  mevcut.ayarlar.arkaPlan.renk = document.getElementById("ayarArkaPlanRenk")?.value || "#050505";
+  mevcut.ayarlar.zemin = mevcut.ayarlar.zemin || {};
+  mevcut.ayarlar.zemin.renk = document.getElementById("ayarZeminRenk")?.value || "#050505";
+  mevcut.ayarlar.zemin.opaklik = sayiInputDegeri("ayarZeminOpaklik", 0.16);
+  mevcut.ayarlar.golge = mevcut.ayarlar.golge || {};
+  mevcut.ayarlar.golge.opaklik = sayiInputDegeri("ayarGolgeOpaklik", 0.16);
+  mevcut.ayarlar.golge.boyut = sayiInputDegeri("ayarGolgeBoyut", 2048);
+  mevcut.ayarlar.golge.bias = sayiInputDegeri("ayarGolgeBias", -0.0008);
+  mevcut.urunKonfigurasyonu = urunKonfigurasyonunuOku();
   mevcut.guncellenmeTarihi = new Date().toISOString();
   return mevcut;
 }
@@ -1970,6 +2518,291 @@ function sahneAyarFormunuDoldur(ayar) {
   set("ayarCamOpacity", a.materials?.camOpacity);
   set("ayarEnvScale", a.materials?.globalEnvMapScale);
   set("ayarClearcoatScale", a.materials?.globalClearcoatScale);
+  set("ayarHdrYogunluk", a.hdr?.intensity);
+  set("ayarHdrDondurme", a.hdr?.rotation);
+  set("ayarHdrBlurluk", a.hdr?.blur);
+  set("ayarArkaPlanRenk", a.arkaPlan?.renk);
+  set("ayarZeminRenk", a.zemin?.renk);
+  set("ayarZeminOpaklik", a.zemin?.opaklik);
+  set("ayarGolgeOpaklik", a.golge?.opaklik);
+  set("ayarGolgeBoyut", a.golge?.boyut);
+  set("ayarGolgeBias", a.golge?.bias);
+  // Sayisal giris (_deger) alanlarini da esitle
+  const setDeger = (id, deger) => { const el = document.getElementById(id + "_deger"); if (el && deger !== undefined) el.value = deger; };
+  setDeger("ayarExposure", a.render?.exposure);
+  setDeger("ayarFov", a.camera?.fov);
+  setDeger("ayarKameraMesafe", a.camera?.fitDistanceMultiplier);
+  setDeger("ayarOrtamIsik", a.lighting?.hemisphere?.intensity);
+  setDeger("ayarAnaIsik", a.lighting?.key?.intensity);
+  setDeger("ayarDolguIsik", a.lighting?.fill?.intensity);
+  setDeger("ayarAynaYansima", a.materials?.mirror?.envMapIntensity);
+  setDeger("ayarAynaRoughness", a.materials?.mirror?.roughness);
+  setDeger("ayarCamOpacity", a.materials?.camOpacity);
+  setDeger("ayarEnvScale", a.materials?.globalEnvMapScale);
+  setDeger("ayarClearcoatScale", a.materials?.globalClearcoatScale);
+  setDeger("ayarHdrYogunluk", a.hdr?.intensity);
+  setDeger("ayarHdrDondurme", a.hdr?.rotation);
+  setDeger("ayarHdrBlurluk", a.hdr?.blur);
+  setDeger("ayarZeminOpaklik", a.zemin?.opaklik);
+  setDeger("ayarGolgeOpaklik", a.golge?.opaklik);
+  setDeger("ayarGolgeBoyut", a.golge?.boyut);
+  setDeger("ayarGolgeBias", a.golge?.bias);
+}
+
+async function urunKonfigurasyonunuUygula(konfigurasyon) {
+  if (!konfigurasyon || konfigurasyon.surum !== 1) return;
+
+  var guvenliSet = function(id, deger) {
+    var el = document.getElementById(id);
+    if (el && deger !== undefined && deger !== null) el.value = deger;
+  };
+
+  // --- Renkler ---
+  var rnk = konfigurasyon.renkler || {};
+  guvenliSet("govdeRenk", rnk.govdeRenk);
+  guvenliSet("kapakRenk", rnk.kapakRenk);
+  guvenliSet("lavaboRenk", rnk.lavaboRenk);
+  guvenliSet("ustTablaRenk", rnk.ustTablaRenk);
+
+  // --- Malzemeler ---
+  var mlz = konfigurasyon.malzemeler || {};
+  guvenliSet("govdeMalzeme", mlz.govdeMalzeme);
+  guvenliSet("kapakMalzeme", mlz.kapakMalzeme);
+  guvenliSet("tezgahMalzeme", mlz.tezgahMalzeme);
+
+  // --- Kaplamalar ---
+  var kpl = konfigurasyon.kaplamalar || {};
+  guvenliSet("kulpKaplama", kpl.kulpKaplama);
+  guvenliSet("muslukKaplama", kpl.muslukKaplama);
+
+  // --- LED ---
+  var led = konfigurasyon.led || {};
+  if (elemanlar.ledIsik) elemanlar.ledIsik.checked = led.acik !== false;
+  guvenliSet("ledSeviye", led.seviye);
+  guvenliSet("ledRenk", led.renk);
+
+  // --- Dokular ---
+  var kayitliDokular = konfigurasyon.dokular || {};
+  Object.keys(kayitliDokular).forEach(function(anahtar) {
+    sahneDurumu.dokular[anahtar] = kayitliDokular[anahtar];
+  });
+
+  ['govdeDoku', 'kapakDoku', 'tezgahDoku'].forEach(function(hedef) {
+    var dokuId = sahneDurumu.dokular[hedef] || 'yok';
+    var dokuGrubu = document.querySelector('.doku-secici[data-hedef="' + hedef + '"]');
+    if (dokuGrubu) {
+      dokuGrubu.querySelectorAll('button').forEach(function(b) {
+        b.classList.toggle('aktif', b.dataset.deger === dokuId);
+      });
+    }
+    var panelEsleme = { govdeDoku: 'govdeDokuAyar', kapakDoku: 'kapakDokuAyar', tezgahDoku: 'tezgahDokuAyar' };
+    var ayarPanel = document.getElementById(panelEsleme[hedef]);
+    if (ayarPanel) ayarPanel.style.display = (dokuId && dokuId !== 'yok') ? '' : 'none';
+  });
+
+  // Doku slider ve _deger alanlarini state ile esitle
+  var onEkler = ['govde', 'kapak', 'tezgah'];
+  onEkler.forEach(function(onEk) {
+    ['OffsetX', 'OffsetY', 'Repeat', 'Rotation'].forEach(function(sufiks) {
+      var alanAdi = onEk + 'Doku' + sufiks;
+      var deger = sahneDurumu.dokular[alanAdi];
+      if (deger === undefined) return;
+      var sliderEl = document.getElementById(onEk + 'Doku' + sufiks);
+      var degerEl = document.getElementById(onEk + 'Doku' + sufiks + '_deger');
+      if (sliderEl) sliderEl.value = deger;
+      if (degerEl) degerEl.value = deger;
+    });
+  });
+
+  // --- Renk/malzeme/kaplama buton gruplarinda aktif class guncelle ---
+  var butonHedefleri = [
+    'govdeRenk', 'kapakRenk', 'lavaboRenk', 'ustTablaRenk',
+    'govdeMalzeme', 'kapakMalzeme', 'tezgahMalzeme',
+    'kulpKaplama', 'muslukKaplama'
+  ];
+  butonHedefleri.forEach(function(hedefId) {
+    var inputEl = document.getElementById(hedefId);
+    if (!inputEl) return;
+    var aktifDeger = inputEl.value;
+    var grup = document.querySelector('[data-hedef="' + hedefId + '"]');
+    if (!grup) return;
+    grup.querySelectorAll('button').forEach(function(b) {
+      b.classList.toggle('aktif', b.dataset.deger === aktifDeger);
+    });
+  });
+
+  if (typeof malzemeyeGoreRenkPaletiniGuncelle === 'function') {
+    malzemeyeGoreRenkPaletiniGuncelle('govdeMalzeme');
+    malzemeyeGoreRenkPaletiniGuncelle('kapakMalzeme');
+    malzemeyeGoreRenkPaletiniGuncelle('tezgahMalzeme');
+  }
+
+  // --- HDR ortam ---
+  var hdrDegeri = konfigurasyon.hdrOrtam || 'varsayilan';
+  guvenliSet('hdrOrtam', hdrDegeri);
+  var hdrSeciciEl = document.getElementById('hdrSecici');
+  if (hdrSeciciEl) {
+    hdrSeciciEl.querySelectorAll('button').forEach(function(b) {
+      b.classList.toggle('aktif', b.dataset.hdr === hdrDegeri);
+    });
+  }
+
+  // --- Doku preload + renkleriUygula ---
+  var dokuYuklemeIsleri = [];
+  ['govdeDoku', 'kapakDoku', 'tezgahDoku'].forEach(function(hedef) {
+    var dokuId = sahneDurumu.dokular[hedef];
+    if (dokuId && dokuId !== 'yok') {
+      dokuYuklemeIsleri.push(dokuYukle(dokuId));
+    }
+  });
+
+  if (dokuYuklemeIsleri.length > 0) {
+    await Promise.all(dokuYuklemeIsleri);
+  }
+
+  // --- Model Renk/Kaplama Toggle ---
+  if (konfigurasyon.renkKaplamaAktif !== undefined) {
+    sahneDurumu.renkKaplamaAktif = !!konfigurasyon.renkKaplamaAktif;
+    if (elemanlar.modelRenkKaplamaAktif) {
+      elemanlar.modelRenkKaplamaAktif.checked = sahneDurumu.renkKaplamaAktif;
+    }
+    modelRenkKaplamaArayuzunuGuncelle();
+  }
+
+  renkleriUygula();
+}
+
+function hdrOrtamDegistir(hdrId) {
+  // Tum secenekler icin ayni gercek HDR dosyasini kullan
+  // Farkli "hissiyat" icin color temperature ve intensity ayarlari
+  var ortamAyarlari = {
+    "varsayilan": { sicaklik: 0, intensity: 1, tint: "#ffffff" },
+    "banyo": { sicaklik: 0.15, intensity: 1.1, tint: "#ffe8d0" },
+    "studiyo": { sicaklik: 0, intensity: 1.3, tint: "#f0f0f0" },
+    "dis": { sicaklik: -0.2, intensity: 0.9, tint: "#d0e8ff" }
+  };
+  
+  var ayar = ortamAyarlari[hdrId] || ortamAyarlari["varsayilan"];
+  sahneDurumu.hdrAyar = ayar;
+  
+  // Gercek HDR dosyasini yukle
+  var hdrYolu = "./hdr/modern_bathroom_1k.hdr";
+  if (!sahneDurumu._hdrDoku) {
+    // Ilk kez yukleniyor
+    var yukleyici = new THREE.RGBELoader();
+    yukleyici.load(hdrYolu, function(doku) {
+      sahneDurumu._hdrDoku = doku;
+      pmremIsleVeUygula(doku, ayar);
+      console.log("✅ HDR ilk kez yüklendi ve uygulandı:", hdrId);
+    }, undefined, function(hata) {
+      console.warn("⚠️ HDR yüklenemedi, prosedürel devam:", hata);
+      prosedurelOrtamUygula(ayar);
+    });
+  } else {
+    // Zaten yuklu, direkt uygula
+    pmremIsleVeUygula(sahneDurumu._hdrDoku, ayar);
+    console.log("✅ HDR ortam değiştirildi:", hdrId);
+  }
+}
+
+function pmremIsleVeUygula(hdrDoku, ayar) {
+  if (!sahneDurumu.sahne || !sahneDurumu.renderer) return;
+  
+  // Orijinal HDR'i kopyala ve renk ayari uygula
+  var islenmisDoku = hdrDoku.clone();
+  if (ayar.tint && ayar.tint !== "#ffffff") {
+    islenmisDoku.color = new THREE.Color(ayar.tint);
+  }
+  islenmisDoku.needsUpdate = true;
+  
+  var pmremDoku;
+  if (THREE.PMREMGenerator) {
+    var pmremGenerator = new THREE.PMREMGenerator(sahneDurumu.renderer);
+    pmremGenerator.compileEquirectangularShader();
+    var pmrem = pmremGenerator.fromEquirectangular(islenmisDoku);
+    pmremDoku = pmrem.texture;
+    islenmisDoku.dispose();
+    pmremGenerator.dispose();
+  } else {
+    pmremDoku = islenmisDoku;
+  }
+  
+  // Onceki farkli PMREM texture varsa dispose et
+  if (sahneDurumu.hdrPmremDoku && sahneDurumu.hdrPmremDoku !== pmremDoku) {
+    sahneDurumu.hdrPmremDoku.dispose();
+  }
+  sahneDurumu.hdrPmremDoku = pmremDoku;
+  sahneDurumu.sahne.environment = pmremDoku;
+  
+  // Intensity ayarini kaydet
+  sahneDurumu.hdrYogunluk = ayar.intensity;
+  // Materyallerin envMapIntensity'lerini guncelle (renkleriUygula degil)
+  hdrAyarlariniUygula();
+}
+
+function prosedurelOrtamUygula(ayar) {
+  // Fallback: sadece basit ortam isigi
+  if (sahneDurumu.isiklar?.ortam) {
+    sahneDurumu.isiklar.ortam.intensity = 0.24 * ayar.intensity;
+  }
+}
+
+// uygulaHdrDoku — artik kullanilmiyor, pmremIsleVeUygula ile degistirildi
+function uygulaHdrDoku(doku) {
+  // Deprecated: pmremIsleVeUygula kullanin
+}
+
+function hdrDosyaYukle(url, ad) {
+  var yukleyici = new THREE.RGBELoader();
+  yukleyici.load(url, function(doku) {
+    sahneDurumu._hdrDoku = doku; // ozel HDR'i da cache'le
+    var ayar = sahneDurumu.hdrAyar || { sicaklik: 0, intensity: 1, tint: "#ffffff" };
+    pmremIsleVeUygula(doku, ayar);
+    URL.revokeObjectURL(url);
+    console.log("✅ Özel HDR yüklendi:", ad);
+  }, undefined, function(hata) {
+    console.error("❌ Özel HDR yüklenemedi:", hata);
+    URL.revokeObjectURL(url);
+  });
+}
+
+function hdrAyarlariniUygula() {
+  // Model kokundeki tum MeshPhysicalMaterial/MeshStandardMaterial traverse et
+  // userData.hdrBazEnvMapIntensity yoksa mevcut envMapIntensity ile ilk kez sakla
+  // envMapIntensity = base * (sahneDurumu.hdrYogunluk ?? 1)
+  // Renderer exposure degismez
+  if (!sahneDurumu.modelKoku) return;
+  var yogunluk = sahneDurumu.hdrYogunluk ?? 1;
+  sahneDurumu.modelKoku.traverse(function(nesne) {
+    if (nesne.isMesh) {
+      var materyaller = Array.isArray(nesne.material) ? nesne.material : [nesne.material];
+      materyaller.forEach(function(m) {
+        if (m && (m.isMeshPhysicalMaterial || m.isMeshStandardMaterial)) {
+          if (m.userData.hdrBazEnvMapIntensity === undefined) {
+            m.userData.hdrBazEnvMapIntensity = m.envMapIntensity;
+          }
+          m.envMapIntensity = m.userData.hdrBazEnvMapIntensity * yogunluk;
+        }
+      });
+    }
+  });
+}
+
+function golgeAyarlariniUygula() {
+  if (sahneDurumu.isiklar?.ana?.shadow) {
+    var boyut = sahneDurumu.golgeBoyut ?? 2048;
+    sahneDurumu.isiklar.ana.shadow.mapSize.set(boyut, boyut);
+    sahneDurumu.isiklar.ana.shadow.bias = sahneDurumu.golgeBias ?? -0.0008;
+    // Map'i yeniden olustur
+    if (sahneDurumu.isiklar.ana.shadow.map) {
+      sahneDurumu.isiklar.ana.shadow.map.dispose();
+      sahneDurumu.isiklar.ana.shadow.map = null;
+    }
+  }
+  // Zemin golge opakligini da guncelle
+  if (sahneDurumu.isiklar?.zemin?.material) {
+    sahneDurumu.isiklar.zemin.material.opacity = sahneDurumu.golgeOpaklik ?? 0.16;
+  }
 }
 
 function sahneAyarlariniUygula(ayar) {
@@ -1999,6 +2832,84 @@ function sahneAyarlariniUygula(ayar) {
   }
   if (sahneDurumu.isiklar?.zemin?.material && a.lighting?.shadowPlane?.opacity !== undefined) {
     sahneDurumu.isiklar.zemin.material.opacity = a.lighting.shadowPlane.opacity;
+  }
+
+  // HDR ayarlari
+  if (sahneDurumu.sahne && a.hdr) {
+    if (a.hdr.intensity !== undefined) {
+      sahneDurumu.hdrYogunluk = a.hdr.intensity;
+    }
+    if (a.hdr.rotation !== undefined) {
+      sahneDurumu.hdrDonme = a.hdr.rotation;
+    }
+    if (a.hdr.blur !== undefined) {
+      sahneDurumu.hdrBlurluk = a.hdr.blur;
+    }
+    hdrAyarlariniUygula();
+    if (a.hdr.rotation !== undefined) {
+      var rad = THREE.MathUtils.degToRad(a.hdr.rotation);
+      if (sahneDurumu.sahne.environmentRotation !== undefined) sahneDurumu.sahne.environmentRotation = new THREE.Euler(0, rad, 0);
+      if (sahneDurumu.sahne.backgroundRotation !== undefined) sahneDurumu.sahne.backgroundRotation = new THREE.Euler(0, rad, 0);
+    }
+    if (a.hdr.blur !== undefined && sahneDurumu.sahne.backgroundBlurriness !== undefined) {
+      sahneDurumu.sahne.backgroundBlurriness = a.hdr.blur;
+    }
+  }
+  
+  // Zemin ayarlari
+  if (a.zemin) {
+    if (a.zemin.renk) {
+      sahneDurumu.zeminRenk = a.zemin.renk;
+    }
+    if (a.zemin.opaklik !== undefined) {
+      sahneDurumu.zeminOpaklik = a.zemin.opaklik;
+    }
+  }
+  // Zemini guncelle
+  if (sahneDurumu.isiklar?.zemin) {
+    if (sahneDurumu.isiklar.zemin.material) {
+      sahneDurumu.isiklar.zemin.material.opacity = sahneDurumu.zeminOpaklik;
+    }
+    if (sahneDurumu.zeminRenk) {
+      sahneDurumu.isiklar.zemin.material.color.set(sahneDurumu.zeminRenk);
+    }
+  }
+  
+  // Arka plan rengi
+  if (a.arkaPlan?.renk && sahneDurumu.sahne) {
+    sahneDurumu.arkaPlanRenk = a.arkaPlan.renk;
+    sahneDurumu.sahne.background = new THREE.Color(a.arkaPlan.renk);
+    var apEl = document.getElementById("ayarArkaPlanRenk");
+    var apDegerEl = document.getElementById("arkaPlanRenkDeger");
+    if (apEl) apEl.value = a.arkaPlan.renk;
+    if (apDegerEl) apDegerEl.textContent = a.arkaPlan.renk;
+  }
+
+  // Golge ayarlari
+  if (a.golge) {
+    if (a.golge.opaklik !== undefined) {
+      sahneDurumu.golgeOpaklik = a.golge.opaklik;
+      // Golge opakligini zemin golge materyaline uygula
+      if (sahneDurumu.isiklar?.zemin?.material) {
+        sahneDurumu.isiklar.zemin.material.opacity = a.golge.opaklik;
+      }
+    }
+    if (a.golge.boyut !== undefined) {
+      sahneDurumu.golgeBoyut = a.golge.boyut;
+      if (sahneDurumu.isiklar?.ana?.shadow?.mapSize) {
+        sahneDurumu.isiklar.ana.shadow.mapSize.set(a.golge.boyut, a.golge.boyut);
+        if (sahneDurumu.isiklar.ana.shadow.map) {
+          sahneDurumu.isiklar.ana.shadow.map.dispose();
+          sahneDurumu.isiklar.ana.shadow.map = null;
+        }
+      }
+    }
+    if (a.golge.bias !== undefined) {
+      sahneDurumu.golgeBias = a.golge.bias;
+      if (sahneDurumu.isiklar?.ana?.shadow) {
+        sahneDurumu.isiklar.ana.shadow.bias = a.golge.bias;
+      }
+    }
   }
 
   renkleriUygula();
@@ -2054,9 +2965,30 @@ async function sahneAyarlariniBaslat() {
     localStorage.setItem("goldbanyo_sahne_ayarlari", JSON.stringify(ayarJson));
     sahneAyarFormunuDoldur(ayarJson);
     sahneAyarlariniUygula(ayarJson);
+    // Ürün konfigürasyonunu uygula (model değişimi gerekebilir)
+    var urunKonfig = ayarJson.urunKonfigurasyonu;
+    if (urunKonfig && urunKonfig.surum === 1) {
+      if (urunKonfig.modelId && urunKonfig.modelId !== aktifModelId) {
+        bekleyenUrunKonfigurasyonu = urunKonfig;
+        modelDegistir(urunKonfig.modelId);
+      } else {
+        urunKonfigurasyonunuUygula(urunKonfig);
+      }
+    }
   });
 }
 console.log("✅ Event listeners bağlandı");
+
+// ═══ MODEL RENK/KAPLAMA TOGGLE EVENT ═══
+if (elemanlar.modelRenkKaplamaAktif) {
+  elemanlar.modelRenkKaplamaAktif.addEventListener("change", function() {
+    sahneDurumu.renkKaplamaAktif = !!elemanlar.modelRenkKaplamaAktif.checked;
+    modelRenkKaplamaArayuzunuGuncelle();
+  });
+}
+
+// ═══ KATLANABİLİR BÖLÜMLERİ BAŞLAT ═══
+bolumleriKatlanabilirYap();
 
 // Model seçiciyi başlat
 modelSeciciyiHazirla();
@@ -2080,4 +3012,247 @@ try {
   console.error("❌ modeliYukle() error:", err);
 }
 
+// ═══ HDR SEÇİCİ ═══
+var hdrSecici = document.getElementById("hdrSecici");
+if (hdrSecici) {
+  hdrSecici.querySelectorAll("button").forEach(function(buton) {
+    buton.addEventListener("click", function() {
+      hdrSecici.querySelectorAll("button").forEach(function(b) { b.classList.remove("aktif"); });
+      buton.classList.add("aktif");
+      var hdrId = buton.dataset.hdr;
+      document.getElementById("hdrOrtam").value = hdrId;
+      hdrOrtamDegistir(hdrId);
+    });
+  });
+}
+
+// Özel HDR yükleme
+var hdrDosyaSec = document.getElementById("hdrDosyaSec");
+if (hdrDosyaSec) {
+  hdrDosyaSec.addEventListener("change", function(event) {
+    var dosya = event.target.files?.[0];
+    if (!dosya) return;
+    var nesneAdresi = URL.createObjectURL(dosya);
+    hdrDosyaYukle(nesneAdresi, dosya.name);
+  });
+}
+
+// HDR ayar slider'lari
+var hdrAyarlari = [
+  { id: "ayarHdrYogunluk", alan: "hdrYogunluk" },
+  { id: "ayarHdrDondurme", alan: "hdrDonme" },
+  { id: "ayarHdrBlurluk", alan: "hdrBlurluk" }
+];
+hdrAyarlari.forEach(function(kayit) {
+  var el = document.getElementById(kayit.id);
+  if (el) {
+    el.addEventListener("input", function() {
+      sahneDurumu[kayit.alan] = parseFloat(el.value);
+      hdrAyarlariniUygula();
+    });
+  }
+});
+
+// Zemin renk picker
+var zeminRenkEl = document.getElementById("ayarZeminRenk");
+var zeminDegerEl = document.getElementById("zeminRenkDeger");
+if (zeminRenkEl) {
+  zeminRenkEl.addEventListener("input", function() {
+    sahneDurumu.zeminRenk = zeminRenkEl.value;
+    if (zeminDegerEl) zeminDegerEl.textContent = zeminRenkEl.value;
+    if (sahneDurumu.isiklar?.zemin?.material) {
+      sahneDurumu.isiklar.zemin.material.color.set(zeminRenkEl.value);
+    }
+  });
+}
+
+// Zemin opaklik
+var zeminOpaklikEl = document.getElementById("ayarZeminOpaklik");
+if (zeminOpaklikEl) {
+  zeminOpaklikEl.addEventListener("input", function() {
+    sahneDurumu.zeminOpaklik = parseFloat(zeminOpaklikEl.value);
+    if (sahneDurumu.isiklar?.zemin?.material) {
+      sahneDurumu.isiklar.zemin.material.opacity = sahneDurumu.zeminOpaklik;
+    }
+  });
+}
+
+// ═══ TÜM SAHNE AYARLARI — SLIDER ↔ SAYISAL GİRİŞ SENKRONİZASYONU ═══
+var tumSahneAyarlari = [
+  { slider: "ayarExposure", sayi: "ayarExposure_deger" },
+  { slider: "ayarFov", sayi: "ayarFov_deger" },
+  { slider: "ayarKameraMesafe", sayi: "ayarKameraMesafe_deger" },
+  { slider: "ayarOrtamIsik", sayi: "ayarOrtamIsik_deger" },
+  { slider: "ayarAnaIsik", sayi: "ayarAnaIsik_deger" },
+  { slider: "ayarDolguIsik", sayi: "ayarDolguIsik_deger" },
+  { slider: "ayarAynaYansima", sayi: "ayarAynaYansima_deger" },
+  { slider: "ayarAynaRoughness", sayi: "ayarAynaRoughness_deger" },
+  { slider: "ayarCamOpacity", sayi: "ayarCamOpacity_deger" },
+  { slider: "ayarEnvScale", sayi: "ayarEnvScale_deger" },
+  { slider: "ayarHdrYogunluk", sayi: "ayarHdrYogunluk_deger" },
+  { slider: "ayarHdrDondurme", sayi: "ayarHdrDondurme_deger" },
+  { slider: "ayarHdrBlurluk", sayi: "ayarHdrBlurluk_deger" },
+  { slider: "ayarZeminOpaklik", sayi: "ayarZeminOpaklik_deger" },
+  { slider: "ayarGolgeOpaklik", sayi: "ayarGolgeOpaklik_deger" },
+  { slider: "ayarGolgeBoyut", sayi: "ayarGolgeBoyut_deger" },
+  { slider: "ayarGolgeBias", sayi: "ayarGolgeBias_deger" },
+  { slider: "ayarClearcoatScale", sayi: "ayarClearcoatScale_deger" }
+];
+tumSahneAyarlari.forEach(function(kayit) {
+  var sliderEl = document.getElementById(kayit.slider);
+  var sayiEl = document.getElementById(kayit.sayi);
+  if (sliderEl && sayiEl) {
+    // Sayisal giris → slider (dispatchEvent yok — sadece deger guncelle)
+    sayiEl.addEventListener("input", function() {
+      var v = parseFloat(sayiEl.value);
+      if (!isNaN(v)) {
+        sliderEl.value = v;
+        // dispatchEvent calistirilmaz — slider'in kendi input event'i zaten bagli
+      }
+    });
+    // Slider → sayisal giris
+    sliderEl.addEventListener("input", function() {
+      sayiEl.value = sliderEl.value;
+    });
+  }
+});
+
+// ═══ ISIK SLIDER'LARI LIVE EVENT ═══
+var isikAyarlari = [
+  { id: "ayarOrtamIsik", fonksiyon: function(v) { if (sahneDurumu.isiklar?.ortam) sahneDurumu.isiklar.ortam.intensity = v; } },
+  { id: "ayarAnaIsik", fonksiyon: function(v) { if (sahneDurumu.isiklar?.ana) sahneDurumu.isiklar.ana.intensity = v; } },
+  { id: "ayarDolguIsik", fonksiyon: function(v) { if (sahneDurumu.isiklar?.dolgu) sahneDurumu.isiklar.dolgu.intensity = v; } }
+];
+isikAyarlari.forEach(function(kayit) {
+  var el = document.getElementById(kayit.id);
+  if (el) {
+    el.addEventListener("input", function() {
+      kayit.fonksiyon(parseFloat(el.value));
+    });
+  }
+});
+
+// ═══ KAMERA LIVE EVENT ═══
+var kameraFovEl = document.getElementById("ayarFov");
+var kameraMesafeEl = document.getElementById("ayarKameraMesafe");
+if (kameraFovEl) {
+  kameraFovEl.addEventListener("input", function() {
+    var v = parseFloat(kameraFovEl.value);
+    if (sahneDurumu.kamera) {
+      sahneDurumu.kamera.fov = v;
+      sahneDurumu.kamera.updateProjectionMatrix();
+    }
+  });
+}
+if (kameraMesafeEl) {
+  kameraMesafeEl.addEventListener("input", function() {
+    var v = parseFloat(kameraMesafeEl.value);
+    if (sahneDurumu.kontroller && sahneDurumu.kamera) {
+      var hedef = sahneDurumu.kontroller.target;
+      var yon = new THREE.Vector3().subVectors(sahneDurumu.kamera.position, hedef).normalize();
+      var mesafe = v * 2.5; // Slider 1.6-3.2 arasi, gercek mesafe 4-8
+      sahneDurumu.kamera.position.copy(hedef).addScaledVector(yon, mesafe);
+    }
+  });
+}
+
+// ═══ EXPOSURE LIVE EVENT ═══
+var exposureEl = document.getElementById("ayarExposure");
+if (exposureEl) {
+  exposureEl.addEventListener("input", function() {
+    var v = parseFloat(exposureEl.value);
+    if (sahneDurumu.renderer) {
+      sahneDurumu.renderer.toneMappingExposure = v;
+    }
+  });
+}
+
+// ═══ HDR SLIDER'LARI LIVE EVENT ═══
+// Bu ID'ler HTML'deki input elemanlarina karsilik gelir (ASCII, Turksuz)
+var hdrIntensityEl = document.getElementById("ayarHdrYogunluk");
+var hdrDonmeEl = document.getElementById("ayarHdrDondurme");
+var hdrBlurlukEl = document.getElementById("ayarHdrBlurluk");
+var hdrIntensityDegerEl = document.getElementById("ayarHdrYogunluk_deger");
+var hdrDonmeDegerEl = document.getElementById("ayarHdrDondurme_deger");
+var hdrBlurlukDegerEl = document.getElementById("ayarHdrBlurluk_deger");
+
+if (hdrIntensityEl) {
+  hdrIntensityEl.addEventListener("input", function() {
+    var v = parseFloat(hdrIntensityEl.value);
+    sahneDurumu.hdrYogunluk = v;
+    if (hdrIntensityDegerEl) hdrIntensityDegerEl.textContent = v.toFixed(1);
+    hdrAyarlariniUygula();
+  });
+}
+if (hdrDonmeEl) {
+  hdrDonmeEl.addEventListener("input", function() {
+    var v = parseFloat(hdrDonmeEl.value);
+    sahneDurumu.hdrDonme = v;
+    if (hdrDonmeDegerEl) hdrDonmeDegerEl.textContent = v.toFixed(0) + "°";
+    // Feature detection ile environment/background rotation, yeni PMREM yok
+    if (sahneDurumu.sahne) {
+      var rad = THREE.MathUtils.degToRad(v);
+      if (sahneDurumu.sahne.environmentRotation !== undefined) sahneDurumu.sahne.environmentRotation = new THREE.Euler(0, rad, 0);
+      if (sahneDurumu.sahne.backgroundRotation !== undefined) sahneDurumu.sahne.backgroundRotation = new THREE.Euler(0, rad, 0);
+    }
+  });
+}
+if (hdrBlurlukEl) {
+  hdrBlurlukEl.addEventListener("input", function() {
+    var v = parseFloat(hdrBlurlukEl.value);
+    sahneDurumu.hdrBlurluk = v;
+    if (hdrBlurlukDegerEl) hdrBlurlukDegerEl.textContent = v.toFixed(1);
+    // backgroundBlurriness varsa uygula, renderer/PMREM/material reset yok
+    if (sahneDurumu.sahne && sahneDurumu.sahne.backgroundBlurriness !== undefined) {
+      sahneDurumu.sahne.backgroundBlurriness = v;
+    }
+  });
+}
+
+// ═══ ARKA PLAN RENGİ ═══
+var arkaPlanRenkEl = document.getElementById("ayarArkaPlanRenk");
+var arkaPlanDegerEl = document.getElementById("arkaPlanRenkDeger");
+if (arkaPlanRenkEl) {
+  arkaPlanRenkEl.addEventListener("input", function() {
+    sahneDurumu.arkaPlanRenk = arkaPlanRenkEl.value;
+    if (arkaPlanDegerEl) arkaPlanDegerEl.textContent = arkaPlanRenkEl.value;
+    if (sahneDurumu.sahne) {
+      sahneDurumu.sahne.background = new THREE.Color(arkaPlanRenkEl.value);
+    }
+  });
+}
+
+// Hızlı renk butonları
+var arkaPlanHizliGrup = document.querySelector('[data-hedef="arkaPlanHizli"]');
+if (arkaPlanHizliGrup) {
+  arkaPlanHizliGrup.querySelectorAll("button").forEach(function(buton) {
+    buton.addEventListener("click", function() {
+      arkaPlanHizliGrup.querySelectorAll("button").forEach(function(b) { b.classList.remove("aktif"); });
+      buton.classList.add("aktif");
+      var renk = buton.dataset.deger;
+      sahneDurumu.arkaPlanRenk = renk;
+      if (arkaPlanRenkEl) arkaPlanRenkEl.value = renk;
+      if (arkaPlanDegerEl) arkaPlanDegerEl.textContent = renk;
+      if (sahneDurumu.sahne) {
+        sahneDurumu.sahne.background = new THREE.Color(renk);
+      }
+    });
+  });
+}
+
+// Golge ayarlari
+var golgeAyarlari = [
+  { id: "ayarGolgeOpaklik", alan: "golgeOpaklik" },
+  { id: "ayarGolgeBoyut", alan: "golgeBoyut" },
+  { id: "ayarGolgeBias", alan: "golgeBias" }
+];
+golgeAyarlari.forEach(function(kayit) {
+  var el = document.getElementById(kayit.id);
+  if (el) {
+    el.addEventListener("input", function() {
+      sahneDurumu[kayit.alan] = parseFloat(el.value);
+      golgeAyarlariniUygula();
+    });
+  }
+});
 

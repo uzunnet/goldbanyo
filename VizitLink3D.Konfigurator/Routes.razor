@@ -1,0 +1,33 @@
+@inject NavigationManager Nav
+
+<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.BosDuzen)">
+            <NotAuthorized>
+                @{
+                    var mevcutYol = Nav.ToBaseRelativePath(Nav.Uri);
+                    var returnUrl = Uri.EscapeDataString("/" + mevcutYol);
+                    Nav.NavigateTo($"/admin?ReturnUrl={returnUrl}", forceLoad: true);
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Sayfa Bulunamadi — VizitLink3D Studio</PageTitle>
+        <LayoutView Layout="typeof(Layout.BosDuzen)">
+            <MudContainer MaxWidth="MaxWidth.Small" Class="mt-16 text-center">
+                <MudText Typo="Typo.h3" Color="Color.Error">404</MudText>
+                <MudText Typo="Typo.h5">Sayfa bulunamadi</MudText>
+                <MudStack Row="true" Justify="Justify.Center" Spacing="2" Class="mt-4">
+                    <MudButton Href="/" Color="Color.Primary" Variant="Variant.Outlined">
+                        Anasayfa
+                    </MudButton>
+                    <MudButton Href="/admin" Color="Color.Primary" Variant="Variant.Filled">
+                        Yonetim Paneli
+                    </MudButton>
+                </MudStack>
+            </MudContainer>
+        </LayoutView>
+    </NotFound>
+</Router>
