@@ -42,7 +42,7 @@ public partial class Iletisim : ComponentBase, IDisposable
     {
         try
         {
-            var icerigi = await ApiIstemcisi.GetAsync<Dictionary<string, string>>($"api/sayfa-icerigi/ayarlar?dil={DilServisi.AktifDil}");
+            var icerigi = await ApiIstemcisi.GetAsync<Dictionary<string, string>>($"api/sayfa-icerigi/iletisim?dil={DilServisi.AktifDil}");
 
             if (icerigi != null)
             {

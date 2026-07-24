@@ -2141,4 +2141,30 @@
     }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+ * GOLD BANYO TEMA OVERRIDE — Hero butonları altın
+ * ═══════════════════════════════════════════════════════════════ */
+:root[data-site-tema="gold"] .vizit-btn-birincil {
+    background-color: var(--vizit-accent) !important;
+    color: var(--vizit-text-inverse) !important;
+    border-color: var(--vizit-accent) !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.25) !important;
+}
+
+:root[data-site-tema="gold"] .vizit-btn-birincil:hover {
+    background-color: transparent !important;
+    color: var(--vizit-accent) !important;
+    border-color: var(--vizit-accent) !important;
+}
+
+:root[data-site-tema="gold"] .vizit-btn-ikincil {
+    border-color: var(--vizit-accent) !important;
+    color: var(--vizit-accent) !important;
+}
+
+:root[data-site-tema="gold"] .vizit-btn-ikincil:hover {
+    background-color: var(--vizit-accent) !important;
+    color: var(--vizit-text-inverse) !important;
+}
+
 

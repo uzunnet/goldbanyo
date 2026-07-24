@@ -17,7 +17,13 @@ public class LisansDogrulamaMiddleware(RequestDelegate sonraki, ILogger<LisansDo
         // Urun/katalog gorselleri ve medya dosyalari herkese acik icerik —
         // lisanssiz da servis edilmeli (aksi halde production'da gorseller 402 doner).
         "/api/medya/dosya", "/api/medya-havuzu/dosya",
-        "/api/db-yukle"
+        "/api/db-yukle",
+        // Public statik dosyalar — medya, css, js herkese acik
+        "/medya", "/css", "/js",
+        // Public sayfa icerikleri — hero slider, sayfa icerigi, blog, galeri, sertifika, referans
+        "/api/slaytlar", "/api/sayfa-icerigi", "/api/blog", "/api/galeri",
+        "/api/sertifikalar", "/api/referanslar", "/api/kataloglar",
+        "/api/haberler"
     };
 
     public async Task InvokeAsync(HttpContext baglam)

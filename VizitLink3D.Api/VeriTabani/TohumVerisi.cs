@@ -1353,8 +1353,8 @@ public static class TohumVerisi
             return;
         }
 
-        const string birincilDomain = "goldbanyo.uzunreklam.com";
-        const string yedekDomain = "www.goldbanyo.uzunreklam.com";
+        const string birincilDomain = "goldbanyom.com.tr";
+        const string yedekDomain = "www.goldbanyom.com.tr";
 
         var mevcutLisans = await vt.Lisanslar.FirstOrDefaultAsync(l => l.FirmaId == firma.Id);
         if (mevcutLisans is not null)
@@ -1642,6 +1642,13 @@ public static class TohumVerisi
             // ─── MİMARİ SEÇİMLER ÜRÜN ADET ────────────────────────
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "OneCikanAdet", Deger = "4", Dil = "tr" },
             new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "OneCikanAdet", Deger = "4", Dil = "en" },
+            // ─── ANASAYFA SEO ─────────────────────────────────
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoTitle", Deger = "Gold Banyo | Ankara Banyo Dolabı, Banyo Mobilyası ve Özel Tasarım Projeler", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoTitle", Deger = "Gold Banyo | Ankara Bathroom Cabinets, Bathroom Furniture & Custom Design Projects", Dil = "en" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoDescription", Deger = "Gold Banyo, Ankara'da 2005'ten beri lüks banyo dolapları, banyo mobilyaları ve özel tasarım banyo projeleri üretmektedir. 500+ koleksiyon, 20+ ülkeye ihracat. Gold Exclusive, Premium, Trend ve Standart serileriyle banyonuza altın dokunuşlar.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoDescription", Deger = "Gold Banyo has been manufacturing luxury bathroom cabinets, bathroom furniture and custom bathroom projects in Ankara since 2005. 500+ collections, export to 20+ countries. Golden touches for your bathroom.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoKeywords", Deger = "banyo dolabı, banyo mobilyası, ankara banyo, lüks banyo, banyo tasarım, gold banyo, banyo projeleri, özel tasarım banyo, banyo dekorasyon, ankara mobilya", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "anasayfa", Anahtar = "SeoKeywords", Deger = "bathroom cabinet, bathroom furniture, ankara bathroom, luxury bathroom, bathroom design, gold banyo, bathroom projects, custom bathroom, bathroom decoration", Dil = "en" },
             // ─── HAKKIMIZDA ───────────────────────────────────────
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SayfaBasligi", Deger = "Hakkımızda | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SayfaBasligi", Deger = "About Us | Gold Banyo", Dil = "en" },
@@ -1697,6 +1704,13 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "TarihceBaslik4", Deger = "Digital transformation", Dil = "en" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "TarihceAciklama4", Deger = "Katalog, medya ve yönetim akışları daha güçlü bir dijital altyapıyla yeniden yapılandırıldı.", Dil = "tr" },
             new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "TarihceAciklama4", Deger = "Catalogue, media and management flows were restructured on a stronger digital foundation.", Dil = "en" },
+            // ─── HAKKIMIZDA SEO ───────────────────────────────
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoTitle", Deger = "Hakkımızda | Gold Banyo - Ankara Banyo Mobilya Üreticisi", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoTitle", Deger = "About Us | Gold Banyo - Ankara Bathroom Furniture Manufacturer", Dil = "en" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoDescription", Deger = "Gold Banyo, 2005'ten beri Ankara Akyurt'ta 10.000 m² üretim tesisinde lüks banyo mobilyaları üretmektedir. 500+ koleksiyon, 35+ ülkeye ihracat, 600+ satış noktası. Gold Exclusive, Premium, Trend ve Standart serileri.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoDescription", Deger = "Gold Banyo has been producing luxury bathroom furniture in its 10,000 m² facility in Ankara since 2005. 500+ collections, export to 35+ countries, 600+ sales points. Gold Exclusive, Premium, Trend and Standard collections.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoKeywords", Deger = "banyo mobilya üreticisi, ankara banyo, gold banyo hakkımızda, banyo dolap imalatı, banyo mobilyası ankara, lüks banyo mobilya, mobilya üreticisi ankara", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "hakkimizda", Anahtar = "SeoKeywords", Deger = "bathroom furniture manufacturer, ankara bathroom, gold banyo, bathroom cabinet production, luxury bathroom furniture, furniture manufacturer turkey", Dil = "en" },
             // ─── İLETİŞİM ──────────────────────────────────────────
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SayfaBasligi", Deger = "İletişim | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SayfaBasligi", Deger = "Contact | Gold Banyo", Dil = "en" },
@@ -1728,6 +1742,13 @@ public static class TohumVerisi
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "CalismaGunleri", Deger = "Monday - Friday", Dil = "en" },
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "CalismaSaatleri", Deger = "08:00 - 17:00", Dil = "tr" },
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "CalismaSaatleri", Deger = "08:00 - 17:00", Dil = "en" },
+            // ─── İLETİŞİM SEO ──────────────────────────────────
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoTitle", Deger = "İletişim | Gold Banyo - Ankara Banyo Dolap ve Mobilya Merkezi", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoTitle", Deger = "Contact | Gold Banyo - Ankara Bathroom Cabinet Center", Dil = "en" },
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoDescription", Deger = "Gold Banyo Ankara Akyurt fabrika ve showroom iletişim bilgileri. Telefon: +90 312 847 55 22. Banyo dolap modelleri, fiyat teklifi ve showroom ziyareti için bize ulaşın.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoDescription", Deger = "Contact Gold Banyo Ankara factory and showroom. Phone: +90 312 847 55 22. Reach us for bathroom cabinet models, price quotes and showroom visits.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoKeywords", Deger = "banyo dolap iletişim, ankara banyo mobilya, gold banyo iletişim, banyo mobilyası fiyat, banyo dolap sipariş, ankara akyurt mobilya", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "iletisim", Anahtar = "SeoKeywords", Deger = "bathroom cabinet contact, ankara bathroom furniture, gold banyo contact, bathroom furniture price, bathroom cabinet order", Dil = "en" },
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "HaritaUrl", Deger = "https://www.google.com/maps?q=C%CC%A7ankiri+Yolu+8+km+Ankara&output=embed", Dil = "tr" },
             new SayfaIcerigi { Bolum = "iletisim", Anahtar = "HaritaUrl", Deger = "https://www.google.com/maps?q=Ankara+Turkey&output=embed", Dil = "en" },
             // ─── BLOG ──────────────────────────────────────────
@@ -1810,7 +1831,20 @@ public static class TohumVerisi
             // ─── BANYO DOLAPLARI ─────────────────────────────────────
             new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "UrunAdet", Deger = "12", Dil = "tr" },
             new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "UrunAdet", Deger = "12", Dil = "en" },
-            // ─── PROJELER ──────────────────────────────────────
+            // ─── BANYO DOLAPLARI SEO ──────────────────────────
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoTitle", Deger = "Banyo Dolapları Modelleri | Gold Banyo Ankara", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoTitle", Deger = "Bathroom Cabinet Models | Gold Banyo Ankara", Dil = "en" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoDescription", Deger = "Gold Banyo Ankara'da lüks banyo dolap modelleri: Gold Exclusive, Premium, Trend ve Standart serileri. Akrilik, lake, membran yüzey seçenekleriyle 500+ banyo dolabı. Ücretsiz keşif ve fiyat teklifi.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoDescription", Deger = "Gold Banyo luxury bathroom cabinet models in Ankara: Gold Exclusive, Premium, Trend and Standard collections. 500+ cabinets with acrylic, lacquer and membrane finishes.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoKeywords", Deger = "banyo dolabı, banyo dolap modelleri, ankara banyo dolap, lüks banyo dolabı, banyo mobilyası, gold banyo, banyo dolap fiyatları, akrilik banyo dolabı, lake banyo dolabı", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "banyo-dolaplari", Anahtar = "SeoKeywords", Deger = "bathroom cabinet, bathroom cabinet models, ankara bathroom, luxury bathroom cabinet, bathroom furniture, bathroom cabinet prices", Dil = "en" },
+            // ─── PROJELER SEO ──────────────────────────────────
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoTitle", Deger = "Banyo Projeleri | Gold Banyo Ankara - Özel Tasarım ve Toplu Konut", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoTitle", Deger = "Bathroom Projects | Gold Banyo Ankara - Custom Design & Developments", Dil = "en" },
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoDescription", Deger = "Gold Banyo Ankara banyo projeleri: showroom, toplu konut, otel ve özel tasarım uygulamaları. 20 yıllık deneyimle anahtar teslim banyo proje çözümleri.", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoDescription", Deger = "Gold Banyo Ankara bathroom projects: showroom, housing developments, hotel and bespoke applications. Turnkey bathroom project solutions with 20 years of experience.", Dil = "en" },
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoKeywords", Deger = "banyo projeleri, ankara banyo proje, toplu konut banyo, otel banyo projesi, showroom banyo, özel tasarım banyo, banyo uygulama, anahtar teslim banyo", Dil = "tr" },
+            new SayfaIcerigi { Bolum = "projeler", Anahtar = "SeoKeywords", Deger = "bathroom projects, ankara bathroom project, housing bathroom, hotel bathroom project, showroom bathroom, custom bathroom design, turnkey bathroom", Dil = "en" },
             new SayfaIcerigi { Bolum = "projeler", Anahtar = "SayfaBasligi", Deger = "Projelerimiz | Gold Banyo", Dil = "tr" },
             new SayfaIcerigi { Bolum = "projeler", Anahtar = "SayfaBasligi", Deger = "Our Projects | Gold Banyo", Dil = "en" },
             new SayfaIcerigi { Bolum = "projeler", Anahtar = "SayfaIcerigi", Deger = "<h2>Projelerimiz</h2><p>Showroom, toplu konut ve özel uygulama projelerinde Gold Banyo koleksiyonlarının kullanım örneklerini bu alanda paylaşabilirsiniz.</p>", Dil = "tr" },

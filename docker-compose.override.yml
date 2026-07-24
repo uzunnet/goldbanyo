@@ -1,0 +1,18 @@
+services:
+  vizitlink3d-api:
+    build:
+      context: .
+      dockerfile: VizitLink3D.Api/Dockerfile
+    ports:
+      - "5005:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - VIZITLINK3D_JWT_KEY=VizitLink3D_GoldBanyo_Gelistirme_Gizli_Anahtari_2024
+      - LisansAyarlari__GizliAnahtar=goldbanyo-2024
+
+  vizitlink3d-ui:
+    build:
+      context: .
+      dockerfile: VizitLink3D.UI/Dockerfile
+    ports:
+      - "5003:80"

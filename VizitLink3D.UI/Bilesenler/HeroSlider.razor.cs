@@ -54,6 +54,12 @@ public partial class HeroSlider : ComponentBase, IDisposable
             {
                 _slaytlar = slaytListesi.Where(s => s.AktifMi).OrderBy(s => s.SiraNo).ToList();
             }
+            else if (dil.AktifDil != "tr")
+            {
+                var trSlaytlar = await api.GetAsync<List<Slayt>>($"api/slaytlar?dil=tr&sayfaKodu={SayfaKodu}");
+                if (trSlaytlar is { Count: > 0 })
+                    _slaytlar = trSlaytlar.Where(s => s.AktifMi).OrderBy(s => s.SiraNo).ToList();
+            }
         }
         catch
         {

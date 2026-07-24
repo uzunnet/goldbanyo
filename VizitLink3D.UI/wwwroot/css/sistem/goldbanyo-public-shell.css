@@ -3031,3 +3031,266 @@ button.gb-chip {
     justify-self: start;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SÜREÇ BÖLÜMÜ (Nasıl Çalışıyoruz?)
+   ═══════════════════════════════════════════════════════════════ */
+.surec-bolum {
+  padding: var(--tema-dikey-bosluk, 100px) var(--tema-kenar-bosluk, 80px);
+  background: var(--tema-arkaplan-2);
+}
+
+.surec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.surec-adim {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--tema-yuzey);
+  border-radius: var(--tema-kose-yuvarlaklik, 12px);
+  border: 1px solid var(--tema-cizgi);
+  transition: transform var(--tema-gecis-normal, 0.3s ease),
+              box-shadow var(--tema-gecis-normal, 0.3s ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.surec-adim:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--tema-golge-lg);
+}
+
+.surec-adim__ikon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tema-birincil);
+  color: var(--tema-vurgu);
+  border-radius: 50%;
+  font-size: 32px;
+}
+
+.surec-adim__ikon .material-symbols-outlined {
+  font-size: 36px;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+}
+
+.surec-adim__numarali-daire {
+  width: 36px;
+  height: 36px;
+  margin: -38px auto 16px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tema-vurgu);
+  color: var(--tema-birincil);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: var(--tema-baslik-agirlik, 700);
+  border: 3px solid var(--tema-yuzey);
+}
+
+.surec-adim__baslik {
+  font-family: var(--tema-font-baslik, 'Noto Serif');
+  font-size: 20px;
+  font-weight: var(--tema-baslik-agirlik, 700);
+  color: var(--tema-metin);
+  margin-bottom: 12px;
+}
+
+.surec-adim__aciklama {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--tema-metin-ikincil);
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .surec-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .surec-adim { padding: 32px 16px; }
+}
+
+@media (max-width: 768px) {
+  .surec-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .surec-bolum {
+    padding: 60px 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YORUMLAR BÖLÜMÜ (Müşteri Yorumları)
+   ═══════════════════════════════════════════════════════════════ */
+.yorumlar-bolum {
+  padding: var(--tema-dikey-bosluk, 100px) var(--tema-kenar-bosluk, 80px);
+  background: var(--tema-arkaplan-2);
+}
+
+.yorumlar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.yorum-kart {
+  padding: 32px 24px;
+  background: var(--tema-yuzey);
+  border-radius: var(--tema-kose-yuvarlaklik, 12px);
+  border: 1px solid var(--tema-cizgi);
+  transition: transform var(--tema-gecis-normal, 0.3s ease),
+              box-shadow var(--tema-gecis-normal, 0.3s ease);
+}
+
+.yorum-kart:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--tema-golge-lg);
+}
+
+.yorum-kart__puan {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 2px;
+}
+
+.yorum-kart__puan .material-symbols-outlined {
+  color: var(--tema-vurgu);
+  font-variation-settings: 'FILL' 1;
+}
+
+.yorum-kart__metin {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--tema-metin);
+  font-style: italic;
+  margin-bottom: 16px;
+  min-height: 80px;
+}
+
+.yorum-kart__musteri-ad {
+  font-family: var(--tema-font-baslik, 'Noto Serif');
+  font-size: 16px;
+  font-weight: var(--tema-baslik-agirlik, 700);
+  color: var(--tema-vurgu);
+}
+
+.yorum-kart__musteri-sehir {
+  font-size: 13px;
+  color: var(--tema-metin-ikincil);
+  margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+  .yorumlar-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .yorumlar-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .yorumlar-bolum {
+    padding: 60px 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SSS BÖLÜMÜ (Accordion)
+   ═══════════════════════════════════════════════════════════════ */
+.sss-bolum {
+  padding: var(--tema-dikey-bosluk, 100px) var(--tema-kenar-bosluk, 80px);
+  background: var(--tema-arkaplan);
+}
+
+.sss-liste__oge {
+  border-bottom: 1px solid var(--tema-cizgi);
+}
+
+.sss-liste__soru {
+  padding: 20px 0;
+  font-family: var(--tema-font-baslik, 'Noto Serif');
+  font-size: 17px;
+  font-weight: var(--tema-baslik-agirlik, 600);
+  color: var(--tema-metin);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color var(--tema-gecis-normal, 0.3s);
+  user-select: none;
+}
+
+.sss-liste__soru:hover {
+  color: var(--tema-vurgu);
+}
+
+.sss-liste__soru::after {
+  content: '+';
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--tema-vurgu);
+  transition: transform var(--tema-gecis-normal, 0.3s);
+}
+
+.sss-liste__oge:has(.sss-liste__cevap) .sss-liste__soru::after {
+  content: '−';
+}
+
+.sss-liste__cevap {
+  padding: 0 0 20px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--tema-metin-ikincil);
+  animation: sssFadeIn 0.3s ease;
+}
+
+@keyframes sssFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .sss-bolum {
+    padding: 60px 20px;
+  }
+}
+
+/* ── HERO BUTTON OVERRIDE ── */
+.hero-btn-primary {
+  background: var(--tema-vurgu) !important;
+  color: var(--tema-metin-ters) !important;
+}
+
+.hero-btn-primary:hover {
+  background: transparent !important;
+  color: var(--tema-vurgu) !important;
+  border: 1px solid var(--tema-vurgu) !important;
+}
+
+.hero-btn-outline {
+  color: var(--tema-vurgu) !important;
+  border-color: var(--tema-vurgu) !important;
+}
+
+.hero-btn-outline:hover {
+  background: var(--tema-vurgu) !important;
+  color: var(--tema-metin-ters) !important;
+}
