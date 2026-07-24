@@ -1,6 +1,6 @@
 services:
   vizitlink3d-api:
-    image: ghcr.io/uzunnet/goldbanyo-api:latest
+    image: uzunnet/goldbanyo-api:latest
     container_name: vizitlink3d-api
     ports:
       - "5115:8080"
@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
 
   vizitlink3d-ui:
-    image: ghcr.io/uzunnet/goldbanyo-ui:latest
+    image: uzunnet/goldbanyo-ui:latest
     container_name: vizitlink3d-ui
     ports:
       - "5113:80"
