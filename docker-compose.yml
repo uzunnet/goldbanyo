@@ -1,8 +1,6 @@
 services:
   vizitlink3d-api:
-    build:
-      context: .
-      dockerfile: VizitLink3D.Api/Dockerfile
+    image: uzunnet/goldbanyo-api:latest
     container_name: vizitlink3d-api
     ports:
       - "5115:8080"
@@ -18,9 +16,7 @@ services:
     restart: unless-stopped
 
   vizitlink3d-ui:
-    build:
-      context: .
-      dockerfile: VizitLink3D.UI/Dockerfile
+    image: uzunnet/goldbanyo-ui:latest
     container_name: vizitlink3d-ui
     ports:
       - "5113:80"
