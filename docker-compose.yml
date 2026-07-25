@@ -1,6 +1,7 @@
 services:
   vizitlink3d-api:
     image: uzunnet/goldbanyo-api:latest
+    pull_policy: always
     container_name: vizitlink3d-api
     ports:
       - "5115:8080"
@@ -17,6 +18,7 @@ services:
 
   vizitlink3d-ui:
     image: uzunnet/goldbanyo-ui:latest
+    pull_policy: always
     container_name: vizitlink3d-ui
     ports:
       - "5113:80"
