@@ -85,6 +85,18 @@ tmp/
 api_*.txt
 ui_*.txt
 *_err.txt
+*_out.txt
+build_sonuc.txt
+konfigurator_*.txt
+
+# Arşiv (eski site versiyonları)
+Arsiv/
+VizitLink3D_Arsiv_*/
+
+# Büyük görseller (medya havuzunda olmalı)
+*.png
+!wwwroot/**/*.png
+!VizitLink3D.UI/wwwroot/**/*.png
 
 # Yerel ajan ve tarayıcı çalışma çıktıları
 .abacusai/
@@ -120,4 +132,7 @@ Yedekler/
 
 # Python sanal ortam
 UcBoyutMotor/venv/
+
+# Docker yerel override (Coolify'de build yapmamasi icin git disinda)
+docker-compose.override.yml
 
