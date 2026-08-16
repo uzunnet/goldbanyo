@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VizitLink3D.Api.VeriTabani;
 
@@ -10,9 +11,11 @@ using VizitLink3D.Api.VeriTabani;
 namespace VizitLink3D.Api.Veri.Migrations
 {
     [DbContext(typeof(VizitLink3DDbContext))]
-    partial class VizitLink3DDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260816200857_PendingModelFarkiGiderildi")]
+    partial class PendingModelFarkiGiderildi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");

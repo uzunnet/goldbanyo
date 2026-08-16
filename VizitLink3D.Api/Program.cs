@@ -1,4 +1,4 @@
-using VizitLink3D.Api.VeriTabani;
+﻿using VizitLink3D.Api.VeriTabani;
 using VizitLink3D.Api.AraYazilimlar;
 using VizitLink3D.Api.Servisler;
 using VizitLink3D.Api.Moduller.Konfigurasyon.Kontrolcu;
@@ -32,8 +32,8 @@ yapici.Services.AddDbContext<VizitLink3DDbContext>((sp, sec) =>
 {
     var httpErisimi = sp.GetService<IHttpContextAccessor>();
     sec.UseSqlite($"Data Source={vtYolu}")
-       .AddInterceptors(new AuditInterceptor(httpErisimi));
-});
+       .AddInterceptors(new AuditInterceptor(httpErisimi))
+       .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));});
 
 // JWT Kimlik Dogrulama — anahtar yoksa public siteyi çökertmeden çalıştır
 var jwtAnahtar = Environment.GetEnvironmentVariable("VIZITLINK3D_JWT_KEY")
@@ -154,6 +154,9 @@ yapici.Services.AddScoped<VizitLink3D.Api.Moduller.Urunler.Servisler.IUcBoyutMod
 
 // Lisans servisi
 yapici.Services.AddScoped<VizitLink3D.Api.Servisler.Kimlik.LisansServisi>();
+
+// Konfigürasyon servisleri — BOM hesaplayıcı DbContext'e bağımlı olduğu için Scoped
+yapici.Services.AddScoped<VizitLink3D.Api.Moduller.Konfigurasyon.Servisler.IBomHesaplayici, VizitLink3D.Api.Moduller.Konfigurasyon.Servisler.BomHesaplayici>();
 
 var uygulama = yapici.Build();
 
