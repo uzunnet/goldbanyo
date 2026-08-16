@@ -59,6 +59,10 @@
 
     <!-- Public Shell CSS — Blazor baslamadan mobil header guvencesi (inline kritik CSS override edebilsin diye ONDA) -->
     <link href="css/sistem/goldbanyo-public-shell.css?v=20260719-pwa-install-4" rel="stylesheet" />
+    <link href="https://www.goldbanyom.com.tr/api/tema/css/gold/tokens" rel="stylesheet" data-tema-parca="gold-tokens" />
+    <link href="https://www.goldbanyom.com.tr/api/tema/css/gold/bilesenler" rel="stylesheet" data-tema-parca="gold-bilesenler" />
+    <link href="https://www.goldbanyom.com.tr/api/tema/css/gold/animasyonlar" rel="stylesheet" data-tema-parca="gold-animasyonlar" />
+
 
     <!-- Ilk yukleme ekrani stili — Blazor/JS calismadan once anlik gorunmesi icin inline -->
     <style>
@@ -569,8 +573,6 @@
                 }
                 if (eskiWorkerEtkin) {
                     sessionStorage.setItem(tekrarYukleAnahtari, 'tamam');
-                    window.location.reload();
-                    return true;
                 }
             } catch (e) { /* yut */ }
 

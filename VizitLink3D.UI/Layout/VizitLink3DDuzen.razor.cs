@@ -23,6 +23,7 @@ public partial class VizitLink3DDuzen : IDisposable
     private string _firmaSlug = "goldbanyo";
     private string? _logoUrl = "/medya/brand/goldbanyo-logo.png";
     private List<DilServisi.DilBilgisi> _diller = [];
+    private bool _siteHazirMi;
     private bool _ilkRenderTamamlandi;
     private bool _mobilMenuAcik;
 
@@ -54,51 +55,52 @@ public partial class VizitLink3DDuzen : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        // Ayarlar/firma/menu birbirine bagimli degil - paralel cekilir,
-        // boylece ilk render'a kadar gecen sure (ve "Gold Banyo" varsayilaninin
-        // gorunme suresi) art arda 3 istek yerine tek round-trip'e iner.
-        var ayarlarTask = AyarlariYukleAsync();
-        var firmaTask = FirmaBilgisi.GetFirmaAsync();
-        var menuTask = MenuleriYukleAsync();
-        await Task.WhenAll(ayarlarTask, firmaTask, menuTask);
-
-        // DilServisi, ayarlardan gelen _varsayilanDil'e ihtiyac duydugu icin
-        // paralel grubun tamamlanmasini bekler.
-        await DilServisi.BaslatAsync(_varsayilanDil);
-        DilServisi.DilDegisti += DilDegisti;
-        _aktifDil = DilServisi.AktifDil;
-        _diller = DilServisi.DesteklenenDiller.ToList();
-
-        var firma = await firmaTask;
-        if (firma == null)
+        try
         {
-            return;
+            var ayarlarTask = AyarlariYukleAsync();
+            var firmaTask = FirmaBilgisi.GetFirmaAsync();
+            var menuTask = MenuleriYukleAsync();
+            await Task.WhenAll(ayarlarTask, firmaTask, menuTask);
+
+            await DilServisi.BaslatAsync(_varsayilanDil);
+            DilServisi.DilDegisti += DilDegisti;
+            _aktifDil = DilServisi.AktifDil;
+            _diller = DilServisi.DesteklenenDiller.ToList();
+
+            var firma = await firmaTask;
+            if (firma == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(firma.Ad))
+            {
+                _firmaAdi = firma.Ad;
+            }
+
+            if (!string.IsNullOrWhiteSpace(firma.Slug))
+            {
+                _firmaSlug = firma.Slug;
+            }
+
+            if (!string.IsNullOrWhiteSpace(firma.SiteTema))
+            {
+                _aktifTema = firma.SiteTema;
+            }
+
+            if (!string.IsNullOrWhiteSpace(firma.Logo))
+            {
+                _logoUrl = UrlNormalizeEt(firma.Logo);
+            }
         }
-
-        if (!string.IsNullOrWhiteSpace(firma.Ad))
+        finally
         {
-            _firmaAdi = firma.Ad;
-        }
-
-        if (!string.IsNullOrWhiteSpace(firma.Slug))
-        {
-            _firmaSlug = firma.Slug;
-        }
-
-        if (!string.IsNullOrWhiteSpace(firma.SiteTema))
-        {
-            _aktifTema = firma.SiteTema;
-        }
-
-        if (!string.IsNullOrWhiteSpace(firma.Logo))
-        {
-            _logoUrl = UrlNormalizeEt(firma.Logo);
+            _siteHazirMi = true;
         }
     }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender) return;
+        if (!_siteHazirMi || _ilkRenderTamamlandi) return;
 
         await JS.InvokeVoidAsync("localStorage.setItem", "aktif_firma", _firmaSlug);
         await JS.InvokeVoidAsync("localStorage.setItem", "vizitlink3d_site_tema", _aktifTema);

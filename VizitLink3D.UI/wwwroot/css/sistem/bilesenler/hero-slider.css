@@ -24,3 +24,22 @@
 .hero-scroll-icon { color: var(--vizit-text-muted); font-size: 2rem; }
 .hero-empty { min-height: 50vh; display: flex; align-items: center; justify-content: center; }
 
+
+/* Slayt hero buton renk düzeltmesi */
+.hero-slider-wrapper .vizit-btn-birincil {
+  background: var(--tema-vurgu, #FFD700) !important;
+  color: var(--tema-metin-ters, #0a0a0a) !important;
+  border-color: var(--tema-vurgu, #FFD700) !important;
+}
+.hero-slider-wrapper .vizit-btn-birincil:hover {
+  background: transparent !important;
+  color: var(--tema-vurgu, #FFD700) !important;
+}
+.hero-slider-wrapper .vizit-btn-ikincil {
+  color: var(--tema-vurgu, #FFD700) !important;
+  border-color: var(--tema-vurgu, #FFD700) !important;
+}
+.hero-slider-wrapper .vizit-btn-ikincil:hover {
+  background: var(--tema-vurgu, #FFD700) !important;
+  color: var(--tema-metin-ters, #0a0a0a) !important;
+}

@@ -1,9 +1,115 @@
 @page "/projeler"
 @layout VizitLink3DDuzen
-@using VizitLink3D.UI.Bilesenler
+@using VizitLink3D.Ortak.Modeller
 
-<PageTitle>Projeler</PageTitle>
+<PageTitle>@DilServisi.T("projeler.sayfaBasligi", "Projeler")</PageTitle>
 
-<YakindaSayfasi Bolum="projeler" Ustbaslik="Referans Projeler" Baslik="Projeler"
-    Aciklama="Gold Banyo'nun otel, rezidans ve toplu konut projelerindeki uygulama örnekleri yakında burada."
-    Ikon="@MudBlazor.Icons.Material.Outlined.Apartment" />
+<section class="gb-showcase-hero">
+    <div class="gb-showcase-hero__isik"></div>
+    <div class="gb-page gb-proje-hero-icerik">
+        <div class="gb-proje-hero-metin">
+            <span class="gb-proje-kicker">@DilServisi.T("projeler.etiket", "REFERANS PROJELER")</span>
+            <h1 class="gb-showcase-hero__baslik">@DilServisi.T("projeler.baslik", "Projelerimiz")</h1>
+            <p class="gb-showcase-hero__aciklama">@DilServisi.T("projeler.aciklama", "Gold Banyo'nun tamamladığı projelerden ilham alın.")</p>
+        </div>
+    </div>
+</section>
+
+<section class="gb-bolum">
+    @if (_yukleniyor)
+    {
+        <div class="gb-proje-yukleniyor">
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+            <MudText Typo="Typo.body1" Class="gb-proje-yukleniyor-metin">@DilServisi.T("ortak.yukleniyor", "Yükleniyor...")</MudText>
+        </div>
+    }
+    else
+    {
+        <div class="gb-proje-chip-row">
+            <button class="@KategoriSinifi(null)" @onclick="() => KategoriSec(null)">
+                @DilServisi.T("projeler.tumu", "Tümü")
+            </button>
+            @foreach (var kategori in _kategoriler)
+            {
+                <button class="@KategoriSinifi(kategori.Id)" @onclick="() => KategoriSec(kategori.Id)">
+                    @kategori.Ad
+                </button>
+            }
+        </div>
+
+        @foreach (var kategori in GorunenKategoriler())
+        {
+            var kategoriProjeleri = KategoriProjeleri(kategori.Id);
+
+            <div class="gb-proje-bolum">
+                <h2 class="gb-proje-bolum-baslik">@kategori.Ad</h2>
+
+                @if (kategoriProjeleri.Count == 0)
+                {
+                    <div class="gb-proje-bos gb-proje-bos--satir">
+                        <MudIcon Icon="@Icons.Material.Outlined.PhotoLibrary" Size="Size.Large" Class="gb-proje-bos-ikon" />
+                        <MudText Typo="Typo.body2" Class="gb-proje-bos-metin">
+                            @DilServisi.T("projeler.gorselBekleniyor", "Bu bölüme görseller eklenecek.")
+                        </MudText>
+                    </div>
+                }
+                else
+                {
+                    <div class="gb-proje-grid">
+                        @foreach (var proje in kategoriProjeleri)
+                        {
+                            <article class="gb-product-card gb-glint-hover">
+                                <div class="gb-product-card__gorsel">
+                                    @{
+                                        var kapakResim = KapakResmiBul(proje);
+                                    }
+                                    @if (kapakResim is not null)
+                                    {
+                                        <img src="@kapakResim" alt="@proje.Baslik" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="gb-proje-placeholder">
+                                            <MudIcon Icon="@Icons.Material.Outlined.Image" Size="Size.Large" Class="gb-proje-placeholder-ikon" />
+                                        </div>
+                                    }
+                                    <div class="gb-product-card__overlay"></div>
+                                    <div class="gb-product-card__rozetler">
+                                        @if (proje.OneCikanMi)
+                                        {
+                                            <span class="gb-badge gb-badge--altin">@DilServisi.T("projeler.oneCikan", "Öne Çıkan")</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="gb-product-card__icerik">
+                                    <div class="gb-product-card__ust">
+                                        <span class="gb-product-card__koleksiyon">@kategori.Ad</span>
+                                        <span class="gb-product-card__kod">@TarihMetni(proje)</span>
+                                    </div>
+                                    <h3 class="gb-product-card__baslik">@proje.Baslik</h3>
+                                    @if (!string.IsNullOrWhiteSpace(proje.KisaAciklama))
+                                    {
+                                        <p class="gb-product-card__metin">@proje.KisaAciklama</p>
+                                    }
+                                    <div class="gb-product-card__etiketler">
+                                        @if (!string.IsNullOrWhiteSpace(proje.MusteriAdi))
+                                        {
+                                            <span>@proje.MusteriAdi</span>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(proje.MusteriSehir))
+                                        {
+                                            <span>@proje.MusteriSehir</span>
+                                        }
+                                    </div>
+                                    <a class="gb-product-card__link" href="@($"/projeler/{proje.Slug}")">
+                                        @DilServisi.T("projeler.detayGor", "Detayı Gör")
+                                    </a>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    }
+</section>
