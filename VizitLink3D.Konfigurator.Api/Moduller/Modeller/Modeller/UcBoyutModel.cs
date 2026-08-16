@@ -5,6 +5,20 @@ namespace VizitLink3D.Konfigurator.Api.Moduller.Modeller.Modeller;
 public class UcBoyutModel
 {
     public int Id { get; set; }
+
+    /// <summary>
+    /// Multi-tenant izolasyon: Modelin ait olduğu firma. null ise sistem geneli.
+    /// </summary>
+    public int? FirmaId { get; set; }
+
+    /// <summary>
+    /// Modelin bağlı olduğu kategori. null ise kategorisiz modeldir.
+    /// </summary>
+    public int? KategoriId { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public Kategoriler.Modeller.Kategori? Kategori { get; set; }
+
     public string Ad { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
     public string? Aciklama { get; set; }

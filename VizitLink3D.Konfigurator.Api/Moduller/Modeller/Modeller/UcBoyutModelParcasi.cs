@@ -11,6 +11,19 @@ public class UcBoyutModelParcasi
     [JsonIgnore]
     public UcBoyutModel? Model { get; set; }
 
+    /// <summary>
+    /// Multi-tenant izolasyon: Parcanin ait olduğu firma. null ise sistem geneli.
+    /// </summary>
+    public int? FirmaId { get; set; }
+
+    /// <summary>
+    /// Parcanin bağlı olduğu firma bazlı parça kategorisi. null ise kategorisiz.
+    /// </summary>
+    public int? ParcaKategoriId { get; set; }
+
+    [JsonIgnore]
+    public ParcaKategorisi? ParcaKategori { get; set; }
+
     public string MeshAdi { get; set; } = string.Empty;
     public string GorunenAd { get; set; } = string.Empty;
     public ParcaTuru ParcaTuru { get; set; } = ParcaTuru.Diger;

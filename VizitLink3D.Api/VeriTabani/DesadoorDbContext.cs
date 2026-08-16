@@ -111,6 +111,10 @@ public class VizitLink3DDbContext(DbContextOptions<VizitLink3DDbContext> secenek
     public DbSet<IsTakipKaydi> IsTakipKayitlari => Set<IsTakipKaydi>();
     public DbSet<SayfaDuzenAyari> SayfaDuzenAyarlari => Set<SayfaDuzenAyari>();
 
+    // Konfigurator — Teklif ve Analitik (P5P6 migration tablolari)
+    public DbSet<KonfiguratorTeklif> KonfiguratorTeklifler => Set<KonfiguratorTeklif>();
+    public DbSet<KonfiguratorOlayKaydi> KonfiguratorOlayKayitlari => Set<KonfiguratorOlayKaydi>();
+
     // Guvenlik — Tenant API Anahtarlari
     public DbSet<FirmaApiAnahtari> FirmaApiAnahtarlari => Set<FirmaApiAnahtari>();
 

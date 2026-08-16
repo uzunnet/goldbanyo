@@ -23,6 +23,9 @@ public class UrunUcBoyutModeli
     public bool AktifMi { get; set; } = true;
     public DateTime OlusturulmaTarihi { get; set; } = DateTime.UtcNow;
     public DateTime? GuncellenmeTarihi { get; set; }
+    public bool AdminOnayliMi { get; set; }
+    public DateTime? OnayTarihi { get; set; }
+    public int? OnaylayanKullaniciId { get; set; }
     public bool SilindiMi { get; set; }
     public DateTime? SilinmeTarihi { get; set; }
 }

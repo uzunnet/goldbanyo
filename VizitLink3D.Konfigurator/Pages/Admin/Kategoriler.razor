@@ -1,0 +1,212 @@
+@page "/admin/kategoriler"
+@layout AdminDuzen
+@attribute [Authorize]
+
+<PageTitle>@Dil.T("kategoriler.baslik", "Kategori Yonetimi — VizitLink3D Studio")</PageTitle>
+
+<div class="studio-sayfasi">
+    @* ── HEADER ── *@
+    <div class="studio-header">
+        <div class="studio-header-sol">
+            <MudText Typo="Typo.h5" Class="studio-header-baslik">
+                <MudIcon Icon="@Icons.Material.Filled.Category" Class="studio-header-icon" />
+                @Dil.T("kategoriler.sayfaBaslik", "Kategori Yonetimi")
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Default" Class="studio-header-alt">
+                @Dil.T("kategoriler.altBaslik", "Hiyerarsik urun kategorilerini yonetin. Ust kategori ve alt kategoriler olusturabilirsiniz.")
+            </MudText>
+        </div>
+        <div class="studio-header-sag">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                       StartIcon="@Icons.Material.Filled.Add" OnClick="EkleDialogAc">
+                @Dil.T("kategoriler.yeniKategori", "Yeni Kategori")
+            </MudButton>
+        </div>
+    </div>
+
+    @* ── YÜKLENİYOR / HATA ── *@
+    @if (_yukleniyor)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+    }
+    else if (_listeHatasi)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4" Variant="Variant.Filled">
+            @Dil.T("kategoriler.listeHata", "Kategori listesi alinamadi. Lutfen daha sonra tekrar deneyin.")
+        </MudAlert>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="KategorileriYukleAsync">
+            @Dil.T("kategoriler.tekarDene", "Tekrar Dene")
+        </MudButton>
+    }
+    else if (_kategoriler.Count == 0)
+    {
+        <div class="studio-bos-durum">
+            <MudIcon Icon="@Icons.Material.Filled.Category" Size="Size.Large" Color="Color.Default" />
+            <MudText Typo="Typo.h5" Color="Color.Default">
+                @Dil.T("kategoriler.bosDurum", "Henuz hic kategori tanimlanmamis.")
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Default">
+                @Dil.T("kategoriler.bosDurumAlt", "Ilk kategorinizi ekleyerek baslayin.")
+            </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="EkleDialogAc" Class="mt-2">
+                @Dil.T("kategoriler.ilkEkle", "Kategori Ekle")
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        <MudPaper Elevation="1" Class="pa-4">
+            @* Ağaç Görünüm *@
+            <MudTreeView Items="_kategoriler"
+                         ItemsChanged="(v) => { /* read-only */ }"
+                         Class="kategori-agac">
+                <ItemTemplate>
+                    @{ var kat = context.Value; }
+                    <div class="kategori-agac-dugum">
+                        <div class="kategori-agac-bilgi">
+                            <MudIcon Icon="@(kat!.UstKategoriId == null ? Icons.Material.Filled.Folder : Icons.Material.Filled.InsertDriveFile)"
+                                     Size="Size.Small" Class="kategori-agac-ikon" />
+                            <MudText Typo="Typo.body2" Class="font-weight-bold">@kat!.Ad</MudText>
+                            @if (!kat.AktifMi)
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Default" Variant="Variant.Outlined" Class="ml-2">
+                                    @Dil.T("kategoriler.pasif", "Pasif")
+                                </MudChip>
+                            }
+                            @if (kat.AltKategoriler is { Count: > 0 })
+                            {
+                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Class="ml-1">
+                                    @kat.AltKategoriler.Count @Dil.T("kategoriler.alt", "alt")
+                                </MudChip>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(kat.Aciklama))
+                            {
+                                <MudText Typo="Typo.caption" Color="Color.Default" Class="ml-1">- @kat.Aciklama</MudText>
+                            }
+                        </div>
+                        <div class="kategori-agac-aksiyon">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Size="Size.Small"
+                                           OnClick="(() => DuzenleDialogAc(kat!))"
+                                           title="@Dil.T("kategoriler.duzenle", "Duzenle")" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Size="Size.Small"
+                                           Color="Color.Error"
+                                           OnClick="(() => SilDialogAc(kat!))"
+                                           title="@Dil.T("kategoriler.sil", "Sil")" />
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </MudTreeView>
+        </MudPaper>
+    }
+</div>
+
+@* ──── EKLEME / DÜZENLEME DİALOGU ──── *@
+<MudDialog @bind-Open="_dialogAcik" MaxWidth="MaxWidth.Small" FullWidth="true">
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-4">@_dialogBaslik</MudText>
+
+        <MudGrid Spacing="2">
+            <MudItem xs="12">
+                <MudTextField T="string"
+                              Label="@Dil.T("kategoriler.ad", "Kategori Adi")"
+                              @bind-Value="_ad"
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              Margin="Margin.Dense"
+                              Disabled="@_kaydediliyor" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField T="string"
+                              Label="@Dil.T("kategoriler.aciklama", "Aciklama (Opsiyonel)")"
+                              @bind-Value="_aciklama"
+                              Variant="Variant.Outlined"
+                              Lines="2"
+                              Margin="Margin.Dense"
+                              Disabled="@_kaydediliyor" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="int?"
+                           Label="@Dil.T("kategoriler.ustKategori", "Ust Kategori")"
+                           @bind-Value="_ustKategoriId"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           AnchorOrigin="Origin.BottomCenter"
+                           Disabled="@_kaydediliyor">
+                    <MudSelectItem T="int?" Value="@((int?)null)">
+                        @Dil.T("kategoriler.ustKategoriYok", "Yok (Ana Kategori)")
+                    </MudSelectItem>
+                    @foreach (var kat in _ustKategoriSecenekleri)
+                    {
+                        <MudSelectItem T="int?" Value="@(kat.Id)">@kat.Ad</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudNumericField T="int"
+                                 Label="@Dil.T("kategoriler.sira", "Sira No")"
+                                 @bind-Value="_sira"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Min="0"
+                                 Disabled="@_kaydediliyor" />
+            </MudItem>
+            @if (_duzenlemeModu)
+            {
+                <MudItem xs="12">
+                    <MudSwitch T="bool"
+                               Label="@Dil.T("kategoriler.aktifMi", "Aktif")"
+                               @bind-Value="_aktifMi"
+                               Color="Color.Primary"
+                               Disabled="@_kaydediliyor" />
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" OnClick="DialogKapat" Disabled="@_kaydediliyor">
+            @Dil.T("kategoriler.iptal", "Iptal")
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="KaydetAsync" Disabled="@_kaydediliyor"
+                   StartIcon="@Icons.Material.Filled.Save">
+            @(_kaydediliyor ? Dil.T("kategoriler.kaydediliyor", "Kaydediliyor...") : Dil.T("kategoriler.kaydet", "Kaydet"))
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@* ──── SİLME DİALOGU ──── *@
+<MudDialog @bind-Open="_silmeDialogAcik" MaxWidth="MaxWidth.ExtraSmall" FullWidth="true">
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-3">
+            @Dil.T("kategoriler.silOnayBaslik", "Kategori Sil")
+        </MudText>
+        <MudText Typo="Typo.body2" Class="mb-2">
+            @Dil.T("kategoriler.silOnayMetin", "\"{0}\" kategorisini silmek istediginize emin misiniz?")
+                .Replace("{0}", _silinecekKategori?.Ad ?? "")
+        </MudText>
+        <MudText Typo="Typo.caption" Color="Color.Default" Class="mb-3">
+            @Dil.T("kategoriler.silOnayAlt", "Soft-delete uygulanir; veri tamamen silinmez, devre disi birakilir.")
+        </MudText>
+
+        @if (!string.IsNullOrEmpty(_silmeHataMesaji))
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Dense="true" Class="mb-2">
+                @_silmeHataMesaji
+            </MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" OnClick="SilDialogKapat" Disabled="@_siliniyor">
+            @Dil.T("kategoriler.iptal", "Iptal")
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                   OnClick="SilAsync" Disabled="@_siliniyor"
+                   StartIcon="@Icons.Material.Filled.Delete">
+            @(_siliniyor ? Dil.T("kategoriler.siliniyor", "Siliniyor...") : Dil.T("kategoriler.sil", "Sil"))
+        </MudButton>
+    </DialogActions>
+</MudDialog>

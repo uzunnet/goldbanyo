@@ -12,4 +12,7 @@ public class KonfiguratorCevap<T>
 
     public static KonfiguratorCevap<T> Hata(string mesaj, List<string>? hatalar = null) =>
         new() { BasariliMi = false, Mesaj = mesaj, Hatalar = hatalar ?? [] };
+
+    public static KonfiguratorCevap<T> Izinsiz(string mesaj) =>
+        new() { BasariliMi = false, Mesaj = mesaj, Hatalar = ["Yetkisiz erişim."] };
 }

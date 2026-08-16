@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VizitLink3D.Konfigurator.Api.Moduller.Kategoriler.Modeller;
 using VizitLink3D.Konfigurator.Api.Moduller.Kimlik.Modeller;
 using VizitLink3D.Konfigurator.Api.Moduller.Modeller.Modeller;
 
@@ -13,6 +14,9 @@ public class KonfiguratorDbContext : DbContext
     public DbSet<UcBoyutModel> UcBoyutModeller => Set<UcBoyutModel>();
     public DbSet<UcBoyutModelParcasi> UcBoyutModelParcalari => Set<UcBoyutModelParcasi>();
     public DbSet<SifreSifirlamaIstegi> SifreSifirlamaIstekleri => Set<SifreSifirlamaIstegi>();
+    public DbSet<Kategori> Kategoriler => Set<Kategori>();
+    public DbSet<ParcaKategorisi> ParcaKategorileri => Set<ParcaKategorisi>();
+    public DbSet<KonfiguratorFirma> Firmalar => Set<KonfiguratorFirma>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +63,67 @@ public class KonfiguratorDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(i => i.KullaniciId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Kategori agaci (Kategoriler tablosu — 20260723021905 migration)
+        modelBuilder.Entity<Kategori>(entity =>
+        {
+            entity.HasQueryFilter(k => !k.SilindiMi);
+            entity.Property(k => k.Ad).HasMaxLength(100);
+            entity.Property(k => k.Slug).HasMaxLength(150);
+            entity.Property(k => k.Aciklama).HasMaxLength(500);
+            entity.HasIndex(k => k.Slug).IsUnique();
+
+            entity.HasOne(k => k.UstKategori)
+                .WithMany(k => k.AltKategoriler)
+                .HasForeignKey(k => k.UstKategoriId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Firma bazli parca kategorisi (20260722231927 migration)
+        modelBuilder.Entity<ParcaKategorisi>(entity =>
+        {
+            entity.HasQueryFilter(p => !p.SilindiMi);
+            entity.Property(p => p.Ad).HasMaxLength(200);
+            entity.Property(p => p.Aciklama).HasMaxLength(500);
+            entity.HasIndex(p => p.FirmaId);
+            entity.HasIndex(p => new { p.FirmaId, p.Ad }).IsUnique();
+        });
+
+        // Konfigurator firmasi / tenant (20260722231927 migration)
+        modelBuilder.Entity<KonfiguratorFirma>(entity =>
+        {
+            entity.HasQueryFilter(f => !f.SilindiMi);
+            entity.Property(f => f.Ad).HasMaxLength(200);
+            entity.Property(f => f.Slug).HasMaxLength(100);
+            entity.Property(f => f.Domain).HasMaxLength(300);
+            entity.Property(f => f.YedekDomain).HasMaxLength(300);
+            entity.HasIndex(f => f.Domain);
+            entity.HasIndex(f => f.Slug).IsUnique();
+        });
+
+        // UcBoyutModel -> FirmaId / KategoriId (tenant + kategori)
+        modelBuilder.Entity<UcBoyutModel>(entity =>
+        {
+            entity.HasIndex(m => m.FirmaId);
+            entity.HasIndex(m => m.KategoriId);
+
+            entity.HasOne(m => m.Kategori)
+                .WithMany()
+                .HasForeignKey(m => m.KategoriId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // UcBoyutModelParcasi -> FirmaId / ParcaKategoriId (tenant + kategori)
+        modelBuilder.Entity<UcBoyutModelParcasi>(entity =>
+        {
+            entity.HasIndex(p => p.FirmaId);
+            entity.HasIndex(p => p.ParcaKategoriId);
+
+            entity.HasOne(p => p.ParcaKategori)
+                .WithMany()
+                .HasForeignKey(p => p.ParcaKategoriId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }
