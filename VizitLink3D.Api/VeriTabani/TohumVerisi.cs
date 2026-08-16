@@ -4904,7 +4904,7 @@ public static class TohumVerisi
     }
 
     /// <summary>
-    /// Gold Yeni koleksiyon gorsellerini (mutfak, kahve köşesi, giyinme odası, tv ünitesi, çamaşır odası)
+    /// Gold Yeni koleksiyon gorsellerini (mutfak, kahve köşesi, giyinme odası, tv ünitesi, çamaşır odası, kapı)
     /// medya havuzuna kopyalar ve proje + projeResim seed kayıtlarını idempotent olarak ekler.
     /// Proje slug varsa güncelle, ProjeResim ProjeId+Url varsa atla.
     /// </summary>
@@ -5018,6 +5018,27 @@ public static class TohumVerisi
                     new { Dosya = "camasir-odasi-ahsap-yan-yana-03.jpeg", Alt = "Ahşap yan yana çamaşır odası, geniş tezgah ve depolama alanı.", Sira = 3 },
                     new { Dosya = "camasir-odasi-ahsap-duz-04.jpeg", Alt = "Ahşap düz çamaşır odası, minimal çizgi ve fonksiyonel yerleşim.", Sira = 4 },
                     new { Dosya = "camasir-odasi-siyah-luks-05.jpeg", Alt = "Siyah lüks çamaşır odası, modern yüzey ve entegre aydınlatma.", Sira = 5 }
+                }
+            },
+            new
+            {
+                Slug = "gold-yeni-kapi-koleksiyonu",
+                Baslik = "Gold Yeni Kapı Koleksiyonu",
+                KategoriSlug = "kapi",
+                KisaAciklama = "Ahşap dokulu, modern panelli ve klasik çizgili iç kapı modellerinden oluşan yeni koleksiyon.",
+                Aciklama = "<p>Gold Yeni Kapı Koleksiyonu, yaşam alanlarını tamamlayan iç kapı modellerini estetik ve fonksiyonel bir çizgide buluşturuyor. Ahşap dokulu, düz lake, klasik panelli ve modern çizgili tasarımlarıyla koleksiyon; krem, bej, kahve ve doğal ahşap tonlarında geniş bir yüzey alternatifi sunar.</p><p>Her model, odalar arası geçişte hem mahremiyet hem de şıklık sağlayacak şekilde tasarlanmıştır. Çift kanat ve tek kanat seçenekleri, sade panellerden klasik detaylara uzanan tasarım yelpazesiyle birlikte Gold Banyo'nun üretim hassasiyeti ve malzeme kalitesiyle hayata geçirilmiştir.</p>",
+                OneCikanMi = false,
+                SiraNo = 6,
+                Gorseller = new[]
+                {
+                    new { Dosya = "kapi-cift-kanat-ahsap-01.jpeg", Alt = "Ahşap dokulu çift kanat iç kapı, sıcak tonlarda doğal görünüm.", Sira = 1 },
+                    new { Dosya = "kapi-modern-tek-kanat-02.jpeg", Alt = "Modern çizgili tek kanat iç kapı modeli, sade panel tasarımı.", Sira = 2 },
+                    new { Dosya = "kapi-klasik-panelli-03.jpeg", Alt = "Klasik panelli iç kapı, geleneksel çerçeve detaylı tasarım.", Sira = 3 },
+                    new { Dosya = "kapi-duz-lake-04.jpeg", Alt = "Düz lake yüzeyli iç kapı, minimal hatlarla tamamlanmış uygulama.", Sira = 4 },
+                    new { Dosya = "kapi-koyu-ahsap-05.jpeg", Alt = "Koyu ahşap tonlu iç kapı, zengin doku ve zarif çizgiler.", Sira = 5 },
+                    new { Dosya = "kapi-acik-krem-06.jpeg", Alt = "Açık krem tonunda iç kapı, aydınlık mekanlara uyumlu model.", Sira = 6 },
+                    new { Dosya = "kapi-bej-ton-07.jpeg", Alt = "Bej tonlu iç kapı, sıcak renk dengesi ve modern görünüm.", Sira = 7 },
+                    new { Dosya = "kapi-kahve-ton-08.jpeg", Alt = "Kahve tonlarında iç kapı, ortam sıcaklığını artıran tasarım.", Sira = 8 }
                 }
             }
         };
