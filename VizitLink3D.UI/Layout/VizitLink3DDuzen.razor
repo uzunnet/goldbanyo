@@ -11,17 +11,6 @@
 <MudDialogProvider />
 <MudPopoverProvider />
 
-@if (!_siteHazirMi)
-{
-    <div class="gb-ilk-yukleme gb-ilk-yukleme--layout">
-        <div class="gb-ilk-yukleme-logo-sarmal">
-            <img class="gb-ilk-yukleme-logo" src="/medya/brand/goldbanyo-logo-kare.png" alt="Gold Banyo" />
-        </div>
-        <p class="gb-ilk-yukleme-metin">@DilServisi.T("ortak.yukleniyor", "Yükleniyor…")</p>
-    </div>
-}
-else
-{
 <div class="gb-shell gb-shell--hazir" data-tema-id="@_aktifTema">
     <header class="gb-header">
         <a href="/" class="gb-brand">
@@ -152,4 +141,3 @@ else
         </div>
     </footer>
 </div>
-}
