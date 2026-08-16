@@ -2,7 +2,7 @@
 @layout VizitLink3D.UI.Layout.AdminDuzen
 @using VizitLink3D.Ortak.Modeller
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin,SuperAdmin")]
 @inject VizitLink3D.UI.Servisler.DilServisi dil
 
 <PageTitle>@($"{dil.T("admin.proje.sayfaBasligi", "Proje Yönetimi")} | VizitLink3D")</PageTitle>

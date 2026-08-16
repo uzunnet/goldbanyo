@@ -41,7 +41,7 @@ public class Proje
     public DateTime OlusturulmaTarihi { get; set; } = DateTime.UtcNow;
     public DateTime? GuncellenmeTarihi { get; set; }
 
-    [JsonIgnore] public List<ProjeResim>? Resimler { get; set; }
+    public List<ProjeResim>? Resimler { get; set; }
 }
 
 public class ProjeResim

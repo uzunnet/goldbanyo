@@ -83,7 +83,7 @@ window.vizitlink3dTema = {
         var mevcutMod = localStorage.getItem('temaMod') || 'koyu';
         root.setAttribute('data-tema-mod', mevcutMod);
 
-        var mevcutTemaLinkleri = document.querySelectorAll('link[data-tema-parca]');
+        var mevcutTemaLinkleri = document.querySelectorAll('[data-tema-parca]');
         mevcutTemaLinkleri.forEach(function (link) {
             var parcaDegeri = link.dataset.temaParca || '';
             if (!parcaDegeri.startsWith(temaSlug + '-')) {
@@ -94,7 +94,7 @@ window.vizitlink3dTema = {
         var dosyalar = ['tokens', 'bilesenler', 'animasyonlar'];
         dosyalar.forEach(function (dosya) {
             var parcaDegeri = temaSlug + '-' + dosya;
-            if (!document.querySelector('style[data-tema-parca="' + parcaDegeri + '"]')) {
+            if (!document.querySelector('[data-tema-parca="' + parcaDegeri + '"]')) {
                 fetch(apiTemelUrl + '/api/tema/css/' + encodeURIComponent(temaSlug) + '/' + encodeURIComponent(dosya), {
                     cache: 'no-store'
                 })
@@ -120,7 +120,7 @@ window.vizitlink3dTema = {
         root.style.colorScheme = 'dark';
         localStorage.setItem('temaMod', 'koyu');
 
-        var temaLinkleri = document.querySelectorAll('link[data-tema-parca]');
+        var temaLinkleri = document.querySelectorAll('[data-tema-parca]');
         temaLinkleri.forEach(function (link) {
             link.parentNode && link.parentNode.removeChild(link);
         });

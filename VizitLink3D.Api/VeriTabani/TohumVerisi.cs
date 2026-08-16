@@ -91,6 +91,7 @@ public static class TohumVerisi
         await Bolum(vt, "Firma", async () => { if (!vt.Firmalar.Any()) await TohumlaFirmaAsync(vt); });
         await Bolum(vt, "Lisans", async () => await TohumlaLisansAsync(vt));
         await Bolum(vt, "ProjeKategorileri", async () => { if (!vt.ProjeKategorileri.Any()) await TohumlaProjeKategorileriAsync(vt); });
+        await Bolum(vt, "ProjeKategorileri2026", async () => await ProjeKategorileri2026GarantiEtAsync(vt));
         await Bolum(vt, "Referanslar", async () => { await TohumlaReferanslariAsync(vt); });
         await Bolum(vt, "ReferansLoglariGuncelle", async () => { await ReferansLogoGuncelleAsync(vt); });
         await Bolum(vt, "MusteriYorumlari", async () => { if (!vt.MusteriYorumlari.Any()) await TohumlaMusteriYorumlariniAsync(vt); });
@@ -154,6 +155,42 @@ public static class TohumVerisi
         await Bolum(vt, "GoldBanyoGecisDuzeltmeleri", async () => await GoldBanyoGecisDuzeltmeleriAsync(vt));
         await Bolum(vt, "MenuTohumlariniGarantiEt", async () => await MenuTohumlariniGarantiEtAsync(vt));
 
+        // 'Proje' public menüsü — idempotent onarım (silme YOK, duplicate EKLEME):
+        // PublicHeader ve PublicMobil için Url='projeler' kayıtları AktifMi=true yapılır;
+        // Baslik='Proje' garanti edilir; Sira=4 (Katalog sonrası, Kurumsal öncesi pozisyon) garanti edilir.
+        // AdminSol / admin/proje-yonetimi kaydına KARIŞILMAZ.
+        await Bolum(vt, "PublicProjelerMenuAktiflestir", async () =>
+        {
+            var projelerMenuleri = await vt.MenuOgeleri
+                .Where(m => (m.Konum == "PublicHeader" || m.Konum == "PublicMobil") && m.Url == "projeler")
+                .ToListAsync();
+
+            var degistiMi = false;
+            foreach (var menu in projelerMenuleri)
+            {
+                if (!menu.AktifMi)
+                {
+                    menu.AktifMi = true;
+                    degistiMi = true;
+                }
+                if (menu.Sira != 4)
+                {
+                    menu.Sira = 4;
+                    degistiMi = true;
+                }
+                if (menu.Baslik != "Proje")
+                {
+                    menu.Baslik = "Proje";
+                    degistiMi = true;
+                }
+            }
+
+            if (degistiMi)
+            {
+                await vt.SaveChangesAsync();
+            }
+        });
+
         await Bolum(vt, "AdminMenuleri", async () =>
         {
             // Her baslangicta admin menulerini guncelle — yeni sayfalar/menu ogeleri
@@ -167,6 +204,62 @@ public static class TohumVerisi
                 vt.MenuOgeleri.RemoveRange(vt.MenuOgeleri.Where(m => m.Konum == "AdminSol"));
                 await vt.SaveChangesAsync();
                 await TohumlaAdminMenuleriAsync(vt);
+            }
+        });
+
+        // 'Projeler' admin menüsü — idempotent onarım (silme YOK; duplicate EKLEME):
+        // admin/proje-yonetimi kaydı kök menü olarak düzeltilir (Baslik='Projeler',
+        // UstMenuId=null, Sira=5 = Musteri ve Operasyon öncesi). Eski alt menü kaydı
+        // varsa aynı kayıt köke taşınır. Soft-delete edilmiş kayıt geri getirilir.
+        await Bolum(vt, "ProjeAcMenuOnarimi", async () =>
+        {
+            const int projeKokSirasi = 5;
+            var projeMenusu = await vt.MenuOgeleri
+                .FirstOrDefaultAsync(m => m.Konum == "AdminSol" && m.Url == "admin/proje-yonetimi");
+
+            if (projeMenusu == null)
+            {
+                var hedefFirmaId = await vt.Firmalar
+                    .Where(f => f.AktifMi)
+                    .Select(f => (int?)f.Id)
+                    .FirstOrDefaultAsync();
+
+                vt.MenuOgeleri.Add(new MenuOgesi
+                {
+                    FirmaId = hedefFirmaId,
+                    Baslik = "Projeler",
+                    Url = "admin/proje-yonetimi",
+                    Sira = projeKokSirasi,
+                    Konum = "AdminSol",
+                    Ikon = "Engineering",
+                    AktifMi = true,
+                    UstMenuId = null,
+                    GerekliRol = "Admin",
+                    SuperAdminGerekliMi = false,
+                    YetkiAnahtari = "admin.proje",
+                    KilitliMi = false,
+                    SistemMenusuMu = false
+                });
+                await vt.SaveChangesAsync();
+            }
+            else
+            {
+                var degisti = false;
+                // Eski alt menü kaydını KÖKE taşı — yeni duplicate eklenmez.
+                if (projeMenusu.UstMenuId != null) { projeMenusu.UstMenuId = null; degisti = true; }
+                if (projeMenusu.Baslik != "Projeler") { projeMenusu.Baslik = "Projeler"; degisti = true; }
+                if (projeMenusu.Sira != projeKokSirasi) { projeMenusu.Sira = projeKokSirasi; degisti = true; }
+                if (projeMenusu.Konum != "AdminSol") { projeMenusu.Konum = "AdminSol"; degisti = true; }
+                if (projeMenusu.Ikon != "Engineering") { projeMenusu.Ikon = "Engineering"; degisti = true; }
+                if (!projeMenusu.AktifMi) { projeMenusu.AktifMi = true; degisti = true; }
+                // Kullanici/menu izin sistemi alanlarini standardize et (idempotent; silme YOK):
+                if (projeMenusu.GerekliRol != "Admin") { projeMenusu.GerekliRol = "Admin"; degisti = true; }
+                if (projeMenusu.SuperAdminGerekliMi) { projeMenusu.SuperAdminGerekliMi = false; degisti = true; }
+                if (projeMenusu.YetkiAnahtari != "admin.proje") { projeMenusu.YetkiAnahtari = "admin.proje"; degisti = true; }
+                if (projeMenusu.KilitliMi) { projeMenusu.KilitliMi = false; degisti = true; }
+                if (projeMenusu.SistemMenusuMu) { projeMenusu.SistemMenusuMu = false; degisti = true; }
+                if (projeMenusu.SilindiMi) { projeMenusu.SilindiMi = false; degisti = true; }
+                if (degisti) await vt.SaveChangesAsync();
             }
         });
 
@@ -232,6 +325,8 @@ public static class TohumVerisi
         await Bolum(vt, "HaberleriGuncelle2026", async () => await HaberleriGuncelle2026Async(vt));
 
         await Bolum(vt, "ProjeleriYenile2026", async () => await ProjeleriYenile2026Async(vt));
+
+        await Bolum(vt, "GoldYeniProjeGorselleri", async () => await GoldYeniProjeGorselleriGarantiEtAsync(vt));
 
         await Bolum(vt, "FabrikaMenuVeSayfaEklendi2026", async () => await FabrikaMenuVeSayfaEkleAsync(vt));
 
@@ -1398,6 +1493,59 @@ public static class TohumVerisi
         await vt.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// 2026 proje kategorilerini garanti eder: Mutfak, TV ünitesi, Kapı, Giyinme odası,
+    /// Çamaşır odası, Kahve köşesi. Mevcutsa Ad/SiraNo/AktifMi güncellenir; yoksa eklenir.
+    /// Banyo kategorisi varsa silinmez, sadece AktifMi=false yapılır.
+    /// </summary>
+    private static async Task ProjeKategorileri2026GarantiEtAsync(VizitLink3DDbContext vt)
+    {
+        var istenenler = new (string Ad, string Slug, int Sira)[]
+        {
+            ("Mutfak", "mutfak", 1),
+            ("TV ünitesi", "tv-unitesi", 2),
+            ("Kapı", "kapi", 3),
+            ("Giyinme odası", "giyinme-odasi", 4),
+            ("Çamaşır odası", "camasir-odasi", 5),
+            ("Kahve köşesi", "kahve-kosesi", 6)
+        };
+
+        var mevcutlar = await vt.ProjeKategorileri.ToListAsync();
+        var degisti = false;
+
+        foreach (var (ad, slug, sira) in istenenler)
+        {
+            var mevcut = mevcutlar.FirstOrDefault(k => k.Slug == slug);
+            if (mevcut is null)
+            {
+                vt.ProjeKategorileri.Add(new ProjeKategorisi
+                {
+                    Ad = ad,
+                    Slug = slug,
+                    SiraNo = sira,
+                    AktifMi = true
+                });
+                degisti = true;
+            }
+            else
+            {
+                if (mevcut.Ad != ad) { mevcut.Ad = ad; degisti = true; }
+                if (mevcut.SiraNo != sira) { mevcut.SiraNo = sira; degisti = true; }
+                if (!mevcut.AktifMi) { mevcut.AktifMi = true; degisti = true; }
+            }
+        }
+
+        // Banyo slug'ı varsa silme, sadece pasifle
+        var banyo = mevcutlar.FirstOrDefault(k => k.Slug == "banyo");
+        if (banyo is not null && banyo.AktifMi)
+        {
+            banyo.AktifMi = false;
+            degisti = true;
+        }
+
+        if (degisti) await vt.SaveChangesAsync();
+    }
+
     private static async Task TohumlaReferanslariAsync(VizitLink3DDbContext vt)
     {
         var referanslar = new List<Referans>
@@ -1931,7 +2079,7 @@ public static class TohumVerisi
                         new() { FirmaId = firma.Id, Baslik = "Tüm Ürünler", Url = "banyo-dolaplari", Sira = 5, Konum = "PublicHeader" }
                     }},
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Katalog", Url = "katalog", Sira = 3, Konum = "PublicHeader", Ikon = "PictureAsPdf" },
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicHeader", Ikon = "Apartment", AktifMi = false },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Proje", Url = "projeler", Sira = 4, Konum = "PublicHeader", Ikon = "Apartment", AktifMi = true },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Kurumsal", Url = "hakkimizda", Sira = 5, Konum = "PublicHeader", Ikon = "Info", AltMenuler = new List<MenuOgesi> {
                         new() { FirmaId = firma.Id, Baslik = "Hakkımızda", Url = "hakkimizda", Sira = 1, Konum = "PublicHeader" },
                         new() { FirmaId = firma.Id, Baslik = "Vizyon & Misyon", Url = "vizyon-misyon", Sira = 2, Konum = "PublicHeader" },
@@ -1951,7 +2099,7 @@ public static class TohumVerisi
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ana Sayfa", Url = "", Sira = 1, Konum = "PublicMobil", Ikon = "Home" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ürünler", Url = "banyo-dolaplari", Sira = 2, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Katalog", Url = "katalog", Sira = 3, Konum = "PublicMobil" },
-                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "projeler", Sira = 4, Konum = "PublicMobil", AktifMi = false },
+                    new MenuOgesi { FirmaId = firma.Id, Baslik = "Proje", Url = "projeler", Sira = 4, Konum = "PublicMobil", AktifMi = true },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Hakkımızda", Url = "hakkimizda", Sira = 5, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Vizyon & Misyon", Url = "vizyon-misyon", Sira = 6, Konum = "PublicMobil" },
                     new MenuOgesi { FirmaId = firma.Id, Baslik = "Ekibimiz", Url = "ekibimiz", Sira = 7, Konum = "PublicMobil" },
@@ -2075,8 +2223,8 @@ public static class TohumVerisi
                     new() { FirmaId = firma.Id, Baslik = "PDF Katalog", Url = "admin/pdf-katalog-yonetimi", Sira = 4, Konum = "AdminSol", Ikon = "PictureAsPdf" },
                     new() { FirmaId = firma.Id, Baslik = "PDF Uygulama Esleme", Url = "admin/pdf-uygulama-esleme", Sira = 5, Konum = "AdminSol", Ikon = "ContentCut" }
                 }},
+                new MenuOgesi { FirmaId = firma.Id, Baslik = "Projeler", Url = "admin/proje-yonetimi", Sira = 5, Konum = "AdminSol", Ikon = "Engineering", GerekliRol = "Admin", YetkiAnahtari = "admin.proje" },
                 new MenuOgesi { FirmaId = firma.Id, Baslik = "Pazarlama", Url = "", Sira = 7, Konum = "AdminSol", Ikon = "Campaign", GerekliRol = "Admin", AltMenuler = new List<MenuOgesi> {
-                    new() { FirmaId = firma.Id, Baslik = "Proje Yonetimi", Url = "admin/proje-yonetimi", Sira = 1, Konum = "AdminSol", Ikon = "Engineering" },
                     new() { FirmaId = firma.Id, Baslik = "Referanslar", Url = "admin/referans-yonetimi", Sira = 2, Konum = "AdminSol", Ikon = "GroupWork" },
                     new() { FirmaId = firma.Id, Baslik = "Musteri Yorumlari", Url = "admin/yorum-yonetimi", Sira = 3, Konum = "AdminSol", Ikon = "RateReview" },
                     new() { FirmaId = firma.Id, Baslik = "Hizmet Adimlari", Url = "admin/hizmet-adimi-yonetimi", Sira = 4, Konum = "AdminSol", Ikon = "Timeline" },
@@ -2141,7 +2289,7 @@ public static class TohumVerisi
         {
             musteri.Baslik = "Musteri ve Operasyon";
             musteri.Ikon = "SupportAgent";
-            musteri.Sira = 5;
+            musteri.Sira = 6;
         }
 
         var dashboard = Kok("Gosterge Paneli");
@@ -2153,7 +2301,7 @@ public static class TohumVerisi
         var sistem = Kok("Sistem");
         if (sistem != null)
         {
-            sistem.Sira = 6;
+            sistem.Sira = 7;
             sistem.SuperAdminGerekliMi = false;
         }
 
@@ -2192,7 +2340,6 @@ public static class TohumVerisi
         Sira(Url("admin/pdf-katalog-yonetimi"), 10);
         Sira(Url("admin/katalog-yonetimi"), 11);
 
-        Sira(Url("admin/proje-yonetimi"), 1);
         Sira(Url("admin/referans-yonetimi"), 2);
         Sira(Url("admin/yorum-yonetimi"), 3);
         Sira(Url("admin/hizmet-adimi-yonetimi"), 4);
@@ -4753,6 +4900,200 @@ public static class TohumVerisi
         {
             await vt.SaveChangesAsync();
             Console.WriteLine($"[TOHUM] KirikMedyalariTamir: Tamir={tamirEdilen}, Silinen={silinen}");
+        }
+    }
+
+    /// <summary>
+    /// Gold Yeni koleksiyon gorsellerini (mutfak, kahve köşesi, giyinme odası, tv ünitesi, çamaşır odası)
+    /// medya havuzuna kopyalar ve proje + projeResim seed kayıtlarını idempotent olarak ekler.
+    /// Proje slug varsa güncelle, ProjeResim ProjeId+Url varsa atla.
+    /// </summary>
+    private static async Task GoldYeniProjeGorselleriGarantiEtAsync(VizitLink3DDbContext vt)
+    {
+        var simdi = DateTime.UtcNow;
+
+        // Kategori slug → Id eşlemesi (ProjeKategorileri2026GarantiEtAsync zaten çalışıyor)
+        var kategoriler = await vt.ProjeKategorileri
+            .Where(k => k.AktifMi)
+            .ToDictionaryAsync(k => k.Slug, k => k.Id);
+
+        int KatId(string slug) =>
+            kategoriler.TryGetValue(slug, out var id) ? id : kategoriler.Values.First();
+
+        // ─── 5 PROJE TANIMI ───────────────────────────────────────────────
+        var projeTanimlari = new[]
+        {
+            new
+            {
+                Slug = "gold-yeni-modern-mutfak-koleksiyonu",
+                Baslik = "Gold Yeni Modern Mutfak Koleksiyonu",
+                KategoriSlug = "mutfak",
+                KisaAciklama = "Ada, U plan, klasik ve modern çizgileri bir araya getiren yeni nesil mutfak uygulamaları.",
+                Aciklama = "<p>Gold Yeni Modern Mutfak Koleksiyonu, fonksiyonel tezgah düzenleri ve şık yüzey kombinasyonlarıyla mutfak tasarımında yeni bir standart belirliyor. Ada tipi, U plan ve klasik hat modellerinin yer aldığı koleksiyon; bej, siyah, beyaz ve gri tonlarında yüzey alternatifleri sunar.</p><p>Mermer dokulu tezgahlar, cam kapakli üst dolaplar ve endüstriyel beton detaylarla zenginleşen koleksiyon, hem minimal hem de lüks mutfak arayanlar için geniş bir yelpaze oluşturur. Her model, Gold Banyo'nun üretim hassasiyeti ve malzeme kalitesiyle hayata geçirilmiştir.</p>",
+                OneCikanMi = true,
+                SiraNo = 1,
+                Gorseller = new[]
+                {
+                    new { Dosya = "mutfak-modern-bej-glossy-u-sekli-01.jpeg", Alt = "Modern bej gloss U plan mutfak dolabı, parlak yüzey ve geniş tezgah düzeni.", Sira = 1 },
+                    new { Dosya = "mutfak-luks-siyah-altin-ada-02.jpeg", Alt = "Lüks siyah-altın renk kombinasyonlu ada tipi mutfak, mermer tezgah detayı.", Sira = 2 },
+                    new { Dosya = "mutfak-klasik-beyaz-mermer-03.jpeg", Alt = "Klasik beyaz lake mutfak, mermer tezgah ve oymalı kapak detayı.", Sira = 3 },
+                    new { Dosya = "mutfak-endustriyel-gri-beton-04.jpeg", Alt = "Endüstriyel gri beton doku mutfak, açık raflar ve metal aksesuarlar.", Sira = 4 },
+                    new { Dosya = "mutfak-luks-cam-siyah-ada-05.jpeg", Alt = "Lüks siyah ada mutfak, cam üst dolaplar ve LED aydınlatma.", Sira = 5 },
+                    new { Dosya = "mutfak-modern-kavisli-ada-06.jpeg", Alt = "Modern kavisli ada mutfak, yuvarlak hatlar ve entegre ocak.", Sira = 6 },
+                    new { Dosya = "mutfak-minimal-gri-duz-07.jpeg", Alt = "Minimal gri düz mutfak, mat yüzey ve gizli kulplu dolaplar.", Sira = 7 },
+                    new { Dosya = "mutfak-modern-bej-siyah-mermer-08.jpeg", Alt = "Modern bej-siyah mutfak, mermer tezgah ve çift renk dolap kombinasyonu.", Sira = 8 },
+                    new { Dosya = "mutfak-modern-gri-ada-09.jpeg", Alt = "Modern gri ada mutfak, geniş tezgah ve sandalye alanı.", Sira = 9 },
+                    new { Dosya = "mutfak-dag-evi-ahsap-siyah-10.jpeg", Alt = "Dağ evi tarzı ahşap-siyah mutfak, doğal malzeme ve sıcak tonlar.", Sira = 10 },
+                    new { Dosya = "mutfak-modern-beyaz-siyah-yemekli-11.jpeg", Alt = "Modern beyaz-siyah mutfak, entegre yemek alanı ve pendant aydınlatma.", Sira = 11 }
+                }
+            },
+            new
+            {
+                Slug = "gold-yeni-kahve-kosesi-serisi",
+                Baslik = "Gold Yeni Kahve Köşesi Serisi",
+                KategoriSlug = "kahve-kosesi",
+                KisaAciklama = "Espresso ekipmanları, cam vitrinler ve sıcak ahşap tonlarıyla kişisel kahve alanları.",
+                Aciklama = "<p>Gold Yeni Kahve Köşesi Serisi, evin en özel köşesini işlevsel ve estetik bir dönüşüme uğratıyor. Ceviz, koyu kahve ve krem tonlarında yüzey alternatifleriyle sunulan koleksiyon; espresso makinesi nişleri, cam vitrinli üst modüller ve gizli makine bölmeleriyle donatılmıştır.</p><p>Rustik ahşap dokulardan klasik mermer detaylara kadar geniş bir stil skalasına sahip olan seri, her mutfak yapısına uyum sağlayacak boyut ve konfigürasyon seçenekleri sunar. Kişisel kahve deneyimini fonksiyonel bir mobilyaya dönüştüren modeller, Gold Banyo kalitesiyle üretilmiştir.</p>",
+                OneCikanMi = false,
+                SiraNo = 2,
+                Gorseller = new[]
+                {
+                    new { Dosya = "kahve-kosesi-koyu-kahve-rustik-01.jpeg", Alt = "Koyu kahve rustik kahve köşesi, doğal ahşap doku ve açık raf sistemi.", Sira = 1 },
+                    new { Dosya = "kahve-kosesi-ceviz-bej-mermer-02.jpeg", Alt = "Ceviz-bej kahve köşesi, mermer tezgah ve cam vitrin.", Sira = 2 },
+                    new { Dosya = "kahve-kosesi-klasik-krem-kemerli-03.jpeg", Alt = "Klasik krem kemerli kahve köşesi, oymalı detay ve kahve çekirdeği deposu.", Sira = 3 },
+                    new { Dosya = "kahve-kosesi-ceviz-gizli-makine-04.jpeg", Alt = "Ceviz kahve köşesi, gizli makine bölmeli fonksiyonel tasarım.", Sira = 4 },
+                    new { Dosya = "kahve-kosesi-klasik-mermer-05.jpeg", Alt = "Klasik mermer kahve köşesi, beyaz lake ve altın detaylar.", Sira = 5 }
+                }
+            },
+            new
+            {
+                Slug = "gold-yeni-giyinme-odasi-koleksiyonu",
+                Baslik = "Gold Yeni Giyinme Odası Koleksiyonu",
+                KategoriSlug = "giyinme-odasi",
+                KisaAciklama = "Cam kapaklı gardıroplar, aydınlatmalı raflar ve düzenli depolama çözümleri.",
+                Aciklama = "<p>Gold Yeni Giyinme Odası Koleksiyonu, kişisel alan düzenlemesini üst düzey bir tasarıma dönüştürüyor. Cam kapaklı gardıroplar, aydınlatmalı iç raflar ve aksesuar çekmeceleriyle zenginleştirilen koleksiyon; siyah, ceviz, gri ve açık ahşap tonlarında yüzey alternatifleri sunar.</p><p>Her model, giysilerin düzenli bir şekilde saklanmasını sağlayan fonksiyonel iç bölmelerle donatılmıştır. Sürgülü cam kapaklar, LED iç aydınlatma ve entegre ayna modülleriyle hem görsel hem de kullanım açısından üst düzey bir deneyim sunar. Gold Banyo'nun üretim kalitesi ve detay hassasiyeti bu koleksiyonda kendini tam olarak göstermektedir.</p>",
+                OneCikanMi = true,
+                SiraNo = 3,
+                Gorseller = new[]
+                {
+                    new { Dosya = "giyinme-odasi-luks-siyah-cam-01.jpeg", Alt = "Lüks siyah cam kapaklı giyinme odası, LED aydınlatmalı iç mekan.", Sira = 1 },
+                    new { Dosya = "giyinme-odasi-acik-ahsap-beyaz-02.jpeg", Alt = "Açık ahşap-beyaz giyinme odası, geniş çekmece sistemi.", Sira = 2 },
+                    new { Dosya = "giyinme-odasi-gri-acik-sistem-03.jpeg", Alt = "Gri açık sistem giyinme odası, askılık ve raflı modül.", Sira = 3 },
+                    new { Dosya = "giyinme-odasi-ceviz-cam-kapak-04.jpeg", Alt = "Ceviz cam kapaklı giyinme odası, warm tone iç aydınlatma.", Sira = 4 },
+                    new { Dosya = "giyinme-odasi-acik-ahsap-cam-05.jpeg", Alt = "Açık ahşap cam kapaklı giyinme odası, minimal tasarım.", Sira = 5 },
+                    new { Dosya = "giyinme-odasi-koyu-ahsap-rustik-06.jpeg", Alt = "Koyu ahşap rustik giyinme odası, doğal doku ve geniş depolama.", Sira = 6 }
+                }
+            },
+            new
+            {
+                Slug = "gold-yeni-tv-unitesi-duvar-panelleri",
+                Baslik = "Gold Yeni TV Ünitesi ve Duvar Panelleri",
+                KategoriSlug = "tv-unitesi",
+                KisaAciklama = "LED aydınlatmalı panel, mermer arka plan ve raf sistemleriyle tamamlanan yaşam alanları.",
+                Aciklama = "<p>Gold Yeni TV Ünitesi ve Duvar Panelleri koleksiyonu, yaşam alanlarını fonksiyonel ve görsel olarak zenginleştiren duvar üniteleri sunuyor. LED aydınlatmalı paneller, mermer arka plan detayları ve çoklu raf sistemleriyle donatılan modeller; modern ve klasik olmak üzere iki ana stil grubunda yer alıyor.</p><p>Ahşap, mermer ve siyah yüzey kombinasyonlarıyla tasarlanan üniteler, TV altı konsol, yan raf modülleri ve entegre saklama alanlarını tek bir bütün halinde sunar. Her model, Gold Banyo'nun hassas üretim kalitesi ve modern yaşam alanı ihtiyaçlarına uygun fonksiyonellikle üretilmiştir.</p>",
+                OneCikanMi = false,
+                SiraNo = 4,
+                Gorseller = new[]
+                {
+                    new { Dosya = "tv-unitesi-duvar-ahsap-led-01.jpeg", Alt = "Duvar tipi ahşap TV ünitesi, LED arka aydınlatma ve raf sistemi.", Sira = 1 },
+                    new { Dosya = "tv-unitesi-ahsap-rafli-02.jpeg", Alt = "Ahşap raflı TV ünitesi, çoklu depolama ve minimal tasarım.", Sira = 2 },
+                    new { Dosya = "tv-unitesi-siyah-somine-03.jpeg", Alt = "Siyah şömine detaylı TV ünitesi, lüks yaşam alanı tasarımı.", Sira = 3 },
+                    new { Dosya = "tv-unitesi-duvar-ahsap-renkli-04.jpeg", Alt = "Duvar tipi renkli ahşap TV ünitesi, canlı tonlar ve modern hat.", Sira = 4 },
+                    new { Dosya = "tv-unitesi-mermer-siyah-luks-05.jpeg", Alt = "Mermer-siyah lüks TV ünitesi, mermer arka plan ve metal detaylar.", Sira = 5 }
+                }
+            },
+            new
+            {
+                Slug = "gold-yeni-camasir-odasi-sistemleri",
+                Baslik = "Gold Yeni Çamaşır Odası Sistemleri",
+                KategoriSlug = "camasir-odasi",
+                KisaAciklama = "Çamaşır, ütü ve temizlik depolamasını tek düzende toplayan fonksiyonel dolap sistemleri.",
+                Aciklama = "<p>Gold Yeni Çamaşır Odası Sistemleri, çamaşır yıkama, kurutma, ütü ve temizlik ürünlerinin depolanmasını tek bir düzenli sistemde topluyor. Ahşap, bej ve siyah yüzey alternatifleriyle sunulan koleksiyon; üst üste yerleştirilen makine alanları, çekmeceli ütü masası bölmeleri ve gizli temizlik ürünü raflarıyla donatılmıştır.</p><p>Her model, dar alanları verimli kullanmayı sağlayan fonksiyonel iç yerleşim planlarıyla tasarlanmıştır. Yığmalı (stacked), yan yana ve düz hat konfigürasyonlarında sunulan sistemler, Gold Banyo'nun üretim kalitesi ve alan optimizasyonu uzmanlığını yansıtmaktadır.</p>",
+                OneCikanMi = false,
+                SiraNo = 5,
+                Gorseller = new[]
+                {
+                    new { Dosya = "camasir-odasi-bej-stacked-01.jpeg", Alt = "Bej yığmalı çamaşır odası, üst üste makine yerleşimi ve çekmece sistemi.", Sira = 1 },
+                    new { Dosya = "camasir-odasi-gizli-stacked-02.jpeg", Alt = "Gizli yığmalı çamaşır odası, kapaklı dolap içinde makine alanı.", Sira = 2 },
+                    new { Dosya = "camasir-odasi-ahsap-yan-yana-03.jpeg", Alt = "Ahşap yan yana çamaşır odası, geniş tezgah ve depolama alanı.", Sira = 3 },
+                    new { Dosya = "camasir-odasi-ahsap-duz-04.jpeg", Alt = "Ahşap düz çamaşır odası, minimal çizgi ve fonksiyonel yerleşim.", Sira = 4 },
+                    new { Dosya = "camasir-odasi-siyah-luks-05.jpeg", Alt = "Siyah lüks çamaşır odası, modern yüzey ve entegre aydınlatma.", Sira = 5 }
+                }
+            }
+        };
+
+        foreach (var tanim in projeTanimlari)
+        {
+            var kategoriId = KatId(tanim.KategoriSlug);
+
+            // ─── PROJE: slug varsa güncelle, yoksa ekle ──────────────────
+            var mevcutProje = await vt.Projeler
+                .FirstOrDefaultAsync(p => p.Slug == tanim.Slug);
+
+            int projeId;
+            if (mevcutProje == null)
+            {
+                var yeniProje = new Proje
+                {
+                    Slug = tanim.Slug,
+                    Baslik = tanim.Baslik,
+                    KisaAciklama = tanim.KisaAciklama,
+                    Aciklama = tanim.Aciklama,
+                    KategoriId = kategoriId,
+                    KapakResim = $"/medya/projeler/{tanim.KategoriSlug}/{tanim.Gorseller[0].Dosya}",
+                    OneCikanMi = tanim.OneCikanMi,
+                    SiraNo = tanim.SiraNo,
+                    AktifMi = true,
+                    ProjeTarihi = new DateTime(2026, 8, 15, 0, 0, 0, DateTimeKind.Utc),
+                    SeoBaslik = $"{tanim.Baslik} | Gold Banyo",
+                    SeoAciklama = tanim.KisaAciklama,
+                    OlusturulmaTarihi = simdi
+                };
+                vt.Projeler.Add(yeniProje);
+                await vt.SaveChangesAsync(); // Id almak için
+                projeId = yeniProje.Id;
+                Console.WriteLine($"[TOHUM] GoldYeni proje eklendi: {tanim.Slug} (Id={projeId})");
+            }
+            else
+            {
+                projeId = mevcutProje.Id;
+                var degisti = false;
+                if (mevcutProje.Baslik != tanim.Baslik) { mevcutProje.Baslik = tanim.Baslik; degisti = true; }
+                if (mevcutProje.KisaAciklama != tanim.KisaAciklama) { mevcutProje.KisaAciklama = tanim.KisaAciklama; degisti = true; }
+                if (mevcutProje.Aciklama != tanim.Aciklama) { mevcutProje.Aciklama = tanim.Aciklama; degisti = true; }
+                if (mevcutProje.KategoriId != kategoriId) { mevcutProje.KategoriId = kategoriId; degisti = true; }
+                if (mevcutProje.OneCikanMi != tanim.OneCikanMi) { mevcutProje.OneCikanMi = tanim.OneCikanMi; degisti = true; }
+                if (mevcutProje.SiraNo != tanim.SiraNo) { mevcutProje.SiraNo = tanim.SiraNo; degisti = true; }
+                if (!mevcutProje.AktifMi) { mevcutProje.AktifMi = true; degisti = true; }
+                mevcutProje.GuncellenmeTarihi = simdi;
+                if (degisti)
+                {
+                    Console.WriteLine($"[TOHUM] GoldYeni proje guncellendi: {tanim.Slug}");
+                    await vt.SaveChangesAsync();
+                }
+            }
+
+            // ─── PROJE RESİMLERİ: ProjeId+Url varsa ekleme ──────────────
+            var mevcutResimUrls = await vt.ProjeResimleri
+                .Where(r => r.ProjeId == projeId)
+                .Select(r => r.Url)
+                .ToListAsync();
+
+            foreach (var gorsel in tanim.Gorseller)
+            {
+                var resimUrl = $"/medya/projeler/{tanim.KategoriSlug}/{gorsel.Dosya}";
+                if (mevcutResimUrls.Contains(resimUrl)) continue;
+
+                vt.ProjeResimleri.Add(new ProjeResim
+                {
+                    ProjeId = projeId,
+                    Url = resimUrl,
+                    AltMetin = gorsel.Alt,
+                    Sira = gorsel.Sira
+                });
+            }
+
+            await vt.SaveChangesAsync();
         }
     }
 }

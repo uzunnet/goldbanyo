@@ -1,6 +1,110 @@
 @page "/projeler/{Slug}"
 @layout VizitLink3DDuzen
+@using VizitLink3D.Ortak.Modeller
 
-<PageTitle>@DilServisi.T("projeDetay.baslik", "Proje Detay")</PageTitle>
+<PageTitle>@(_proje?.SeoBaslik ?? DilServisi.T("projeDetay.baslik", "Proje Detay"))</PageTitle>
 
-<section class="gb-page"><div class="gb-panel"><MudText Typo="Typo.h4">@DilServisi.T("projeDetay.baslik", "Proje Detay")</MudText><MudText Typo="Typo.body1">@DilServisi.T("projeDetay.aciklama", "Bu rota yeni public yapida sade tutuldu. Detay modulu ikinci asamada yeniden kurulacak.")</MudText></div></section>
+<section class="gb-detail-page gb-page">
+    <nav class="gb-breadcrumb" aria-label="breadcrumb">
+        <a href="/">@DilServisi.T("menu.anasayfa", "Ana Sayfa")</a>
+        <span>/</span>
+        <a href="/projeler">@DilServisi.T("menu.projeler", "Projeler")</a>
+        @if (_proje is not null)
+        {
+            <span>/</span>
+            <strong>@_proje.Baslik</strong>
+        }
+    </nav>
+
+    @if (_yukleniyor)
+    {
+        <div class="gb-proje-yukleniyor">
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+            <MudText Typo="Typo.body1" Class="gb-proje-yukleniyor-metin">@DilServisi.T("ortak.yukleniyor", "Yükleniyor...")</MudText>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(_hataMesaji))
+    {
+        <div class="gb-panel">
+            <MudIcon Icon="@Icons.Material.Outlined.ErrorOutline" Size="Size.Large" Class="gb-proje-bos-ikon" />
+            <MudText Typo="Typo.h5">@DilServisi.T("projeDetay.bulunamadi", "Proje bulunamadı")</MudText>
+            <MudText Typo="Typo.body1">@_hataMesaji</MudText>
+            <MudButton Href="/projeler" Variant="Variant.Filled" Color="Color.Primary">@DilServisi.T("projeDetay.projelereDon", "Projelere Dön")</MudButton>
+        </div>
+    }
+    else if (_proje is not null)
+    {
+        <div class="gb-detail-grid">
+            <div class="gb-detail-medya">
+                @if (AnaKapakYolu() is { } anaKapak)
+                {
+                    <div class="gb-detail-medya__ana">
+                        <img src="@anaKapak" alt="@_proje.Baslik" @onclick="() => ResmiBuyut(anaKapak)" />
+                    </div>
+                }
+
+                @if (GaleriResimleri().Count > 0)
+                {
+                    <div class="gb-detail-medya__galeri">
+                        @foreach (var resim in GaleriResimleri())
+                        {
+                            var resimYolu = ResimYoluDuzenle(resim.Url);
+                            @if (resimYolu is not null)
+                            {
+                                <figure class="@KartSinifi(resimYolu)" @onclick="() => ResimSec(resimYolu)">
+                                    <img src="@resimYolu" alt="@(resim.AltMetin ?? _proje.Baslik)" loading="lazy" />
+                                </figure>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="gb-detail-icerik">
+                <span class="gb-proje-kicker">@DilServisi.T("projeDetay.etiket", "PROJE DETAYI")</span>
+                <h1 class="gb-detail-baslik">@_proje.Baslik</h1>
+
+                @if (!string.IsNullOrWhiteSpace(_proje.KisaAciklama))
+                {
+                    <p class="gb-detail-spot">@_proje.KisaAciklama</p>
+                }
+
+                <div class="gb-detail-ozet">
+                    <div class="gb-detail-ozet__kart gb-panel">
+                        <strong>@DilServisi.T("projeDetay.tarih", "Tarih")</strong>
+                        <span>@TarihMetni(_proje)</span>
+                    </div>
+                    <div class="gb-detail-ozet__kart gb-panel">
+                        <strong>@DilServisi.T("projeDetay.musteri", "Müşteri")</strong>
+                        <span>@(!string.IsNullOrWhiteSpace(_proje.MusteriAdi) ? _proje.MusteriAdi : DilServisi.T("ortak.belirtilmedi", "Belirtilmedi"))</span>
+                    </div>
+                    <div class="gb-detail-ozet__kart gb-panel">
+                        <strong>@DilServisi.T("projeDetay.sehir", "Şehir")</strong>
+                        <span>@(!string.IsNullOrWhiteSpace(_proje.MusteriSehir) ? _proje.MusteriSehir : DilServisi.T("ortak.belirtilmedi", "Belirtilmedi"))</span>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_proje.Aciklama))
+                {
+                    <div class="gb-card gb-panel">
+                        <MudText Typo="Typo.body1">@AciklamaMetni()</MudText>
+                    </div>
+                }
+
+                <MudButton Href="/projeler" Variant="Variant.Outlined" Color="Color.Primary">
+                    @DilServisi.T("projeDetay.projelereDon", "Projelere Dön")
+                </MudButton>
+            </div>
+        </div>
+    }
+</section>@if (_buyukResimAcik && _buyukResimYolu is not null)
+{
+    <div class="gb-lightbox" @onclick="ResmiKapat">
+        <div class="gb-lightbox__icerik" @onclick:stopPropagation="true">
+            <button class="gb-lightbox__kapat" @onclick="ResmiKapat" aria-label="@DilServisi.T("ortak.kapat", "Kapat")">
+                <MudIcon Icon="@Icons.Material.Outlined.Close" Size="Size.Large" />
+            </button>
+            <img src="@_buyukResimYolu" alt="@(_proje?.Baslik)" />
+        </div>
+    </div>
+}

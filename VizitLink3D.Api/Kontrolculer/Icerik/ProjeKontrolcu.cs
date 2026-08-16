@@ -13,6 +13,17 @@ namespace VizitLink3D.Api.Kontrolculer.Icerik;
 [Route("api/projeler")]
 public class ProjeKontrolcu(VizitLink3DDbContext vt) : ControllerBase
 {
+    [HttpGet("kategoriler")]
+    public async Task<IActionResult> Kategoriler()
+    {
+        var liste = await vt.ProjeKategorileri
+            .Where(k => k.AktifMi)
+            .OrderBy(k => k.SiraNo)
+            .ThenBy(k => k.Ad)
+            .ToListAsync();
+        return Ok(Cevap<List<ProjeKategorisi>>.Basarili(liste));
+    }
+
     [HttpGet]
     public async Task<IActionResult> Listele([FromQuery] int? kategoriId)
     {
@@ -77,6 +88,27 @@ public class ProjeKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         return Ok(Cevap<Proje>.Basarili(proje));
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    [HttpPost]
+    public async Task<IActionResult> Ekle([FromBody] Proje p)
+    {
+        if (string.IsNullOrWhiteSpace(p.Slug))
+            p.Slug = SlugOlustur(p.Baslik);
+        if (p.KategoriId == 0)
+            p.KategoriId = await vt.ProjeKategorileri
+                .Where(k => k.AktifMi)
+                .OrderBy(k => k.SiraNo)
+                .Select(k => (int?)k.Id)
+                .FirstOrDefaultAsync() ?? 1;
+
+        p.Id = 0;
+        p.OlusturulmaTarihi = DateTime.UtcNow;
+        p.GuncellenmeTarihi = DateTime.UtcNow;
+        vt.Projeler.Add(p);
+        await vt.SaveChangesAsync();
+        return Ok(Cevap<Proje>.Basarili(p, "Proje eklendi."));
+    }
+
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> Guncelle(int id, Proje g)
@@ -100,6 +132,17 @@ public class ProjeKontrolcu(VizitLink3DDbContext vt) : ControllerBase
         p.GuncellenmeTarihi = DateTime.UtcNow;
         await vt.SaveChangesAsync();
         return Ok(Cevap<object>.Basarili(null!));
+    }
+
+    private static string SlugOlustur(string deger)
+    {
+        return deger
+            .ToLowerInvariant()
+            .Replace(' ', '-')
+            .Replace('ı', 'i').Replace('ğ', 'g').Replace('ü', 'u')
+            .Replace('ş', 's').Replace('ö', 'o').Replace('ç', 'c')
+            .Replace('İ', 'i').Replace('Ğ', 'g').Replace('Ü', 'u')
+            .Replace('Ş', 's').Replace('Ö', 'o').Replace('Ç', 'c');
     }
 }
 
