@@ -169,30 +169,23 @@ using (var kapsam = uygulama.Services.CreateScope())
     // SQLite performans ayarlari: WAL modu okuma/yazmayi birbirini kilitlemeden
     // calistirir (coklu istek altinda hizli kalir), busy_timeout kilit
     // catismalarinda "database is locked" hatasi yerine kisa sure bekler.
-    try
+    vt.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
+    vt.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;");
+    vt.Database.ExecuteSqlRaw("PRAGMA busy_timeout=5000;");
+
+    var migrationAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "1", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "true", StringComparison.OrdinalIgnoreCase);
+
+    if (migrationAtla)
     {
-        vt.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
-        vt.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;");
-        vt.Database.ExecuteSqlRaw("PRAGMA busy_timeout=5000;");
-
-        var migrationAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "1", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_MIGRATION"), "true", StringComparison.OrdinalIgnoreCase);
-
-        if (migrationAtla)
-        {
-            Log.Information("Veritabani migrasyonu ortam degiskeni ile atlandi.");
-        }
-        else
-        {
-            // SQLite EF migration kilidi, yarida kalan onceki calismalardan kalabiliyor.
-            // Ilk acilista guvenli sekilde temizleyip migrasyonu devam ettiriyoruz.
-            vt.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsLock\";");
-            await vt.Database.MigrateAsync();
-        }
+        Log.Information("Veritabani migrasyonu ortam degiskeni ile atlandi.");
     }
-    catch (Exception ex)
+    else
     {
-        Log.Warning(ex, "Veritabani migration/startup hazirligi uygulanamadi; API normal baslatiliyor.");
+    // SQLite EF migration kilidi, yarida kalan onceki calismalardan kalabiliyor.
+    // Ilk acilista guvenli sekilde temizleyip migrasyonu devam ettiriyoruz.
+    vt.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsLock\";");
+    await vt.Database.MigrateAsync();
     }
 
     var startupFixupAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_STARTUP_FIXUPS"), "1", StringComparison.OrdinalIgnoreCase)
