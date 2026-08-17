@@ -199,9 +199,13 @@ using (var kapsam = uygulama.Services.CreateScope())
         await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
     }
 
-    // Tohum verisi idempotent calisir: mevcut kayitlara dokunmaz, eksik proje/galeri kayitlarini ekler.
-    // Production dahil her ortamda calistirilir; boylece yeni icerik canliya otomatik duser.
-    await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
+    // Tohum verisi sadece Development ortaminda calissin (best practice).
+    // Production'da DB zaten dolu, tohum verisi gereksiz islem + potansiyel AuditLog dongusu riski tasir.
+    // Gerekirse FOR_SEED=1 ortam degiskeni ile zorla calistirilabilir.
+    if (webEnv.IsDevelopment() || Environment.GetEnvironmentVariable("FORCE_SEED") == "1")
+    {
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
+    }
 
     // DeepSeek API anahtarını şifreli tohumla (env veya config'den; kayıt varsa dokunma)
     var deepSeekKey = Environment.GetEnvironmentVariable("DEEPSEEK_API_KEY")
