@@ -201,14 +201,7 @@ using (var kapsam = uygulama.Services.CreateScope())
 
     // Tohum verisi idempotent calisir: mevcut kayitlara dokunmaz, eksik proje/galeri kayitlarini ekler.
     // Production dahil her ortamda calistirilir; boylece yeni icerik canliya otomatik duser.
-    try
-    {
-        await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
-    }
-    catch (Exception ex)
-    {
-        Log.Warning(ex, "Tohum verisi uygulanamadi; API normal baslatiliyor.");
-    }
+    await VizitLink3D.Api.VeriTabani.TohumVerisi.TohumlaAsync(vt);
 
     // DeepSeek API anahtarını şifreli tohumla (env veya config'den; kayıt varsa dokunma)
     var deepSeekKey = Environment.GetEnvironmentVariable("DEEPSEEK_API_KEY")
