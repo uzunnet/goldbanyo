@@ -195,15 +195,8 @@ using (var kapsam = uygulama.Services.CreateScope())
     {
         // Bu düzeltme, üretimde tohumlama kapalı olsa bile statik katalog dosyası
         // PNG'den WebP'ye dönüştürülmüş ürünlerin medya yolunu güvenli biçimde güncel tutar.
-        try
-        {
-            await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
-            await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "Startup katalog/iletisim duzeltmeleri uygulanamadi; API normal baslatiliyor.");
-        }
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldKatalogMedyaUzantilariniDuzeltAsync(vt);
+        await VizitLink3D.Api.VeriTabani.TohumVerisi.GoldBanyoIletisimBilgileriniDuzeltAsync(vt);
     }
 
     // Tohum verisi idempotent calisir: mevcut kayitlara dokunmaz, eksik proje/galeri kayitlarini ekler.
@@ -218,8 +211,6 @@ using (var kapsam = uygulama.Services.CreateScope())
     }
 
     // DeepSeek API anahtarını şifreli tohumla (env veya config'den; kayıt varsa dokunma)
-    try
-    {
     var deepSeekKey = Environment.GetEnvironmentVariable("DEEPSEEK_API_KEY")
         ?? yapici.Configuration["AI:DeepSeekApiKey"];
     if (!string.IsNullOrWhiteSpace(deepSeekKey)
@@ -239,16 +230,9 @@ using (var kapsam = uygulama.Services.CreateScope())
         await vt.SaveChangesAsync();
         Log.Information("DeepSeek sağlayıcısı şifreli API anahtarıyla tohumlandı.");
     }
-    }
-    catch (Exception ex)
-    {
-        Log.Warning(ex, "DeepSeek saglayicisi tohumlanamadi; API normal baslatiliyor.");
-    }
 
     // OpenCode Zen modellerini tohumla (2-6. modeller — paralel işçiler).
     // Ücretsiz modeller aktif; ücretli olanlar bakiye yüklenene kadar pasif.
-    try
-    {
     var zenKey = Environment.GetEnvironmentVariable("OPENCODE_ZEN_KEY")
         ?? Environment.GetEnvironmentVariable("OPENCODE_ZEN_KEY", EnvironmentVariableTarget.User);
     if (!string.IsNullOrWhiteSpace(zenKey)
@@ -276,11 +260,6 @@ using (var kapsam = uygulama.Services.CreateScope())
         await vt.SaveChangesAsync();
         Log.Information("OpenCode Zen modelleri tohumlandı (2 aktif ücretsiz + 3 pasif ücretli).");
     }
-    }
-    catch (Exception ex)
-    {
-        Log.Warning(ex, "OpenCode Zen modelleri tohumlanamadi; API normal baslatiliyor.");
-    }
 
     var postStartupSyncAtla = string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_POST_STARTUP_SYNC"), "1", StringComparison.OrdinalIgnoreCase)
         || string.Equals(Environment.GetEnvironmentVariable("VIZITLINK3D_SKIP_POST_STARTUP_SYNC"), "true", StringComparison.OrdinalIgnoreCase);
@@ -291,8 +270,6 @@ using (var kapsam = uygulama.Services.CreateScope())
     }
     else
     {
-        try
-        {
         // Gold Banyo frontend varsayılanı gold olmalı; admin teması ayrı hatta kalır.
         vt.Database.ExecuteSqlRaw("UPDATE Firmalar SET SiteTema = 'gold' WHERE Slug = 'goldbanyo' AND (SiteTema IS NULL OR SiteTema = '' OR SiteTema IN ('goldbanyo', 'goldbanyo-karanlik', 'gold-luxury-dark', 'altin-siyah', 'aurelian-onyx', 'endustri-karanlik'))");
 
@@ -316,11 +293,6 @@ using (var kapsam = uygulama.Services.CreateScope())
         var baglamaSonuc = await medyaBaglama.BaglaAsync();
         Log.Information("Urun medya baglama: {Urun} urun, {Gorsel} gorsel, {Model} 3D model",
             baglamaSonuc.Veri?.GuncellenenUrun, baglamaSonuc.Veri?.BaglananGorsel, baglamaSonuc.Veri?.BaglananModel);
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "Baslangic sonrasi tema/medya senkronu uygulanamadi; API normal baslatiliyor.");
-        }
     }
 }
 
